@@ -690,9 +690,10 @@ GW.assetVersions = (GW.assetVersions ?? { });
     path.
  */
 function versionedAssetURL(pathname) {
-    let version = GW.assetVersions[pathname];
-    let versionString = (version ? `?v=${version}` : ``);
-    return URLFromString(pathname + versionString);
+    return URLFromString(pathname);
+    // let version = GW.assetVersions[pathname];
+    // let versionString = (version ? `?v=${version}` : ``);
+    // return URLFromString(pathname + versionString);
 }
 
 /*****************************************************************************/
@@ -7188,17 +7189,23 @@ Content = {
 
                         let truncationNotice = codeWrapper.nextElementSibling;
                         truncationNotice.classList.add("truncation-notice");
-                        truncationNotice.querySelector("a").classList.add("extract-not");
+                        let trunc2 = truncationNotice.querySelector("a");
+                        if (trunc2 && trunc2 != null) {
+                            trunc2.classList.add("extract-not");
+                        }
 
                         codeWrapper.append(truncationNotice);
                     }
 
                     //  Set ‘line’ class and fix blank lines.
-                    Array.from(contentDocument.querySelector("code").children).forEach(lineSpan => {
-                        lineSpan.classList.add("line");
-                        if (lineSpan.innerHTML.length == 0)
-                            lineSpan.innerHTML = "&nbsp;";
-                    });
+                    let codecontainer = contentDocument.querySelector("code");
+                    if (codecontainer && codecontainer != null) {
+                        Array.from(codecontainer.children).forEach(lineSpan => {
+                            lineSpan.classList.add("line");
+                            if (lineSpan.innerHTML.length == 0)
+                                lineSpan.innerHTML = "&nbsp;";
+                        });
+                    }
                 } else {
                     //  “Raw” code.
                     let htmlEncodedResponse = response.replace(
@@ -7468,7 +7475,7 @@ Content = {
 
                 //  Determine sandbox settings.
                 let embedURL = URLFromString(embedSrc);
-                if (embedURL.pathname.startsWith("/static/") == true || embedURL.pathname.startsWith("./static/") == true) {
+                if (embedURL.pathname.startsWith("/static/") == true || embedURL.pathname.startsWith("/static/") == true) {
                 	additionalAttributes.push(`sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"`);
                 } else if (embedURL.pathname.endsWith(".pdf") == false) {
                     additionalAttributes.push(`sandbox="allow-same-origin" referrerpolicy="same-origin"`);
