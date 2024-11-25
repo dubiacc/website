@@ -873,19 +873,20 @@
                     );
                 });
             }
-            heProm.w.then((response) => {
+            
+            heProm.w.then(async (response) => {
+                let text = await response.clone().json();
                 if (response.ok) {
-                    if (
-                        wa.instantiateStreaming &&
-                        (response.headers.get("Content-Type") === "application/wasm")
-                    ) {
-                        return wa.instantiateStreaming(response);
+                    let base64 = text.join("");
+                    var binaryString = atob(base64);
+                    var bytes = new Uint8Array(binaryString.length);
+                    for (var i = 0; i < binaryString.length; i++) {
+                        bytes[i] = binaryString.charCodeAt(i);
                     }
-                    return response.arrayBuffer().then((ab) => {
-                        return wa.instantiate(ab);
-                    });
+                    return wa.instantiate(bytes.buffer);
+                } else {
+                    return Promise.reject(Error(`File ${lang}.wasm can't be loaded from ${H.paths.patterndir}`));
                 }
-                return Promise.reject(Error(`File ${lang}.wasm can't be loaded from ${H.paths.patterndir}`));
             }).then(handleWasm, (e) => {
                 event.fire("error", e);
                 H.res.els.rem(lang);

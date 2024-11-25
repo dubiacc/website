@@ -13168,7 +13168,7 @@ window.Hyphenopoly = {};
                     fn,
                     {
                         "l": [lang],
-                        "w": w.fetch(H.paths.patterndir + fn + ".wasm", {"credentials": H.s.CORScredentials})
+                        "w": w.fetch(H.paths.patterndir + fn + ".wasm.json", {"credentials": H.s.CORScredentials})
                     }
                 );
             }
@@ -13302,7 +13302,7 @@ window.Hyphenopoly = {};
             "CORScredentials": "include",
             "hide": "all",
             "selectors": {".hyphenate": {}},
-            "timeout": 1000
+            "timeout": 10000
         });
         // Change mode string to mode int
         H.s.hide = ["all", "element", "text"].indexOf(H.s.hide);

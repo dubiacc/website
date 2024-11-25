@@ -29,6 +29,20 @@ def chunks(lst, n):
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
 
+def format_wasm_file(b64):
+    global_wasm_script = list(chunks(b64, 100))
+    wasm_script = []
+    wasm_script.append("[")
+    for l in global_wasm_script[:-1]:
+        wasm_script.append("    \"" + l + "\",")
+    wasm_script.append("    \"" + global_wasm_script[-1] + "\"")
+    wasm_script_out = "\r\n".join(wasm_script)
+    wasm_script_out += "\r\n]\r\n"
+    return wasm_script_out
+
+wasm_script = format_wasm_file(read_file_base64("./static/js/patterns/en-us.wasm"))
+write_file(wasm_script, "./static/js/patterns/en-us.wasm.json")
+
 articles = {}
 for (dirpath, dirnames, filenames) in os.walk("./articles"):
     for lang in dirnames:
@@ -55,7 +69,7 @@ header_template = header_template.replace(
 )
 header_template = header_template.replace(
     "<!-- INLINED_STYLES_DARK -->", 
-    "<style id='inlined-styles-colors-dark' media='not all'>\r\n" + inlined_styles_dark + "    </style>"
+    "<style id='inlined-styles-colors-dark' media='all and (prefers-color-scheme: dark)'>\r\n" + inlined_styles_dark + "    </style>"
 )
 
 for slug, readme in articles.items():

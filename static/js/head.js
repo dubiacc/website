@@ -1427,7 +1427,7 @@ function GWStopWatch(f, ...args) {
 	(Requires utility.js.)
  */
 function GWServerLogError(errorString, errorType) {
-    doAjax({ location: `${location.origin}/404-error-` + fixedEncodeURIComponent(errorString) });
+    // doAjax({ location: `${location.origin}/404-error-` + fixedEncodeURIComponent(errorString) });
     GWLog(`Reporting ${(errorType || "error")}:  ${errorString}`, "error reporting", 1);
 }
 
