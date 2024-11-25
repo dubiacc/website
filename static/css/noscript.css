@@ -1,0 +1,11 @@
+#markdownBody #noscript-warning-header { 
+    position: fixed; /* sticky */
+    top: 6px; /* at top */
+    width: 58%;
+    z-index: 99; /* Make sure it is on top */
+    background-color: #f8f8f8; /* Set a solid background color so legible while positioned over text */
+    border-color: var(--GW-abstract-border-color); /* Make look like theme-toggle/admonitions a bit more */
+    border-width: 6px 6px 6px 6px;
+    border-style: double; }
+#markdownBody #noscript-warning-header p { margin: 10px; }
+nav#sidebar { padding-top: 160px; } /* avoid overlap with page header */
