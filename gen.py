@@ -51,6 +51,10 @@ def load_templates():
         "<!-- INLINED_STYLES_DARK -->", 
         "<style id='inlined-styles-colors-dark' media='all and (prefers-color-scheme: dark)'>\r\n" + inlined_styles_dark + "    </style>"
     )
+    header_template = header_template.replace(
+        "<!-- CRITICAL_CSS -->", 
+        "<style id='critical-css'>\r\n" + read_file("./static/css/critical.css") + "    </style>"
+    )
     templates["head"] = header_template
     templates["table-of-contents"] = read_file("./templates/table-of-contents.html")
     templates["page-metadata"] = read_file("./templates/page-metadata.html")
