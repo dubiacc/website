@@ -24,7 +24,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          depth: 1
+          fetch-depth: 1
+      - name: Run md2json
+        run: |
+          cp ./md2json/md2json-linux ./md2json-bin
+          chmod +x ./md2json-linux
+          ./md2json-linux
       - name: Setup Python
         uses: actions/setup-python@v5.3.0
         with:

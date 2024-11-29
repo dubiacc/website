@@ -93,6 +93,7 @@ def generate_gitignore(articles_dict):
     filenames.extend(map(lambda x: "/" + x, dirs))
     filenames.append("/venv")
     filenames.append("*.md.json")
+    filenames.append("md2json-bin")
     filenames.append("/md2json/target")
     filenames.append("/md2json/out.txt")
     filenames.append("/venv/*")
