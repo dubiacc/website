@@ -240,7 +240,16 @@
 			</div>
 		</div>
 		<span id="scratchpad"></span>
-		<script src="/static/js/script.js" defer></script>
+		<script>
+			function injectMainScript() {
+				var resource = document.createElement('script'); 
+				resource.async = "true";
+				resource.src = "/static/js/script.js";
+				var script = document.getElementsByTagName('script')[0];
+				script.parentNode.insertBefore(resource, script);
+			}
+			setTimeout(injectMainScript, 1000);
+		  </script>
 	</body>
 	<div id="popup-container" class="popup-container" style="z-index: 10000;"></div>
 </html>

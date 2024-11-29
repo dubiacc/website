@@ -1949,15 +1949,15 @@ a code {
 
 .has-recently-modified-icon .recently-modified-icon-hook::before,
 .icon-single-white-star-on-black-circle::before { background-image: var(--GW-image-single-white-star-on-black-circle-svg); }
-.icon-moon-solid::before          { background-image: url('/static/img/icon/icons.svg?v=1732408337#moon-solid'); }
-.icon-book-open-solid::before     { background-image: url('/static/img/icon/icons.svg?v=1732408337#book-open-solid'); }
-.icon-message-slash-solid::before { background-image: url('/static/img/icon/icons.svg?v=1732408337#message-slash-solid'); }
-.icon-magnifying-glass::before    { background-image: url('/static/img/icon/icons.svg?v=1732408337#magnifying-glass'); }
-.icon-gear-solid::before          { background-image: url('/static/img/icon/icons.svg?v=1732408337#gear-solid'); }
-.icon-sun-solid::before           { background-image: url('/static/img/icon/icons.svg?v=1732408337#sun-solid'); }
-.icon-eye-slash-solid::before     { background-image: url('/static/img/icon/icons.svg?v=1732408337#eye-slash-solid'); }
-.icon-manicule-right::before      { background-image: url('/static/img/icon/icons.svg?v=1732408337#manicule-right'); }
-.icon-manicule-left::before       { background-image: url('/static/img/icon/icons.svg?v=1732408337#manicule-left'); }
+.icon-moon-solid::before          { background-image: url('/static/img/icon/icons.svg#moon-solid'); }
+.icon-book-open-solid::before     { background-image: url('/static/img/icon/icons.svg#book-open-solid'); }
+.icon-message-slash-solid::before { background-image: url('/static/img/icon/icons.svg#message-slash-solid'); }
+.icon-magnifying-glass::before    { background-image: url('/static/img/icon/icons.svg#magnifying-glass'); }
+.icon-gear-solid::before          { background-image: url('/static/img/icon/icons.svg#gear-solid'); }
+.icon-sun-solid::before           { background-image: url('/static/img/icon/icons.svg#sun-solid'); }
+.icon-eye-slash-solid::before     { background-image: url('/static/img/icon/icons.svg#eye-slash-solid'); }
+.icon-manicule-right::before      { background-image: url('/static/img/icon/icons.svg#manicule-right'); }
+.icon-manicule-left::before       { background-image: url('/static/img/icon/icons.svg#manicule-left'); }
 
 
 /*************/
@@ -2625,7 +2625,7 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	font-family: 'Source Serif Pro';
 	font-weight: 400;
 	font-style: normal;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Regular.ttf?v=1708747185') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Regular.ttf') format('truetype');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -2633,7 +2633,7 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	font-family: 'Source Serif Pro';
 	font-weight: 400;
 	font-style: italic;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-RegularItalic.ttf?v=1708747185') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-RegularItalic.ttf') format('truetype');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -2642,7 +2642,7 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	font-family: 'Source Serif Pro';
 	font-weight: 600;
 	font-style: normal;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Semibold.ttf?v=1708747185') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Semibold.ttf') format('truetype');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -2651,7 +2651,7 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	font-family: 'Source Serif Pro';
 	font-weight: 700;
 	font-style: normal;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Bold.ttf?v=1708747185') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Bold.ttf') format('truetype');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -2660,7 +2660,7 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	font-family: 'Source Sans Pro';
 	font-weight: 400;
 	font-style: normal;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-Regular.ttf?v=1708747185') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-Regular.ttf') format('truetype');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -2668,7 +2668,7 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	font-family: 'Source Sans Pro';
 	font-weight: 400;
 	font-style: italic;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-RegularItalic.ttf?v=1708747185') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-RegularItalic.ttf') format('truetype');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -2677,7 +2677,7 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	font-family: 'Source Sans Pro';
 	font-weight: 700;
 	font-style: normal;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-Bold.ttf?v=1708747185') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-Bold.ttf') format('truetype');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }

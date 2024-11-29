@@ -6144,7 +6144,6 @@ Content = {
         /*	PDF optional settings to embed more cleanly: fit width, and disable
         	‘bookmarks’ & ‘thumbnails’ (just not enough space).
 
-        	<https://gwern.net/doc/cs/css/2007-adobe-parametersforopeningpdffiles.pdf#page=6>
         	<https://github.com/mozilla/pdf.js/wiki/Viewer-options>
 
         	WARNING: browsers are unreliable in whether they properly apply
@@ -7991,7 +7990,7 @@ Content = {
 		When the `include-rectify-not` option is used, this rectification is
 		not done.
 
-		(Not currently used on gwern.net.)
+		(Not currently used)
 
     include-identify-not
         Normally, if the include-link has a nonempty ‘id’ attribute, and that
@@ -8000,7 +7999,7 @@ Content = {
         DIV element, which will be given the ID of the include-link. When the
         `include-identify-not` option is used, this will not be done.
 
-		(Not currently used on gwern.net.)
+		(Not currently used)
 
 	include-localize-not
 		When content specified by an include-link is transcluded into the base
@@ -10177,8 +10176,6 @@ Transclude.templates = {
 // Popups are inspired by Wikipedia's augmented tooltips (originally implemented as editor-built extensions, now available to all readers via https://www.mediawiki.org/wiki/Page_Previews ). Whenever any such link is mouse-overed by the user, popups.js will pop up a large tooltip-like square with the contents of the attributes. This is particularly intended for references, where it is extremely convenient to autopopulate links such as to Arxiv.org/Biorxiv.org/Wikipedia with the link's title/author/date/abstract, so the reader can see it instantly. Links to 'reverse citations' are provided as much as possible: links with DOIs go to a Semantic Scholar search engine query for that DOI, which prioritizes meta-analyses & systematic reviews to provide context for any given paper (particularly whether it has failed to replicate or otherwise been debunked); for URLs ending in 'PDF' which probably have Semantic Scholar entries, they go to a title search; and for all other URLs, a Google search using the obscure `link:` operator is provided.. For more details, see `LinkMetadata.hs`.
 
 // On mobile, clicking on links (as opposed to hovering over links on desktop) will bring up the annotation or video; another click on it or the popup will then go to it. A click outside it de-activates it.
-
-// For an example of a Hakyll library which generates annotations for Wikipedia/Biorxiv/Arxiv/PDFs/arbitrarily-defined links, see <https://gwern.net/static/build/LinkMetadata.hs>; for examples, see the links in <https://gwern.net/lorem-links>
 
 Extracts = {
     /******************/
@@ -12991,337 +12988,7 @@ Typography = {
 		}
 	}
 };
-/**
- * @license Hyphenopoly_Loader 5.0.0-beta.4 - client side hyphenation
- * ©2022  Mathias Nater, Güttingen (mathiasnater at gmail dot com)
- * https://github.com/mnater/Hyphenopoly
- *
- * Released under the MIT license
- * https://github.com/mnater/Hyphenopoly/blob/master/LICENSE
- */
-/* globals Hyphenopoly:readonly */
-window.Hyphenopoly = {};
 
-((w, d, H, o) => {
-    "use strict";
-
-    /**
-     * Shortcut for new Map
-     * @param {any} init - initialiser for new Map
-     * @returns {Map}
-     */
-    const mp = (init) => {
-        return new Map(init);
-    };
-
-    const scriptName = "Hyphenopoly_Loader.js";
-    const thisScript = d.currentScript.src;
-    const store = sessionStorage;
-    let mainScriptLoaded = false;
-
-    /**
-     * The main function runs the feature test and loads Hyphenopoly if
-     * necessary.
-     */
-    const main = (() => {
-        const shortcuts = {
-            "ac": "appendChild",
-            "ce": "createElement",
-            "ct": "createTextNode"
-        };
-
-        /**
-         * Create deferred Promise
-         *
-         * From http://lea.verou.me/2016/12/resolve-promises-externally-with-
-         * this-one-weird-trick/
-         * @return {promise}
-         */
-        const defProm = () => {
-            let res = null;
-            let rej = null;
-            const promise = new Promise((resolve, reject) => {
-                res = resolve;
-                rej = reject;
-            });
-            promise.resolve = res;
-            promise.reject = rej;
-            return promise;
-        };
-
-        let stylesNode = null;
-
-        /**
-         * Define function H.hide.
-         * This function hides (state = 1) or unhides (state = 0)
-         * the whole document (mode == 0) or
-         * each selected element (mode == 1) or
-         * text of each selected element (mode == 2) or
-         * nothing (mode == -1)
-         * @param {integer} state - State
-         * @param {integer} mode  - Mode
-         */
-        H.hide = (state, mode) => {
-            if (state === 0) {
-                if (stylesNode) {
-                    stylesNode.remove();
-                }
-            } else {
-                let vis = "{visibility:hidden!important}";
-                stylesNode = d[shortcuts.ce]("style");
-                let myStyle = "";
-                if (mode === 0) {
-                    myStyle = "html" + vis;
-                } else if (mode !== -1) {
-                    if (mode === 2) {
-                        vis = "{color:transparent!important}";
-                    }
-                    o.keys(H.s.selectors).forEach((sel) => {
-                        myStyle += sel + vis;
-                    });
-                }
-                stylesNode[shortcuts.ac](d[shortcuts.ct](myStyle));
-                d.head[shortcuts.ac](stylesNode);
-            }
-        };
-
-        const tester = (() => {
-            let fakeBody = null;
-            return {
-
-                /**
-                 * Append fakeBody with tests to document
-                 * @returns {Object|null} The body element or null, if no tests
-                 */
-                "ap": () => {
-                    if (fakeBody) {
-                        d.documentElement[shortcuts.ac](fakeBody);
-                        return fakeBody;
-                    }
-                    return null;
-                },
-
-                /**
-                 * Remove fakeBody
-                 * @returns {undefined}
-                 */
-                "cl": () => {
-                    if (fakeBody) {
-                        fakeBody.remove();
-                    }
-                },
-
-                /**
-                 * Create and append div with CSS-hyphenated word
-                 * @param {string} lang Language
-                 * @returns {undefined}
-                 */
-                "cr": (lang) => {
-                    if (H.cf.langs.has(lang)) {
-                        return;
-                    }
-                    fakeBody = fakeBody || d[shortcuts.ce]("body");
-                    const testDiv = d[shortcuts.ce]("div");
-                    const ha = "hyphens:auto";
-                    testDiv.lang = lang;
-                    testDiv.style.cssText = `visibility:hidden;-webkit-${ha};-ms-${ha};${ha};width:48px;font-size:12px;line-height:12px;border:none;padding:0;word-wrap:normal`;
-                    testDiv[shortcuts.ac](
-                        d[shortcuts.ct](H.lrq.get(lang).wo.toLowerCase())
-                    );
-                    fakeBody[shortcuts.ac](testDiv);
-                }
-            };
-        })();
-
-        /**
-         * Checks if hyphens (ev.prefixed) is set to auto for the element.
-         * @param {Object} elm - the element
-         * @returns {Boolean} result of the check
-         */
-        const checkCSSHyphensSupport = (elmStyle) => {
-            const h = elmStyle.hyphens ||
-                elmStyle.webkitHyphens ||
-                elmStyle.msHyphens;
-            return (h === "auto");
-        };
-
-        H.res = {
-            "he": mp()
-        };
-
-        /**
-         * Load hyphenEngines to H.res.he
-         *
-         * Make sure each .wasm is loaded exactly once, even for fallbacks
-         * Store a list of languages to by hyphenated with each .wasm
-         * @param {string} lang The language
-         * @returns {undefined}
-         */
-        const loadhyphenEngine = (lang) => {
-            const fn = H.lrq.get(lang).fn;
-            H.cf.pf = true;
-            H.cf.langs.set(lang, "H9Y");
-            if (H.res.he.has(fn)) {
-                H.res.he.get(fn).l.push(lang);
-            } else {
-                H.res.he.set(
-                    fn,
-                    {
-                        "l": [lang],
-                        "w": w.fetch(H.paths.patterndir + fn + ".wasm.json", {"credentials": H.s.CORScredentials})
-                    }
-                );
-            }
-        };
-        H.lrq.forEach((value, lang) => {
-            if (value.wo === "FORCEHYPHENOPOLY" || H.cf.langs.get(lang) === "H9Y") {
-                loadhyphenEngine(lang);
-            } else {
-                tester.cr(lang);
-            }
-        });
-        const testContainer = tester.ap();
-        if (testContainer) {
-            testContainer.querySelectorAll("div").forEach((n) => {
-                if (checkCSSHyphensSupport(n.style) && n.offsetHeight > 12) {
-                    H.cf.langs.set(n.lang, "CSS");
-                } else {
-                    loadhyphenEngine(n.lang);
-                }
-            });
-            tester.cl();
-        }
-        const hev = H.hev;
-        if (H.cf.pf) {
-            H.res.DOM = new Promise((res) => {
-                if (d.readyState === "loading") {
-                    d.addEventListener(
-                        "DOMContentLoaded",
-                        res,
-                        {
-                            "once": true,
-                            "passive": true
-                        }
-                    );
-                } else {
-                    res();
-                }
-            });
-            H.hide(1, H.s.hide);
-            H.timeOutHandler = w.setTimeout(() => {
-                H.hide(0, null);
-                // eslint-disable-next-line no-console
-                console.info(scriptName + " timed out.");
-            }, H.s.timeout);
-            if (mainScriptLoaded) {
-                H.main();
-            } else {
-                // Load main script
-                const script = d[shortcuts.ce]("script");
-                script.src = H.paths.maindir + "Hyphenopoly.js";
-                d.head[shortcuts.ac](script);
-                mainScriptLoaded = true;
-            }
-            H.hy6ors = mp();
-            H.cf.langs.forEach((langDef, lang) => {
-                if (langDef === "H9Y") {
-                    H.hy6ors.set(lang, defProm());
-                }
-            });
-            H.hy6ors.set("HTML", defProm());
-            H.hyphenators = new Proxy(H.hy6ors, {
-                "get": (target, key) => {
-                    return target.get(key);
-                },
-                "set": () => {
-                    // Inhibit setting of hyphenators
-                    return true;
-                }
-            });
-            (() => {
-                if (hev && hev.polyfill) {
-                    hev.polyfill();
-                }
-            })();
-        } else {
-            (() => {
-                if (hev && hev.tearDown) {
-                    hev.tearDown();
-                }
-                w.Hyphenopoly = null;
-            })();
-        }
-        (() => {
-            if (H.cft) {
-                store.setItem(scriptName, JSON.stringify(
-                    {
-                        "langs": [...H.cf.langs.entries()],
-                        "pf": H.cf.pf
-                    }
-                ));
-            }
-        })();
-    });
-
-    H.config = (c) => {
-        /**
-         * Sets default properties for an Object
-         * @param {object} obj - The object to set defaults to
-         * @param {object} defaults - The defaults to set
-         * @returns {object}
-         */
-        const setDefaults = (obj, defaults) => {
-            if (obj) {
-                o.entries(defaults).forEach(([k, v]) => {
-                    // eslint-disable-next-line security/detect-object-injection
-                    obj[k] = obj[k] || v;
-                });
-                return obj;
-            }
-            return defaults;
-        };
-
-        H.cft = Boolean(c.cacheFeatureTests);
-        if (H.cft && store.getItem(scriptName)) {
-            H.cf = JSON.parse(store.getItem(scriptName));
-            H.cf.langs = mp(H.cf.langs);
-        } else {
-            H.cf = {
-                "langs": mp(),
-                "pf": false
-            };
-        }
-
-        const maindir = thisScript.slice(0, (thisScript.lastIndexOf("/") + 1));
-        const patterndir = maindir + "patterns/";
-        H.paths = setDefaults(c.paths, {
-            maindir,
-            patterndir
-        });
-        H.s = setDefaults(c.setup, {
-            "CORScredentials": "include",
-            "hide": "all",
-            "selectors": {".hyphenate": {}},
-            "timeout": 10000
-        });
-        // Change mode string to mode int
-        H.s.hide = ["all", "element", "text"].indexOf(H.s.hide);
-        if (c.handleEvent) {
-            H.hev = c.handleEvent;
-        }
-
-        const fallbacks = mp(o.entries(c.fallbacks || {}));
-        H.lrq = mp();
-        o.entries(c.require).forEach(([lang, wo]) => {
-            H.lrq.set(lang.toLowerCase(), {
-                "fn": fallbacks.get(lang) || lang,
-                wo
-            });
-        });
-
-        main();
-    };
-})(window, document, Hyphenopoly, Object);
 /* Miscellaneous JS functions which run after the page loads to rewrite or adjust parts of the page. */
 /* author: Said Achmiz */
 /* license: MIT */
@@ -14452,49 +14119,6 @@ addContentLoadHandler(GW.contentLoadHandlers.removeExtraneousWhitespaceFromCitat
     });
 }, "rewrite");
 
-/******************************************************************/
-/*  Configure Hyphenopoly.
-
-    Requires Hyphenopoly_Loader.js to be loaded prior to this file.
- */
-Hyphenopoly.config({
-    require: {
-        "en-us": "FORCEHYPHENOPOLY"
-    },
-    setup: {
-        hide: "none",
-        keepAlive: true,
-        safeCopy: false
-    }
-});
-
-/**********************************************/
-/*  Hyphenate with Hyphenopoly.
-
-    Requires Hyphenopoly_Loader.js to be loaded prior to this file.
- */
-addContentInjectHandler(GW.contentInjectHandlers.hyphenate = (eventInfo) => {
-    GWLog("hyphenate", "rewrite.js", 1);
-
-    if (Hyphenopoly.hyphenators == null)
-        return;
-
-    if (GW.isX11())
-        return;
-
-    let selector = (GW.isMobile()
-                    ? ".markdownBody p"
-                    : (eventInfo.document == document
-                       ? ".sidenote p, .abstract blockquote p"
-                       : "p"));
-    let blocks = eventInfo.container.querySelectorAll(selector);
-    Hyphenopoly.hyphenators.HTML.then((hyphenate) => {
-        blocks.forEach(block => {
-            hyphenate(block);
-            Typography.processElement(block, Typography.replacementTypes.NONE, true);
-        });
-    });
-}, "rewrite");
 
 /************************************************************************/
 /*  Remove soft hyphens and other extraneous characters from copied text.
@@ -15347,7 +14971,7 @@ addContentInjectHandler(GW.contentInjectHandlers.designateLocalNavigationLinkIco
         link.dataset.linkIconType = "text";
         link.dataset.linkIcon = [ "arrow-down", "arrow-up" ].includes(link.dataset.linkIcon)
                                 ? "\u{00B6}"   // ‘¶’
-                                : "\u{1D50A}"; // ‘𝔊’ MATHEMATICAL FRAKTUR CAPITAL G [gwern.net logo]
+                                : "\u{1D521}"; // ‘𝔡’ MATHEMATICAL FRAKTUR SMALL D [dubia.cc logo]
     });
 }, "rewrite");
 
@@ -16159,7 +15783,7 @@ doWhenPageLoaded(() => {
 /*  If a reader loads a page and the anchor ID/hash does not exist inside the page,
     fire off a request to the 404 page, whose logs are reviewed manually,
     with the offending page+anchor ID, for correction (either fixing an outdated
-    link somewhere on gwern.net, or adding a span/div manually to the page to
+    link somewhere on dubia.cc, or adding a span/div manually to the page to
     make old inbound links go where they ought to).
 
     Such broken anchors can reflect out of date cross-page references, or reflect
@@ -17168,7 +16792,7 @@ document.addEventListener("selectionchange", GW.selectionChangedRevealElement = 
 	Pandoc-style footnotes and dynamically repositioning them into the
 	left/right margins, when browser windows are wide enough.
 
-	Sidenotes (see https://gwern.net/sidenote ) are superior to footnotes where
+	Sidenotes are superior to footnotes where
 	possible because they enable the reader to immediately look at them without
 	requiring user action to “go to” or “pop up” the footnotes; even floating
 	footnotes require effort by the reader.

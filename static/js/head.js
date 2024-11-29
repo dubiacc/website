@@ -2762,67 +2762,6 @@ GW.specialOccasionTestPageNamePrefix = "test-";
     provided to remove those classes. (See the ‘halloween’ entry for example.)
  */
 GW.specialOccasions = [
-    [ "halloween", isItHalloween, () => {
-        //  Default to dark mode during Halloween.
-        DarkMode.defaultMode = "dark";
-
-        //  Different special styles for light and dark mode.
-        document.body.classList.remove("special-halloween-dark", "special-halloween-light");
-        let specialClass = DarkMode.computedMode() == "light"
-                           ? "special-halloween-light"
-                           : "special-halloween-dark";
-        document.body.classList.add(specialClass);
-
-        //  Replace logo.
-        let newLogoLink = URLFromString("/dropcap#halloween");
-        doWhenMatchMedia(matchMedia("(min-width: 1180px)"), "GW.setHalloweenPageLogoForViewportWidth",
-           (mediaQuery) => {
-        	injectSpecialPageLogo("halloween", { mode: "dark", randomize: true, link: newLogoLink });
-        }, (mediaQuery) => {
-			injectSpecialPageLogo("halloween", { mode: "dark", identifier: "1", link: newLogoLink });
-        }, (mediaQuery) => {
-        	resetPageLogo();
-        });
-      }, () => {
-        document.body.classList.remove("special-halloween-dark", "special-halloween-light");
-
-        cancelDoWhenMatchMedia("GW.setHalloweenPageLogoForViewportWidth");
-      } ],
-    [ "christmas", isItChristmas, () => {
-        //  Different special styles for light and dark mode.
-        document.body.classList.remove("special-christmas-dark", "special-christmas-light");
-        let specialClass = DarkMode.computedMode() == "light"
-                           ? "special-christmas-light"
-                           : "special-christmas-dark";
-        document.body.classList.add(specialClass);
-
-        //  Replace logo.
-        let newLogoLink = URLFromString("/dropcap#christmas");
-        injectSpecialPageLogo("christmas", { mode: DarkMode.computedMode(), randomize: true, link: newLogoLink });
-      }, () => {
-        document.body.classList.remove("special-christmas-dark", "special-christmas-light");
-      } ],
-    [ "april-fools", isItAprilFools, () => {
-        document.body.classList.add("special-april-fools");
-        // TODO: no April Fools logos or dropcaps.. for now. Maybe 2025?
-
-        /*  Turn off the funny after half a minute (the blackletter joke has
-            worn old by then).
-         */
-        let jokeDurationSeconds = 30;
-        setTimeout(() => {
-            document.body.classList.remove("special-april-fools");
-        }, jokeDurationSeconds * 1000);
-      }, () => {
-        document.body.classList.remove("special-april-fools");
-      } ],
-    [ "easter", isItEaster, () => {
-        document.body.classList.add("special-easter");
-        //  Replace logo.
-//         injectSpecialPageLogo("easter");
-      }, () => {
-        document.body.classList.remove("special-easter");
-      } ],
 ];
 
 /******************************************************************************/
