@@ -1,17 +1,16 @@
----
-title: "Hexenverfolgung"
-date: 2021-03-11
-tags: ['hexe', 'mittelalter', 'fruehe neuzeit', 'inquisition']
-author: discord:821379162828439581
----
+Als Hexenverfolgung bezeichnet man die Hexenverdächtigung, Festnahme, Folter 
+und insbesondere Hinrichtung von Personen, von denen geglaubt wird, sie 
+praktizierten als Hexe Zauberei bzw. stünden mit dem Teufel im Bunde.  
 
-![Hexenverbrennung](./image.png)
+![Hexenverfolgung](image.avif)
 
-# Hexenverbrennung / Hexenverfolgung
+# Hexenverfolgung
 
-In diesem Beitrag setzen wir uns kritisch mit dem Mythos der 
-Hexenverfolgung auseinander. Ist die Katholische Kirche tatsächlich 
-für die Verfolgung fabelhafter Wesen verantwortlich, oder handelt es 
+In diesem [Beitrag](https://wikipedia.org/test.png) setzen wir uns kritisch 
+mit *dem Mythos der Hexenverfolgung auseinander. Ist die Katholische Kirche* 
+tatsächlich für die Verfolgung 
+
+fabelhafter Wesen verantwortlich, oder handelt es 
 sich um einen von vielen erfundenen Skandalen, die ihr ungerechtfertigt 
 zugeschrieben werden?
 
@@ -28,15 +27,17 @@ und fliegbaren Besen, verurteilt hatte.
 > es sei jemand eine Hexe und fresse Menschen, und diese 
 > Person deshalb verbrennt oder ihr Fleisch durch andere 
 > essen läßt, der soll mit dem Tode bestraft werden“
+>
+> [Quelle](https://paderborn.org)
 
 So wurde unter dem katholischen König Karl des Großen, in den Gesetzbüchern 
 (Capitulatio) verboten zu glauben: *„nach Art der Heiden, daß ein Mann 
 oder eine Frau eine Hexe sei“*
 
-Edictus Rothari das Gesetzbuch der gerade christianisierten Langobarden 
+Edictus Rothari, das Gesetzbuch der gerade christianisierten Langobarden 
 aus dem 7. Jahrhundert: *„ein Christ nicht glauben dürfe, daß es Hexen gäbe“*.
 
-> **Canon episcopi Bischofssynode 9.Jahrhundert:**
+> **Canon episcopi Bischofssynode 9. Jahrhundert:**
 >
 > „von den betreffenden Weibern selbst verbreiteten Wahn aufzutreten, 
 > daß Weiber nächtlicherweise, auf gewissen Tieren reitend, zum Dienste 
@@ -47,7 +48,7 @@ Im Jahre 1080 schrieb Papst Gregor VII. (1073-1085) an König Harald von Dänema
 *„Unwettern, Stürmen und manchen Krankheiten“* gäbe und die 
 *„mit Unmenschlichkeit nach einem barbarischen Brauch abgeurteilt werden“*
 
-![Alexander IV. (1245-1261)](image-1.png)
+![Alexander IV. (1245-1261)](image-1.avif)
 
 > **Alexander IV. (1245-1261):**
 >
@@ -74,7 +75,7 @@ verantwortlich gemacht.
 
 ## Die Kirche im Kampf gegen die Hexenverfolgung 
 
-![Hexenverbrennung](image-2.png)
+![Hexenverbrennung](image-2.avif)
 
 Es ist zu beobachten dass die katholische Kirche nur "Hexen" verurteilte, insofern 
 diese sich auch der Häresie schuldigt machten. So wurden die verurteilen Hexen 
@@ -91,7 +92,7 @@ unbehelligt; Clemens VII. (1523-1534) ließ kurzerhand die Protokolle der Verhö
 
 ### Hexenjagd in Bitonto, Italien
 
-![Porträt von Papst Clemens V (1305-1314)](image-3.png)
+![Porträt von Papst Clemens V (1305-1314)](image-3.avif)
 
 Unter Clemens VIII. wurden in einem Fall in Bitonto alle beschuldigten Frauen 
 freigesprochen und rehabilitiert, während der verantwortliche Bischof seines Amtes 
@@ -102,7 +103,7 @@ Missbräuche zu vermeiden.
 
 ### Spätes Mittelalter
 
-![Desiderio Scaglia](image-4.png)
+![Desiderio Scaglia](image-4.avif)
 
 Im 17.Jahrhundert verfasste der Dominikaner Desiderio Scaglia, Kommissar des 
 Heiligen Offiziums ein umfangreicheres Inquisitoren-Handbuch zum Thema Hexen: 
@@ -125,13 +126,13 @@ Heiligen Offiziums ein umfangreicheres Inquisitoren-Handbuch zum Thema Hexen:
 
 ### Interventionen durch Päpste
 
-![Papst Paul V. (1605-1621)](image-5.png)
+![Papst Paul V. (1605-1621)](image-5.avif)
 
 Als der Mailänder Inquisitor Rom über einen lokalen Hexenprozeß informierte, 
 setzte **Papst Paul V. (1605-1621)** sich persönlich dafür ein, daß die verhängten 
 Todesstrafen nicht vollstreckt wurden. 
 
-![Gregor XV. (1621-1623)](image-6.png)
+![Gregor XV. (1621-1623)](image-6.avif)
 
 **Gregor XV. (1621-1623)**, legte mit der Bulle Omnipotens Dei 1623 fest, daß 
 die Auslieferung einer Hexe oder eines Zauberers an den „weltlichen Arm“ 
@@ -146,7 +147,7 @@ Die bald sprichwörtliche Milde der Inquisition ließ immer häufiger Beschuldig
 Überstellung nach Rom verlangen, weil sie wussten, dass sie dort das fairste 
 Verfahren und die geringste Strafe erwartete..
 
-![Papst Innozenz X. (1644-1655)](image-7.png)
+![Papst Innozenz X. (1644-1655)](image-7.avif)
 
 1652 erhielt Rom Berichte der Inquisitoren aus Como und Mailand über Hexenverfolgungen 
 durch die weltlichen Gerichte in der Region. **Papst Innozenz X. (1644-1655)** und seine 
@@ -174,7 +175,7 @@ verfallen waren, vergiftet wurden.
 
 ## Spanische Inquisition
 
-![Cautio Criminalis - Anordnung der Inquisition gegen Aberglauben](image-8.png)
+![Cautio Criminalis - Anordnung der Inquisition gegen Aberglauben](image-8.avif)
 
 Am 31. August 1614 veröffentlichte die Spanische Inquisition 32 
 Anordnungen zur Bekämpfung des Hexenglaubens.
@@ -203,7 +204,7 @@ So schrieb unter der 1. Frage ob es überhaupt Hexen gebe, folgendes:
 
 ## Verbreitung des Hexenwahns durch Protestanten 
 
-![Martin Luther ()](image-9.png)
+![Martin Luther](image-9.avif)
 
 Es herrschte unter den frühen Protestanten die Lehre dass der Teufel alle Gewalt
 über jede Kreatur habe, was somit das Fundament des Hexenmythos war. In diesem
@@ -249,3 +250,10 @@ Mythos der Hexen gestellt und bekämpft hatte, jedoch durch protestantische
 Geschichtsschreibung wir heute ein verkehrtes Bild des historischen Geschehens
 haben.
 
+```json
+{
+    "date": "2021-03-11",
+    "tags": ["hexe", "mittelalter", "fruehe-neuzeit", "inquisition"],
+    "authors": ["discord:821379162828439581"]
+}
+```

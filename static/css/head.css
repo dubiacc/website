@@ -396,7 +396,7 @@ article {
 /*  Interpunct separators for the metadata fields; looks nicer than semicolons
     or slashes.
  */
-#page-metadata .page-metadata-fields > span::after {
+#page-metadata .page-metadata-fields > span.dotted::after {
     content: "\00B7"; /* interpunct MIDDLE DOT (U+00B7) '·' */
     margin: 0 0.75em;
 }

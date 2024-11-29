@@ -23,12 +23,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          depth: 1
       - name: Setup Python
         uses: actions/setup-python@v5.3.0
         with:
           python-version: 3
       - name: build
         run: python3 ./gen.py --production
+      - name: Remove unnecessary files
+        run: |
+          rm -rf ./*.DS_Store
+          rm -rf ./.git
+          rm -rf ./md2json
+          rm -rf ./templates
+          rm -rf ./.gitignore
+          rm -rf ./gen.py
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

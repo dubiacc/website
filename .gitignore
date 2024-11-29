@@ -1,1 +1,15 @@
-hexenverfolgung.html
+de/missbraeuche.html
+/venv/*
+*.md.json
+/md2json/out.txt
+/venv
+en/witch-hunts.html
+en/inquisition.html
+de/kreuzzuege.html
+/en
+/de
+/md2json/target
+de/hexenverfolgung.html
+de/inquisition.html
+en/abuse.html
+en/crusades.html
