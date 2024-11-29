@@ -240,18 +240,46 @@
 		</div>
 		<span id="scratchpad"></span>
 
-		<link async defer rel="stylesheet" href="/static/css/head.css">
-		<link async defer rel="stylesheet" href="/static/css/style.css" media="all" onload="this.media=`all`" />
-		<script async defer src="/static/js/head.js"></script>
 		<script async defer>
+
+			function injectHeadCss() {
+				var resource = document.createElement('link'); 
+				resource.rel = "stylesheet";
+				resource.href = "/static/css/head.css";
+				var script = document.getElementById('scratchpad');
+				script.parentNode.insertBefore(resource, script);
+			}
+			setTimeout(injectHeadCss, 300);
+
+
+			function injectMainCss() {
+				var resource = document.createElement('link'); 
+				resource.rel = "stylesheet";
+				resource.href = "/static/css/style.css";
+				resource.media = "all";
+				resource.onload = "this.media = `all`";
+				var script = document.getElementById('scratchpad');
+				script.parentNode.insertBefore(resource, script);
+			}
+			setTimeout(injectMainCss, 300);
+
+			function injectHeadScript() {
+				var resource = document.createElement('script'); 
+				resource.async = "true";
+				resource.src = "/static/js/head.js";
+				var script = document.getElementById('scratchpad');
+				script.parentNode.insertBefore(resource, script);
+			}
+			setTimeout(injectHeadScript, 1300);
+
 			function injectMainScript() {
 				var resource = document.createElement('script'); 
 				resource.async = "true";
 				resource.src = "/static/js/script.js";
-				var script = document.getElementsByTagName('script')[0];
+				var script = document.getElementById('scratchpad');
 				script.parentNode.insertBefore(resource, script);
 			}
-			setTimeout(injectMainScript, 1000);
+			setTimeout(injectMainScript, 2000);
 		</script>
 	</body>
 	<div id="popup-container" class="popup-container" style="z-index: 10000;"></div>

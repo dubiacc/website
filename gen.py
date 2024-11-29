@@ -40,8 +40,8 @@ def chunks(lst, n):
 def load_templates():
     templates = {}
     templates["index"] = read_file("./templates/lorem.html")
-    inlined_styles_light = read_file("./templates/inlined-styles.css")
-    inlined_styles_dark = read_file("./templates/inlined-styles-color-dark.css")
+    inlined_styles_light = read_file("./static/css/inlined-styles.css")
+    inlined_styles_dark = read_file("./static/css/inlined-styles-color-dark.css")
     header_template = read_file("./templates/head.html")
     header_template = header_template.replace(
         "<!-- INLINED_STYLES_LIGHT -->", 
