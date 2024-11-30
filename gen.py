@@ -107,42 +107,109 @@ def generate_gitignore(articles_dict):
     return gitignore
 
 # returns the <head> element of the page
-def head(templates, lang, title):
+def head(templates, lang, obj):
+    print(str(obj))
     head = templates["head"]
-    head = head.replace("$$TITLE$$", title)
+    head = head.replace("$$TITLE$$", obj.get("title", ""))
+    head = head.replace("$$KEYWORDS$$", ", ".join(obj.get("keywords", [])))
+    head = head.replace("$$DATE$$", obj.get("date", ""))
+    head = head.replace("$$AUTHOR$$", ", ".join(obj.get("keywords", [])))
+    head = head.replace("$$DESCRIPTION$$", obj.get("description", ""))
+    head = head.replace("$$IMG$$", obj.get("img", {}).get("href", ""))
+    head = head.replace("$$IMG_ALT$$", obj.get("img", {}).get("title", ""))
+    head = head.replace("$$IMG_WIDTH$$", obj.get("img", {}).get("width", ""))
+    head = head.replace("$$IMG_HEIGHT$$", obj.get("img", {}).get("height", ""))
     return head
 
 def header_navigation(templates, lang):
 
-    homepage_desc = "Homepage: categorized list of articles index"
-    logo = "/static/img/logo/logo-smooth.svg#logo"
-    about_site_desc = "Site ideals, source, content, traffic, examples, license"
-    about_site_title = "<span class='mobile-not'>About</span> Site"
-    about_me_desc = "Who am I online, what have I done, what am I like? Contact information; sites I use; things I&#39;ve worked on"
-    about_me_title = "<span class='mobile-not'>About</span> Me"
-    changelog_desc = "Changelog of what’s new or updated"
-    changlog_title = "New Essays"
-    newest_desc = "Most recent link annotations"
-    newest_title = "New Links"
-    donate_desc = "Link to Patreon donation profile to support my writing"
-    donate_title = "Donate"
-    donate_href = ""
+    homepage_logo = "/static/img/logo/logo-smooth.svg#logo"
+    homepage_desc = ""
+    all_articles_desc = ""
+    all_articles_title = ""
+    shop_desc = ""
+    shop_title = ""
+    shop_link = ""
+    about_desc = ""
+    about_title = ""
+    tools_desc = ""
+    tools_title = ""
+    newest_desc = ""
+    newest_title = ""
+    about_link = ""
+    homepage_link = lang
+    all_articles_link = lang
+    newest_link = ""
+    tools_link = ""
+    
+    if lang == "de":
+        homepage_logo = "/static/img/logo/logo-smooth.svg#logo"
+        homepage_desc = "Startseite: Kategorisierte Liste aller deutschen Artikel"
+        all_articles_desc = "Durchsuche alle deutschen Artikel"
+        all_articles_title = "Themen"
+        shop_desc = "Unterstütze unser Apostolat mit deinem Einkauf in unserem Shop!"
+        shop_title = "Shop"
+        about_desc = "Über diese Seite, Kontakt und Rechtliches"
+        about_title = "Impressum"
+        tools_desc = "Software und Hilfsmittel zum Latein-Lernen, Gebetssammlungen, Online Mess- und Bibelbücher, Online-Bücherei u.v.m"
+        tools_title = "Ressourcen"
+        newest_desc = "Artikel sortiert nach Datum"
+        newest_title = "Neuigkeiten"
+
+        homepage_link = lang
+        shop_link = lang + "/shop"
+        about_link = lang + "/impressum"
+        tools_link = lang + "/ressourcen"
+        all_articles_link = lang + "/themen"
+        newest_link = lang + "/neu"
+    else:
+
+        homepage_logo = "/static/img/logo/logo-smooth.svg#logo"
+        homepage_desc = "Homepage"
+        all_articles_desc = "Search all English articles by category / tag"
+        all_articles_title = "Categories"
+        shop_desc = "Support our apostolate with your purchase in our store!"
+        shop_title = "Shop"
+        shop_link = lang + "/shop"
+        about_desc = "Imprint, contact and legal information"
+        about_title = "Contact"
+        tools_desc = "Software and aids for learning Latin, prayer collections, online Mass and Bible books, online library and much more"
+        tools_title = "Tools"
+        newest_desc = "Articles sorted by date"
+        newest_title = "Newest"
+
+        homepage_link = lang
+        shop_link = lang + "/shop"
+        about_link = lang + "/contact"
+        all_articles_link = lang + "/categories"
+        newest_link = lang + "/newest"
+        tools_link = lang + "/tools"
 
     header_navigation = templates["header-navigation"]
+
+    header_navigation = header_navigation.replace("$$HOMEPAGE_LOGO$$", homepage_logo)
     header_navigation = header_navigation.replace("$$HOMEPAGE_DESC$$", homepage_desc)
-    header_navigation = header_navigation.replace("$$LOGO$$", logo)
-    header_navigation = header_navigation.replace("$$ABOUT_SITE_DESCT$$", about_site_desc)
-    header_navigation = header_navigation.replace("$$ABOUT_SITE_TITLE$$", about_site_title)
-    header_navigation = header_navigation.replace("$$ABOUT_ME_DESC$$", about_me_desc)
-    header_navigation = header_navigation.replace("$$ABOUT_ME_TITLE$$", about_me_title)
-    header_navigation = header_navigation.replace("$$CHANGELOG_DESC$$", changelog_desc)
-    header_navigation = header_navigation.replace("$$CHANGELOG_TITLE$$", changlog_title)
-    header_navigation = header_navigation.replace("$$ABOUT_ME_TITLE$$", about_me_title)
-    header_navigation = header_navigation.replace("$$NEWEST_DESCT$$", newest_desc)
+    header_navigation = header_navigation.replace("$$HOMEPAGE_LINK$$", homepage_link)
+
+    header_navigation = header_navigation.replace("$$TOOLS_DESC$$", tools_desc)
+    header_navigation = header_navigation.replace("$$TOOLS_TITLE$$", tools_title)
+    header_navigation = header_navigation.replace("$$TOOLS_LINK$$", tools_link)
+
+    header_navigation = header_navigation.replace("$$ABOUT_DESC$$", about_desc)
+    header_navigation = header_navigation.replace("$$ABOUT_TITLE$$", about_title)
+    header_navigation = header_navigation.replace("$$ABOUT_LINK$$", about_link)
+
+    header_navigation = header_navigation.replace("$$ALL_ARTICLES_TITLE$$", all_articles_title)
+    header_navigation = header_navigation.replace("$$ALL_ARTICLES_DESC$$", all_articles_desc)
+    header_navigation = header_navigation.replace("$$ALL_ARTICLES_LINK$$", all_articles_link)
+
+    header_navigation = header_navigation.replace("$$NEWEST_DESC$$", newest_desc)
     header_navigation = header_navigation.replace("$$NEWEST_TITLE$$", newest_title)
-    header_navigation = header_navigation.replace("$$DONATE_DESC$$", donate_desc)
-    header_navigation = header_navigation.replace("$$DONATE_TITLE$$", donate_title)
-    header_navigation = header_navigation.replace("$$DONATE_HREF$$", donate_href)
+    header_navigation = header_navigation.replace("$$NEWEST_LINK$$", newest_link)
+
+    header_navigation = header_navigation.replace("$$SHOP_DESC$$", shop_desc)
+    header_navigation = header_navigation.replace("$$SHOP_TITLE$$", shop_title)
+    header_navigation = header_navigation.replace("$$SHOP_LINK$$", shop_link)
     
     return header_navigation
 
@@ -160,25 +227,47 @@ def link_tags(templates, lang, tags):
     link_tags = link_tags.replace("$$TAGS$$", tags_str)  
     return link_tags
 
-def page_desciption(templates, lang):
-    page_descr = "Hexerei ist der Gebrauch von angeblich übernatürlichen magischen Kräften."
-    page_desciption = "<div class='page-description'><p>$$PAGE_DESCR$$</p></div>"
-    page_desciption = page_desciption.replace("$$PAGE_DESCR$$", page_descr)
+def text_from_par(paragraph):
+    target = ""
+    for p in paragraph:
+        target += p.get("data", {}).get("text", "")
+    return target
+
+def page_desciption(templates, lang, pagemeta):
+    descr = pagemeta.get("tagline", "")
+    page_desciption = "<div class='page-description'><p>" + descr + "</p></div>"
     return page_desciption
 
-def page_metadata(templates, lang):
+def page_metadata(templates, lang, pagemeta):
     
     page_metadata = templates["page-metadata"]
 
-    date_desc = "The date range 2020-09-27–2022-11-10 lasted 2 years (775 days), ending 2 years ago."
-    date_title = "2020-09-27<span class='subsup'><sup>–</sup><sub>2y</sub></span>2022-11-10"	
-    backlinks_desc = "Reverse citations/backlinks for this page (the list of other pages which link to this page)."
-    backlinks_title = "⁠backlinks"
-    similar_desc = "Similar links for this link (by text embedding)."
-    similar_title = "⁠similar"
-    bibliography_desc = "Bibliography of links cited in this page (forward citations)."
-    bibliography_title = "bibliography"
-    
+    date = pagemeta.get("date", "")
+    date_desc = date
+    date_title = date
+
+    backlinks_desc = ""
+    backlinks_title = ""
+    similar_desc = ""
+    similar_title = ""
+    bibliography_desc = ""
+    bibliography_title = ""
+
+    if lang == "de":
+        backlinks_desc = "Liste der anderen Seiten, die auf diese Seite verweisen"
+        backlinks_title = "rückverweise"
+        similar_desc = "Ähnliche Artikel"
+        similar_title = "ähnlich"
+        bibliography_desc = "Bibliographie der auf dieser Seite zitierten Links"
+        bibliography_title = "bibliografie"
+    else:
+        backlinks_desc = "List of other pages which link to this page"
+        backlinks_title = "⁠backlinks"
+        similar_desc = "Similar articles for this link"
+        similar_title = "⁠similar"
+        bibliography_desc = "Bibliography of links cited in this page"
+        bibliography_title = "bibliography"
+        
     page_metadata = page_metadata.replace("$$DATE_DESC$$", date_desc)
     page_metadata = page_metadata.replace("$$DATE_TITLE$$", date_title)
     page_metadata = page_metadata.replace("$$BACKLINKS_DESC$$", backlinks_desc)
@@ -190,94 +279,101 @@ def page_metadata(templates, lang):
 
     return page_metadata
 
+def render_link_internal(internal_link, title, link_text):
+    link_id = "dubia-" + internal_link.replace("https://", "").replace("/", "-").lower()
+    v = "<a href='$$ROOT_HREF$$/" + internal_link + "' id='" + link_id + "'" 
+    v += "class='link-annotated link-page has-icon has-annotation spawns-popup'"
+    v += "data-link-icon-type='text' data-link-icon='𝔡'"
+    v += "data-attribute-title='" + title + "'"
+    v += "style=\"--link-icon: '𝔡';\""
+    v += ">" + link_text + "<span class='link-icon-hook'>⁠</span></a>"  
+    return v
 
-def escape_html(text):
-    """Escapes special characters in text for HTML."""
-    import html
-    return html.escape(text, quote=True)
+def render_wikipedia_link(wikipedia_link, title, link_text):
+    v = "<a href='" + wikipedia_link + "'"
+    v += "class='link-annotated-partial link-live has-icon has-annotation content-transform spawns-popup'"
+    v += "data-link-icon='wikipedia'"
+    v += "data-link-icon-type='svg'"
+    v += "data-url-html='" + wikipedia_link + "#bodyContent'"
+    v += "style='--link-icon-url: url('/static/img/icon/icons.svg#wikipedia');'"
+    v += "data-attribute-title='" + title + "'"
+    v += ">" + link_text + "<span class='link-icon-hook'>⁠</span></a>"
+    return v
 
-def process_text_with_wbr(text):
-    """
-    Inserts <wbr> tags at every '/' or '-' in the text.
-    """
-    return text.replace("/", "/<wbr />").replace("-", "-<wbr />")
+def render_link(link, title, text):
+    if "wikipedia." in link:
+        return render_wikipedia_link(link, title, text)
+    else:
+        return render_link_internal(link, title, text)
 
-def render_abstract_from_items(abstract):
-    """
-    Converts the abstract data structure into corresponding HTML.
+def render_blockquote(q):
+    return "" # todo
 
-    Args:
-        abstract (list): A nested list where each item represents a paragraph
-                         with text or link elements.
+def render_code_block(obj):
+    return ""
 
-    Returns:
-        str: The HTML representation of the abstract.
-    """
-    html_output = []
-    for paragraph in abstract:
-        # Start a new paragraph with the appropriate class and style
-        if paragraph is abstract[0]:  # First paragraph has a specific class
-            html_output.append('<p class="first-block first-graf block" style="--bsm: 0;">')
-        else:
-            html_output.append('<p class="block" style="--bsm: 0;">')
+def render_text_item(obj):
 
-        for element in paragraph:
-            if element["ty"] == "text":
-                # Process plain text, inserting <wbr> if necessary
-                html_output.append(process_text_with_wbr(escape_html(element["text"])))
-            elif element["ty"] == "link":
-                # Process links with optional attributes
-                link_attrs = [
-                    f'href="{escape_html(element["href"])}"',
-                    f'class="link-annotated link-page has-icon has-annotation spawns-popup"',
-                ]
-                if "id" in element:
-                    link_attrs.append(f'id="{escape_html(element["id"])}"')
-                link_attrs.append(f'data-attribute-title="{escape_html(element["desc"])}"')
+    context = obj.get("context", [])
+    text = obj.get("text", "")
+    link = obj.get("link", "")
+    title = obj.get("title", "")
 
-                # Render the link
-                html_output.append(
-                    f'<a {" ".join(link_attrs)}>'
-                    f'{escape_html(element["text"])}'
-                    '<span class="link-icon-hook">⁠</span></a>'
-                )
+    target = text
 
-        # Close the paragraph
-        html_output.append("</p>")
+    if target == "":
+        return target
+    else:
+        target = target + "&nbsp;"
+    
+    if "strikethrough" in context:
+        target = "<del>" + target + "</del>"
+    
+    if "superscript" in context:
+        target = "<sup>" + target + "</sup>"
+    elif "subscript" in context:
+        target = "<sub>" + target + "</sub>"
 
-    return "\n".join(html_output)
+    if "italic" in context:
+        target = "<em>" + target + "</em>"
+    
+    if "bold" in context:
+        target = "<strong>" + target + "</strong>"
+    
+    if "underline" in context:
+        target = "<span class='smallcaps'>" + target + "</span>"
+    
+    if "link" in context:
+        target = render_link(link, title, target)
 
-def body_abstract(templates, lang):
+    return target
+
+def render_paragraph(par):
+    target = ""
+    for item in par:
+        if item["type"] == "text":
+            target += render_text_item(item["data"])
+        elif item["type"] == "code":
+            target += render_code_block(item["data"])
+    return target
+
+def body_abstract(templates, lang, abstract_json):
+
+    target = ""
+    if len(abstract_json) == 0:
+        return target
+
+    target += "<p class='first-block first-graf block' style='--bsm: 0;'>"
+    target += render_paragraph(abstract_json[0]) 
+    target += "</p>"
+
+    for par in abstract_json[1:]:
+        target += "<p class='block' style='--bsm: 0;'>" + render_paragraph(par) + "</p>"
 
     style = "class='first-block block blockquote-level-1' style='--bsm: 0;'"
-    body_abstract = "<div class='abstract'><blockquote " + style + ">$$ABSTRACT_CONTENT$$</blockquote></div>"
+    ba = "<div class='abstract'><blockquote " + style + ">" + target + "</blockquote></div>"
 
-    abstract = render_abstract_from_items([
-        [
-            {"ty": "text", "type": "block", "text": "Ab­stract of ar­ti­cle sum­ma­riz­ing the page. For de­sign phi­los­o­phy, see"},
-            {
-                "ty": "link", 
-                "href": "/design", 
-                "id": "gwern-design", # optional
-                "desc": "&#39;Design Of This Website&#39;, Branwen 2010", 
-                "text": "“De­sign Of This Web­site”"
-            },
-            {"ty": "text", "text": "."},
-        ],
-        [
-            {"ty": "text", "type": "block", "text": "“Lorem Ipsum” is a test page which ex­er­cises all stan­dard func­tion­al­ity and fea­tures of Gwern.net, from stan­dard Pan­doc"},
-            {
-                "ty": "link", 
-                "href": "https://en.wikipedia.org/wiki/Markdown", 
-                "desc": "Markdown", 
-                "text": "Markdown"
-            },
-            {"ty": "text", "text": " like block­quotes / head­ers / ta­bles / im­ages, to cus­tom fea­tures like side­notes, mar­gin notes, left / right-floated and full width im­ages, columns, epigraphs, ad­mo­ni­tions, small / wide ta­bles, small­caps, col­lapse sec­tions, link an­no­ta­tions, link icons. It par­tic­u­larly stresses tran­sclu­sion func­tion­al­ity, as it is bro­ken up into mul­ti­ple Lorem sub-pages which are tran­scluded into the mas­ter Lorem page."},
-        ]
-    ])
-
-    body_abstract = body_abstract.replace("$$ABSTRACT_CONTENT$$", abstract)
-    return body_abstract
+    return ba
 
 def body_noscript(templates, lang):
     body_noscript = templates["body-noscript"]
@@ -295,16 +391,31 @@ for slug, readme in articles.items():
     readme_tags = ["hexe", "mittelalter", "fruehe-neuzeit", "inquisition"]
 
     lang = slug.split("/")[0]
+    slug_raw = slug.split("/")[1]
     html = templates["index"]
-    html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content")
-    html = html.replace("$$TITLE$$", "Hexenverfolgung")
-    html = html.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, "Hello"))
+
+    pagemeta = {
+        "title": readme.get("title", ""),
+        "keywords": readme.get("tags", ""),
+        "date": readme.get("date", ""),
+        "author": readme.get("authors", []),
+        "contact_url": "/contact",
+        "description": text_from_par(readme.get("tagline", [])),
+        "img": readme.get("img", {}),
+    }
+
+    html = html.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta))
     html = html.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang))
-    html = html.replace("<!-- LINK_TAGS -->", link_tags(templates, lang, readme_tags))
-    html = html.replace("<!-- PAGE_DESCRIPTION -->", page_desciption(templates, lang))
-    html = html.replace("<!-- PAGE_METADATA -->", page_metadata(templates, lang))
-    html = html.replace("<!-- BODY_ABSTRACT -->", body_abstract(templates, lang))
+    html = html.replace("<!-- LINK_TAGS -->", link_tags(templates, lang, readme.get("tags", [])))
+    html = html.replace("<!-- PAGE_DESCRIPTION -->", page_desciption(templates, lang, pagemeta))
+    html = html.replace("<!-- PAGE_METADATA -->", page_metadata(templates, lang, pagemeta))
+    html = html.replace("<!-- BODY_ABSTRACT -->", body_abstract(templates, lang, readme.get("summary", [])))
     html = html.replace("<!-- BODY_NOSCRIPT -->", body_noscript(templates, lang))
+    
+    html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content")
+    html = html.replace("$$TITLE$$", pagemeta["title"])
+    html = html.replace("$$LANG$$", lang)
+    html = html.replace("$$SLUG$$", slug_raw)
     html = html.replace("$$ROOT_HREF$$", root_href)
     html = html.replace("$$PAGE_HREF$$", root_href + "/" + slug)
 

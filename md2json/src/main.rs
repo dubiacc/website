@@ -22,11 +22,19 @@ fn main() -> Result<(), String> {
         }
     }).collect::<Vec<_>>();
 
+    println!("");
     println!("indexing {} files", entries.len());
+    println!("");
 
     for index_md in entries.iter() {
 
-        println!("indexing ", );
+        let parent = index_md.parent().and_then(|s| s.parent())
+        .and_then(|s| s.file_name().and_then(|q| q.to_str())).unwrap_or("");
+        
+        let file = index_md.parent()
+        .and_then(|s| s.file_name().and_then(|q| q.to_str())).unwrap_or("");
+
+        println!("indexing {parent}/{file}");
 
         let file_loaded = std::fs::read_to_string(&index_md)
             .map_err(|e| format!("error loading {}: {e}", index_md.display()))?;
@@ -51,19 +59,30 @@ fn main() -> Result<(), String> {
         }.save_to_json(&index_md)?;
     }
 
+    println!("");
+
     Ok(())
 }
 
 #[derive(Debug, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 struct MdFile {
+    #[serde(default, skip_serializing_if = "String::is_empty")]
     title: String,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
     date: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     tags: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     authors: Vec<String>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     images: BTreeMap<String, String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     tagline: Vec<MdNode>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     img: Option<Link>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     summary: Vec<Vec<MdNode>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     sections: Vec<MdFileSection>,
 }
 
@@ -117,34 +136,49 @@ enum MdNode {
     Text { 
         text: String, 
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
-        context: Vec<Context> 
+        context: Vec<Context>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        link: Option<String>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        title: Option<String>,
     },
     Code { 
         lines: Vec<String>, 
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
-        context: Vec<Context>, 
+        context: Vec<Context>,
     },
     LineBreak,
 }
 
 impl MdNode {
+
     pub fn get_context(&self) -> Vec<Context> {
         match self {
             MdNode::Text { context, .. } | MdNode::Code { context, .. } => context.clone(),
             MdNode::LineBreak => Vec::new()
         }
     }
+
     pub fn get_link(&self) -> Option<Link> {
-        self.get_context().iter()
-        .find_map(|s| match s {
-            Context::Link(l) => Some(l.clone()),
-            _ => None,
+
+        let (title, link) = match self {
+            MdNode::Text { link, text, .. } => (link, text),
+            _ => return None,
+        };
+
+        if !self.get_context().iter().any(|s| *s == Context::Link) {
+            return None;
+        }
+
+        Some(Link {
+            href: link.clone(),
+            title: title.clone().unwrap_or_default(),
         })
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-#[serde(tag = "type", content = "data", rename_all = "lowercase")]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
 enum Context {
     H1,
     H2,
@@ -153,7 +187,7 @@ enum Context {
     H5,
     H6,
 
-    Link(Link),
+    Link,
 
     Bold,
     Italic,
@@ -213,28 +247,52 @@ impl JsonOutput {
         let mut last_text = String::new();
         let mut last_context = Vec::new();
         let mut newitems = Vec::new();
+        let mut last_link = None;
+        let mut last_title = None;
 
         for i in self.content.iter() {
             match i {
                 MdNode::Code { .. } => newitems.push(i.clone()),
                 MdNode::LineBreak => {
-                    newitems.push(MdNode::Text { text: last_text.split_whitespace().collect::<Vec<_>>().join(" "), context: last_context });
+                    newitems.push(MdNode::Text {
+                        text: last_text.split_whitespace().collect::<Vec<_>>().join(" "), 
+                        context: last_context,
+                        link: None,
+                        title: None,
+                    });
                     last_text.clear();
                     last_context = Vec::new();
                     newitems.push(MdNode::LineBreak);
                 },
-                MdNode::Text { text, context } => {
+                MdNode::Text { 
+                    text, 
+                    context, 
+                    link, 
+                    title 
+                } => {
+
                     if text.is_empty() {
                         continue;
                     }
 
                     if *context == last_context {
                         last_text.push_str(&(String::from(" ") + text + " "));
+                        last_link = link.clone();
+                        last_title = title.clone();
                     } else if *context != last_context && last_text.is_empty() {
                         last_text.push_str(&(String::from(" ") + text + " "));
+                        last_link = link.clone();
+                        last_title = title.clone();
                     } else if *context != last_context && !last_text.is_empty() {
-                        newitems.push(MdNode::Text { text: last_text.split_whitespace().collect::<Vec<_>>().join(" "), context: last_context });
+                        newitems.push(MdNode::Text { 
+                            text: last_text.split_whitespace().collect::<Vec<_>>().join(" "), 
+                            context: last_context,
+                            link: last_link.clone(),
+                            title: last_title.clone(),
+                        });
                         last_text.clear();
+                        last_link = None;
+                        last_title = None;
                         last_text.push_str(&(String::from(" ") + text + " "));
                     }
                     last_context = context.clone();
@@ -243,7 +301,12 @@ impl JsonOutput {
         }
     
         if !last_text.is_empty() {
-            newitems.push(MdNode::Text { text: last_text, context: last_context });
+            newitems.push(MdNode::Text { 
+                text: last_text, 
+                context: last_context,
+                link: last_link,
+                title: last_title,
+            });
         }
 
         Self {
@@ -262,47 +325,41 @@ impl JsonOutput {
         let mut map = BTreeMap::new();
         for s in self.content.iter() {
             match s {
-                MdNode::Text { context, .. }  |
-                MdNode::Code { context, .. } => {
-                    for c in context.iter() {
-                        if let Context::Link(Link { href, .. }) = c {
-                            if href.is_empty() || href.contains("://") {
-                                continue;
-                            }
-                            let mut image_path_path = parent_dir.join(href);
-                            let image_path = image_path_path.to_string_lossy().to_string();
-                            if map.contains_key(&image_path) {
-                                continue;
-                            }
-
-                            image_path_path.set_extension("avif");
-
-                            if image_path_path.exists() {
-                                let parent = parent_dir.to_string_lossy().to_string() + "/";
-                                let source = image_path.clone().replace(&parent, "");
-                                let target = image_path_path.to_string_lossy().to_string().replace(&parent, "");
-                                map.insert(source, target);
-                                continue;
-                            }
-
-                            let file = std::fs::read(&image_path)
-                            .map_err(|e| format!("{}: cannot find image {href:?}: {e}", parent_dir.display()))?;
-
-                            let transcoded = transcode_image_to_avif(&file)
-                            .map_err(|e| format!("{}: cannot transcode image {href:?}: {e}", parent_dir.display()))?;
-
-                            std::fs::write(&image_path_path, transcoded)
-                            .map_err(|e| format!("{}: cannot write transcoded image {href:?}: {e}", parent_dir.display()))?;
-
-                            let _ = std::fs::remove_file(&image_path);
-
-                            map.insert(image_path, image_path_path.to_string_lossy().to_string());
-                        }
+                MdNode::Text { link, .. }=> {
+                    let href = link.as_deref().unwrap_or("");
+                    if href.is_empty() || href.contains("://") {
+                        continue;
                     }
-                },
-                MdNode::LineBreak => {
+                    let mut image_path_path = parent_dir.join(href);
+                    let image_path = image_path_path.to_string_lossy().to_string();
+                    if map.contains_key(&image_path) {
+                        continue;
+                    }
 
+                    image_path_path.set_extension("avif");
+
+                    if image_path_path.exists() {
+                        let parent = parent_dir.to_string_lossy().to_string() + "/";
+                        let source = image_path.clone().replace(&parent, "");
+                        let target = image_path_path.to_string_lossy().to_string().replace(&parent, "");
+                        map.insert(source, target);
+                        continue;
+                    }
+
+                    let file = std::fs::read(&image_path)
+                    .map_err(|e| format!("{}: cannot find image {href:?}: {e}", parent_dir.display()))?;
+
+                    let transcoded = transcode_image_to_avif(&file)
+                    .map_err(|e| format!("{}: cannot transcode image {href:?}: {e}", parent_dir.display()))?;
+
+                    std::fs::write(&image_path_path, transcoded)
+                    .map_err(|e| format!("{}: cannot write transcoded image {href:?}: {e}", parent_dir.display()))?;
+
+                    let _ = std::fs::remove_file(&image_path);
+
+                    map.insert(image_path, image_path_path.to_string_lossy().to_string());
                 },
+                _ => { },
             }
         }
 
@@ -345,20 +402,11 @@ fn parse_file(input: &str) -> Result<JsonOutput, String> {
     let mut target = Vec::new();
     let mut text = String::new();
     let mut context = Vec::new();
+    let mut last_link = None;
+    let mut last_title = None;
 
     for (i, opening) in items {
         match i.value {
-            NodeValue::BlockQuote => {
-                if opening {
-                    context.push(Context::BlockQuote);
-                } else {
-                    loop {
-                        if context.is_empty() || context.pop() == Some(Context::BlockQuote) {
-                            break;
-                        }
-                    }
-                }
-            },
             NodeValue::List(nl) => {
                 let item = match nl.list_type {
                     ListType::Bullet => Context::UnorderedList,
@@ -388,7 +436,14 @@ fn parse_file(input: &str) -> Result<JsonOutput, String> {
             NodeValue::Paragraph => {
                 if !opening {
                     if !text.is_empty() {
-                        target.push(MdNode::Text { text: text.clone(), context: context.clone() });
+                        target.push(MdNode::Text { 
+                            text: text.clone(), 
+                            context: context.clone(),
+                            link: last_link.clone(),
+                            title: last_title.clone(),
+                        });
+                        last_link = None;
+                        last_title = None;
                         text = String::new();
                         context = Vec::new();
                     }
@@ -399,7 +454,14 @@ fn parse_file(input: &str) -> Result<JsonOutput, String> {
                 if opening {
                     text.push_str(&t);
                 } else {
-                    target.push(MdNode::Text { text: text.clone(), context: context.clone() });
+                    target.push(MdNode::Text { 
+                        text: text.clone(), 
+                        context: context.clone(),
+                        link: last_link.clone(),
+                        title: last_title.clone(),
+                    });
+                    last_link = None;
+                    last_title = None;
                     text = String::new();
                 }
             },
@@ -423,81 +485,45 @@ fn parse_file(input: &str) -> Result<JsonOutput, String> {
                     }
                 }
             },
-            NodeValue::Emph => {
+            NodeValue::Emph |
+            NodeValue::Strong |
+            NodeValue::Strikethrough |
+            NodeValue::Superscript |
+            NodeValue::Subscript |
+            NodeValue::Underline |
+            NodeValue::BlockQuote => {
+
+                let ctx = match i.value {
+                    NodeValue::Emph => Context::Italic,
+                    NodeValue::Strong => Context::Bold,
+                    NodeValue::Strikethrough => Context::Strikethrough,
+                    NodeValue::Superscript => Context::Superscript,
+                    NodeValue::Subscript => Context::Subscript,
+                    NodeValue::Underline => Context::Underline,
+                    NodeValue::BlockQuote => Context::BlockQuote,
+                    _ => break,
+                };
+
                 if opening {
-                    context.push(Context::Italic);
+                    context.push(ctx);
                 } else {
                     loop {
-                        if context.is_empty() || context.pop() == Some(Context::Italic) {
-                            break;
-                        }
-                    }
-                }
-            },
-            NodeValue::Strong => {
-                if opening {
-                    context.push(Context::Bold);
-                } else {
-                    loop {
-                        if context.is_empty() || context.pop() == Some(Context::Bold) {
-                            break;
-                        }
-                    }
-                }
-            },
-            NodeValue::Strikethrough => {
-                if opening {
-                    context.push(Context::Strikethrough);
-                } else {
-                    loop {
-                        if context.is_empty() || context.pop() == Some(Context::Strikethrough) {
-                            break;
-                        }
-                    }
-                }
-            },
-            NodeValue::Superscript => {
-                if opening {
-                    context.push(Context::Superscript);
-                } else {
-                    loop {
-                        if context.is_empty() || context.pop() == Some(Context::Superscript) {
-                            break;
-                        }
-                    }
-                }
-            },
-            NodeValue::Subscript => {
-                if opening {
-                    context.push(Context::Subscript);
-                } else {
-                    loop {
-                        if context.is_empty() || context.pop() == Some(Context::Subscript) {
-                            break;
-                        }
-                    }
-                }
-            },
-            NodeValue::Underline => {
-                if opening {
-                    context.push(Context::Underline);
-                } else {
-                    loop {
-                        if context.is_empty() || context.pop() == Some(Context::Underline) {
+                        if context.is_empty() || context.pop() == Some(ctx) {
                             break;
                         }
                     }
                 }
             },
             NodeValue::Link(node_link) | NodeValue::Image(node_link) => {
-                let item = Context::Link(Link { 
-                    href: node_link.url.clone(), 
-                    title: node_link.title.clone() 
-                });
+                let item = Context::Link;
                 
                 if opening {
                     context.push(item.clone());
+                    last_link = Some(node_link.url.clone());
+                    last_title = Some(node_link.title.clone());
                 } else {
+                    last_link = None;
+                    last_title = None;
                     loop {
                         if context.is_empty() || context.pop() == Some(item.clone()) {
                             break;
@@ -542,7 +568,7 @@ fn split_sections(s: &[MdNode]) -> SplitSections {
         let mut level = 7;
         let header = q.iter()
         .filter_map(|q| match q {
-            MdNode::Text { text, context } => if is_heading(&context) { 
+            MdNode::Text { text, context, .. } => if is_heading(&context) { 
                 level = level.min(context.iter().map(|q| q.get_header_level()).min().unwrap_or(7));
                 Some(text.clone()) 
             } else { None },
