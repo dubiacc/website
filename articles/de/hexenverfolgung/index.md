@@ -7,10 +7,8 @@ praktizierten als Hexe Zauberei bzw. stünden mit dem Teufel im Bunde.
 # Hexenverfolgung
 
 In diesem [Beitrag](https://wikipedia.org/test.png) setzen wir uns kritisch 
-mit *dem Mythos der Hexenverfolgung auseinander. Ist die Katholische Kirche* 
-tatsächlich für die Verfolgung 
-
-fabelhafter Wesen verantwortlich, oder handelt es 
+mit dem Mythos der Hexenverfolgung auseinander. Ist die Katholische Kirche 
+tatsächlich für die Verfolgung fabelhafter Wesen verantwortlich, oder handelt es 
 sich um einen von vielen erfundenen Skandalen, die ihr ungerechtfertigt 
 zugeschrieben werden?
 

@@ -85,6 +85,8 @@ def load_articles():
             else:
                 print("WARN: missing file /articles/" + lang + "/" + slug + "/index.md.json")
                 print("WARN: run md2json in the root dir to fix this issue")
+                if (is_prod()):
+                    raise Exception("")
     return articles
 
 # Generates a .gitignore so that during development, the generated 
@@ -108,7 +110,6 @@ def generate_gitignore(articles_dict):
 
 # returns the <head> element of the page
 def head(templates, lang, obj):
-    print(str(obj))
     head = templates["head"]
     head = head.replace("$$TITLE$$", obj.get("title", ""))
     head = head.replace("$$KEYWORDS$$", ", ".join(obj.get("keywords", [])))
@@ -234,7 +235,7 @@ def text_from_par(paragraph):
     return target
 
 def page_desciption(templates, lang, pagemeta):
-    descr = pagemeta.get("tagline", "")
+    descr = pagemeta.get("description", "")
     page_desciption = "<div class='page-description'><p>" + descr + "</p></div>"
     return page_desciption
 
@@ -255,7 +256,7 @@ def page_metadata(templates, lang, pagemeta):
 
     if lang == "de":
         backlinks_desc = "Liste der anderen Seiten, die auf diese Seite verweisen"
-        backlinks_title = "rückverweise"
+        backlinks_title = "verweise"
         similar_desc = "Ähnliche Artikel"
         similar_title = "ähnlich"
         bibliography_desc = "Bibliographie der auf dieser Seite zitierten Links"
@@ -286,7 +287,7 @@ def render_link_internal(internal_link, title, link_text):
     v += "data-link-icon-type='text' data-link-icon='𝔡'"
     v += "data-attribute-title='" + title + "'"
     v += "style=\"--link-icon: '𝔡';\""
-    v += ">" + link_text + "<span class='link-icon-hook'>⁠</span></a>"  
+    v += ">" + link_text + "<span class='link-icon-hook'>⁠</span></a>&nbsp;"  
     return v
 
 def render_wikipedia_link(wikipedia_link, title, link_text):
@@ -297,7 +298,7 @@ def render_wikipedia_link(wikipedia_link, title, link_text):
     v += "data-url-html='" + wikipedia_link + "#bodyContent'"
     v += "style='--link-icon-url: url('/static/img/icon/icons.svg#wikipedia');'"
     v += "data-attribute-title='" + title + "'"
-    v += ">" + link_text + "<span class='link-icon-hook'>⁠</span></a>"
+    v += ">" + link_text + "<span class='link-icon-hook'>⁠</span></a>&nbsp;"
     return v
 
 def render_link(link, title, text):
