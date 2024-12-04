@@ -301,7 +301,7 @@ def page_metadata(templates, lang, pagemeta):
         name = v.get("displayname", "")
         style = "data-link-icon='info-circle-regular' data-link-icon-type='svg' style=\"--link-icon-url: url('/static/img/icon/icons.svg#info-circle-regular');\""
         classes = "class='backlinks link-self has-icon has-content spawns-popup has-indicator-hook'"
-        link = "<a href='/" + lang + "/author/" + id + ".html' data-attribute-title='" + name 
+        link = "<a href='/" + lang + "/author/" + id + "' data-attribute-title='" + name 
         link += "' " + style + " " + classes + "><span class='indicator-hook'></span>" + name 
         link += "<span class='link-icon-hook'>⁠</span></a>"
         authors_link.append(link)
