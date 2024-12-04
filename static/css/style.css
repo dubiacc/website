@@ -1101,12 +1101,12 @@ blockquote .collapse-block.no-abstract.expanded-not > .disclosure-button .part::
 /*  Collapses in directory index link bibliographies.
  */
 
-.collapse.tag-index-link-bibliography-block.expanded-not {
+.collapse.tag-index-bibliography-block.expanded-not {
     padding-left: 0.75em;
     margin-left: -1px;
 }
 
-.collapse.tag-index-link-bibliography-block > .collapse-content-wrapper {
+.collapse.tag-index-bibliography-block > .collapse-content-wrapper {
     padding: 0.5em 0;
 }
 
@@ -2414,13 +2414,13 @@ del {
 /* AUX-LINKS */
 /*************/
 
-#link-bibliography-section > .list > li > p {
+#bibliography > .list > li > p {
     --text-alignment: left;
 }
 
 @media all and (max-width: 649px) {
     .backlinks-list .backlink-context,
-    .link-bibliography-list .annotation-abstract {
+    .bibliography-list .annotation-abstract {
         margin-left: calc(-1 * var(--list-left-padding));
     }
 }
@@ -3445,7 +3445,7 @@ blockquote .TOC,
     max-width: 100%;
 }
 
-/*  “Aux links” (see also, similars, backlinks, link bibliography).
+/*  “Aux links” (see also, similar, backlinks, link bibliography).
  */
 .annotation .aux-links-list > li > p {
     --text-alignment: left;
@@ -3455,14 +3455,14 @@ blockquote .TOC,
     (rather than pop-framed) annotations.
  */
 
-ol.link-bibliography-list-compact {
+ol.bibliography-list-compact {
     --list-left-padding: 2.25em;
 }
-ol.link-bibliography-list-compact > li::before {
+ol.bibliography-list-compact > li::before {
     font-family: var(--GW-monospaced-font-stack);
 }
 @media all and (max-width: 649px) {
-    ol.link-bibliography-list-compact {
+    ol.bibliography-list-compact {
         --list-left-padding: 1.75em;
     }
 }
@@ -6995,8 +6995,8 @@ a.include-loading.include-spinner[data-link-icon]:not(:empty)::after {
     #ui-elements-container,
     #sidebar,
     #page-metadata .page-metadata-fields .backlinks,
-    #page-metadata .page-metadata-fields .similars,
-    #page-metadata .page-metadata-fields .link-bibliography,
+    #page-metadata .page-metadata-fields .similar,
+    #page-metadata .page-metadata-fields .bibliography,
     #navigation,
     #noscript-warning-header,
     #TOC .toc-collapse-toggle-button,
@@ -7005,14 +7005,14 @@ a.include-loading.include-spinner[data-link-icon]:not(:empty)::after {
     .reader-mode-note {
         display: none;
     }
-    #link-bibliography-section,
-    .link-bibliography-append {
+    #bibliography,
+    .bibliography-append {
         display: none;
     }
-    .TOC li:has(#toc-link-bibliography-section) {
+    .TOC li:has(#toc-bibliography) {
         display: none;
     }
-    .similars-list li:has(.similar-links-search) {
+    .similar-list li:has(.similar-links-search) {
         display: none;
     }
 
@@ -7775,7 +7775,7 @@ a[data-link-icon='audio-waveform-lines'] { /* Radiolab */
     --link-icon-offset-y: 0.30em;
 }
 
-a[data-link-icon='bibliography'] { /* lb link-bibliography 'table of contents' */
+a[data-link-icon='bibliography'] { /* lb bibliography 'table of contents' */
     --link-icon-size: 0.60em;
     --link-icon-offset-y: 0.15em;
 }

@@ -60,6 +60,7 @@ def load_templates():
     templates["page-metadata"] = read_file("./templates/page-metadata.html")
     templates["body-noscript"] = read_file("./templates/body-noscript.html")
     templates["header-navigation"] = read_file("./templates/header-navigation.html")
+    templates["section"] = read_file("./templates/section.html")
     return templates
 
 def get_root_href():
@@ -112,6 +113,7 @@ def generate_gitignore(articles_dict):
 def head(templates, lang, obj):
     head = templates["head"]
     head = head.replace("$$TITLE$$", obj.get("title", ""))
+    head = head.replace("<!-- DROPCAP_CSS -->", "<style>" + generate_dropcap_css(obj.get("initiale", "")) + "</style>")
     head = head.replace("$$KEYWORDS$$", ", ".join(obj.get("keywords", [])))
     head = head.replace("$$DATE$$", obj.get("date", ""))
     head = head.replace("$$AUTHOR$$", ", ".join(obj.get("keywords", [])))
@@ -121,6 +123,13 @@ def head(templates, lang, obj):
     head = head.replace("$$IMG_WIDTH$$", obj.get("img", {}).get("width", ""))
     head = head.replace("$$IMG_HEIGHT$$", obj.get("img", {}).get("height", ""))
     return head
+
+def get_initiale(readme):
+    summary = readme.get("summary", [])
+    if len(summary) == 0:
+        return ""
+    target = summary[0][0].get("data", {}).get("text", "")[0]
+    return target
 
 def header_navigation(templates, lang):
 
@@ -173,7 +182,7 @@ def header_navigation(templates, lang):
         shop_title = "Shop"
         shop_link = lang + "/shop"
         about_desc = "Imprint, contact and legal information"
-        about_title = "Contact"
+        about_title = "About"
         tools_desc = "Software and aids for learning Latin, prayer collections, online Mass and Bible books, online library and much more"
         tools_title = "Tools"
         newest_desc = "Articles sorted by date"
@@ -181,7 +190,7 @@ def header_navigation(templates, lang):
 
         homepage_link = lang
         shop_link = lang + "/shop"
-        about_link = lang + "/contact"
+        about_link = lang + "/about"
         all_articles_link = lang + "/categories"
         newest_link = lang + "/newest"
         tools_link = lang + "/tools"
@@ -239,6 +248,45 @@ def page_desciption(templates, lang, pagemeta):
     page_desciption = "<div class='page-description'><p>" + descr + "</p></div>"
     return page_desciption
 
+def render_page_author_pages(lang, authors):
+
+    text_contact = "Contact"
+    text_donate = "Donate"
+
+    if lang == "de":
+        text_contact = "Kontakt"
+        text_donate = "Spenden"
+    
+    for id, v in authors.items():
+        i = id.lower().replace(":", "-")
+        name = v.get("displayname", "")
+        contact_url = v.get("contact", "")
+        donate_urls = v.get("donate", {})
+        dn = ""
+        for platform, link in donate_urls.items():
+            if platform == "paypal":
+                dn += "<p><a href='" + link + "'>PayPal</a></p>"
+            elif platform == "ko-fi":
+                dn += "<p><a href='" + link + "'>Ko-Fi</a></p>"
+            elif platform == "github":
+                dn += "<p><a href='" + link + "'>GitHub Sponsors</a></p>"
+            else:
+                raise Exception("unknown platform " + platform + " for user " + id + "in authors.json")
+            
+        t = "<!doctype html><html><head><title>" + name + "</title></head><body>"
+        t += "<h1>" + name + "</h1>"
+        t += "<h2>" + text_contact + "</h2>"
+        t += "<a href='" + contact_url + "'>" + contact_url + "</a>"
+        t += "<h2>" + text_donate + "</h2>"
+        t += dn
+        t += "</body></html>"
+
+        if not(os.path.isdir("./" + lang)):
+            os.mkdir("./" + lang)
+        if not(os.path.isdir("./" + lang + "/author")):
+            os.mkdir("./" + lang + "/author")
+        write_file(t, "./" + lang + "/author/" + i + ".html")
+
 def page_metadata(templates, lang, pagemeta):
     
     page_metadata = templates["page-metadata"]
@@ -247,6 +295,18 @@ def page_metadata(templates, lang, pagemeta):
     date_desc = date
     date_title = date
 
+    authors_link = []
+    for k, v in pagemeta.get("authors", {}).items():
+        id = k.lower().replace(":", "-")
+        name = v.get("displayname", "")
+        style = "data-link-icon='info-circle-regular' data-link-icon-type='svg' style=\"--link-icon-url: url('/static/img/icon/icons.svg#info-circle-regular');\""
+        classes = "class='backlinks link-self has-icon has-content spawns-popup has-indicator-hook'"
+        link = "<a href='/" + lang + "/author/" + id + ".html' data-attribute-title='" + name 
+        link += "' " + style + " " + classes + "><span class='indicator-hook'></span>" + name 
+        link += "<span class='link-icon-hook'>⁠</span></a>"
+        authors_link.append(link)
+
+    authors_link = ", ".join(authors_link)
     backlinks_desc = ""
     backlinks_title = ""
     similar_desc = ""
@@ -277,6 +337,7 @@ def page_metadata(templates, lang, pagemeta):
     page_metadata = page_metadata.replace("$$SIMILAR_TITLE$$", similar_title)
     page_metadata = page_metadata.replace("$$BIBLIOGRAPHY_DESC$$", bibliography_desc)
     page_metadata = page_metadata.replace("$$BIBLIOGRAPHY_TITLE$$", bibliography_title)       
+    page_metadata = page_metadata.replace("<!-- AUTHORS -->", authors_link)
 
     return page_metadata
 
@@ -313,14 +374,20 @@ def render_blockquote(q):
 def render_code_block(obj):
     return ""
 
-def render_text_item(obj):
+def render_text_item(obj, dropcap=False):
 
     context = obj.get("context", [])
     text = obj.get("text", "")
     link = obj.get("link", "")
     title = obj.get("title", "")
 
-    target = text
+    if text == "":
+        return ""
+    
+    if dropcap:
+        target = text[1:]
+    else:
+        target = text
 
     if target == "":
         return target
@@ -349,13 +416,161 @@ def render_text_item(obj):
 
     return target
 
-def render_paragraph(par):
+def generate_dropcap_css(initiale):
+    if initiale == "":
+        return ""
+
+    dropcap_map = {
+        "A": "U+0041",
+        "B": "U+0042",
+        "C": "U+0043",
+        "D": "U+0044",
+        "E": "U+0045",
+        "F": "U+0046",
+        "G": "U+0047",
+        "H": "U+0048",
+        "I": "U+0049",
+        "J": "U+004A",
+        "K": "U+004B",
+        "L": "U+004C",
+        "M": "U+004D",
+        "N": "U+004E",
+        "O": "U+004F",
+        "P": "U+0050",
+        "Q": "U+0051",
+        "R": "U+0052",
+        "S": "U+0053",
+        "T": "U+0054",
+        "U": "U+0055",
+        "V": "U+0056",
+        "W": "U+0057",
+        "X": "U+0058",
+        "Y": "U+0059",
+        "Z": "U+005A",
+    }
+
+    text = "@font-face {"
+    text += "    font-family: 'Kanzlei Initialen';"
+    text += "    src: url('/static/font/dropcap/kanzlei/Kanzlei-Initialen-" + initiale + ".ttf') format('truetype');"
+    text += "    font-display: swap;"
+    text += "    unicode-range: " + dropcap_map[initiale] + ";"
+    text += "}"
+    return text
+
+def render_paragraph(par,dropcap=False):
     target = ""
     for item in par:
         if item["type"] == "text":
-            target += render_text_item(item["data"])
+            if dropcap and item["data"] == par[0]["data"]:
+                drc = item["data"].get("text", "")[0]
+                target += "<span class='dropcap'>" + drc + "</span>"
+                target += render_text_item(item["data"], True)
+            else:
+                target += render_text_item(item["data"], False)
         elif item["type"] == "code":
             target += render_code_block(item["data"])
+    return target
+
+def render_section(templates, lang, section):
+    
+    paragraphs = section.get("paragraphs", [])
+    if len(paragraphs) == 0:
+        return ""
+    
+    header = section.get("header", "")
+    level = section.get("level", 5)
+    section_id = header.lower().replace(" ", "-")
+    section_descr = ""
+    if lang == "de":
+        section_descr = "Link zum Abschnitt '" + header +"'"
+    else:
+        section_descr = "Link to section '" + header +"'"
+
+    target = templates["section"]
+    target = target.replace("$$LEVEL$$", str(level - 1))
+    target = target.replace("$$SECTION_ID$$", section_id)
+    target = target.replace("$$SECTION_DESCR$$", header)
+    target = target.replace("$$SECTION_TITLE$$", header)
+    target = target.replace("<!-- FIRST_PARAGRAPH -->", render_paragraph(paragraphs[0], False))
+    
+    for t in paragraphs[1:]:
+        target += "<p class='block' style='--bsm: 0;'>" + render_paragraph(t, False) + "</p>"
+    
+    return target
+
+def body_content(templates, lang, sections):
+
+    target = ""
+
+    if len(sections) == 0:
+        return target
+    
+    for section in sections:
+        target += render_section(templates, lang, section)
+
+    return target
+
+def table_of_contents(templates, lang, sections):
+
+    if len(sections) == 0:
+        return ""
+
+    target = "<div id='TOC' class='TOC'>"
+    target += "<ul class='list-level-1'>"
+
+    cur_level = sections[0].get("level", 5)
+    orig_cur_level = cur_level
+
+    for section in sections:
+
+        header = section.get("header", "")
+        level = section.get("level", 5)
+        section_id = header.lower().replace(" ", "-")
+        
+        if level > cur_level:
+            target += "<ul class='list-level-" + str(level - 1) + "'>"
+
+        while level < cur_level:
+            target += "</ul>"
+            cur_level -= 1
+
+        cur_level = level
+        target += "<li>"
+
+        target += "<a href='#" + section_id + "' id='toc-" + section_id
+        target += "' class='decorate-not has-content spawns-popup'>" + header + "</a>"
+        
+        target += "</li>"
+
+    while orig_cur_level < cur_level:
+        target += "</ul>"
+        cur_level -= 1
+
+    footnotes_id = "footnotes"
+    similar_id = "similar"
+    bibliography_id = "bibliography"
+    backlinks_id = "backlinks"
+
+    collapse_button_title = "Collapse table of contents"
+    footnotes_title = "Footnotes"
+    similar_title = "Similar articles"
+    bibliography_title = "Bibliography"
+    backlinks_title = "Verweise"
+
+    if lang == "de":
+        collapse_button_title = "Inhaltsverzeichnis zusammenklappen"
+        footnotes_title = "Fußnoten"
+        similar_title = "Ähnliche Artikel"
+        bibliography_title = "Bibliographie"
+
+    s = "class='link-self decorate-not has-content spawns-popup'"
+    target += "<li><a " + s + " id='toc-backlinks' href='#" + backlinks_id +"'>" + backlinks_title + "</a></li>"
+    target += "<li><a " + s + " id='toc-footnotes' href='#" + footnotes_id +"'>" + footnotes_title + "</a></li>"
+    target += "<li><a " + s + " id='toc-similar' href='#" + similar_id + "'>" + similar_title + "</a></li>"
+    target += "<li><a " + s + " id='toc-bibliography' href='#" + bibliography_id + "'>" + bibliography_title + "</a></li>"
+    target += "</ul>"
+    target += "<button class='toc-collapse-toggle-button' title='" + collapse_button_title + "' tabindex='-1'><span></span></button>"
+    target += "</div>"
     return target
 
 def body_abstract(templates, lang, abstract_json):
@@ -364,17 +579,14 @@ def body_abstract(templates, lang, abstract_json):
     if len(abstract_json) == 0:
         return target
 
-    target += "<p class='first-block first-graf block' style='--bsm: 0;'>"
-    target += render_paragraph(abstract_json[0]) 
+    target += "<p class='first-block first-graf intro-graf block dropcap-kanzlei' style='--bsm: 0;'>"
+    target += render_paragraph(abstract_json[0], True) 
     target += "</p>"
 
     for par in abstract_json[1:]:
-        target += "<p class='block' style='--bsm: 0;'>" + render_paragraph(par) + "</p>"
+        target += "<p class='block' style='--bsm: 0;'>" + render_paragraph(par, False) + "</p>"
 
-    style = "class='first-block block blockquote-level-1' style='--bsm: 0;'"
-    ba = "<div class='abstract'><blockquote " + style + ">" + target + "</blockquote></div>"
-
-    return ba
+    return target
 
 def body_noscript(templates, lang):
     body_noscript = templates["body-noscript"]
@@ -386,6 +598,9 @@ def body_noscript(templates, lang):
 root_href = get_root_href()
 templates = load_templates()
 articles = load_articles()
+authors = json.loads(read_file("./authors.json"))
+render_page_author_pages("de", authors)
+render_page_author_pages("en", authors)
 
 for slug, readme in articles.items():
 
@@ -393,16 +608,21 @@ for slug, readme in articles.items():
 
     lang = slug.split("/")[0]
     slug_raw = slug.split("/")[1]
+    title_id = lang + "-" + slug_raw
     html = templates["index"]
+    a = {}
+    for q in readme.get("authors", []):
+        a[q] = authors[q]
 
     pagemeta = {
         "title": readme.get("title", ""),
         "keywords": readme.get("tags", ""),
         "date": readme.get("date", ""),
-        "author": readme.get("authors", []),
-        "contact_url": "/contact",
+        "authors": a,
+        "contact_url": "/about",
         "description": text_from_par(readme.get("tagline", [])),
         "img": readme.get("img", {}),
+        "initiale": get_initiale(readme)
     }
 
     html = html.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta))
@@ -411,10 +631,12 @@ for slug, readme in articles.items():
     html = html.replace("<!-- PAGE_DESCRIPTION -->", page_desciption(templates, lang, pagemeta))
     html = html.replace("<!-- PAGE_METADATA -->", page_metadata(templates, lang, pagemeta))
     html = html.replace("<!-- BODY_ABSTRACT -->", body_abstract(templates, lang, readme.get("summary", [])))
+    html = html.replace("<!-- BODY_CONTENT -->", body_content(templates, lang, readme.get("sections", [])))
     html = html.replace("<!-- BODY_NOSCRIPT -->", body_noscript(templates, lang))
-    
+    html = html.replace("<!-- TOC -->", table_of_contents(templates, lang, readme.get("sections", [])))
     html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content")
     html = html.replace("$$TITLE$$", pagemeta["title"])
+    html = html.replace("$$TITLE_ID$$", title_id)
     html = html.replace("$$LANG$$", lang)
     html = html.replace("$$SLUG$$", slug_raw)
     html = html.replace("$$ROOT_HREF$$", root_href)

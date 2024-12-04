@@ -423,8 +423,8 @@ article {
 }
 /* backlinks, similar, bibliography */
 #page-metadata .page-metadata-fields .backlinks,
-#page-metadata .page-metadata-fields .similars,
-#page-metadata .page-metadata-fields .link-bibliography {
+#page-metadata .page-metadata-fields .similar,
+#page-metadata .page-metadata-fields .bibliography {
     order: 5;
 }
 
@@ -2689,8 +2689,8 @@ body.reader-mode-active #page-metadata .page-status,
 body.reader-mode-active #page-metadata .page-confidence,
 body.reader-mode-active #page-metadata .page-importance,
 body.reader-mode-active #page-metadata .backlinks,
-body.reader-mode-active #page-metadata .link-bibliography,
-body.reader-mode-active #page-metadata .similars,
+body.reader-mode-active #page-metadata .bibliography,
+body.reader-mode-active #page-metadata .similar,
 body.reader-mode-active #page-metadata .page-date-range::after,
 body.reader-mode-active #TOC ul li::before,
 body.reader-mode-active #TOC .toc-collapse-toggle-button,
