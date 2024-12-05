@@ -1,4 +1,4 @@
-import sys, base64, os, json
+import sys, base64, os, json, hashlib
 
 # Returns if the script is run in a production 
 # environment ("with --production")
@@ -102,6 +102,8 @@ def generate_gitignore(articles_dict):
     filenames.append("/venv")
     filenames.append("*.md.json")
     filenames.append("md2json-bin")
+    filenames.append("index.json")
+    filenames.append("index.html")
     filenames.append("/md2json/target")
     filenames.append("/md2json/out.txt")
     filenames.append("/venv/*")
@@ -134,7 +136,7 @@ def get_initiale(readme, slug):
         raise Exception("file " + slug + ": article starts with \" or '")
     return target
 
-def header_navigation(templates, lang):
+def header_navigation(templates, lang, display_logo):
 
     homepage_logo = "/static/img/logo/logo-smooth.svg#logo"
     homepage_desc = ""
@@ -200,9 +202,14 @@ def header_navigation(templates, lang):
 
     header_navigation = templates["header-navigation"]
 
-    header_navigation = header_navigation.replace("$$HOMEPAGE_LOGO$$", homepage_logo)
-    header_navigation = header_navigation.replace("$$HOMEPAGE_DESC$$", homepage_desc)
-    header_navigation = header_navigation.replace("$$HOMEPAGE_LINK$$", homepage_link)
+    logo = "<a class='logo has-content' rel='home me contents' href='$$ROOT_HREF$$/" + lang + "' data-attribute-title='" + homepage_desc + "'>"
+    logo += "<svg class='logo-image' viewBox='0 0 64 75'><use href='" + homepage_logo + "'></use></svg>"
+    logo += "</a>"
+
+    if display_logo:
+        header_navigation = header_navigation.replace("$$HOMEPAGE_LOGO$$", logo)
+    else:
+        header_navigation = header_navigation.replace("$$HOMEPAGE_LOGO$$", "")
 
     header_navigation = header_navigation.replace("$$TOOLS_DESC$$", tools_desc)
     header_navigation = header_navigation.replace("$$TOOLS_TITLE$$", tools_title)
@@ -595,6 +602,61 @@ def body_noscript(templates, lang):
     body_noscript = templates["body-noscript"]
     return body_noscript
 
+def generate_searchindex(lang, articles_dict):
+    version = read_file("./.git/refs/heads/master").strip().replace("\n", "")
+    articles = {}
+    for slug, readme in articles_dict.items():
+        if not(slug.startswith(lang + "/")):
+            continue
+        slug = slug.replace(lang + "/", "")
+        articles[slug] = { "title": readme.get("title", ""), "sha256": readme.get("sha256", "") }
+
+    obj = {
+        "git": version,
+        "articles": articles
+    }
+    return json.dumps(obj,ensure_ascii=False).encode('utf8').decode()
+
+def search_html(lang):
+    version = read_file("./.git/refs/heads/master").strip().replace("\n", "")
+    searchbar_placeholder = "Keyword, topic, question, ..."
+    searchbar = "Search"
+    no_results = "No results found."
+    if lang == "de":
+        searchbar_placeholder = "Stichwort, Thema, Frage, ..."
+        searchbar = "Suchen"
+        no_results = "Keine Ergebnisse gefunden."
+    searchbar_html = read_file("./templates/searchbar.html")
+    searchbar_html = searchbar_html.replace("$$VERSION$$", version)
+    searchbar_html = searchbar_html.replace("$$SEARCHBAR_PLACEHOLDER$$", searchbar_placeholder)
+    searchbar_html = searchbar_html.replace("$$SEARCH$$", searchbar.upper())
+    searchbar_html = searchbar_html.replace("$$NO_RESULTS$$", no_results)
+    return searchbar_html
+
+def render_index_html(lang):
+    index_html = read_file("./templates/index.html")
+    index_body_html = read_file("./templates/index-body.html")
+    logo_svg = read_file("./static/img/logo/full.svg")
+    pagemeta = {
+        "title": readme.get("title", ""),
+        "description": "",
+        "img": {},
+    }
+    index_body_html = index_body_html.replace("<!-- SEARCHBAR -->", search_html(lang))
+    index_html = index_html.replace("<!-- BODY_ABSTRACT -->", index_body_html)
+    index_html = index_html.replace("<!-- PAGE_DESCRIPTION -->", read_file("./templates/page-description-" + lang + ".html"))
+    index_html = index_html.replace("<!-- SVG_LOGO_INLINE -->", logo_svg)
+    index_html = index_html.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta))
+    index_html = index_html.replace("<!-- PAGE_HELP -->", read_file("./templates/navigation-help-" + lang + ".html"))
+    index_html = index_html.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, False))
+    index_html = index_html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content")
+    index_html = index_html.replace("$$TITLE$$", pagemeta["title"])
+    index_html = index_html.replace("$$TITLE_ID$$", "")
+    index_html = index_html.replace("$$LANG$$", lang)
+    index_html = index_html.replace("$$SLUG$$", "")
+    index_html = index_html.replace("$$ROOT_HREF$$", root_href)
+    index_html = index_html.replace("$$PAGE_HREF$$", root_href)
+    return index_html
 
 # SCRIPT STARTS HERE
 
@@ -606,8 +668,6 @@ render_page_author_pages("de", authors)
 render_page_author_pages("en", authors)
 
 for slug, readme in articles.items():
-
-    readme_tags = ["hexe", "mittelalter", "fruehe-neuzeit", "inquisition"]
 
     lang = slug.split("/")[0]
     slug_raw = slug.split("/")[1]
@@ -629,7 +689,7 @@ for slug, readme in articles.items():
     }
 
     html = html.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta))
-    html = html.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang))
+    html = html.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, True))
     html = html.replace("<!-- LINK_TAGS -->", link_tags(templates, lang, readme.get("tags", [])))
     html = html.replace("<!-- PAGE_DESCRIPTION -->", page_desciption(templates, lang, pagemeta))
     html = html.replace("<!-- PAGE_METADATA -->", page_metadata(templates, lang, pagemeta))
@@ -645,9 +705,17 @@ for slug, readme in articles.items():
     html = html.replace("$$ROOT_HREF$$", root_href)
     html = html.replace("$$PAGE_HREF$$", root_href + "/" + slug)
 
-    write_file(html, "./" + slug + ".html")
+    write_file(html, "./" + lang + "/" + slug_raw + ".html")
 
 write_file(generate_gitignore(articles), "./.gitignore")
+write_file(generate_searchindex("de", articles), "./de/index.json")
+write_file(generate_searchindex("en", articles), "./en/index.json")
+write_file(render_index_html("en"), "./en.html")
+write_file(render_index_html("de"), "./de.html")
+
+index_html = render_index_html("en")
+index_html = index_html.replace("<!-- REDIRECT_JS -->", read_file("./templates/redirect.js"))
+write_file(index_html, "./index.html")
 
 # special pages: /de - list all articles
 # /de/neu - list newest articles

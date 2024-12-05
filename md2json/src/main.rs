@@ -1,13 +1,26 @@
 use std::{collections::BTreeMap, path::Path};
+use base64::Engine;
 use comrak::{arena_tree::NodeEdge, nodes::ListType};
 use serde_derive::{Deserialize, Serialize};
 
+fn sha256(s: &str) -> String {
+    use sha2::{Sha256, Digest};
+    let mut hasher = Sha256::new();
+    hasher.update(s.as_bytes());
+    let result = hasher.finalize();
+    base64::prelude::BASE64_URL_SAFE_NO_PAD.encode(result)
+}
+
 fn main() -> Result<(), String> {
 
-    let dir = get_dir::get_dir_by_target(get_dir::Target { 
-        name: "articles", 
-        ty: get_dir::TargetType::Dir,
-    }).map_err(|_| "cannot find /articles dir in current path")?;
+    let mut cwd = std::env::current_dir()
+        .map_err(|e| e.to_string())?;
+    
+    while !cwd.join("articles").is_dir() {
+        cwd = cwd.parent().ok_or("cannot find /articles dir in current path")?.to_path_buf();
+    }
+
+    let dir = cwd.join("articles");
 
     let entries = walkdir::WalkDir::new(dir)
     .max_depth(5)
@@ -39,6 +52,8 @@ fn main() -> Result<(), String> {
         let file_loaded = std::fs::read_to_string(&index_md)
             .map_err(|e| format!("error loading {}: {e}", index_md.display()))?;
         
+        let sha256 = sha256(&file_loaded);
+
         let file_parsed = parse_file(&file_loaded)
             .map_err(|e| format!("error parsing {}: {e}", index_md.display()))?;
         
@@ -49,6 +64,7 @@ fn main() -> Result<(), String> {
         MdFile {
             images,
             title: sections.title,
+            sha256,
             date: file_parsed.config.date.clone(),
             tags: file_parsed.config.tags.clone(),
             authors: file_parsed.config.authors.clone(),
@@ -68,6 +84,8 @@ fn main() -> Result<(), String> {
 struct MdFile {
     #[serde(default, skip_serializing_if = "String::is_empty")]
     title: String,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    sha256: String,
     #[serde(default, skip_serializing_if = "String::is_empty")]
     date: String,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
