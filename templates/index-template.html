@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="$$LANG$$">
+	<!-- HEAD_TEMPLATE_HTML -->
+	<body class="page-index">
+		<!-- REDIRECT_JS -->
+		<a id="skip-to-content-link" href="$$PAGE_HREF$$#markdownBody">
+            $$SKIP_TO_MAIN_CONTENT$$
+        </a>
+		<main>
+			<nav id="sidebar">
+				<!-- HEADER_NAVIGATION -->
+			</nav>
+			<article>
+				<header>
+					<h1>$$TITLE$$</h1>
+				</header>
+				
+				<div class="markdownBody" id="markdownBody">
+					
+					<!-- BODY_NOSCRIPT -->
+					<!-- BODY_ABSTRACT -->
+					<!-- BODY_CONTENT -->
+
+					<!-- FOOTNOTES -->
+					<!-- NOSCRIPT_FOOTER -->
+					<!-- BACKLINKS -->
+					<!-- SIMILARS -->
+					<!-- BIBLIOGRAPHY -->
+
+					<div id="sidenote-column-left" class="footnotes" style="visibility: hidden;"></div>
+					<div id="sidenote-column-right" class="footnotes" style="visibility: hidden;"></div>
+					<!-- SIDENOTES -->
+				</div>
+			</article>
+		</main>
+		<div id="ui-elements-container">
+		</div>
+
+        <div id="popup-container" class="popup-container" style="z-index: 10000;"></div>
+		<span id="scratchpad"></span>
+
+		<script defer>
+
+			function injectHeadCss() {
+				var resource = document.createElement('link'); 
+				resource.rel = "stylesheet";
+				resource.href = "/static/css/head.css";
+				var script = document.getElementById('scratchpad');
+				script.parentNode.insertBefore(resource, script);
+			}
+			setTimeout(injectHeadCss, 300);
+
+
+			function injectMainCss() {
+				var resource = document.createElement('link'); 
+				resource.rel = "stylesheet";
+				resource.href = "/static/css/style.css";
+				resource.media = "all";
+				resource.onload = "this.media = `all`";
+				var script = document.getElementById('scratchpad');
+				script.parentNode.insertBefore(resource, script);
+			}
+			setTimeout(injectMainCss, 300);
+
+			function injectHeadScript() {
+				var resource = document.createElement('script'); 
+				resource.async = "true";
+				resource.src = "/static/js/head.js";
+				var script = document.getElementById('scratchpad');
+				script.parentNode.insertBefore(resource, script);
+			}
+			setTimeout(injectHeadScript, 1300);
+
+			function injectMainScript() {
+				var resource = document.createElement('script'); 
+				resource.async = "true";
+				resource.src = "/static/js/script.js";
+				var script = document.getElementById('scratchpad');
+				script.parentNode.insertBefore(resource, script);
+			}
+			setTimeout(injectMainScript, 2000);
+		</script>
+			<style>
+	
+				/*****************/
+				  /*  Column layout.
+				   */
+				  
+				  @media all and (min-width: 961px) {
+					  body.page-index #markdownBody {
+						  display: grid;
+						  grid-row-gap: 0.5em;
+					  }
+					  @media all and (max-width: 1040px) {
+						  body.page-index #markdownBody {
+							  grid-template-columns: 1fr;
+						  }
+						  body.page-index #markdownBody section > ul {
+							  column-count: 2;
+							  column-gap: 3em;
+						  }
+						  body.page-index #markdownBody section > ul li {
+							  break-inside: avoid;
+						  }
+					  }
+					  @media all and (min-width: 1041px) {
+						  body.page-index #markdownBody {
+							  grid-template-columns: 1fr 1fr;
+							  grid-column-gap: 2em;
+						  }
+						  body.page-index #markdownBody .abstract,
+						  body.page-index #markdownBody hr {
+							  grid-column-start: 1;
+							  grid-column-end: -1;
+						  }
+					  }
+					  /*  On sufficiently-wide screens, we can get 3 columns in nicely; to preserve
+						  the initial row being ‘meta’ blocks, we leave #notable visible
+						  (for a newest/popular/notable triplet)
+					   */
+					  @media all and (min-width: 1761px) {
+						  body.page-index #markdownBody {
+							  grid-template-columns: 45ch 45ch 45ch;
+							  margin-left: -20ch;
+						  }
+						  body.page-index #markdownBody #notable {
+							  display: block;
+						  }
+						  body.page-index #markdownBody .abstract {
+							  max-width: 935px;
+							  margin-left: 20ch;
+						  }
+						  body.page-index #markdownBody hr {
+							  margin-left: -5ch;
+						  }
+					  }
+				  }
+				  
+				  </style>
+			
+	</body>
+</html>

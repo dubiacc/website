@@ -634,7 +634,7 @@ def search_html(lang):
     return searchbar_html
 
 def render_index_html(lang):
-    index_html = read_file("./templates/index.html")
+    index_html = read_file("./templates/index-template.html")
     index_body_html = read_file("./templates/index-body.html")
     logo_svg = read_file("./static/img/logo/full.svg")
     pagemeta = {
