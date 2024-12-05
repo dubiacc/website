@@ -97,6 +97,7 @@ def generate_gitignore(articles_dict):
     dirs = []
     for k in articles_dict.keys():
         dirs.append(k.split("/")[0])
+        filenames.append(k.split("/")[0] + ".html")
     filenames.extend(map(lambda x: "/" + x, dirs))
     filenames.append("/venv")
     filenames.append("*.md.json")
@@ -124,11 +125,13 @@ def head(templates, lang, obj):
     head = head.replace("$$IMG_HEIGHT$$", obj.get("img", {}).get("height", ""))
     return head
 
-def get_initiale(readme):
+def get_initiale(readme, slug):
     summary = readme.get("summary", [])
     if len(summary) == 0:
         return ""
     target = summary[0][0].get("data", {}).get("text", "")[0]
+    if target == "'" or target == "\"":
+        raise Exception("file " + slug + ": article starts with \" or '")
     return target
 
 def header_navigation(templates, lang):
@@ -622,7 +625,7 @@ for slug, readme in articles.items():
         "contact_url": "/about",
         "description": text_from_par(readme.get("tagline", [])),
         "img": readme.get("img", {}),
-        "initiale": get_initiale(readme)
+        "initiale": get_initiale(readme, slug)
     }
 
     html = html.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta))
