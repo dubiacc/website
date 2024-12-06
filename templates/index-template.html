@@ -40,48 +40,184 @@
 		<span id="scratchpad"></span>
 
 		<script defer>
-
-			function injectHeadCss() {
-				var resource = document.createElement('link'); 
-				resource.rel = "stylesheet";
-				resource.href = "/static/css/head.css";
+			function injectSearchScript() {
+				var resource = document.createElement('script'); 
+				resource.defer = "true";
+				resource.src = "/static/js/search-$$LANG$$.js";
 				var script = document.getElementById('scratchpad');
 				script.parentNode.insertBefore(resource, script);
 			}
-			setTimeout(injectHeadCss, 300);
-
-
-			function injectMainCss() {
-				var resource = document.createElement('link'); 
-				resource.rel = "stylesheet";
-				resource.href = "/static/css/style.css";
-				resource.media = "all";
-				resource.onload = "this.media = `all`";
-				var script = document.getElementById('scratchpad');
-				script.parentNode.insertBefore(resource, script);
-			}
-			setTimeout(injectMainCss, 300);
-
+			setTimeout(injectSearchScript, 300);
 			function injectHeadScript() {
 				var resource = document.createElement('script'); 
-				resource.async = "true";
+				resource.defer = "true";
 				resource.src = "/static/js/head.js";
 				var script = document.getElementById('scratchpad');
 				script.parentNode.insertBefore(resource, script);
 			}
 			setTimeout(injectHeadScript, 1300);
-
-			function injectMainScript() {
-				var resource = document.createElement('script'); 
-				resource.async = "true";
-				resource.src = "/static/js/script.js";
-				var script = document.getElementById('scratchpad');
-				script.parentNode.insertBefore(resource, script);
-			}
-			setTimeout(injectMainScript, 2000);
 		</script>
 			<style>
-	
+			
+			/********************/
+/* BACK-TO-TOP LINK */
+/********************/
+
+#back-to-top {
+    position: absolute;
+    bottom: 0.75rem;
+    opacity: 1.0;
+    visibility: visible;
+    transition:
+        opacity 2s ease;
+}
+#back-to-top.hidden {
+    opacity: 0;
+}
+#back-to-top a {
+    --background-color: var(--GW-body-background-color);
+
+    display: block;
+    width: 2.25em;
+    height: 2.25em;
+    padding: 0.25em 0.25em;
+    box-sizing: border-box;
+    color: var(--GW-back-to-top-link-color);
+    filter:
+        drop-shadow(0 0 1px var(--background-color))
+        drop-shadow(0 0 1px var(--background-color))
+        drop-shadow(0 0 1px var(--background-color));
+}
+#back-to-top a:hover {
+    color: var(--GW-back-to-top-link-hover-color);
+}
+#back-to-top svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+@media all and (min-width: 1080px) {
+    #back-to-top {
+        right: calc(((100% - (var(--GW-body-max-width) + 2 * var(--GW-body-side-padding))) / 2) - 35px);
+    }
+    #back-to-top a {
+        border: 3px double transparent;
+    }
+    #back-to-top a:hover {
+        border-color: currentColor;
+    }
+}
+
+@media all and (max-width: 1079px) {
+    #back-to-top {
+        right: 1rem;
+        bottom: 1rem;
+    }
+    #back-to-top a {
+        border: 1px solid currentColor;
+    }
+    #back-to-top {
+        background-color: var(--background-color);
+        background-image: linear-gradient(var(--GW-back-to-top-link-color),
+                                          var(--GW-back-to-top-link-color));
+        background-position: 0 0;
+        background-repeat: no-repeat;
+        background-size: 0 0;
+    }
+}
+
+/*=---------=*/
+/*= Overlay =*/
+/*=---------=*/
+
+#image-focus-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    display: none;
+    cursor: zoom-out;
+}
+#image-focus-overlay::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: var(--SA-image-focus-overlay-background-color);
+    opacity: 0.9;
+    z-index: -1;
+}
+#image-focus-overlay.engaged {
+    display: initial;
+}
+
+#image-focus-overlay .image-in-focus {
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    width: auto;
+    height: auto;
+    max-height: unset;
+    background-color: var(--SA-image-focus-image-background-color);
+}
+
+#image-focus-overlay .image-in-focus.loading {
+    box-shadow: 0 0 0 1px var(--SA-image-focus-overlay-image-caption-separator-color) inset;
+    background-color: transparent;
+}
+#image-focus-overlay .loading-spinner {
+    visibility: hidden;
+    color: var(--SA-image-focus-overlay-image-caption-separator-color);
+    width: 40vw;
+    height: fit-content;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: -1;
+}
+#image-focus-overlay .loading-spinner svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: 20vh;
+    animation: fa-spin 2s infinite linear;
+}
+#image-focus-overlay .image-in-focus.loading + .loading-spinner {
+    visibility: visible;
+}
+
+			@media all and (min-width: 650px) {
+			/*  Horizontal ruler on the home page.
+				*/
+				body.page-index div[class^='horizontal-rule'] {
+					display: none;
+				}
+			}
+
+			/*  Back-to-top link on home page.
+				*/
+			@media all and (min-width: 1761px) {
+				body.page-index #back-to-top {
+					left: calc((100% - 1430px - 50px)/2);
+				}
+			}
+
+
 				/*****************/
 				  /*  Column layout.
 				   */

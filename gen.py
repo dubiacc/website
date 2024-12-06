@@ -40,20 +40,10 @@ def chunks(lst, n):
 def load_templates():
     templates = {}
     templates["index"] = read_file("./templates/lorem.html")
-    inlined_styles_light = read_file("./static/css/inlined-styles.css")
-    inlined_styles_dark = read_file("./static/css/inlined-styles-color-dark.css")
     header_template = read_file("./templates/head.html")
     header_template = header_template.replace(
-        "<!-- INLINED_STYLES_LIGHT -->", 
-        "<style id='inlined-styles-colors'>\r\n" + inlined_styles_light + "    </style>"
-    )
-    header_template = header_template.replace(
-        "<!-- INLINED_STYLES_DARK -->", 
-        "<style id='inlined-styles-colors-dark' media='all and (prefers-color-scheme: dark)'>\r\n" + inlined_styles_dark + "    </style>"
-    )
-    header_template = header_template.replace(
         "<!-- CRITICAL_CSS -->", 
-        "<style id='critical-css'>\r\n" + read_file("./static/css/critical.css") + "    </style>"
+        "<style id='critical-css'>\r\n" + read_file("./templates/article.critical.css") + "    </style>"
     )
     templates["head"] = header_template
     templates["table-of-contents"] = read_file("./templates/table-of-contents.html")
@@ -629,8 +619,10 @@ def search_html(lang):
     searchbar_html = read_file("./templates/searchbar.html")
     searchbar_html = searchbar_html.replace("$$VERSION$$", version)
     searchbar_html = searchbar_html.replace("$$SEARCHBAR_PLACEHOLDER$$", searchbar_placeholder)
-    searchbar_html = searchbar_html.replace("$$SEARCH$$", searchbar.upper())
-    searchbar_html = searchbar_html.replace("$$NO_RESULTS$$", no_results)
+    search_js = read_file("./static/js/search.js")
+    search_js = search_js.replace("$$LANG$$", lang)
+    search_js = search_js.replace("$$NO_RESULTS$$", no_results)
+    write_file(search_js, "./static/js/search-" + lang + ".js")
     return searchbar_html
 
 def render_index_html(lang):
@@ -656,6 +648,11 @@ def render_index_html(lang):
     index_html = index_html.replace("$$SLUG$$", "")
     index_html = index_html.replace("$$ROOT_HREF$$", root_href)
     index_html = index_html.replace("$$PAGE_HREF$$", root_href)
+    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/img/logo/logo-smooth.svg\" as=\"image\">", "")
+    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/img/icon/icons.svg\" as=\"image\">", "")
+    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/ssfp/ssp/SourceSansPro-BASIC-Regular.ttf\" as=\"font\" type=\"font/ttf\" crossorigin>", "")
+    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/quivira/Quivira-SUBSETTED.ttf\" as=\"font\" type=\"font/ttf\" crossorigin>", "")
+    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/img/icon/icons.svg\" as=\"font\" type=\"font/ttf\" crossorigin>", "")
     return index_html
 
 # SCRIPT STARTS HERE
