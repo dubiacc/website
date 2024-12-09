@@ -5,6 +5,7 @@
         max-width: 800px;
         margin: 40px auto;
         margin-top: 50px;
+        margin-bottom: 0px;
         flex-direction: column;
     }
     #index-searchbar-row {
@@ -38,12 +39,18 @@
     }
     #index-search-results {
         background: var(--link-underline-gradient-line-color);
-        padding: 10px 0px;
-        min-height: 100px;
-        max-height: 175px;
+        padding: 0px;
         margin-top: 10px;
         overflow: hidden;
         overflow-y: auto;
+    }
+    #index-search-results, #index-search-results > ul, #index-search-results > p {
+        height: 120px !important;
+        min-height: 120px !important;
+        max-height: 120px !important;
+    }
+    #index-search-results li {
+        margin-top: 0 !important;
     }
     #index-search-results ul.list.list-level-1 {
         line-height: 1.5;

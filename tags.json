@@ -1,0 +1,144 @@
+{
+    "de": {
+        "ibelievein": [
+            {
+                "title": "die Wissenschaft",
+                "tag": "evolution",
+                "featured": [
+                    "bibel-vergewaltigung"
+                ]
+            },
+            {
+                "title": "keinen Gott",
+                "tag": "atheismus",
+                "featured": [
+                ]
+            },
+            {
+                "title": "die evangelische Kirche",
+                "tag": "evangelisch",
+                "featured": [
+                ]
+            },
+            {
+                "title": "den Islam",
+                "tag": "islam",
+                "featured": [
+                ]
+            },
+            {
+                "title": "eine Sedisvakanz",
+                "tag": "sedisvakantismus",
+                "featured": [
+                ]
+            },
+            {
+                "title": "die orthodoxe Kirche",
+                "tag": "orthodoxie",
+                "featured": [
+                ]
+            },
+            {
+                "title": "das Judentum",
+                "tag": "judentum",
+                "featured": [
+                ]
+            },
+            {
+                "title": "Buddhismus",
+                "tag": "buddhismus",
+                "featured": [
+                ]
+            },
+            {
+                "title": "Hinduismus",
+                "tag": "hinduismus",
+                "featured": [
+                ]
+            },
+            {
+                "title": "Heidentum / Sonstiges",
+                "tag": "polytheismus",
+                "featured": [
+                ]
+            }
+        ],
+        "iwanttolearn": {
+            "kirchenvaeter": {
+                "title": "Kirchenväter",
+                "featured": [
+
+                ]
+            },
+            "apostel": {
+                "title": "Apostel und Frühkirche",
+                "featured": [
+
+                ]
+            },
+            "kath-morallehre": {
+                "title": "Moral-und Soziallehre",
+                "featured": [
+
+                ]
+            },
+            "geschichte": {
+                "title": "Kirchengeschichte",
+                "featured": [
+
+                ]
+            },
+            "theologie": {
+                "title": "Theologie / Thomistik",
+                "featured": [
+                    "eucharistie"
+                ]
+            },
+            "philosophie": {
+                "title": "Philosophie",
+                "featured": [
+                    "aristoteles-sinne-und-sein"
+                ]
+            },
+            "kanonische-fragen": {
+                "title": "Kanonisches Recht",
+                "featured": [
+
+                ]
+            }
+        },
+        "tags": {
+            "islam": "Islam",
+            "judentum": "Judentum",
+            "ost-orthodoxie": "Östliche Orthodoxie",
+            "orientale-orthodoxie": "Orientale Orthodoxie",
+            "atheismus": "Atheismus",
+            "geschichte": "Geschichte",
+            "polytheismus": "Polytheismus",
+            "evangelisch": "Evangelische Kirche",
+            "sedisvakantismus": "Sedisvakantismus",
+            "kanon": "Kanon",
+            "kirchenvaeter": "Kirchenväter",
+            "evolution": "Evolution",
+            "moral": "Morallehre",
+            "gnostizismus": "Gnostizismus",
+            "fruehkirche": "Frühkirche"
+        }
+    },
+    "en": {
+        "ibelievein": [
+            {
+                "title": "science",
+                "tag": "evolution",
+                "featured": [
+                ]
+            }
+        ],
+        "iwanttolearn": {
+            
+        },
+        "tags": {
+            
+        }  
+    }
+}

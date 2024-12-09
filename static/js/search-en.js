@@ -100,7 +100,7 @@ function searchAndDisplayArticles(e) {
             const element = results[i];
             let id = element["id"];
             let title = element["title"];
-            a += "<li class='block link-modified-recently-list-item dark-mode-invert'>";
+            a += "<li class='link-modified-recently-list-item dark-mode-invert'>";
             a += "<p class='in-list first-graf block' style='--bsm: 0;''>";
             a += "<a href='/en/" +id + "' id='sr-" + id;
             a += "' class='link-annotated link-page in-list has-annotation spawns-popup' "
@@ -108,7 +108,7 @@ function searchAndDisplayArticles(e) {
             a += "</p>";
             a += "</li>";
         }
-        target.innerHTML = "<ul class='list list-level-1'>" + a + "</ul>";
+        target.innerHTML = "<ul class='list'>" + a + "</ul>";
         return false;
     }
 }
@@ -241,7 +241,7 @@ function initSearchIndex(force) {
         do_force = true;
     }
 
-    var version = "$$VERSION$$";
+    var version = "ebbb94ec73fe91335c391dec27b80222368ea68f";
     var a = localStorage.getItem('articles');
 
 

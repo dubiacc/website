@@ -43,7 +43,7 @@ def load_templates():
     header_template = read_file("./templates/head.html")
     header_template = header_template.replace(
         "<!-- CRITICAL_CSS -->", 
-        "<style id='critical-css'>\r\n" + read_file("./templates/article.critical.css") + "    </style>"
+        "<style id='critical-css'>\r\n" + read_file("./static/css/head.css") + read_file("./static/css/style.css") + "    </style>"
     )
     templates["head"] = header_template
     templates["table-of-contents"] = read_file("./templates/table-of-contents.html")
@@ -106,6 +106,7 @@ def generate_gitignore(articles_dict):
 def head(templates, lang, obj):
     head = templates["head"]
     head = head.replace("$$TITLE$$", obj.get("title", ""))
+    head = head.replace("<!-- DARKLIGHT_STYLES -->", read_file("./templates/darklight.html"))
     head = head.replace("<!-- DROPCAP_CSS -->", "<style>" + generate_dropcap_css(obj.get("initiale", "")) + "</style>")
     head = head.replace("$$KEYWORDS$$", ", ".join(obj.get("keywords", [])))
     head = head.replace("$$DATE$$", obj.get("date", ""))
@@ -159,7 +160,7 @@ def header_navigation(templates, lang, display_logo):
         tools_desc = "Software und Hilfsmittel zum Latein-Lernen, Gebetssammlungen, Online Mess- und Bibelbücher, Online-Bücherei u.v.m"
         tools_title = "Ressourcen"
         newest_desc = "Artikel sortiert nach Datum"
-        newest_title = "Neuigkeiten"
+        newest_title = "Neues"
 
         homepage_link = lang
         shop_link = lang + "/shop"
@@ -172,7 +173,7 @@ def header_navigation(templates, lang, display_logo):
         homepage_logo = "/static/img/logo/logo-smooth.svg#logo"
         homepage_desc = "Homepage"
         all_articles_desc = "Search all English articles by category / tag"
-        all_articles_title = "Categories"
+        all_articles_title = "Topics"
         shop_desc = "Support our apostolate with your purchase in our store!"
         shop_title = "Shop"
         shop_link = lang + "/shop"
@@ -192,7 +193,7 @@ def header_navigation(templates, lang, display_logo):
 
     header_navigation = templates["header-navigation"]
 
-    logo = "<a class='logo has-content' rel='home me contents' href='$$ROOT_HREF$$/" + lang + "' data-attribute-title='" + homepage_desc + "'>"
+    logo = "<a class='logo has-content' rel='home me contents' href='$$ROOT_HREF$$/" + homepage_link + "' data-attribute-title='" + homepage_desc + "'>"
     logo += "<svg class='logo-image' viewBox='0 0 64 75'><use href='" + homepage_logo + "'></use></svg>"
     logo += "</a>"
 
@@ -619,15 +620,95 @@ def search_html(lang):
     searchbar_html = read_file("./templates/searchbar.html")
     searchbar_html = searchbar_html.replace("$$VERSION$$", version)
     searchbar_html = searchbar_html.replace("$$SEARCHBAR_PLACEHOLDER$$", searchbar_placeholder)
+    searchbar_html = searchbar_html.replace("$$SEARCH$$", searchbar)
     search_js = read_file("./static/js/search.js")
     search_js = search_js.replace("$$LANG$$", lang)
+    search_js = search_js.replace("$$VERSION$$", version)
     search_js = search_js.replace("$$NO_RESULTS$$", no_results)
     write_file(search_js, "./static/js/search-" + lang + ".js")
     return searchbar_html
 
-def render_index_html(lang):
+SECTIONS = [
+    { 
+        "id": "islam",
+        "title": "Islam",
+        "links": [
+            {"slug": "why-not-islam", "title": "Why not Islam?"},
+            {"slug": "history-of-muhammad", "title": "History of Muhammad"}
+        ]
+    },
+]
+
+TAGS = json.loads(read_file("./tags.json"))
+
+def render_index_sections(lang, sections):
+    ret = ""
+    for s in sections:
+        section_id = s["id"]
+        section_title = s["title"]
+        section_links = s["links"]
+        ret += render_index_section(lang, section_id, section_title, section_links)
+    return ret 
+
+def render_section_items(lang, links):
+    section_items = ""
+    first = True
+    for l in links:
+        slug = l["slug"]
+        section_title = l["title"]
+        bsm = "4"
+        if not(first):
+            bsm = "0"
+        first = False
+
+        section_items += "<li class='block link-modified-recently-list-item dark-mode-invert' style='--bsm: " + bsm + ";'>"
+        section_items += "  <p class='in-list first-graf block' style='--bsm: 0;'><a href='$$ROOT_HREF$$/" + lang + "/" + slug + "'"
+        section_items += "      id='" + lang + "-" + slug + "'"
+        section_items += "      class='link-annotated link-page link-modified-recently in-list has-annotation spawns-popup'"
+        section_items += "      data-attribute-title='" + section_title + "'>" + section_title + "</a></p>"
+        section_items += "</li>"
+
+    return section_items
+
+def render_index_section(lang, id, title, links):
+    # hr = "<hr class='horizontal-rule-nth-1 block dark-mode-invert' style='--bsm: 8;'>"
+    section_html = read_file("./templates/index.section.html")
+    section_html = section_html.replace("$$SECTION_ID$$", id)
+    section_html = section_html.replace("$$SECTION_NAME$$", title)
+    section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title)
+    section_html = section_html.replace("<!-- SECTION_ITEMS -->", render_section_items(lang, links))
+    return section_html
+
+def render_index_first_section(lang, tags, articles):
+    ibelievein = tags[lang]["ibelievein"]
+    first_section = read_file("./templates/index.first-section.html")
+    text_ibelieve = "I believe in"
+    if lang == "de":
+        text_ibelieve = "Ich glaube an"
+    sections = ""
+    options = ""
+    for t in ibelievein:
+        section_title = t["title"]
+        tag = t["tag"]
+        featured = []
+        for f in t["featured"]:
+            slug = f
+            title = articles[lang + "/" + slug].get("title", "")
+            featured.append({ "slug": slug, "title": title })
+        li_items = render_section_items(lang, featured)
+        sections += "<ul id='index-section-" + tag + "' class='index-first-section list list-level-1' style='margin-top:20px;'>" + li_items + "</ul>"
+        options += "<option value='" + tag + "'>" + section_title + "</option>"
+    
+    first_section = first_section.replace("$$I_BELIEVE_IN$$", text_ibelieve)
+    first_section = first_section.replace("<!-- SECTIONS -->", sections)
+    first_section = first_section.replace("<!-- OPTIONS -->", options)
+
+    return first_section
+
+def render_index_html(lang, sections, articles):
     index_html = read_file("./templates/index-template.html")
     index_body_html = read_file("./templates/index-body.html")
+    index_body_html = index_body_html.replace("<!-- SECTIONS -->", render_index_first_section(lang, TAGS, articles) + render_index_sections(lang, sections))
     logo_svg = read_file("./static/img/logo/full.svg")
     pagemeta = {
         "title": readme.get("title", ""),
@@ -707,10 +788,9 @@ for slug, readme in articles.items():
 write_file(generate_gitignore(articles), "./.gitignore")
 write_file(generate_searchindex("de", articles), "./de/index.json")
 write_file(generate_searchindex("en", articles), "./en/index.json")
-write_file(render_index_html("en"), "./en.html")
-write_file(render_index_html("de"), "./de.html")
-
-index_html = render_index_html("en")
+write_file(render_index_html("en", SECTIONS, articles), "./en.html")
+write_file(render_index_html("de", SECTIONS, articles), "./de.html")
+index_html = render_index_html("en", SECTIONS, articles)
 index_html = index_html.replace("<!-- REDIRECT_JS -->", read_file("./templates/redirect.js"))
 write_file(index_html, "./index.html")
 
