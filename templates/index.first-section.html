@@ -1,4 +1,4 @@
-<section id="main" class="level1 block" style="--bsm: 7;grid-column:span 2;">
+<section id="main" class="level1 block" style="--bsm: 7;grid-column:span 2;min-height: 250px;">
   <div style="display:flex;flex-grow:1;justify-content: space-between;">
     <h1 class="heading" style="border:none !important;font-variant-caps: small-caps;min-width:150px;">$$I_BELIEVE_IN$$</h1>
     <select id="select-faith" style="border: 2px solid var(--GW-body-link-color);font-family: var(--GW-serif-font-stack);font-weight: bold;padding:0px 10px; text-align:right;background-color: var(--GW-body-color);color:var(--GW-text-color);flex-grow:1;cursor:pointer;margin-left:25px;max-width:400px;font-size:1rem;">
@@ -18,9 +18,17 @@
             e.style.display = "none";
         }
         document.getElementById("index-section-" + newval).style.display = "block";
+        let inverted = document.getElementsByClassName("invert");
+        for (let e of inverted) {
+          e.style.display = "none";
+        }
+        let shown = document.getElementsByClassName("invert-of-" + newval);
+        for (let q of shown) {
+          q.style.display = "block";
+        }
     }
     document.getElementById("select-faith").onchange = replaceIBelieveInSection;
   </script>
 </section>
 
-<!-- OTHER_FAITH_SECTIONS -->
+<!-- OTHER_SECTIONS -->

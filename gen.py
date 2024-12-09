@@ -42,6 +42,9 @@ def load_templates():
     templates["index"] = read_file("./templates/lorem.html")
     header_template = read_file("./templates/head.html")
     header_template = header_template.replace(
+        "<!-- DARKLIGHT_STYLES -->", read_file("./templates/darklight.html")
+    )
+    header_template = header_template.replace(
         "<!-- CRITICAL_CSS -->", 
         "<style id='critical-css'>\r\n" + read_file("./static/css/head.css") + read_file("./static/css/style.css") + "    </style>"
     )
@@ -106,7 +109,6 @@ def generate_gitignore(articles_dict):
 def head(templates, lang, obj):
     head = templates["head"]
     head = head.replace("$$TITLE$$", obj.get("title", ""))
-    head = head.replace("<!-- DARKLIGHT_STYLES -->", read_file("./templates/darklight.html"))
     head = head.replace("<!-- DROPCAP_CSS -->", "<style>" + generate_dropcap_css(obj.get("initiale", "")) + "</style>")
     head = head.replace("$$KEYWORDS$$", ", ".join(obj.get("keywords", [])))
     head = head.replace("$$DATE$$", obj.get("date", ""))
@@ -647,7 +649,7 @@ def render_index_sections(lang, sections):
         section_id = s["id"]
         section_title = s["title"]
         section_links = s["links"]
-        ret += render_index_section(lang, section_id, section_title, section_links)
+        ret += render_index_section(lang, section_id, "", section_title, section_links)
     return ret 
 
 def render_section_items(lang, links):
@@ -670,45 +672,81 @@ def render_section_items(lang, links):
 
     return section_items
 
-def render_index_section(lang, id, title, links):
-    # hr = "<hr class='horizontal-rule-nth-1 block dark-mode-invert' style='--bsm: 8;'>"
+def render_index_section(lang, id, classes, title, links):
     section_html = read_file("./templates/index.section.html")
     section_html = section_html.replace("$$SECTION_ID$$", id)
+    section_html = section_html.replace("$$SECTION_CLASSES$$", classes)
     section_html = section_html.replace("$$SECTION_NAME$$", title)
     section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title)
     section_html = section_html.replace("<!-- SECTION_ITEMS -->", render_section_items(lang, links))
     return section_html
 
+def render_other_index_sections(lang, tags, articles):
+    
+    first_section = ""
+
+    for (k, v) in tags[lang]["iwanttolearn"].items():
+        id = k
+        title = v["title"]
+        featured = []
+        for f in v["featured"]:
+            slug = f
+            title = articles[lang + "/" + slug].get("title", "")
+            featured.append({ "slug": slug, "title": title })
+        v["featured"] = featured
+        first_section += render_index_section(lang, id, "", title, featured)
+
+    return first_section
+
 def render_index_first_section(lang, tags, articles):
-    ibelievein = tags[lang]["ibelievein"]
-    first_section = read_file("./templates/index.first-section.html")
-    text_ibelieve = "I believe in"
-    if lang == "de":
-        text_ibelieve = "Ich glaube an"
-    sections = ""
-    options = ""
-    for t in ibelievein:
-        section_title = t["title"]
-        tag = t["tag"]
+
+    for t in tags[lang]["ibelievein"]:
         featured = []
         for f in t["featured"]:
             slug = f
             title = articles[lang + "/" + slug].get("title", "")
             featured.append({ "slug": slug, "title": title })
-        li_items = render_section_items(lang, featured)
-        sections += "<ul id='index-section-" + tag + "' class='index-first-section list list-level-1' style='margin-top:20px;'>" + li_items + "</ul>"
-        options += "<option value='" + tag + "'>" + section_title + "</option>"
-    
+        t["featured"] = featured
+
+    text_ibelieve = "I believe in"
+    if lang == "de":
+        text_ibelieve = "Ich glaube an"
+
+    ibelievein = tags[lang]["ibelievein"]
+    first_section = read_file("./templates/index.first-section.html")
+    sections = ""
+    options = ""
+    first = True
+    other_sections = "<style>.section-hidden { display: none; }</style>"
+
+    for t in ibelievein:
+        li_items = render_section_items(lang, t["featured"])
+        display_hidden = "display:none;"
+        if first:
+            display_hidden = ""
+        classes = "index-first-section list list-level-1"
+        sections += "<ul id='index-section-" + t["tag"] + "' class='" + classes + "' style='margin-top:20px;" + display_hidden + "'>" + li_items + "</ul>"
+        options += "<option value='" + t["tag"] + "'>" + t["option"] + "</option>"
+        for q in ibelievein:
+            if t["tag"] == q["tag"]:
+                continue
+            hidden_class = "section-hidden"
+            if first:
+                hidden_class = ""
+            other_sections += render_index_section(lang, q["tag"],  hidden_class + " invert invert-of-" + t["tag"], q["title"], q["featured"])
+        first = False
+
     first_section = first_section.replace("$$I_BELIEVE_IN$$", text_ibelieve)
     first_section = first_section.replace("<!-- SECTIONS -->", sections)
+    first_section = first_section.replace("<!-- OTHER_SECTIONS -->", other_sections)
     first_section = first_section.replace("<!-- OPTIONS -->", options)
-
     return first_section
 
 def render_index_html(lang, sections, articles):
     index_html = read_file("./templates/index-template.html")
     index_body_html = read_file("./templates/index-body.html")
     index_body_html = index_body_html.replace("<!-- SECTIONS -->", render_index_first_section(lang, TAGS, articles) + render_index_sections(lang, sections))
+    index_body_html = index_body_html.replace("<!-- SECTION_EXTRA -->", render_other_index_sections(lang, TAGS, articles))
     logo_svg = read_file("./static/img/logo/full.svg")
     pagemeta = {
         "title": readme.get("title", ""),

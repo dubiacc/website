@@ -2,62 +2,77 @@
     "de": {
         "ibelievein": [
             {
-                "title": "die Wissenschaft",
+                "title": "Naturalismus / Agnostizismus",
+                "option": "die Wissenschaft",
                 "tag": "evolution",
                 "featured": [
                     "bibel-vergewaltigung"
                 ]
             },
             {
-                "title": "keinen Gott",
+                "title": "Atheismus",
+                "option": "keinen Gott",
                 "tag": "atheismus",
                 "featured": [
+                    "eucharistie-ohne-wein"
                 ]
             },
             {
-                "title": "die evangelische Kirche",
+                "title": "Evangelische Kirche",
+                "option": "die evangelische Kirche",
                 "tag": "evangelisch",
                 "featured": [
+                    "hexenverfolgung"
                 ]
             },
             {
-                "title": "den Islam",
+                "title": "Islam",
+                "option": "den Islam",
                 "tag": "islam",
                 "featured": [
+                    "kreuzzuege"
                 ]
             },
             {
-                "title": "eine Sedisvakanz",
+                "title": "II. Vatikanisches Konzil",
+                "option": "eine Sedisvakanz",
                 "tag": "sedisvakantismus",
                 "featured": [
+                    "timotheus-zoelibat"
                 ]
             },
             {
-                "title": "die orthodoxe Kirche",
+                "title": "Östliche Orthodoxie",
+                "option": "die orthodoxe Kirche",
                 "tag": "orthodoxie",
                 "featured": [
+                    "inquisition"
                 ]
             },
             {
-                "title": "das Judentum",
+                "title": "Judaismus",
+                "option": "das Judentum",
                 "tag": "judentum",
                 "featured": [
                 ]
             },
             {
                 "title": "Buddhismus",
+                "option": "Buddhismus",
                 "tag": "buddhismus",
                 "featured": [
                 ]
             },
             {
                 "title": "Hinduismus",
+                "option": "Hinduismus",
                 "tag": "hinduismus",
                 "featured": [
                 ]
             },
             {
-                "title": "Heidentum / Sonstiges",
+                "title": "Sonstige",
+                "option": "andere Götter",
                 "tag": "polytheismus",
                 "featured": [
                 ]
@@ -91,13 +106,13 @@
             "theologie": {
                 "title": "Theologie / Thomistik",
                 "featured": [
-                    "eucharistie"
+
                 ]
             },
             "philosophie": {
                 "title": "Philosophie",
                 "featured": [
-                    "aristoteles-sinne-und-sein"
+
                 ]
             },
             "kanonische-fragen": {
@@ -128,7 +143,8 @@
     "en": {
         "ibelievein": [
             {
-                "title": "science",
+                "title": "Naturalism",
+                "option": "science",
                 "tag": "evolution",
                 "featured": [
                 ]
