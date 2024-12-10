@@ -162,6 +162,7 @@ main {
 #sidebar .sidebar-links a {
     flex: 1 1 auto;
     padding: 0.25em 0.75em;
+    background: var(--background-color);
 }
 
 @media all and (max-width: 649px) {

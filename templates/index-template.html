@@ -56,6 +56,21 @@
 				script.parentNode.insertBefore(resource, script);
 			}
 			setTimeout(injectHeadScript, 1300);
+			function injectMainImg() {
+				var resource = document.createElement('img'); 
+				resource.src = "/static/img/watercolor.avif";
+				resource.id = "watercolor";
+				resource.style.position = "absolute";
+				resource.style.top = "0px";
+				resource.style.maxWidth = "900px";
+				resource.style.width = "100%";
+				resource.style.filter = "contrast(1.5)";
+				resource.style.left = "0px";
+				resource.style.zIndex = "-999";
+				document.body.parentNode.insertBefore(resource, document.body);
+			}
+			window.injectMainImg = injectMainImg;
+			setTimeout(injectMainImg, 1000);
 		</script>
 			<style>
 			
