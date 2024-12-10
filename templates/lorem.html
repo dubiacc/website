@@ -229,25 +229,9 @@
 			script.parentNode.insertBefore(resource, script);
 		}
 		setTimeout(injectHeadScript, 1300);
-
-		function injectMainImg() {
-			var resource = document.createElement('img'); 
-			resource.src = "/static/img/watercolor.avif";
-			resource.id = "watercolor";
-			resource.style.position = "absolute";
-			resource.style.top = "0px";
-			resource.style.maxWidth = "900px";
-			resource.style.width = "100%";
-			resource.style.filter = "contrast(1.5)";
-			resource.style.right = "0px";
-			resource.style.zIndex = "-999";
-			resource.style.transform = "scaleX(-1)";
-			document.body.parentNode.insertBefore(resource, document.body);
-		}
-		window.injectMainImg = injectMainImg;
-		setTimeout(injectMainImg, 500);
 	</script>
 </body>
 <div id="popup-container" class="popup-container" style="z-index: 10000;"></div>
+<img src="/static/img/watercolor.avif" alt="Watercolor decoration" id="watercolor" decoding="async" height="1026" width="2050" decoding="async" style="position:absolute;height:auto;top:0px;min-width:500px;max-width:900px;width:100%;filter:contrast(1.5);right:0px;z-index:-999;transform:scaleX(-1);" />
 
 </html>
