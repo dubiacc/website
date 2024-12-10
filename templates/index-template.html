@@ -34,6 +34,135 @@
 			</article>
 		</main>
 		<div id="ui-elements-container">
+			<div id="page-toolbar" class="desktop vertical collapsed">
+				<div class="widgets">
+					<div id="extracts-mode-selector" class="extracts-mode-selector mode-selector widget"><button
+							type="button" class="select-mode-on selected" disabled="" tabindex="-1" data-name="on"
+							title="Enable link popups. [This option is currently selected.]"><span class="icon"><svg
+									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+									<path
+										d="M447.1 0h-384c-35.25 0-64 28.75-64 63.1v287.1c0 35.25 28.75 63.1 64 63.1h96v83.1c0 9.75 11.25 15.45 19.12 9.7l124.9-93.7h144c35.25 0 64-28.75 64-63.1V63.1C511.1 28.75 483.2 0 447.1 0zM264 288h-112C138.8 288 128 277.3 128 264S138.8 240 152 240h112C277.3 240 288 250.8 288 264S277.3 288 264 288zM360 192h-208C138.8 192 128 181.3 128 168S138.8 144 152 144h208C373.3 144 384 154.8 384 168S373.3 192 360 192z">
+									</path>
+								</svg></span><span class="label" data-selected-label="Popups Enabled"
+								data-unselected-label="Enable Popups">Popups Enabled</span></button><button type="button"
+							class="select-mode-off selectable" tabindex="-1" data-name="off"
+							title="Disable link popups."><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 640 512">
+									<path
+										d="M63.1 351.1c0 35.25 28.75 63.1 63.1 63.1h95.1v83.99c0 9.749 11.25 15.45 19.12 9.7l124.9-93.69l39.37-.0117L63.1 146.9L63.1 351.1zM630.8 469.1l-82.76-64.87c16.77-11.47 27.95-30.46 27.95-52.27V63.1c0-35.25-28.75-63.1-63.1-63.1H127.1c-23.51 0-43.97 12.88-55.07 31.86L38.81 5.128C34.41 1.691 29.19 .0332 24.03 .0332c-7.125 0-14.2 3.137-18.92 9.168c-8.187 10.44-6.365 25.53 4.073 33.7l591.1 463.1c10.5 8.202 25.57 6.333 33.7-4.073C643.1 492.4 641.2 477.3 630.8 469.1z">
+									</path>
+								</svg></span><span class="label" data-selected-label="Popups Disabled"
+								data-unselected-label="Disable Popups">Disable Popups</span></button></div>
+					<div id="reader-mode-selector" class="reader-mode-selector mode-selector widget"><button type="button"
+							class="select-mode-auto selected" disabled="" tabindex="-1" data-name="auto"
+							title="Reader mode enabled automatically on certain pages. (When enabled, hold Alt key to show links in text.) [This option is currently selected.]"><span
+								class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 32 640 539">
+									<path
+										d="M 78.09,26.62 C 35.03,26.62 0,60.96 0,103.17 v 313.72 c 0,40.73 32.47,74.3 73.92,76.41 36.78,1.91 128.81,9.5 187.73,38.69 8.19,4.05 17.25,6.29 26.34,6.58 v 0.05 h 64.01954 v -0.05 c 9.09,-0.29 18.15,-2.53 26.34,-6.58 58.92,-29.19 150.95,-36.78 187.73,-38.69 C 607.53,491.19 640,457.62 640,416.89 V 103.17 C 640,60.96 604.97,26.62 561.91,26.62 v 0 c -4.58,0 -26.72,0.88 -57.19,4.47 18.27,19.63 24.34,27.66 34.67,44.73 10.53,-0.83 18.41,-1.19 22.55,-1.21 16.56,0 30.06,12.81 30.06,28.55 v 313.72 c 0,15.16 -12.45937,27.66 -28.36,28.47 -44.35,2.3 -133.78,9.83 -198.31,34.38 C 354.96,483.68 344,475.87 344,464.78 v -5.36 c -8.14,0.97 -16.53,1.47 -25.43,1.47 -7.38,0 -14.99,-0.45 -22.57,-1.31 v 5.19 c 0,11.09 -10.96,18.91 -21.33,14.96 -64.53,-24.54 -153.96,-32.07 -198.31,-34.38 C 60.46,444.55 48,432.05 48,416.89 v -313.72 c 0,-15.74 13.5,-28.55 30.06,-28.55 4.019,0.02 11.57,0.35 21.64,1.14 C 113.24,54.12 117.43,46.9 134.86,31.04 104.6,27.49 82.64,26.62 78.09,26.62 Z"
+										transform="translate(0,32)"></path>
+									<path
+										d="m 511.83,165.72 c 2.65,6.9 0.4,14.69 -5.06,19.74 l -34.75,31.62 c 0.88,6.66 1.36,13.48 1.36,20.38 0,6.9 -0.48,13.72 -1.36,20.38 l 34.75,31.62 c 5.46,5.06 7.7,12.84 5.06,19.74 -3.53,9.55 -7.78,18.78 -12.6,27.53 l -3.77,6.5 c -5.3,8.83 -11.24001,17.17 -17.74,25.12 -4.82,5.7 -12.6,7.7 -19.66,5.46 l -44.7,-14.28 c -10.75,8.27 -23.35,15.17 -35.31,20.46 l -10.03,45.82 c -1.61,7.22 -7.22,12.36 -14.61,14.28 -11.07,1.85 -22.47,2.81 -34.83,2.81 -10.91,0 -22.31,-0.96 -33.38,-2.81 -7.38,-1.93 -13,-7.06 -14.61,-14.28 l -10.03,-45.82 c -12.68,-5.3 -24.56,-12.2 -35.31,-20.46 l -44.67,14.28 c -7.09,2.25 -14.92,0.24 -19.67,-5.46 -6.5,-7.94 -12.45,-16.29 -17.74,-25.12 l -3.76,-6.5 c -4.87,-8.75 -9.11,-17.98 -12.66,-27.52 -2.6,-6.9 -0.41,-14.69 5.1,-19.74 l 34.72,-31.62 c -0.88,-6.66 -1.34,-13.48 -1.34,-20.38 0,-6.9 0.46,-13.73 1.34,-20.38 l -34.72,-31.63 c -5.51,-5.06 -7.7,-12.76 -5.1,-19.74 3.56,-9.55 7.8,-18.78 12.66,-27.53 l 3.75,-6.5 c 5.3,-8.83 11.24,-17.17 17.75,-25.08 4.75,-5.74 12.58,-7.73 19.67,-5.47 l 44.67,14.25 c 10.75,-8.3 22.63,-15.2 35.31,-20.44 L 270.59,49.13 c 1.61,-7.29 7.22,-13.07 14.6,-14.3 11.07,-1.85 22.47,-2.82 34.11,-2.82 11.64,0 23.03,0.96 34.11,2.82 7.38,1.23 13,7.014 14.6,14.3 l 10.03,45.82 c 11.96,5.24 24.56,12.14 35.31,20.44 l 44.7,-14.25 c 7.06,-2.260002 14.85,-0.27 19.66,5.47 6.5,7.9 12.44,16.25 17.74,25.08 l 3.77,6.5 c 4.82,8.75 9.09,17.98 12.6,27.5 z M 319.31,301.66 c 35.47,0 64.2,-28.73 64.2,-64.92 0,-34.75 -28.73,-64.2 -64.2,-64.2 -35.47,0 -64.2,29.45 -64.2,64.2 0,36.19 28.73,64.92 64.2,64.92 z">
+									</path>
+								</svg></span><span class="label" data-selected-label="Auto Reader Mode"
+								data-unselected-label="Auto Reader Mode">Auto Reader Mode</span></button><button
+							type="button" class="select-mode-on selectable" tabindex="-1" data-name="on"
+							title="Enable reader mode on all pages. (Hold Alt key to show links in text.)"><span
+								class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 448">
+									<path
+										d="M 542.22,0.05 C 487.42,3.16 378.5,14.48 311.26,55.64 c -4.64,2.84 -7.27,7.89 -7.27,13.17 V 432.68431 c 0,11.55 12.63,18.85 23.28,13.49 69.18,-34.82 169.23,-44.32 218.7,-46.92 16.89,-0.89 30.02,-14.43 30.02,-30.66 V 30.75 C 576,13.04 560.64,-0.99 542.22,0.05 Z M 264.73,55.64 C 197.5,14.48 88.58,3.17 33.78,0.05 15.36,-0.99 0,13.04 0,30.75 V 368.6 c 0,16.24 13.13,29.78 30.02,30.66 49.49,2.6 149.59,12.11 218.77,46.95 10.62,5.35 23.21,-1.94 23.21,-13.46 V 68.63 c 0,-5.29 -2.62,-10.14 -7.27,-12.99 z">
+									</path>
+								</svg></span><span class="label" data-selected-label="Reader Mode Enabled"
+								data-unselected-label="Enable Reader Mode">Enable Reader Mode</span></button><button
+							type="button" class="select-mode-off selectable active" tabindex="-1" data-name="off"
+							title="Disable reader mode on all pages."><span class="icon"><svg
+									xmlns="http://www.w3.org/2000/svg" viewBox="0 -48 640 512">
+									<path
+										d="M 561.91,-48 C 549.44,-48 406.51,-41.51 320,8.89 233.49,-41.51 90.56,-48 78.09,-48 35.03,-48 0,-13.66 0,28.55 v 313.72 c 0,40.73 32.47,74.3 73.92,76.41 36.78,1.91 128.81,9.5 187.73,38.69 8.19,4.05 17.25,6.29 26.34,6.58 V 464 h 64.02 v -0.05 c 9.09,-0.29 18.15,-2.53 26.34,-6.58 C 437.27,428.18 529.3,420.59 566.08,418.68 607.53,416.57 640,383 640,342.27 V 28.55 C 640,-13.66 604.97,-48 561.91,-48 Z M 296,390.15 c 0,11.09 -10.96,18.91 -21.33,14.96 C 210.14,380.57 120.71,373.04 76.36,370.73 60.46,369.93 48,357.43 48,342.27 V 28.55 C 48,12.81 61.5,0 78.06,0 c 19.93,0.1 126.55,7.81 198.53,40.49 11.63,5.28 19.27,16.66 19.28,29.44 L 296,176 Z m 296,-47.88 c 0,15.16 -12.46,27.66 -28.36,28.47 -44.35,2.3 -133.78,9.83 -198.31,34.38 C 354.96,409.06 344,401.25 344,390.16 V 176 L 344.14,69.92 C 344.16,57.14 351.79,45.77 363.42,40.48 435.4,7.81 542.02,0.1 561.94,0 578.5,0 592,12.81 592,28.55 Z">
+									</path>
+								</svg></span><span class="label" data-selected-label="Reader-Mode Disabled"
+								data-unselected-label="Disable Reader Mode">Disable Reader Mode</span></button></div>
+					<div id="search-widget" class="link-widget widget"><a
+							class="search no-footer-bar has-content spawns-popup"
+							href="https://gwern.net/static/google-search.html" aria-label="Search site with Google Search"
+							data-link-content-type="local-document"><span class="icon"><svg
+									xmlns="http://www.w3.org/2000/svg" viewBox="2.875 2.875 17.75 17.75">
+									<path
+										d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z">
+									</path>
+								</svg></span><span class="label">Search</span></a></div>
+					<div id="help-widget" class="link-widget widget"><a class="help no-footer-bar has-content spawns-popup"
+							href="https://gwern.net/help"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 320 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+									<path
+										d="M204.3 32.01H96c-52.94 0-96 43.06-96 96c0 17.67 14.31 31.1 32 31.1s32-14.32 32-31.1c0-17.64 14.34-32 32-32h108.3C232.8 96.01 256 119.2 256 147.8c0 19.72-10.97 37.47-30.5 47.33L127.8 252.4C117.1 258.2 112 268.7 112 280v40c0 17.67 14.31 31.99 32 31.99s32-14.32 32-31.99V298.3L256 251.3c39.47-19.75 64-59.42 64-103.5C320 83.95 268.1 32.01 204.3 32.01zM144 400c-22.09 0-40 17.91-40 40s17.91 39.1 40 39.1s40-17.9 40-39.1S166.1 400 144 400z">
+									</path>
+								</svg></span><span class="label">Help</span></a></div>
+					<div id="dark-mode-selector" class="dark-mode-selector mode-selector widget"><button type="button"
+							class="select-mode-auto selected" tabindex="-1" data-name="auto"
+							title="Set light or dark mode automatically, according to system-wide setting (Win: Start → Personalization → Colors; Mac: Apple → System-Preferences → Appearance; iOS: Settings → Display-and-Brightness; Android: Settings → Display) [This option is currently selected.]"
+							disabled=""><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+									viewBox="-32 -32 576 576">
+									<path
+										d="M8 256c0 136.966 111.033 248 248 248s248-111.034 248-248S392.966 8 256 8 8 119.033 8 256zm248 184V72c101.705 0 184 82.311 184 184 0 101.705-82.311 184-184 184z">
+									</path>
+								</svg></span><span class="label" data-selected-label="Auto Light/Dark"
+								data-unselected-label="Auto Light/Dark">Auto Light/Dark</span></button><button type="button"
+							class="select-mode-light selectable active" tabindex="-1" data-name="light"
+							title="Light mode at all times (black-on-white)"><span class="icon"><svg
+									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+									<path
+										d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z">
+									</path>
+								</svg></span><span class="label" data-selected-label="Light Mode"
+								data-unselected-label="Light Mode">Light Mode</span></button><button type="button"
+							class="select-mode-dark selectable" tabindex="-1" data-name="dark"
+							title="Dark mode at all times (inverted: white-on-black)"><span class="icon"><svg
+									xmlns="http://www.w3.org/2000/svg" viewBox="-16 -16 544 544">
+									<path
+										d="M283.211 512c78.962 0 151.079-35.925 198.857-94.792 7.068-8.708-.639-21.43-11.562-19.35-124.203 23.654-238.262-71.576-238.262-196.954 0-72.222 38.662-138.635 101.498-174.394 9.686-5.512 7.25-20.197-3.756-22.23A258.156 258.156 0 0 0 283.211 0c-141.309 0-256 114.511-256 256 0 141.309 114.511 256 256 256z">
+									</path>
+								</svg></span><span class="label" data-selected-label="Dark Mode"
+								data-unselected-label="Dark Mode">Dark Mode</span></button></div>
+				</div><button type="button" title="Collapse/expand controls" class="toggle-button main-toggle-button"
+					tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+						<path
+							d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z">
+						</path>
+					</svg></button><button type="button" title="Collapse controls" class="toggle-button collapse-button"
+					tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+						<path
+							d="M441.9 167.3l-19.8-19.8c-4.7-4.7-12.3-4.7-17 0L224 328.2 42.9 147.5c-4.7-4.7-12.3-4.7-17 0L6.1 167.3c-4.7 4.7-4.7 12.3 0 17l209.4 209.4c4.7 4.7 12.3 4.7 17 0l209.4-209.4c4.7-4.7 4.7-12.3 0-17z">
+						</path>
+					</svg></button>
+			</div>
+			<div id="image-focus-overlay">
+				<div class="help-overlay hidden">
+					<p class="slideshow-help-text"><strong>Arrow keys:</strong> Next/<wbr>previous image</p>
+					<p><strong>Escape</strong> or <strong>click</strong>: Hide zoomed image</p>
+					<p><strong>Space bar:</strong> Reset image size &amp; position</p>
+					<p><strong>Scroll</strong> to zoom in/<wbr>out</p>
+					<p>(When zoomed in, <strong>drag</strong> to pan;<br><strong>double-click</strong> to reset size &amp;
+						position)</p>
+				</div>
+				<div class="image-number hidden" data-number-of-images="0"></div>
+				<div class="slideshow-buttons">
+					<button type="button" class="slideshow-button previous hidden" tabindex="-1" title="Previous image">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+							<path
+								d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z">
+							</path>
+						</svg>
+					</button>
+					<button type="button" class="slideshow-button next hidden" tabindex="-1" title="Next image">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+							<path
+								d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z">
+							</path>
+						</svg>
+					</button>
+				</div>
+				<div class="caption hidden"></div>
+			</div>
 		</div>
 
         <div id="popup-container" class="popup-container" style="z-index: 10000;"></div>
@@ -273,7 +402,7 @@
 				  }
 				  
 				  </style>
-			
+	
+	<img src="/static/img/watercolor.avif" alt="Watercolor decoration" id="watercolor" decoding="async" height="1026" width="2050" decoding="async" style="position:absolute;top:0px;min-width:500px;max-width:900px;width:100%;height:auto;filter:contrast(1.5);right:0px;z-index:-999;transform:scaleX(-1);" />			
 	</body>
-	<img src="/static/img/watercolor.avif" alt="Watercolor decoration" id="watercolor" decoding="async" height="1026" width="2050" decoding="async" style="position:absolute;top:0px;min-width:500px;max-width:900px;width:100%;height:auto;filter:contrast(1.5);right:0px;z-index:-999;transform:scaleX(-1);" />
 </html>

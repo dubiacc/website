@@ -54,6 +54,7 @@ def load_templates():
     templates["body-noscript"] = read_file("./templates/body-noscript.html")
     templates["header-navigation"] = read_file("./templates/header-navigation.html")
     templates["section"] = read_file("./templates/section.html")
+    templates["special"] = read_file("./templates/special.html")
     return templates
 
 def get_root_href():
@@ -189,7 +190,7 @@ def header_navigation(templates, lang, display_logo):
         homepage_link = lang
         shop_link = lang + "/shop"
         about_link = lang + "/about"
-        all_articles_link = lang + "/categories"
+        all_articles_link = lang + "/topics"
         newest_link = lang + "/newest"
         tools_link = lang + "/tools"
 
@@ -630,19 +631,6 @@ def search_html(lang):
     write_file(search_js, "./static/js/search-" + lang + ".js")
     return searchbar_html
 
-SECTIONS = [
-    { 
-        "id": "islam",
-        "title": "Islam",
-        "links": [
-            {"slug": "why-not-islam", "title": "Why not Islam?"},
-            {"slug": "history-of-muhammad", "title": "History of Muhammad"}
-        ]
-    },
-]
-
-TAGS = json.loads(read_file("./tags.json"))
-
 def render_index_sections(lang, sections):
     ret = ""
     for s in sections:
@@ -742,18 +730,47 @@ def render_index_first_section(lang, tags, articles):
     first_section = first_section.replace("<!-- OPTIONS -->", options)
     return first_section
 
-def render_index_html(lang, sections, articles):
+def render_special_page(templates, lang, sections, pagemeta):
+    special = templates["special"]
+    special = special.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta))
+    special = special.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, True))
+    special = special.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta))
+    special = special.replace("<!-- BODY_CONTENT -->", render_index_sections(lang, sections))
+    special = special.replace("$$TITLE$$", pagemeta.get("title", ""))
+    special = special.replace("$$LANG$$", lang)
+    special = special.replace("$$ROOT_HREF$$", root_href)
+    return special
+           
+def render_index_html(lang, articles, tags):
     index_html = read_file("./templates/index-template.html")
     index_body_html = read_file("./templates/index-body.html")
-    index_body_html = index_body_html.replace("<!-- SECTIONS -->", render_index_first_section(lang, TAGS, articles) + render_index_sections(lang, sections))
-    index_body_html = index_body_html.replace("<!-- SECTION_EXTRA -->", render_other_index_sections(lang, TAGS, articles))
+    index_body_html = index_body_html.replace("<!-- SECTIONS -->", render_index_first_section(lang, tags, articles))
+    index_body_html = index_body_html.replace("<!-- SECTION_EXTRA -->", render_other_index_sections(lang, tags, articles))
     logo_svg = read_file("./static/img/logo/full.svg")
     pagemeta = {
         "title": readme.get("title", ""),
         "description": "",
         "img": {},
     }
-    index_body_html = index_body_html.replace("<!-- SEARCHBAR -->", search_html(lang))
+    shtml = search_html(lang)
+    search = read_file("./templates/search.html")
+    search = search.replace("<!-- SEARCH -->", shtml)
+    search = search.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, True))
+    search = search.replace("$$LANG$$", lang)
+    search = search.replace("$$ROOT_HREF$$", root_href)
+    search_lang = "Search"
+    if lang == "de":
+        search_lang = "Suche"
+    search_meta = {
+        "title": search_lang,
+        "description": "Search dubia.cc",
+        "img": {},
+    }
+    search = search.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, search_meta))
+    search = search.replace("$$TITLE$$", search_meta.get("title", ""))
+    write_file(search, "./" + lang + "/search.html")
+
+    index_body_html = index_body_html.replace("<!-- SEARCHBAR -->", shtml)
     index_html = index_html.replace("<!-- BODY_ABSTRACT -->", index_body_html)
     index_html = index_html.replace("<!-- PAGE_DESCRIPTION -->", read_file("./templates/page-description-" + lang + ".html"))
     index_html = index_html.replace("<!-- SVG_LOGO_INLINE -->", logo_svg)
@@ -773,6 +790,19 @@ def render_index_html(lang, sections, articles):
     return index_html
 
 # SCRIPT STARTS HERE
+
+SECTIONS = [
+    { 
+        "id": "islam",
+        "title": "Islam",
+        "links": [
+            {"slug": "why-not-islam", "title": "Why not Islam?"},
+            {"slug": "history-of-muhammad", "title": "History of Muhammad"}
+        ]
+    },
+]
+
+TAGS = json.loads(read_file("./tags.json"))
 
 root_href = get_root_href()
 templates = load_templates()
@@ -822,11 +852,29 @@ for slug, readme in articles.items():
     write_file(html, "./" + lang + "/" + slug_raw + ".html")
 
 write_file(generate_gitignore(articles), "./.gitignore")
+
+write_file(render_special_page(templates, "de", SECTIONS, { "title": "Themen", "description": "Themenübersicht", "img": { }}), "./de/themen.html")
+write_file(render_special_page(templates, "en", SECTIONS, { "title": "Topics", "description": "Topics", "img": { }}), "./en/topics.html")
+
+write_file(render_special_page(templates, "de", SECTIONS, { "title": "Neueste Links", "description": "Neueste Links", "img": { }}), "./de/neu.html")
+write_file(render_special_page(templates, "en", SECTIONS, { "title": "Newest Links", "description": "Newest links", "img": { }}), "./en/newest.html")
+
+write_file(render_special_page(templates, "de", SECTIONS, { "title": "Ressourcen", "description": "Ressourcen", "img": { }}), "./de/ressourcen.html")
+write_file(render_special_page(templates, "en", SECTIONS, { "title": "Tools", "description": "Tools", "img": { }}), "./en/tools.html")
+
+write_file(render_special_page(templates, "de", SECTIONS, { "title": "Shop", "description": "Shop", "img": { }}), "./de/shop.html")
+write_file(render_special_page(templates, "en", SECTIONS, { "title": "Shop", "description": "Shop", "img": { }}), "./en/shop.html")
+
+write_file(render_special_page(templates, "de", SECTIONS, { "title": "Impressum", "description": "Impressum", "img": { }}), "./de/impressum.html")
+write_file(render_special_page(templates, "en", SECTIONS, { "title": "About", "description": "About", "img": { }}), "./en/about.html")
+
 write_file(generate_searchindex("de", articles), "./de/index.json")
 write_file(generate_searchindex("en", articles), "./en/index.json")
-write_file(render_index_html("en", SECTIONS, articles), "./en.html")
-write_file(render_index_html("de", SECTIONS, articles), "./de.html")
-index_html = render_index_html("en", SECTIONS, articles)
+
+write_file(render_index_html("en", articles, TAGS), "./en.html")
+write_file(render_index_html("de", articles, TAGS), "./de.html")
+
+index_html = render_index_html("en", articles, TAGS)
 index_html = index_html.replace("<!-- REDIRECT_JS -->", read_file("./templates/redirect.js"))
 write_file(index_html, "./index.html")
 

@@ -1,4 +1,4 @@
-<style id="inlined-styles-colors" media="all">
+<style id="inlined-styles-colors">
 :root {
     /*  General.
      */
@@ -849,3 +849,25 @@ div#masked-links-key-toggle-info-alert img {
 }
 
 </style>
+
+<!-- immediately set dark / light mode, even before any other script runs -->
+<script type="text/javascript">
+window.addEventListener("DOMContentLoaded", () => {
+    let selectedMode = localStorage.getItem("dark-mode-setting") || "auto";
+    let switchedElementsSelector = [
+        "#inlined-styles-colors-dark",
+        "#favicon-dark",
+        "#favicon-apple-touch-dark"
+    ].join(", ");
+
+    let mediaAttributeValues = {
+        "auto": "all and (prefers-color-scheme: dark)",
+        "dark": "all",
+        "light": "not all"
+    };
+
+    document.querySelectorAll(switchedElementsSelector).forEach(element => { 
+        element.media = mediaAttributeValues[selectedMode]; 
+    });
+});
+</script>

@@ -1426,8 +1426,8 @@ function GWStopWatch(f, ...args) {
     (Requires utility.js.)
  */
 function GWServerLogError(errorString, errorType) {
-    doAjax({ location: `${location.origin}/404-error-` + fixedEncodeURIComponent(errorString) });
-    GWLog(`Reporting ${(errorType || "error")}:  ${errorString}`, "error reporting", 1);
+    // doAjax({ location: `${location.origin}/404-error-` + fixedEncodeURIComponent(errorString) });
+    // GWLog(`Reporting ${(errorType || "error")}:  ${errorString}`, "error reporting", 1);
 }
 
 
@@ -2939,17 +2939,7 @@ function applySpecialOccasionClasses() {
     }
 }
 
-/***************************************************************************/
-/*  Apply special occasion classes (if need be) when the <body> element is
-    created; update them (applying or removing, as appropriate) whenever the
-    mode changes.
- */
-doWhenBodyExists(() => {
-    applySpecialOccasionClasses();
-    GW.notificationCenter.addHandlerForEvent("DarkMode.computedModeDidChange", (info) => {
-        applySpecialOccasionClasses();
-    });
-});
+
 /**********/
 /* LAYOUT */
 /**********/
@@ -6578,7 +6568,8 @@ function getPageScrollPosition() {
 /*  Returns a saved (in local storage) integer, or 0 if nothing saved.
  */
 function getSavedCount(key) {
-    return parseInt(localStorage.getItem(key) || "0");
+    let s = parseInt(localStorage.getItem(key) || "0");
+    return s;
 }
 
 /*****************************************************************************/
@@ -6896,10 +6887,32 @@ GW.pageToolbar = {
         GW.pageToolbar.toolbar.style.setProperty("--toolbar-offset-y", offset.y + "px");
     },
 
+    getStartCollapsed: () => {
+        let never_init_toolbar_on_these_pages = [
+            "de/themen",
+            "de/impressum",
+            "de/tags",
+            "de/neu",
+            "de/ressourcen",
+            "de/shop",
+            "en/shop",
+            "en/about",
+            "en/tags",
+        ];
+        let nav = window.location.pathname.replace(".html", "");
+        if (never_init_toolbar_on_these_pages.includes(nav)) {
+            return true;
+        }
+        if (GW.isMobile()) {
+            return true;
+        }
+        getSavedCount("page-toolbar-demos-count") >= GW.pageToolbar.maxDemos
+    },
+
     setup: () => {
         GW.pageToolbar.toolbar = GW.pageToolbar.getToolbar();
 
-        let startCollapsed = getSavedCount("page-toolbar-demos-count") >= GW.pageToolbar.maxDemos;
+        let startCollapsed = GW.pageToolbar.getStartCollapsed();
         if (startCollapsed) {
             //  Don’t collapse if hovering.
             if (GW.pageToolbar.toolbar.matches(":hover") == false)
@@ -6982,7 +6995,7 @@ GW.pageToolbar = {
             /*  Slowly collapse toolbar shortly after page load (if it’s not
                 already collapsed).
              */
-            let startCollapsed = getSavedCount("page-toolbar-demos-count") >= GW.pageToolbar.maxDemos;
+            let startCollapsed = GW.pageToolbar.getStartCollapsed();
             if (startCollapsed == false) {
                 requestAnimationFrame(() => {
                     Array.from(GW.pageToolbar.getToolbar().querySelector(".widgets").children).forEach(widget => {
@@ -7001,9 +7014,8 @@ GW.pageToolbar = {
                             delay: GW.pageToolbar.demoCollapseDelay
                         });
                 });
-            } else {
-                incrementSavedCount("page-toolbar-demos-count");
             }
+            incrementSavedCount("page-toolbar-demos-count");
 
             //  Update toolbar state on scroll.
             addScrollListener(GW.pageToolbar.updateState, {
@@ -7369,8 +7381,8 @@ GW.search = {
         GW.search.searchWidget = GW.pageToolbar.addWidget(`<div id="${GW.search.searchWidgetId}">`
             + `<a
                                                                class="search no-footer-bar"
-                                                               href="/static/google-search.html"
-                                                               aria-label="Search site with Google Search"
+                                                               href="/de/search.html"
+                                                               aria-label="Search site"
                                                                data-link-content-type="local-document"
                                                                >`
             + `<span class="icon">`
