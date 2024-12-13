@@ -99,6 +99,7 @@ def generate_gitignore(articles_dict):
     filenames.append("index.json")
     filenames.append("index.html")
     filenames.append("/md2json/target")
+    filenames.append("/img2avif/target")
     filenames.append("/md2json/out.txt")
     filenames.append("/venv/*")
     filenames.sort()
