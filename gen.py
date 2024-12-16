@@ -283,9 +283,9 @@ def render_rosary_body(templates, lang, pagemeta):
     hm_end = " Heilige Maria, Mutter Gottes, bitte für uns Sünder, jetzt und in der Stunde unseres Todes."
     
     rosary_template = read_file("./templates/tools.rosary.html")
-    rosary_template = rosary_template.replace("<!-- OURFATHER -->", render_rosary_ourfather(templates, "Intro", "intro-05", "intro-04", "intro-06"))
-    rosary_template = rosary_template.replace("<!-- GLORYBE -->", render_rosary_glorybe(templates, "Intro", "intro-09", "intro-08", "intro-10"))
-    rosary_template = rosary_template.replace("<!-- FATIMA -->", render_rosary_fatima(templates, "Intro", "intro-10", "intro-09", "decade-1-ourfather"))
+    rosary_template = rosary_template.replace("<!-- OURFATHER -->", render_rosary_ourfather(templates, "Anfang", "intro-05", "intro-04", "intro-06"))
+    rosary_template = rosary_template.replace("<!-- GLORYBE -->", render_rosary_glorybe(templates, "Anfang", "intro-09", "intro-08", "intro-10"))
+    rosary_template = rosary_template.replace("<!-- FATIMA -->", render_rosary_fatima(templates, "Anfang", "intro-10", "intro-09", "decade-1-ourfather"))
     rosary_template = rosary_template.replace("<!-- NAV_01 -->", render_nav(templates, lang, "intro-00"))
     rosary_template = rosary_template.replace("<!-- NAV_02 -->", render_nav(templates, lang, "intro-11"))
     rosary_template = rosary_template.replace("<!-- END -->", read_file("./templates/tools.rosary.outro." + lang + ".html"))
@@ -971,7 +971,9 @@ for slug, readme in articles.items():
     html = html.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, True))
     html = html.replace("<!-- LINK_TAGS -->", link_tags(templates, lang, readme.get("tags", [])))
     if slug == "de/rosenkranz" or slug == "en/rosary":
-        html = html.replace("<!-- BODY_ABSTRACT -->", render_rosary_body(templates, lang, pagemeta))
+        html = html.replace("<!-- PAGE_DESCRIPTION -->", "<div style='max-width:500px;margin-left:auto;margin-right:auto;'>" + page_desciption(templates, lang, pagemeta) + "</div>")
+        html = html.replace("<!-- BODY_ABSTRACT -->", "<div class='abstract' style='max-width:500px;margin:0 auto;'><blockquote class='first-block first-graf block page-abstract blockquote-level-1' style='--bsm: 0;'>" + body_abstract(templates, lang, readme.get("summary", [])) + "</blockquote></div>")
+        html = html.replace("<!-- BODY_CONTENT -->", render_rosary_body(templates, lang, pagemeta))
     else:
         html = html.replace("<!-- PAGE_DESCRIPTION -->", page_desciption(templates, lang, pagemeta))
         html = html.replace("<!-- PAGE_METADATA -->", page_metadata(templates, lang, pagemeta))
