@@ -1,0 +1,380 @@
+<script>
+</script>
+
+<style>
+    .rosg { color: light-dark(lightgreen, darkgreen) !important; }
+    .rosb { color: light-dark(cyan, darkblue) !important; }
+    .rosr { color: light-dark(crimson, darkred) !important; }
+
+    .markdownBody a.rosg:hover { color: light-dark(lightgreen, darkgreen); }
+    .markdownBody a.rosb:hover { color: light-dark(cyan, darkblue); }
+    .markdownBody a.rosr:hover { color: light-dark(crimson, darkred); }
+
+    .markdownBody a.rosg:visited { color: light-dark(lightgreen, darkgreen); }
+    .markdownBody a.rosb:visited { color: light-dark(cyan, darkblue); }
+    .markdownBody a.rosr:visited { color: light-dark(crimson, darkred); }
+
+    .markdownBody a.rosg:visited:hover { color: light-dark(lightgreen, darkgreen); }
+    .markdownBody a.rosb:visited:hover { color: light-dark(cyan, darkblue); }
+    .markdownBody a.rosr:visited:hover { color: light-dark(crimson, darkred); }
+
+    #rosary-app-container {
+        max-width: 500px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        margin-top: 0px;
+    }
+
+    #rosary-app-container .rosary-img p.first {
+        background-color: var(--background-color);
+        padding: 10px;
+        margin: 10px;
+        position: relative;
+        z-index: 1;
+    }
+
+    #rosary-app-container .rosary-img img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+        margin: -80px auto;
+        margin-bottom: -100px;
+        z-index: 0;
+        filter: none !important;
+    }
+
+    #rosary-app-container .rosary-img p.last {
+        background-color: var(--background-color);
+        padding: 10px;
+        margin: 10px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .nextlink {
+        background: radial-gradient(at 100% 100%, #fedb37 0%, #fdb931 8%, #9f7928 30%, #8a6e2f 40%, #0000 80%), radial-gradient(at 0 0, #fff 0%, #ffffac 8%, #d1b464 25%, #5d4a1f 62.5% 100%) !important;
+        border: none !important;
+        border-radius: 5px !important;
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        padding: 2px;
+        display: block;
+    }
+
+    .nextlink .link-right, .nextlink .link-left {
+        background-color: #efefef;
+        color: white;
+        fill: white;
+        width: 40px;
+        height: 40px;
+    }
+
+    .nextlink.left {
+        bottom: 50px;
+        right: 10px;
+    }
+
+    .nextlink.right {
+        bottom: 0px;
+        right: 10px;
+    }
+</style>
+
+<div id="rosary-app-container">
+
+    <!-- NAV_01 -->
+
+    <section id="intro-01" class="level1 block" style="--bsm: 7;min-height: 200px;">
+        <h2 class="heading"><a href="$$PAGE_HREF$$#intro-01"
+        title="Intro">Intro</a><button type="button"
+        class="copy-section-link-button" title="Copy section link to clipboard"><svg viewBox="0 0 640 512">
+            <path
+            d="M0 256C0 167.6 71.63 96 160 96H256C273.7 96 288 110.3 288 128C288 145.7 273.7 160 256 160H160C106.1 160 64 202.1 64 256C64 309 106.1 352 160 352H256C273.7 352 288 366.3 288 384C288 401.7 273.7 416 256 416H160C71.63 416 0 344.4 0 256zM480 416H384C366.3 416 352 401.7 352 384C352 366.3 366.3 352 384 352H480C533 352 576 309 576 256C576 202.1 533 160 480 160H384C366.3 160 352 145.7 352 128C352 110.3 366.3 96 384 96H480C568.4 96 640 167.6 640 256C640 344.4 568.4 416 480 416zM416 224C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H224C206.3 288 192 273.7 192 256C192 238.3 206.3 224 224 224H416z">
+            </path>
+        </svg></button></h2>
+        <div class="rosary-img">
+
+            <p class="first-graf block first" style="--bsm: 4;">
+                Im Namen des Vaters und des Sohnes und des Heiligen Geistes. Amen.
+            </p>
+
+            <div style="position:relative;">
+
+                <img class="rosary-img" src="/static/img/rosary/intro-01.avif" width="1024" height="1024" />
+
+                <a class="nextlink right" href="#intro-02">
+                    <div class="link-right">
+                        <div class="link-right-content"></div>
+                    </div>
+                </a>
+            </div>
+
+            <p class="first-graf block last" style="--bsm: 4;">
+                Ich glaube an Gott, den Vater, den Allmächtigen,
+                den Schöpfer des Himmels und der Erde, ...
+            </p>
+        </div>
+    </section>
+
+    <section id="intro-02" class="level1 block" style="--bsm: 7;min-height: 200px;">
+        <h2 class="heading"><a href="$$PAGE_HREF$$#intro-02"
+        title="Intro (Credo 1/3)">Intro (Credo 1/3)</a><button type="button"
+        class="copy-section-link-button" title="Copy section link to clipboard"><svg viewBox="0 0 640 512">
+            <path
+            d="M0 256C0 167.6 71.63 96 160 96H256C273.7 96 288 110.3 288 128C288 145.7 273.7 160 256 160H160C106.1 160 64 202.1 64 256C64 309 106.1 352 160 352H256C273.7 352 288 366.3 288 384C288 401.7 273.7 416 256 416H160C71.63 416 0 344.4 0 256zM480 416H384C366.3 416 352 401.7 352 384C352 366.3 366.3 352 384 352H480C533 352 576 309 576 256C576 202.1 533 160 480 160H384C366.3 160 352 145.7 352 128C352 110.3 366.3 96 384 96H480C568.4 96 640 167.6 640 256C640 344.4 568.4 416 480 416zM416 224C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H224C206.3 288 192 273.7 192 256C192 238.3 206.3 224 224 224H416z">
+            </path>
+        </svg></button></h2>
+        <div class="rosary-img">
+
+            <p class="first-graf block first" style="--bsm: 4;">
+                ... und an Jesus Christus,
+                seinen ein<sup>zig</sup>geborenen Sohn,
+                unsern Herrn, empfangen durch den Heiligen Geist,
+            </p>
+
+            <div style="position:relative;">
+
+                <img class="rosary-img" src="/static/img/rosary/intro-02.avif" width="1024" height="1024" />
+
+                <a class="nextlink left" href="#intro-01">
+                    <div class="link-left">
+                        <div class="link-left-content"></div>
+                    </div>
+                </a>
+        
+                <a class="nextlink right" href="#intro-03">
+                    <div class="link-right">
+                        <div class="link-right-content"></div>
+                    </div>
+                </a>
+            </div>
+
+            <p class="first-graf block last" style="--bsm: 4;">
+                geboren von der Jungfrau Maria,
+                gelitten unter Pontius Pilatus,
+                gekreuzigt, gestorben und begraben, ...
+            </p>
+        </div>
+    </section>
+
+    <section id="intro-03" class="level1 block" style="--bsm: 7;min-height: 200px;">
+        <h2 class="heading"><a href="$$PAGE_HREF$$#intro-03"
+        title="Intro (Credo 2/3)">Intro (Credo 2/3)</a><button type="button"
+        class="copy-section-link-button" title="Copy section link to clipboard"><svg viewBox="0 0 640 512">
+            <path
+            d="M0 256C0 167.6 71.63 96 160 96H256C273.7 96 288 110.3 288 128C288 145.7 273.7 160 256 160H160C106.1 160 64 202.1 64 256C64 309 106.1 352 160 352H256C273.7 352 288 366.3 288 384C288 401.7 273.7 416 256 416H160C71.63 416 0 344.4 0 256zM480 416H384C366.3 416 352 401.7 352 384C352 366.3 366.3 352 384 352H480C533 352 576 309 576 256C576 202.1 533 160 480 160H384C366.3 160 352 145.7 352 128C352 110.3 366.3 96 384 96H480C568.4 96 640 167.6 640 256C640 344.4 568.4 416 480 416zM416 224C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H224C206.3 288 192 273.7 192 256C192 238.3 206.3 224 224 224H416z">
+            </path>
+        </svg></button></h2>
+        <div class="rosary-img">
+
+            <p class="first-graf block first" style="--bsm: 4;">
+                ... hinabgestiegen in das Reich des Todes,
+                am dritten Tage auferstanden von den Toten,
+                aufgefahren in den Himmel;
+            </p>
+
+            <div style="position:relative;">
+
+                <img class="rosary-img" src="/static/img/rosary/intro-03.avif" width="1024" height="1024" />
+
+                <a class="nextlink left" href="#intro-02">
+                    <div class="link-left">
+                        <div class="link-left-content"></div>
+                    </div>
+                </a>
+        
+                <a class="nextlink right" href="#intro-04">
+                    <div class="link-right">
+                        <div class="link-right-content"></div>
+                    </div>
+                </a>
+            </div>
+
+            <p class="first-graf block last" style="--bsm: 4;">
+                er sitzt zur Rechten Gottes,
+                des allmächtigen Vaters;
+                von dort wird er kommen,
+                zu richten die Lebenden und die Toten.
+            </p>
+        </div>
+    </section>
+
+    <section id="intro-04" class="level1 block" style="--bsm: 7;min-height: 200px;">
+        <h2 class="heading"><a href="$$PAGE_HREF$$#intro-04"
+        title="Intro (Credo 3/3)">Intro (Credo 3/3)</a><button type="button"
+        class="copy-section-link-button" title="Copy section link to clipboard"><svg viewBox="0 0 640 512">
+            <path
+            d="M0 256C0 167.6 71.63 96 160 96H256C273.7 96 288 110.3 288 128C288 145.7 273.7 160 256 160H160C106.1 160 64 202.1 64 256C64 309 106.1 352 160 352H256C273.7 352 288 366.3 288 384C288 401.7 273.7 416 256 416H160C71.63 416 0 344.4 0 256zM480 416H384C366.3 416 352 401.7 352 384C352 366.3 366.3 352 384 352H480C533 352 576 309 576 256C576 202.1 533 160 480 160H384C366.3 160 352 145.7 352 128C352 110.3 366.3 96 384 96H480C568.4 96 640 167.6 640 256C640 344.4 568.4 416 480 416zM416 224C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H224C206.3 288 192 273.7 192 256C192 238.3 206.3 224 224 224H416z">
+            </path>
+        </svg></button></h2>
+        <div class="rosary-img">
+
+            <p class="first-graf block first" style="--bsm: 4;">
+                Ich glaube an den Heiligen Geist,
+                die heilige katholische Kirche,
+                Gemeinschaft der Heiligen,
+            </p>
+
+            <div style="position:relative;">
+
+                <img class="rosary-img" src="/static/img/rosary/intro-04.avif" width="1024" height="1024" />
+
+                <a class="nextlink left" href="#intro-03">
+                    <div class="link-left">
+                        <div class="link-left-content"></div>
+                    </div>
+                </a>
+        
+                <a class="nextlink right" href="#intro-05">
+                    <div class="link-right">
+                        <div class="link-right-content"></div>
+                    </div>
+                </a>
+            </div>
+
+            <p class="first-graf block last" style="--bsm: 4;">
+                Vergebung der Sünden,
+                Auferstehung der Toten 
+                und das ewige Leben. Amen.
+            </p>
+        </div>
+    </section>
+
+    <!-- intro-05 -->
+    <!-- OURFATHER -->
+
+    <section id="intro-06" class="level1 block" style="--bsm: 7;min-height: 200px;">
+        <h2 class="heading"><a href="$$PAGE_HREF$$#intro-06"
+        title="Intro (Vater Unser)">Intro (Glaube)</a><button type="button"
+        class="copy-section-link-button" title="Copy section link to clipboard"><svg viewBox="0 0 640 512">
+            <path
+            d="M0 256C0 167.6 71.63 96 160 96H256C273.7 96 288 110.3 288 128C288 145.7 273.7 160 256 160H160C106.1 160 64 202.1 64 256C64 309 106.1 352 160 352H256C273.7 352 288 366.3 288 384C288 401.7 273.7 416 256 416H160C71.63 416 0 344.4 0 256zM480 416H384C366.3 416 352 401.7 352 384C352 366.3 366.3 352 384 352H480C533 352 576 309 576 256C576 202.1 533 160 480 160H384C366.3 160 352 145.7 352 128C352 110.3 366.3 96 384 96H480C568.4 96 640 167.6 640 256C640 344.4 568.4 416 480 416zM416 224C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H224C206.3 288 192 273.7 192 256C192 238.3 206.3 224 224 224H416z">
+            </path>
+        </svg></button></h2>
+        <div class="rosary-img">
+
+            <p class="first-graf block first" style="--bsm: 4;">
+                Gegrüßet seiest du Maria, voll der 
+                Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern und gebenedeit ist die Frucht
+                deines Leibes, <strong class="rosb"><em>der in uns den <sup>christlichen</sup> Glauben vermehre</em></strong>.
+            </p>
+
+            <div style="position:relative;">
+
+                <img class="rosary-img" src="/static/img/rosary/intro-06.avif" width="1024" height="1024" />
+
+                <a class="nextlink left" href="#intro-05">
+                    <div class="link-left">
+                        <div class="link-left-content"></div>
+                    </div>
+                </a>
+        
+                <a class="nextlink right" href="#intro-07">
+                    <div class="link-right">
+                        <div class="link-right-content"></div>
+                    </div>
+                </a>
+            </div>
+
+            <p class="first-graf block last" style="--bsm: 4;">
+                Heilige Maria, Mutter Gottes, bitte für uns Sünder,
+                jetzt und in der Stunde unseres Todes.
+            </p>
+        </div>
+    </section>
+
+    <section id="intro-07" class="level1 block" style="--bsm: 7;min-height: 200px;">
+        <h2 class="heading"><a href="$$PAGE_HREF$$#intro-07"
+        title="Intro (Vater Unser)">Intro (Hoffnung)</a><button type="button"
+        class="copy-section-link-button" title="Copy section link to clipboard"><svg viewBox="0 0 640 512">
+            <path
+            d="M0 256C0 167.6 71.63 96 160 96H256C273.7 96 288 110.3 288 128C288 145.7 273.7 160 256 160H160C106.1 160 64 202.1 64 256C64 309 106.1 352 160 352H256C273.7 352 288 366.3 288 384C288 401.7 273.7 416 256 416H160C71.63 416 0 344.4 0 256zM480 416H384C366.3 416 352 401.7 352 384C352 366.3 366.3 352 384 352H480C533 352 576 309 576 256C576 202.1 533 160 480 160H384C366.3 160 352 145.7 352 128C352 110.3 366.3 96 384 96H480C568.4 96 640 167.6 640 256C640 344.4 568.4 416 480 416zM416 224C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H224C206.3 288 192 273.7 192 256C192 238.3 206.3 224 224 224H416z">
+            </path>
+        </svg></button></h2>
+        <div class="rosary-img">
+
+            <p class="first-graf block first" style="--bsm: 4;">
+                Gegrüßet seiest du Maria, voll der 
+                Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern und gebenedeit ist die Frucht
+                deines Leibes, <strong class="rosg"><em>der in uns die <sup>christliche</sup> Hoffnung stärke</em></strong>.
+            </p>
+
+            <div style="position:relative;">
+
+                <img class="rosary-img" src="/static/img/rosary/intro-07.avif" width="1024" height="1024" />
+
+                <a class="nextlink left" href="#intro-06">
+                    <div class="link-left">
+                        <div class="link-left-content"></div>
+                    </div>
+                </a>
+        
+                <a class="nextlink right" href="#intro-08">
+                    <div class="link-right">
+                        <div class="link-right-content"></div>
+                    </div>
+                </a>
+            </div>
+
+            <p class="first-graf block last" style="--bsm: 4;">
+                Heilige Maria, Mutter Gottes, bitte für uns Sünder,
+                jetzt und in der Stunde unseres Todes.
+            </p>
+        </div>
+    </section>
+
+    <section id="intro-08" class="level1 block" style="--bsm: 7;min-height: 200px;">
+        <h2 class="heading"><a href="$$PAGE_HREF$$#intro-08"
+        title="Intro (Vater Unser)">Intro (Liebe)</a><button type="button"
+        class="copy-section-link-button" title="Copy section link to clipboard"><svg viewBox="0 0 640 512">
+            <path
+            d="M0 256C0 167.6 71.63 96 160 96H256C273.7 96 288 110.3 288 128C288 145.7 273.7 160 256 160H160C106.1 160 64 202.1 64 256C64 309 106.1 352 160 352H256C273.7 352 288 366.3 288 384C288 401.7 273.7 416 256 416H160C71.63 416 0 344.4 0 256zM480 416H384C366.3 416 352 401.7 352 384C352 366.3 366.3 352 384 352H480C533 352 576 309 576 256C576 202.1 533 160 480 160H384C366.3 160 352 145.7 352 128C352 110.3 366.3 96 384 96H480C568.4 96 640 167.6 640 256C640 344.4 568.4 416 480 416zM416 224C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H224C206.3 288 192 273.7 192 256C192 238.3 206.3 224 224 224H416z">
+            </path>
+        </svg></button></h2>
+        <div class="rosary-img">
+
+            <p class="first-graf block first" style="--bsm: 4;">
+                Gegrüßet seiest du Maria, voll der 
+                Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern und gebenedeit ist die Frucht
+                deines Leibes, <strong class="rosr"><em>der in uns die <sup>christliche</sup> Liebe entzünde</em></strong>.
+            </p>
+
+            <div style="position:relative;">
+
+                <img class="rosary-img" src="/static/img/rosary/intro-08.avif" width="1024" height="1024" />
+
+                <a class="nextlink left" href="#intro-07">
+                    <div class="link-left">
+                        <div class="link-left-content"></div>
+                    </div>
+                </a>
+        
+                <a class="nextlink right" href="#intro-09">
+                    <div class="link-right">
+                        <div class="link-right-content"></div>
+                    </div>
+                </a>
+            </div>
+
+            <p class="first-graf block last" style="--bsm: 4;">
+                Heilige Maria, Mutter Gottes, bitte für uns Sünder,
+                jetzt und in der Stunde unseres Todes.
+            </p>
+        </div>
+    </section>
+
+    <!-- intro-09 -->
+    <!-- GLORYBE -->
+
+    <!-- intro-10 -->
+    <!-- FATIMA -->
+
+    <!-- NAV_02 -->
+
+    <!-- MYSTERIES -->
+
+    <!-- END -->
+
+</div>

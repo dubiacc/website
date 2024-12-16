@@ -171,8 +171,8 @@
         "3": {
             "decade": {
                 "en": "Nativity",
-                "de": "Geburt Christi",
-                "latin": "Nativitas Christi"
+                "de": "Geburt",
+                "latin": "Nativitas"
             },
             "spiritual-fruit": {
                 "en": "Poverty in Spirit",
@@ -254,9 +254,9 @@
         },
         "4": {
             "decade": {
-                "en": "Presentation in the Temple",
-                "de": "Darstellung im Tempel",
-                "latin": "Praesentatio in Templo"
+                "en": "Presentation",
+                "de": "Darstellung",
+                "latin": "Praesentatio"
             },
             "spiritual-fruit": {
                 "en": "Obedience",
@@ -338,9 +338,9 @@
         },
         "5": {
             "decade": {
-                "en": "Finding Jesus in the Temple",
-                "de": "Jesus im Tempel wiederfinden",
-                "latin": "Inventio Iesu in Templo"
+                "en": "Jesus in the Temple",
+                "de": "Jesus im Tempel",
+                "latin": "Iesu in Templo"
             },
             "spiritual-fruit": {
                 "en": "Joy in Finding Jesus",
@@ -506,9 +506,9 @@
         },
         "7": {
             "decade": {
-                "en": "The Scourging at the Pillar",
-                "de": "Die Geißelung Jesu",
-                "latin": "Flagellatio ad Columnam"
+                "en": "Scourging",
+                "de": "Geißelung",
+                "latin": "Flagellatio"
             },
             "spiritual-fruit": {
                 "en": "Mortification of the Senses",
@@ -589,8 +589,8 @@
         },
         "8": {
             "decade": {
-                "en": "The Crowning with Thorns",
-                "de": "Die Dornenkrönung Jesu",
+                "en": "Crowning with Thorns",
+                "de": "Dornenkrönung",
                 "latin": "Coronatio Spinea"
             },
             "spiritual-fruit": {
@@ -673,8 +673,8 @@
         },
         "9": {
             "decade": {
-                "en": "The Carrying of the Cross",
-                "de": "Der Kreuzweg Jesu",
+                "en": "Carrying of the Cross",
+                "de": "Kreuzweg",
                 "latin": "Portatio Crucis"
             },
             "spiritual-fruit": {
@@ -757,9 +757,9 @@
         },
         "10": {
             "decade": {
-                "en": "The Crucifixion and Death of Jesus",
-                "de": "Die Kreuzigung und der Tod Jesu",
-                "latin": "Crucifixio et Mors Iesu"
+                "en": "Crucifixion",
+                "de": "Kreuzigung",
+                "latin": "Crucifixio"
             },
             "spiritual-fruit": {
                 "en": "Perseverance",
@@ -841,9 +841,9 @@
         },
         "11": {
             "decade": {
-                "en": "The Resurrection of Jesus",
-                "de": "Die Auferstehung Jesu",
-                "latin": "Resurrectio Iesu"
+                "en": "Resurrection",
+                "de": "Auferstehung",
+                "latin": "Resurrectio"
             },
             "spiritual-fruit": {
                 "en": "Faith",
@@ -925,9 +925,9 @@
         },
         "12": {
             "decade": {
-                "en": "The Ascension of Jesus",
-                "de": "Die Himmelfahrt Jesu",
-                "latin": "Ascensio Iesu"
+                "en": "Ascension",
+                "de": "Himmelfahrt",
+                "latin": "Ascensio"
             },
             "spiritual-fruit": {
                 "en": "Hope",
@@ -1009,9 +1009,9 @@
         },
         "13": {
             "decade": {
-                "en": "The Descent of the Holy Spirit",
-                "de": "Herabkunft des Heiligen Geistes",
-                "latin": "Descensus Spiritus Sancti"
+                "en": "Pentecost",
+                "de": "Pfingsten",
+                "latin": "Pentecoste"
             },
             "spiritual-fruit": {
                 "en": "Love of God",
@@ -1093,7 +1093,7 @@
         },
         "14": {
             "decade": {
-                "en": "The Assumption of Mary",
+                "en": "Assumption of Mary",
                 "de": "Mariä Himmelfahrt",
                 "latin": "Assumptio Mariae"
             },
@@ -1177,8 +1177,8 @@
         },
         "15": {
             "decade": {
-                "en": "The Coronation of Mary",
-                "de": "Die Krönung Mariens",
+                "en": "Coronation of Mary",
+                "de": "Krönung Mariens",
                 "latin": "Coronatio Mariae"
             },
             "spiritual-fruit": {

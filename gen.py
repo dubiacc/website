@@ -248,6 +248,140 @@ def text_from_par(paragraph):
         target += p.get("data", {}).get("text", "")
     return target
 
+def render_rosary_glorybe(templates, decade, id, prev_id, next_id):
+    rosary_template = read_file("./templates/tools.rosary.glorybe.html")
+    rosary_template = rosary_template.replace("$$ID$$", id)
+    rosary_template = rosary_template.replace("$$PREV_ID$$", prev_id)
+    rosary_template = rosary_template.replace("$$NEXT_ID$$", next_id)
+    rosary_template = rosary_template.replace("$$DECADE$$", decade)
+    return rosary_template
+
+def render_rosary_fatima(templates, decade, id, prev_id, next_id):
+    rosary_template = read_file("./templates/tools.rosary.fatima.html")
+    rosary_template = rosary_template.replace("$$ID$$", id)
+    rosary_template = rosary_template.replace("$$PREV_ID$$", prev_id)
+    rosary_template = rosary_template.replace("$$NEXT_ID$$", next_id)
+    rosary_template = rosary_template.replace("$$DECADE$$", decade)
+    return rosary_template
+
+def render_rosary_ourfather(templates, decade, id, prev_id, next_id):
+    rosary_template = read_file("./templates/tools.rosary.ourfather.html")
+    rosary_template = rosary_template.replace("$$ID$$", id)
+    rosary_template = rosary_template.replace("$$PREV_ID$$", prev_id)
+    rosary_template = rosary_template.replace("$$NEXT_ID$$", next_id)
+    rosary_template = rosary_template.replace("$$DECADE$$", decade)
+    return rosary_template
+
+def render_nav(templates, lang, id):
+    nav = read_file("./templates/tools.rosary.nav." + lang + ".html")
+    nav = nav.replace("$$ID$$", id)
+    return nav
+
+def render_rosary_body(templates, lang, pagemeta):
+    
+    hm_start = "Gegrüßet seiest du Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern und gebenedeit ist die Frucht deines Leibes Jesus, "
+    hm_end = " Heilige Maria, Mutter Gottes, bitte für uns Sünder, jetzt und in der Stunde unseres Todes."
+    
+    rosary_template = read_file("./templates/tools.rosary.html")
+    rosary_template = rosary_template.replace("<!-- OURFATHER -->", render_rosary_ourfather(templates, "Intro", "intro-05", "intro-04", "intro-06"))
+    rosary_template = rosary_template.replace("<!-- GLORYBE -->", render_rosary_glorybe(templates, "Intro", "intro-09", "intro-08", "intro-10"))
+    rosary_template = rosary_template.replace("<!-- FATIMA -->", render_rosary_fatima(templates, "Intro", "intro-10", "intro-09", "decade-1-ourfather"))
+    rosary_template = rosary_template.replace("<!-- NAV_01 -->", render_nav(templates, lang, "intro-00"))
+    rosary_template = rosary_template.replace("<!-- NAV_02 -->", render_nav(templates, lang, "intro-11"))
+    rosary_template = rosary_template.replace("<!-- END -->", read_file("./templates/tools.rosary.outro." + lang + ".html"))
+
+    rosary_section_template = read_file("./templates/tools.rosary.mystery.html")
+    mysteries = json.loads(read_file("./static/img/rosary/mysteries.json"))["mysteries"]
+    mst = []
+    hm_add = [
+        "den du, o Jungfrau, vom Heiligen Geist empfangen hast.",
+        "den du, o Jungfrau, zu Elisabeth getragen hast.",
+        "den du, o Jungfrau, <sup>in Bethlehem</sup> geboren hast.",
+        "den du, o Jungfrau, im Tempel aufgeopfert hast.",
+        "den du, o Jungfrau, im Tempel wiedergefunden hast.",
+
+        "der für uns Blut geschwitzt hat.",
+        "der für uns gegeißelt worden ist.",
+        "der für uns mit Dornen gekrönt worden ist.",
+        "der für uns das schwere Kreuz getragen hat.",
+        "der für uns am Kreuz gestorben ist.",
+
+        "der von den Toten auferstanden ist.",
+        "der in den Himmel aufgefahren ist.",
+        "der uns den Heiligen Geist gesandt hat.",
+        "der dich, o Jungfrau, in den Himmel aufgenommen hat.",
+        "der dich, o Jungfrau, im Himmel gekrönt hat.",
+    ]
+
+    for i in range(1, 16):
+
+        hma = hm_add[i - 1]
+        mys = mysteries[str(i)]
+        decade = mys["decade"][lang]
+        fruit = mys["spiritual-fruit"][lang]
+        
+        # + our father
+        ourfather_prev = ""
+        if i == 1:
+            ourfather_prev = "intro-10"
+        else:
+            ourfather_prev = "decade-" + str(i - 1) + "-fatima"
+        
+        ourfather_next = ""
+        if i == 15:
+            ourfather_next = "outro-01"
+        else:
+            ourfather_next = "s" + mysteries[str(i)]["prayers"]["1"]["image"]
+        
+        mst.append(render_rosary_ourfather(templates, decade, "decade-" + str(i) + "-ourfather", ourfather_prev, ourfather_next))
+
+        for q in range(1, 11):
+            pr = mys["prayers"][str(q)]
+            text = pr[lang]
+            source = pr["source"]
+            prev_id = ""
+            if q == 1:
+                prev_id = "decade-" + str(i) + "-ourfather"
+                next_id = "s" + mys["prayers"][str(q + 1)]["image"]
+            elif q == 10:
+                prev_id = "s" + mys["prayers"][str(q - 1)]["image"]
+                next_id = "decade-" + str(i) + "-glorybe"
+            else:
+                prev_id = "s" + mys["prayers"][str(q - 1)]["image"]
+                next_id = "s" + mys["prayers"][str(q + 1)]["image"]
+
+            rst = rosary_section_template
+            rst = rst.replace("$$SECTION_ID$$", pr["image"])
+            rst = rst.replace("$$DECADE$$", decade)
+            rst = rst.replace("$$INDEX$$", str(q))
+            rst = rst.replace("$$TEXT_TOP$$", text) 
+            rst = rst.replace("$$SOURCE$$", source)
+            rst = rst.replace("$$PREV_SECTION_ID$$", prev_id)
+            rst = rst.replace("$$NEXT_SECTION_ID$$", next_id)
+            rst = rst.replace("$$HAIL_MARY_START$$", hm_start)
+            rst = rst.replace("$$DECADE_ADDITION$$", hma)
+            rst = rst.replace("$$HAIL_MARY_END$$", hm_end)
+            mst.append(rst)
+    
+        glorybe_prev = mys["prayers"]["10"]["image"]
+        glorybe_next = "decade-" + str(i) + "-fatima"
+        mst.append(render_rosary_glorybe(templates, decade, "decade-" + str(i) + "-glorybe", glorybe_prev, glorybe_next))
+
+        fatima_prev = "decade-" + str(i) + "-glorybe"
+        fatima_next = ""
+        
+        if i % 5 == 0:
+            fatima_next = "nav-" + str(i)
+        else:
+            fatima_next = "decade-" + str(i + 1) + "-ourfather"
+        
+        mst.append(render_rosary_fatima(templates, decade, "decade-" + str(i) + "-fatima", fatima_prev, fatima_next))
+        
+        if i % 5 == 0:
+            mst.append(render_nav(templates, lang, "nav-" + str(i)))
+
+    return rosary_template.replace("<!-- MYSTERIES -->", "".join(mst))
+
 def page_desciption(templates, lang, pagemeta):
     descr = pagemeta.get("description", "")
     page_desciption = "<div class='page-description'><p>" + descr + "</p></div>"
@@ -836,12 +970,15 @@ for slug, readme in articles.items():
     html = html.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta))
     html = html.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, True))
     html = html.replace("<!-- LINK_TAGS -->", link_tags(templates, lang, readme.get("tags", [])))
-    html = html.replace("<!-- PAGE_DESCRIPTION -->", page_desciption(templates, lang, pagemeta))
-    html = html.replace("<!-- PAGE_METADATA -->", page_metadata(templates, lang, pagemeta))
-    html = html.replace("<!-- BODY_ABSTRACT -->", body_abstract(templates, lang, readme.get("summary", [])))
-    html = html.replace("<!-- BODY_CONTENT -->", body_content(templates, lang, readme.get("sections", [])))
-    html = html.replace("<!-- BODY_NOSCRIPT -->", body_noscript(templates, lang))
-    html = html.replace("<!-- TOC -->", table_of_contents(templates, lang, readme.get("sections", [])))
+    if slug == "de/rosenkranz" or slug == "en/rosary":
+        html = html.replace("<!-- BODY_ABSTRACT -->", render_rosary_body(templates, lang, pagemeta))
+    else:
+        html = html.replace("<!-- PAGE_DESCRIPTION -->", page_desciption(templates, lang, pagemeta))
+        html = html.replace("<!-- PAGE_METADATA -->", page_metadata(templates, lang, pagemeta))
+        html = html.replace("<!-- BODY_ABSTRACT -->", body_abstract(templates, lang, readme.get("summary", [])))
+        html = html.replace("<!-- BODY_CONTENT -->", body_content(templates, lang, readme.get("sections", [])))
+        html = html.replace("<!-- BODY_NOSCRIPT -->", body_noscript(templates, lang))
+        html = html.replace("<!-- TOC -->", table_of_contents(templates, lang, readme.get("sections", [])))
     html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content")
     html = html.replace("$$TITLE$$", pagemeta["title"])
     html = html.replace("$$TITLE_ID$$", title_id)
