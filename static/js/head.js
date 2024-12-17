@@ -6891,7 +6891,7 @@ GW.pageToolbar = {
             "de/themen",
             "de/impressum",
             "de/tags",
-            "de/neu",
+            "de/neues",
             "de/ressourcen",
             "de/shop",
             "en/shop",

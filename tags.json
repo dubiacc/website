@@ -133,12 +133,77 @@
             "evangelisch": "Evangelische Kirche",
             "sedisvakantismus": "Sedisvakantismus",
             "kanon": "Kanon",
+            "mittelalter": "Mittelalter",
             "kirchenvaeter": "Kirchenväter",
             "evolution": "Evolution",
             "moral": "Morallehre",
             "gnostizismus": "Gnostizismus",
-            "fruehkirche": "Frühkirche"
-        }
+            "fruehkirche": "Frühkirche",
+            "frage": "Frage"
+        },
+        "ressources": [
+            { 
+                "id": "gebete",
+                "title": "Gebete",
+                "links": [
+                    {"slug": "rosenkranz", "title": "Rosenkranz"}
+                ]
+            },
+            {
+                "id": "bibeln",
+                "title": "Bibeln und Kirchenväter",
+                "links": [
+                    {"slug": "https://k-bibel.de/", "title": "K-Bibel.de: Katholische Bibelübersetzung"},
+                    {"slug": "https://vulgata.online/", "title": "Vulgata Online"},
+                    {"slug": "https://biblehub.com/interlinear/", "title": "Interlinear Bibel (BibleHub)"},
+                    {"slug": "https://logeion.uchicago.edu/", "title": "Logeion: Griechische / Hebräische Quelltexte (Univ. Chicago)"},
+                    {"slug": "https://bkv.unifr.ch/de", "title": "Bibliothek der Kirchenväter (Univ. Freiburg)"},
+                    {"slug": "https://canonlaw.ninja/", "title": "CanonLaw.ninja - Suchmaschine für kanonisches Recht"},
+                    {"slug": "https://catenabible.com/", "title": "Catena Bible - Bibel mit Fußnoten von Kirchenvätern"},
+                    {"slug": "https://ccel.org/", "title": "CCEL - Christian Classics Ethereal Library"}
+                ]
+            },
+            { 
+                "id": "messe",
+                "title": "Lateinischen Messen",
+                "links": [
+                    {"slug": "https://www.latinmass.com/find-latin-mass", "title": "latinmass.com/find-latin-mass"},
+                    {"slug": "https://latinmassdir.org", "title": "LatinMassDir.org"},
+                    {"slug": "https://sspx.org/en/mass-centers", "title": "Interaktive Karte von Messorten der FSSPX"}
+                ]
+            }
+        ],
+        "shop": [
+            {
+                "id": "mode-fuer-sie",
+                "title": "Katholische Mode für Sie",
+                "link": {"slug": "https://etsy.com", "img": "/static/img/shop/womansfashion.avif", "title": "Frauenmode auf etsy.de" }
+            },
+            { 
+                "id": "mode-fuer-ihn",
+                "title": "Katholische Mode für Ihn",
+                "link": {"slug": "https://etsy.com", "img": "/static/img/shop/mensfashion.avif", "title": "Herrenmode auf etsy.de" }
+            },
+            { 
+                "id": "rosenkraenze",
+                "title": "Paracord Rosenkränze",
+                "link": {"slug": "https://etsy.com", "img": "/static/img/shop/rosary.avif", "title": "Rosenkränze auf etsy.de"  }
+            },
+            { 
+                "id": "buecher",
+                "title": "Katholische Bücher",
+                "link": {"slug": "https://lulu.com", "img": "/static/img/shop/books.avif", "title": "Bücher auf lulu.com"  }
+            }
+        ],
+        "about": [
+            { 
+                "id": "kontakt",
+                "title": "Kontakt",
+                "links": [
+                    
+                ]
+            }
+        ]
     },
     "en": {
         "ibelievein": [
@@ -155,6 +220,69 @@
         },
         "tags": {
             
-        }  
+        },
+        "ressources": [
+            { 
+                "id": "prayers",
+                "title": "Prayers",
+                "links": [
+                    {"slug": "rosary", "title": "Rosary"}
+                ]
+            },
+            {
+                "id": "bibles",
+                "title": "Bibles and Church Fathers",
+                "links": [
+                    {"slug": "https://www.drbo.org/", "title": "Douay-Rheims Online: Catholic Bible Translation(s)"},
+                    {"slug": "https://vulgata.online/", "title": "Vulgata Online"},
+                    {"slug": "https://biblehub.com/interlinear/", "title": "BibleHub: Interlinear Bible (Hebrew - Greek)"},
+                    {"slug": "https://logeion.uchicago.edu/", "title": "Logeion: Greek / Hebrew source texts (Univ. Chicago)"},
+                    {"slug": "https://bkv.unifr.ch/en", "title": "Library of the Church Fathers (Univ. Freiburg)"},
+                    {"slug": "https://canonlaw.ninja/", "title": "CanonLaw.ninja - search engine for Canon Law"},
+                    {"slug": "https://catenabible.com/", "title": "Catena Bible - Bible with annotations by the Church Fathers"},
+                    {"slug": "https://ccel.org/", "title": "CCEL - Christian Classics Ethereal Library"}
+                ]
+            },
+            { 
+                "id": "messe",
+                "title": "Latin Mass Locations",
+                "links": [
+                    {"slug": "https://www.latinmass.com/find-latin-mass", "title": "latinmass.com/find-latin-mass"},
+                    {"slug": "https://latinmassdir.org", "title": "LatinMassDir.org"},
+                    {"slug": "https://sspx.org/en/mass-centers", "title": "SSPX Mass Centers"}
+                ]
+            }
+        ],
+        "shop": [
+            { 
+                "id": "fashion-f",
+                "title": "Catholic Fashion for Her",
+                "link": {"slug": "https://etsy.com", "img": "/static/img/shop/womansfashion.avif", "title": "Shop on etsy.com"  }
+            },
+            { 
+                "id": "fashion-m",
+                "title": "Catholic Fashion for Him",
+                "link": {"slug": "https://etsy.com", "img": "/static/img/shop/mensfashion.avif", "title": "Shop on etsy.com" }
+            },
+            { 
+                "id": "rosaries",
+                "title": "Paracord Rosaries",
+                "link": {"slug": "https://etsy.com", "img": "/static/img/shop/rosary.avif", "title": "Shop on etsy.com" }
+            },
+            { 
+                "id": "books",
+                "title": "Catholic Books",
+                "link": {"slug": "https://lulu.com", "img": "/static/img/shop/books.avif", "title": "Shop on lulu.com" }
+            }
+        ],
+        "about": [
+            { 
+                "id": "contact",
+                "title": "Contact",
+                "links": [
+                    
+                ]
+            }
+        ]
     }
 }

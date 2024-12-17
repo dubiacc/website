@@ -98,6 +98,7 @@ def generate_gitignore(articles_dict):
     filenames.append("md2json-bin")
     filenames.append("index.json")
     filenames.append("index.html")
+    filenames.append(".DS_Store")
     filenames.append("/md2json/target")
     filenames.append("/img2avif/target")
     filenames.append("/md2json/out.txt")
@@ -171,7 +172,7 @@ def header_navigation(templates, lang, display_logo):
         about_link = lang + "/impressum"
         tools_link = lang + "/ressourcen"
         all_articles_link = lang + "/themen"
-        newest_link = lang + "/neu"
+        newest_link = lang + "/neues"
     else:
 
         homepage_logo = "/static/img/logo/logo-smooth.svg#logo"
@@ -279,7 +280,7 @@ def render_nav(templates, lang, id):
 
 def render_rosary_body(templates, lang, pagemeta):
     
-    hm_start = "Gegrüßet seiest du Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern und gebenedeit ist die Frucht deines Leibes Jesus, "
+    hm_start = "Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern und gebenedeit ist die Frucht deines Leibes Jesus, "
     hm_end = " Heilige Maria, Mutter Gottes, bitte für uns Sünder, jetzt und in der Stunde unseres Todes."
     
     rosary_template = read_file("./templates/tools.rosary.html")
@@ -771,9 +772,20 @@ def render_index_sections(lang, sections):
     for s in sections:
         section_id = s["id"]
         section_title = s["title"]
-        section_links = s["links"]
-        ret += render_index_section(lang, section_id, "", section_title, section_links)
+        if "links" in s:
+            section_links = s["links"]
+            ret += render_index_section(lang, section_id, "", section_title, section_links)
+        elif "link" in s:
+            section_links = s["link"]
+            ret += render_index_section_img(lang, section_id, "", section_title, section_links["slug"], section_links["img"], section_links["title"])
     return ret 
+
+def render_section_items_img(lang, link, img, title):
+    section_items = ""
+    style = "justify-content: flex-end;margin-top:10px;width: 100%;min-height: 440px;display: flex;flex-direction:column;height: 100%;background-size: cover;background-image: url(" + img + ");"
+    p_style = "font-variant-caps: small-caps;background: var(--background-color);border-radius:5px;border: 2px solid var(--GW-H1-border-color); text-align: center; text-decoration: underline; text-indent: 0px;margin: 10px;padding: 10px 20px;"
+    section_items += "<a href='" + link + "' style='" + style + "'><p style='" + p_style + "'>" + title + "</p></a>"
+    return section_items
 
 def render_section_items(lang, links):
     section_items = ""
@@ -802,6 +814,15 @@ def render_index_section(lang, id, classes, title, links):
     section_html = section_html.replace("$$SECTION_NAME$$", title)
     section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title)
     section_html = section_html.replace("<!-- SECTION_ITEMS -->", render_section_items(lang, links))
+    return section_html
+
+def render_index_section_img(lang, id, classes, title, link, img, t):
+    section_html = read_file("./templates/index.section.html")
+    section_html = section_html.replace("$$SECTION_ID$$", id)
+    section_html = section_html.replace("$$SECTION_CLASSES$$", classes)
+    section_html = section_html.replace("$$SECTION_NAME$$", title)
+    section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title)
+    section_html = section_html.replace("<!-- SECTION_ITEMS -->", render_section_items_img(lang, link, img, t))
     return section_html
 
 def render_other_index_sections(lang, tags, articles):
@@ -868,9 +889,8 @@ def render_index_first_section(lang, tags, articles):
 def render_special_page(templates, lang, sections, pagemeta):
     special = templates["special"]
     special = special.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta))
+    special = special.replace("<!-- BODY_ABSTRACT -->", render_index_sections(lang, sections))
     special = special.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, True))
-    special = special.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta))
-    special = special.replace("<!-- BODY_CONTENT -->", render_index_sections(lang, sections))
     special = special.replace("$$TITLE$$", pagemeta.get("title", ""))
     special = special.replace("$$LANG$$", lang)
     special = special.replace("$$ROOT_HREF$$", root_href)
@@ -926,18 +946,10 @@ def render_index_html(lang, articles, tags):
 
 # SCRIPT STARTS HERE
 
-SECTIONS = [
-    { 
-        "id": "islam",
-        "title": "Islam",
-        "links": [
-            {"slug": "why-not-islam", "title": "Why not Islam?"},
-            {"slug": "history-of-muhammad", "title": "History of Muhammad"}
-        ]
-    },
-]
-
 TAGS = json.loads(read_file("./tags.json"))
+
+articles_by_tag = {}
+articles_by_date = {}
 
 root_href = get_root_href()
 templates = load_templates()
@@ -958,7 +970,7 @@ for slug, readme in articles.items():
 
     pagemeta = {
         "title": readme.get("title", ""),
-        "keywords": readme.get("tags", ""),
+        "keywords": readme.get("tags", []),
         "date": readme.get("date", ""),
         "authors": a,
         "contact_url": "/about",
@@ -967,6 +979,34 @@ for slug, readme in articles.items():
         "initiale": get_initiale(readme, slug)
     }
 
+    # insert sorted by keyword
+    for t in pagemeta["keywords"]:
+        tag_name = TAGS[lang]["tags"][t]
+        if not(lang in articles_by_tag):
+            articles_by_tag[lang] = { }
+        if not(t in articles_by_tag[lang]):
+            articles_by_tag[lang][t] = {}
+        if not("links" in articles_by_tag[lang][t]):
+            articles_by_tag[lang][t]["links"] = []
+        articles_by_tag[lang][t]["links"].append({"slug": slug_raw, "title": pagemeta["title"] })
+
+    # insert sorted by date
+    if not(lang in articles_by_date):
+        articles_by_date[lang] = { }
+    
+    if pagemeta["date"] == "":
+        print("error: article " + lang + "/" + slug_raw + " has no date")
+    else:
+        year = pagemeta["date"].split("-")[0]
+        month = pagemeta["date"].split("-")[1]
+        day = pagemeta["date"].split("-")[2]
+        if not(year in articles_by_date[lang]):
+            articles_by_date[lang][year] = { }
+        if not(month in articles_by_date[lang][year]):
+            articles_by_date[lang][year][month] = { }
+        if not(day in articles_by_date[lang][year][month]):
+            articles_by_date[lang][year][month][day] = {"slug": slug_raw, "title": pagemeta["title"] }
+        
     html = html.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta))
     html = html.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, True))
     html = html.replace("<!-- LINK_TAGS -->", link_tags(templates, lang, readme.get("tags", [])))
@@ -993,20 +1033,27 @@ for slug, readme in articles.items():
 
 write_file(generate_gitignore(articles), "./.gitignore")
 
-write_file(render_special_page(templates, "de", SECTIONS, { "title": "Themen", "description": "Themenübersicht", "img": { }}), "./de/themen.html")
-write_file(render_special_page(templates, "en", SECTIONS, { "title": "Topics", "description": "Topics", "img": { }}), "./en/topics.html")
+at = {}
+for lang, topics in articles_by_tag.items():
+    if not(lang in at):
+        at[lang] = []
+    for topic, links in topics.items():
+        at[lang].append({"id": topic, "title": TAGS[lang]["tags"][topic], "links": links["links"] })
 
-write_file(render_special_page(templates, "de", SECTIONS, { "title": "Neueste Links", "description": "Neueste Links", "img": { }}), "./de/neu.html")
-write_file(render_special_page(templates, "en", SECTIONS, { "title": "Newest Links", "description": "Newest links", "img": { }}), "./en/newest.html")
+write_file(render_special_page(templates, "de", at.get("de", []), { "title": "Themen", "description": "Themenübersicht", "img": { }}), "./de/themen.html")
+write_file(render_special_page(templates, "en", at.get("en", []), { "title": "Topics", "description": "Topics", "img": { }}), "./en/topics.html")
 
-write_file(render_special_page(templates, "de", SECTIONS, { "title": "Ressourcen", "description": "Ressourcen", "img": { }}), "./de/ressourcen.html")
-write_file(render_special_page(templates, "en", SECTIONS, { "title": "Tools", "description": "Tools", "img": { }}), "./en/tools.html")
+write_file(render_special_page(templates, "de", [], { "title": "Neueste Links", "description": "Neueste Links", "img": { }}), "./de/neues.html")
+write_file(render_special_page(templates, "en", [], { "title": "Newest Links", "description": "Newest links", "img": { }}), "./en/newest.html")
 
-write_file(render_special_page(templates, "de", SECTIONS, { "title": "Shop", "description": "Shop", "img": { }}), "./de/shop.html")
-write_file(render_special_page(templates, "en", SECTIONS, { "title": "Shop", "description": "Shop", "img": { }}), "./en/shop.html")
+write_file(render_special_page(templates, "de", TAGS["de"]["ressources"], { "title": "Ressourcen", "description": "Ressourcen", "img": { }}), "./de/ressourcen.html")
+write_file(render_special_page(templates, "en", TAGS["en"]["ressources"], { "title": "Tools", "description": "Tools", "img": { }}), "./en/tools.html")
 
-write_file(render_special_page(templates, "de", SECTIONS, { "title": "Impressum", "description": "Impressum", "img": { }}), "./de/impressum.html")
-write_file(render_special_page(templates, "en", SECTIONS, { "title": "About", "description": "About", "img": { }}), "./en/about.html")
+write_file(render_special_page(templates, "de", TAGS["de"]["shop"], { "title": "Shop", "description": "Shop", "img": { }}), "./de/shop.html")
+write_file(render_special_page(templates, "en", TAGS["en"]["shop"], { "title": "Shop", "description": "Shop", "img": { }}), "./en/shop.html")
+
+write_file(render_special_page(templates, "de", TAGS["de"]["about"], { "title": "Impressum", "description": "Impressum", "img": { }}), "./de/impressum.html")
+write_file(render_special_page(templates, "en", TAGS["en"]["about"], { "title": "About", "description": "About", "img": { }}), "./en/about.html")
 
 write_file(generate_searchindex("de", articles), "./de/index.json")
 write_file(generate_searchindex("en", articles), "./en/index.json")
@@ -1017,7 +1064,3 @@ write_file(render_index_html("de", articles, TAGS), "./de.html")
 index_html = render_index_html("en", articles, TAGS)
 index_html = index_html.replace("<!-- REDIRECT_JS -->", read_file("./templates/redirect.js"))
 write_file(index_html, "./index.html")
-
-# special pages: /de - list all articles
-# /de/neu - list newest articles
-# /index.html - search page (automatic language)

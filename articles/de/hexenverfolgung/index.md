@@ -251,7 +251,7 @@ haben.
 ```json
 {
     "date": "2021-03-11",
-    "tags": ["hexe", "mittelalter", "fruehe-neuzeit", "inquisition"],
+    "tags": ["geschichte", "mittelalter"],
     "authors": ["discord:821379162828439581"]
 }
 ```

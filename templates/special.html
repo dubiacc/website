@@ -1,21 +1,28 @@
 <!DOCTYPE html>
-<html lang="en-us">
-<!-- HEAD_TEMPLATE_HTML -->
-<body class="page-lorem dropcaps-kanzlei">
-	<main>
-        <nav id="sidebar">
-			<!-- HEADER_NAVIGATION -->
-		</nav>
-		<article>
-			<header>
-				<h1>$$TITLE$$</h1>
-			</header>
-
-			<div class="markdownBody" id="markdownBody">
-                <!-- BODY_CONTENT -->
-            </div>
-        </article>
-    </main>
-    <img loading="lazy" src="/static/img/watercolor.avif" alt="Watercolor decoration" id="watercolor" decoding="async" height="1026" width="2050" decoding="async" style="position:absolute;top:0px;min-width:500px;max-width:900px;width:100%;height:auto;filter:contrast(1.5);right:0px;z-index:-999;" />
-</body>
+<html lang="$$LANG$$">
+	<!-- HEAD_TEMPLATE_HTML -->
+	<body class="page-index">
+		<!-- REDIRECT_JS -->
+		<a id="skip-to-content-link" href="$$PAGE_HREF$$#markdownBody">
+            $$SKIP_TO_MAIN_CONTENT$$
+        </a>
+		<main>
+			<nav id="sidebar">
+				<!-- HEADER_NAVIGATION -->
+			</nav>
+			<article style="margin-bottom: 100px">
+				<header>
+					<h1>$$TITLE$$</h1>
+				</header>
+				
+				<div class="markdownBody" id="markdownBody">
+					<!-- BODY_NOSCRIPT -->
+					<!-- BODY_ABSTRACT -->
+					<!-- BODY_CONTENT -->
+					<!-- SIDENOTES -->
+				</div>
+			</article>
+		</main>
+		<img loading="lazy" src="/static/img/watercolor.avif" alt="Watercolor decoration" id="watercolor" decoding="async" height="1026" width="2050" decoding="async" style="position:absolute;top:0px;min-width:500px;max-width:900px;width:100%;height:auto;filter:contrast(1.5);right:0px;z-index:-999;" />
+	</body>
 </html>

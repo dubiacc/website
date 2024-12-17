@@ -74,7 +74,7 @@ Eine genaue Analyse von **5. Mose 22,28-29** unter Berücksichtigung des hebräi
 ```
 {
     "date": "2024-11-13",
-    "tags": ["allgemeines"],
+    "tags": ["frage"],
     "authors": ["discord:1236084336340762656"]
 }
 ```
