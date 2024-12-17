@@ -109,9 +109,10 @@ def generate_gitignore(articles_dict):
     return gitignore
 
 # returns the <head> element of the page
-def head(templates, lang, obj):
+def head(templates, lang, obj, title_id):
     head = templates["head"]
     head = head.replace("$$TITLE$$", obj.get("title", ""))
+    head = head.replace("$$TITLE_ID$$", title_id)
     head = head.replace("<!-- DROPCAP_CSS -->", "<style>" + generate_dropcap_css(obj.get("initiale", "")) + "</style>")
     head = head.replace("$$KEYWORDS$$", ", ".join(obj.get("keywords", [])))
     head = head.replace("$$DATE$$", obj.get("date", ""))
@@ -886,9 +887,9 @@ def render_index_first_section(lang, tags, articles):
     first_section = first_section.replace("<!-- OPTIONS -->", options)
     return first_section
 
-def render_special_page(templates, lang, sections, pagemeta):
+def render_special_page(templates, lang, sections, pagemeta, page_id):
     special = templates["special"]
-    special = special.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta))
+    special = special.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta, page_id))
     special = special.replace("<!-- BODY_ABSTRACT -->", render_index_sections(lang, sections))
     special = special.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, True))
     special = special.replace("$$TITLE$$", pagemeta.get("title", ""))
@@ -921,7 +922,7 @@ def render_index_html(lang, articles, tags):
         "description": "Search dubia.cc",
         "img": {},
     }
-    search = search.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, search_meta))
+    search = search.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, search_meta, lang + "-search"))
     search = search.replace("$$TITLE$$", search_meta.get("title", ""))
     write_file(search, "./" + lang + "/search.html")
 
@@ -929,7 +930,7 @@ def render_index_html(lang, articles, tags):
     index_html = index_html.replace("<!-- BODY_ABSTRACT -->", index_body_html)
     index_html = index_html.replace("<!-- PAGE_DESCRIPTION -->", read_file("./templates/page-description-" + lang + ".html"))
     index_html = index_html.replace("<!-- SVG_LOGO_INLINE -->", logo_svg)
-    index_html = index_html.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta))
+    index_html = index_html.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta, lang + "-index"))
     index_html = index_html.replace("<!-- PAGE_HELP -->", read_file("./templates/navigation-help-" + lang + ".html"))
     index_html = index_html.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, False))
     index_html = index_html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content")
@@ -1007,7 +1008,7 @@ for slug, readme in articles.items():
         if not(day in articles_by_date[lang][year][month]):
             articles_by_date[lang][year][month][day] = {"slug": slug_raw, "title": pagemeta["title"] }
         
-    html = html.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta))
+    html = html.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta, lang + "-" + slug_raw))
     html = html.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, True))
     html = html.replace("<!-- LINK_TAGS -->", link_tags(templates, lang, readme.get("tags", [])))
     if slug == "de/rosenkranz" or slug == "en/rosary":
@@ -1040,20 +1041,20 @@ for lang, topics in articles_by_tag.items():
     for topic, links in topics.items():
         at[lang].append({"id": topic, "title": TAGS[lang]["tags"][topic], "links": links["links"] })
 
-write_file(render_special_page(templates, "de", at.get("de", []), { "title": "Themen", "description": "Themenübersicht", "img": { }}), "./de/themen.html")
-write_file(render_special_page(templates, "en", at.get("en", []), { "title": "Topics", "description": "Topics", "img": { }}), "./en/topics.html")
+write_file(render_special_page(templates, "de", at.get("de", []), { "title": "Themen", "description": "Themenübersicht", "img": { }}, "de-themen"), "./de/themen.html")
+write_file(render_special_page(templates, "en", at.get("en", []), { "title": "Topics", "description": "Topics", "img": { }}, "en-topics"), "./en/topics.html")
 
-write_file(render_special_page(templates, "de", [], { "title": "Neueste Links", "description": "Neueste Links", "img": { }}), "./de/neues.html")
-write_file(render_special_page(templates, "en", [], { "title": "Newest Links", "description": "Newest links", "img": { }}), "./en/newest.html")
+write_file(render_special_page(templates, "de", [], { "title": "Neueste Links", "description": "Neueste Links", "img": { }}, "de-neues"), "./de/neues.html")
+write_file(render_special_page(templates, "en", [], { "title": "Newest Links", "description": "Newest links", "img": { }}, "en-newest"), "./en/newest.html")
 
-write_file(render_special_page(templates, "de", TAGS["de"]["ressources"], { "title": "Ressourcen", "description": "Ressourcen", "img": { }}), "./de/ressourcen.html")
-write_file(render_special_page(templates, "en", TAGS["en"]["ressources"], { "title": "Tools", "description": "Tools", "img": { }}), "./en/tools.html")
+write_file(render_special_page(templates, "de", TAGS["de"]["ressources"], { "title": "Ressourcen", "description": "Ressourcen", "img": { }}, "de-ressourcen"), "./de/ressourcen.html")
+write_file(render_special_page(templates, "en", TAGS["en"]["ressources"], { "title": "Tools", "description": "Tools", "img": { }}, "en-tools"), "./en/tools.html")
 
-write_file(render_special_page(templates, "de", TAGS["de"]["shop"], { "title": "Shop", "description": "Shop", "img": { }}), "./de/shop.html")
-write_file(render_special_page(templates, "en", TAGS["en"]["shop"], { "title": "Shop", "description": "Shop", "img": { }}), "./en/shop.html")
+write_file(render_special_page(templates, "de", TAGS["de"]["shop"], { "title": "Shop", "description": "Shop", "img": { }}, "de-shop"), "./de/shop.html")
+write_file(render_special_page(templates, "en", TAGS["en"]["shop"], { "title": "Shop", "description": "Shop", "img": { }}, "en-shop"), "./en/shop.html")
 
-write_file(render_special_page(templates, "de", TAGS["de"]["about"], { "title": "Impressum", "description": "Impressum", "img": { }}), "./de/impressum.html")
-write_file(render_special_page(templates, "en", TAGS["en"]["about"], { "title": "About", "description": "About", "img": { }}), "./en/about.html")
+write_file(render_special_page(templates, "de", TAGS["de"]["about"], { "title": "Impressum", "description": "Impressum", "img": { }}, "de-impressum"), "./de/impressum.html")
+write_file(render_special_page(templates, "en", TAGS["en"]["about"], { "title": "About", "description": "About", "img": { }}, "en-about"), "./en/about.html")
 
 write_file(generate_searchindex("de", articles), "./de/index.json")
 write_file(generate_searchindex("en", articles), "./en/index.json")
