@@ -1,4 +1,4 @@
-# St. Bridget 12 Jähriges Gebet
+# Gebet der Hl. Birgitta von Schweden
 
 Im Namen des Vaters und des Sohnes und des Heiligen Geistes. Amen.
 

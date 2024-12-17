@@ -802,8 +802,11 @@ def render_section_items(lang, links):
             bsm = "0"
         first = False
 
+        final_link = "$$ROOT_HREF$$/" + lang + "/" + slug
+        if slug.startswith("http"):
+            final_link = slug
         section_items += "<li class='block link-modified-recently-list-item dark-mode-invert' style='--bsm: " + bsm + ";'>"
-        section_items += "  <p class='in-list first-graf block' style='--bsm: 0;'><a href='$$ROOT_HREF$$/" + lang + "/" + slug + "'"
+        section_items += "  <p class='in-list first-graf block' style='--bsm: 0;'><a href='" + final_link + "'"
         section_items += "      id='" + lang + "-" + slug + "'"
         section_items += "      class='link-annotated link-page link-modified-recently in-list has-annotation spawns-popup'"
         section_items += "      data-attribute-title='" + section_title + "'>" + section_title + "</a></p>"
