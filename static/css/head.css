@@ -2058,11 +2058,6 @@ body.page-index #markdownBody {
 /*  Nav bar.
  */
 
-/*  No index self-link.
- */
-body.page-index #sidebar a.logo {
-    pointer-events: none;
-}
 
 /*  Special nav link styling on /index.
  */

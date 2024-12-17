@@ -33,3 +33,9 @@ erschalle: Lob sei dem göttlichen Herzen, durch das uns
 Heil geworden; ihm sei Ruhm und Ehre in Ewigkeit.
 
 Amen.
+
+```
+{
+    "tags": ["gebet"]
+}
+```

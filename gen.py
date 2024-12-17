@@ -235,7 +235,10 @@ def link_tags(templates, lang, tags):
     tags_str = ""
     for t in tags:
         t_descr = "Link to " + t + " tag"
-        t_data = "<a href='$$ROOT_HREF$$/" + lang + "/tag/" + t
+        topics_url = "topics"
+        if lang == "de":
+            topics_url = "themen"
+        t_data = "<a href='$$ROOT_HREF$$/" + lang + "/" + topics_url + "#" + t
         t_data += "' class='link-tag link-page link-annotated icon-not has-annotation spawns-popup' rel='tag' data-attribute-title='"
         t_data += t_descr + "'>" + t + "</a>"
         if t != tags[-1]:
@@ -413,7 +416,7 @@ def render_page_author_pages(lang, authors):
                 dn += "<p><a href='" + link + "'>GitHub Sponsors</a></p>"
             else:
                 raise Exception("unknown platform " + platform + " for user " + id + "in authors.json")
-            
+        
         t = "<!doctype html><html><head><title>" + name + "</title></head><body>"
         t += "<h1>" + name + "</h1>"
         t += "<h2>" + text_contact + "</h2>"
@@ -995,8 +998,11 @@ for slug, readme in articles.items():
     if not(lang in articles_by_date):
         articles_by_date[lang] = { }
     
+    article_is_prayer = ("gebet" in pagemeta["keywords"]) or ("prayer" in pagemeta["keywords"])
+
     if pagemeta["date"] == "":
-        print("error: article " + lang + "/" + slug_raw + " has no date")
+        if not(article_is_prayer):
+            print("error: article " + lang + "/" + slug_raw + " has no date")
     else:
         year = pagemeta["date"].split("-")[0]
         month = pagemeta["date"].split("-")[1]
@@ -1016,12 +1022,16 @@ for slug, readme in articles.items():
         html = html.replace("<!-- BODY_ABSTRACT -->", "<div class='abstract' style='max-width:500px;margin:0 auto;'><blockquote class='first-block first-graf block page-abstract blockquote-level-1' style='--bsm: 0;'>" + body_abstract(templates, lang, readme.get("summary", [])) + "</blockquote></div>")
         html = html.replace("<!-- BODY_CONTENT -->", render_rosary_body(templates, lang, pagemeta))
     else:
-        html = html.replace("<!-- PAGE_DESCRIPTION -->", page_desciption(templates, lang, pagemeta))
-        html = html.replace("<!-- PAGE_METADATA -->", page_metadata(templates, lang, pagemeta))
+
+        if not(article_is_prayer):
+            html = html.replace("<!-- TOC -->", table_of_contents(templates, lang, readme.get("sections", [])))
+            html = html.replace("<!-- PAGE_DESCRIPTION -->", page_desciption(templates, lang, pagemeta))
+            html = html.replace("<!-- PAGE_METADATA -->", page_metadata(templates, lang, pagemeta))
+        
         html = html.replace("<!-- BODY_ABSTRACT -->", body_abstract(templates, lang, readme.get("summary", [])))
         html = html.replace("<!-- BODY_CONTENT -->", body_content(templates, lang, readme.get("sections", [])))
         html = html.replace("<!-- BODY_NOSCRIPT -->", body_noscript(templates, lang))
-        html = html.replace("<!-- TOC -->", table_of_contents(templates, lang, readme.get("sections", [])))
+    
     html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content")
     html = html.replace("$$TITLE$$", pagemeta["title"])
     html = html.replace("$$TITLE_ID$$", title_id)
@@ -1044,8 +1054,22 @@ for lang, topics in articles_by_tag.items():
 write_file(render_special_page(templates, "de", at.get("de", []), { "title": "Themen", "description": "Themenübersicht", "img": { }}, "de-themen"), "./de/themen.html")
 write_file(render_special_page(templates, "en", at.get("en", []), { "title": "Topics", "description": "Topics", "img": { }}, "en-topics"), "./en/topics.html")
 
-write_file(render_special_page(templates, "de", [], { "title": "Neueste Links", "description": "Neueste Links", "img": { }}, "de-neues"), "./de/neues.html")
-write_file(render_special_page(templates, "en", [], { "title": "Newest Links", "description": "Newest links", "img": { }}, "en-newest"), "./en/newest.html")
+ad2 = {}
+for lang, year in articles_by_date.items():
+    if not(lang in ad2):
+        ad2[lang] = []
+    a2 = {}
+    for year, months in year.items():
+        for month, days in months.items():
+            for day, link in days.items():
+                if not(year in a2):
+                    a2[year] = []
+                a2[year].append({"slug": link["slug"], "title": month + "-" + day + ": " + link["title"] })
+    for y, links in a2.items():
+        ad2[lang].append({ "id": "y" + y, "title": y, "links": links })
+    ad2[lang].reverse()
+write_file(render_special_page(templates, "de", ad2.get("de", []), { "title": "Neueste Links", "description": "Neueste Links", "img": { }}, "de-neues"), "./de/neues.html")
+write_file(render_special_page(templates, "en", ad2.get("en", []), { "title": "Newest Links", "description": "Newest links", "img": { }}, "en-newest"), "./en/newest.html")
 
 write_file(render_special_page(templates, "de", TAGS["de"]["ressources"], { "title": "Ressourcen", "description": "Ressourcen", "img": { }}, "de-ressourcen"), "./de/ressourcen.html")
 write_file(render_special_page(templates, "en", TAGS["en"]["ressources"], { "title": "Tools", "description": "Tools", "img": { }}, "en-tools"), "./en/tools.html")

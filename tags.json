@@ -139,6 +139,7 @@
             "moral": "Morallehre",
             "gnostizismus": "Gnostizismus",
             "fruehkirche": "Frühkirche",
+            "gebet": "Gebete",
             "frage": "Frage"
         },
         "ressources": [
@@ -146,7 +147,17 @@
                 "id": "gebete",
                 "title": "Gebete",
                 "links": [
-                    {"slug": "rosenkranz", "title": "Rosenkranz"}
+                    {"slug": "rosenkranz", "title": "Rosenkranz"},
+                    {"slug": "angelus", "title": "Angelus"},
+                    {"slug": "morgengruss", "title": "Morgengruß zum Herzen Jesu"},
+                    {"slug": "abendgruss", "title": "Abendgruß zum Herzen Jesu"},
+                    {"slug": "weihe-menschengeschlecht", "title": "Weihe des Menschengeschlechtes"},
+                    {"slug": "arbeitergebet", "title": "Arbeitergebet zum Hl. Josef"},
+                    {"slug": "mutter-der-hilfe", "title": "Zur Mutter der immerwährenden Hilfe"},
+                    {"slug": "hl-josef-schutzherr", "title": "Heiliger Joseph, Schutzherr der Kirche"},
+                    {"slug": "salve-regina", "title": "Salve Regina"},
+                    {"slug": "gebet-fuer-papst", "title": "Gebet für den Papst"},
+                    {"slug": "gebet-birgitta-schweden", "title": "Gebet der Hl. Birgitta von Schweden"}
                 ]
             },
             {
@@ -219,7 +230,7 @@
             
         },
         "tags": {
-            
+            "prayer": "Prayers"
         },
         "ressources": [
             { 

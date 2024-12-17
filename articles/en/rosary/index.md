@@ -8,3 +8,9 @@ You can navigate the rosary using the arrows
 (&lt; and &gt;), as well as using the “Skip to” section after 
 after each rosary or skip to the end. Each mystery can be linked by clicking on the heading,
 so that progress can be saved.
+
+```
+{
+    "tags": ["prayer"]
+}
+```
