@@ -122,9 +122,9 @@ def head(templates, lang, obj, title_id):
 
     description = obj.get("description", "")
     if description == "":
-        description = "Discover the true Catholic Faith - dubia.cc"
+        description = "dubia is a collection of articles about the traditional Catholic faith. Did the Church really teach...? Answers to errors and questions, prayers, and more!"
         if lang == "de":
-            description = "Entdecke den wahren katholischen Glauben - dubia.cc"
+            description = "dubia ist eine Sammlung von Artikeln über den traditionellen katholischen Glauben. Hat die Kirche wirklich ...? Antworten auf Irrtümer, Gebete, uvm."
 
     head = head.replace("$$TITLE$$", title)
     head = head.replace("$$DESCRIPTION$$", description)
@@ -953,6 +953,7 @@ def render_special_page(templates, lang, sections, pagemeta, page_id):
            
 def render_index_html(lang, articles, tags):
     index_html = read_file("./templates/index-template.html")
+    multilang = read_file("./templates/multilang.tags.html")
     index_body_html = read_file("./templates/index-body.html")
     index_body_html = index_body_html.replace("<!-- SECTIONS -->", render_index_first_section(lang, tags, articles))
     index_body_html = index_body_html.replace("<!-- SECTION_EXTRA -->", render_other_index_sections(lang, tags, articles))
@@ -991,6 +992,7 @@ def render_index_html(lang, articles, tags):
     index_html = index_html.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta, lang + "-index"))
     index_html = index_html.replace("<!-- PAGE_HELP -->", read_file("./templates/navigation-help-" + lang + ".html"))
     index_html = index_html.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, False))
+    index_html = index_html.replace("<!-- MULTILANG_TAGS -->", multilang)
     index_html = index_html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content")
     index_html = index_html.replace("$$TITLE$$", pagemeta["title"])
     index_html = index_html.replace("$$TITLE_ID$$", slug_raw)

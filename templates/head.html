@@ -1,5 +1,9 @@
 <head>
     <title>$$TITLE$$</title>
+    <meta name="description" content="$$DESCRIPTION$$">
+
+    <!-- MULTILANG_TAGS -->
+    <!-- REDIRECT_JS -->
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
@@ -15,7 +19,17 @@
     <link rel="preload" href="/static/font/quivira/Quivira-SUBSETTED.ttf" as="font" type="font/ttf" crossorigin>
     
     <!-- Basic IP-based analytics, only tracks statistics about country + article -->
-    <script defer="" src="https://analytics.dubia.cc?p=$$TITLE_ID$$" type="application/javascript" ></script>
+    <script defer="" type="text/javascript">
+      function injectAnalyticsScript() {
+        var resource = document.createElement('script');
+        resource.defer = "";
+        resource.type = "application/javascript";
+        resource.src = "https://analytics.dubia.cc?p=$$TITLE_ID$$";
+        var script = document.getElementById('scratchpad');
+        script.parentNode.insertBefore(resource, script);
+      }
+      setTimeout(injectAnalyticsScript, 2000);
+    </script>
 
     <!-- CRITICAL_CSS -->
     <!-- DARKLIGHT_STYLES -->
@@ -30,7 +44,6 @@
     <meta name="author" content="$$AUTHOR$$">
     <meta name="citation_author" content="$$AUTHOR$$">
     <meta name="contact" content="$$ROOT_HREF$$/$$CONTACT_URL$$">
-    <meta name="description" content="$$DESCRIPTION$$">
     <meta name="keywords" content="$$KEYWORDS$$">
     <meta name="page-body-classes" content="lorem dropcaps-kanzlei">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
