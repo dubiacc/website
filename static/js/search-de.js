@@ -241,7 +241,7 @@ function initSearchIndex(force) {
         do_force = true;
     }
 
-    var version = "1e574e43205118403b8ff0576c650fffdf7195e1";
+    var version = "427e501cfdaf7c21e591bd6c82ee80f42e8196c0";
     var a = localStorage.getItem('articles');
 
 
