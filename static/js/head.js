@@ -7073,7 +7073,7 @@ function updateBackToTopLinkVisibility(event) {
 if (GW.isMobile() == false) doWhenPageLoaded(() => {
     GWLog("injectBackToTopLink", "rewrite.js", 1);
 
-    GW.backToTop = addUIElement(`<div id="back-to-top"><a href="#top" tabindex="-1" title="Back to top">`
+    GW.backToTop = addUIElement(`<div id="back-to-top"><a href="#top" tabindex="-1" aria-label="Back to top">`
         + GW.svg("arrow-up-to-line-light")
         + `</a></div>`);
 
@@ -7110,7 +7110,7 @@ addContentLoadHandler(GW.contentLoadHandlers.rewriteIndexFooterLogoLinkHref = (e
 
     eventInfo.container.querySelectorAll("#footer-decoration-container .footer-logo").forEach(footerLogo => {
         footerLogo.href = "#top";
-        footerLogo.title="Back to top";
+        footerLogo.ariaLabel = "Back to top";
     });
 }, "rewrite", (info) => (info.container == document.body
     && /\/(index)?$/.test(location.pathname)));
