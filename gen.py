@@ -111,17 +111,45 @@ def generate_gitignore(articles_dict):
 # returns the <head> element of the page
 def head(templates, lang, obj, title_id):
     head = templates["head"]
-    head = head.replace("$$TITLE$$", obj.get("title", ""))
+    
+    title = obj.get("title", "")
+    if title == "":
+        title = "Discover the true Catholic Faith - dubia.cc"
+        if lang == "de":
+            title = "Entdecke den wahren katholischen Glauben - dubia.cc"
+    else:
+        title = title + " - dubia.cc"
+
+    description = obj.get("description", "")
+    if description == "":
+        description = "Discover the true Catholic Faith - dubia.cc"
+        if lang == "de":
+            description = "Entdecke den wahren katholischen Glauben - dubia.cc"
+
+    head = head.replace("$$TITLE$$", title)
+    head = head.replace("$$DESCRIPTION$$", description)
     head = head.replace("$$TITLE_ID$$", title_id)
     head = head.replace("<!-- DROPCAP_CSS -->", "<style>" + generate_dropcap_css(obj.get("initiale", "")) + "</style>")
     head = head.replace("$$KEYWORDS$$", ", ".join(obj.get("keywords", [])))
     head = head.replace("$$DATE$$", obj.get("date", ""))
-    head = head.replace("$$AUTHOR$$", ", ".join(obj.get("keywords", [])))
-    head = head.replace("$$DESCRIPTION$$", obj.get("description", ""))
+    head = head.replace("$$AUTHOR$$", ", ".join(obj.get("authors", [])))
     head = head.replace("$$IMG$$", obj.get("img", {}).get("href", ""))
     head = head.replace("$$IMG_ALT$$", obj.get("img", {}).get("title", ""))
     head = head.replace("$$IMG_WIDTH$$", obj.get("img", {}).get("width", ""))
     head = head.replace("$$IMG_HEIGHT$$", obj.get("img", {}).get("height", ""))
+    head = head.replace("$$LANG$$", lang)
+    head = head.replace("$$SLUG$$", "")
+    head = head.replace("$$ROOT_HREF$$", root_href)
+    head = head.replace("$$PAGE_HREF$$", root_href + "/" + lang + "/" + slug_raw)
+    skip = "Skip to main content"
+    if lang == "de":
+        skip = "Zum Hauptinhalt springen"
+    head = head.replace("$$SKIP_TO_MAIN_CONTENT$$", skip)
+    contact = "en/about"
+    if lang == "de":
+        contact = "de/impressum"
+    head = head.replace("$$CONTACT_URL$$", contact)
+    head = head.replace("$$SLUG$$", title_id)
     return head
 
 def get_initiale(readme, slug):
@@ -918,7 +946,7 @@ def render_special_page(templates, lang, sections, pagemeta, page_id):
     special = special.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, pagemeta, page_id))
     special = special.replace("<!-- BODY_ABSTRACT -->", render_index_sections(lang, sections))
     special = special.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, True))
-    special = special.replace("$$TITLE$$", pagemeta.get("title", ""))
+    special = special.replace("$$TITLE$$", pagemeta.get("title", "") + " - dubia.cc")
     special = special.replace("$$LANG$$", lang)
     special = special.replace("$$ROOT_HREF$$", root_href)
     return special
@@ -949,7 +977,7 @@ def render_index_html(lang, articles, tags):
         "img": {},
     }
     search = search.replace("<!-- HEAD_TEMPLATE_HTML -->", head(templates, lang, search_meta, lang + "-search"))
-    search = search.replace("$$TITLE$$", search_meta.get("title", ""))
+    search = search.replace("$$TITLE$$", search_meta.get("title", "Search") + " - dubia.cc")
     write_file(search, "./" + lang + "/search.html")
 
     index_body_html = index_body_html.replace("<!-- SEARCHBAR -->", shtml)
@@ -961,11 +989,11 @@ def render_index_html(lang, articles, tags):
     index_html = index_html.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, False))
     index_html = index_html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content")
     index_html = index_html.replace("$$TITLE$$", pagemeta["title"])
-    index_html = index_html.replace("$$TITLE_ID$$", "")
+    index_html = index_html.replace("$$TITLE_ID$$", slug_raw)
     index_html = index_html.replace("$$LANG$$", lang)
     index_html = index_html.replace("$$SLUG$$", "")
     index_html = index_html.replace("$$ROOT_HREF$$", root_href)
-    index_html = index_html.replace("$$PAGE_HREF$$", root_href)
+    index_html = index_html.replace("$$PAGE_HREF$$", root_href + "/" + lang + "/" + slug_raw)
     index_html = index_html.replace("<link rel=\"preload\" href=\"/static/img/logo/logo-smooth.svg\" as=\"image\">", "<link rel=\"preload\" href=\"/static/img/ornament/sun-verginasun-black.svg\" as=\"image\">")
     index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/ssfp/ssp/SourceSansPro-BASIC-Regular.ttf\" as=\"font\" type=\"font/ttf\" crossorigin>", "")
     index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/quivira/Quivira-SUBSETTED.ttf\" as=\"font\" type=\"font/ttf\" crossorigin>", "")
@@ -1055,8 +1083,15 @@ for slug, readme in articles.items():
         html = html.replace("<!-- BODY_CONTENT -->", body_content(templates, lang, readme.get("sections", [])))
         html = html.replace("<!-- BODY_NOSCRIPT -->", body_noscript(templates, lang))
     
-    html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content")
-    html = html.replace("$$TITLE$$", pagemeta["title"])
+    skip = "Skip to main content"
+    if lang == "de":
+        skip = "Zum Hauptinhalt springen"
+    html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", skip)
+    contact = "en/about"
+    if lang == "de":
+        contact = "de/impressum"
+    html = html.replace("$$CONTACT_URL$$", contact)
+    html = html.replace("$$TITLE$$", pagemeta["title"] + " - dubia.cc")
     html = html.replace("$$TITLE_ID$$", title_id)
     html = html.replace("$$LANG$$", lang)
     html = html.replace("$$SLUG$$", slug_raw)
