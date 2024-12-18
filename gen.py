@@ -980,6 +980,10 @@ def render_index_html(lang, articles, tags):
     search = search.replace("$$TITLE$$", search_meta.get("title", "Search") + " - dubia.cc")
     write_file(search, "./" + lang + "/search.html")
 
+    select_faith = "Select Faith"
+    if lang == "de":
+        "Glauben auswählen"
+        
     index_body_html = index_body_html.replace("<!-- SEARCHBAR -->", shtml)
     index_html = index_html.replace("<!-- BODY_ABSTRACT -->", index_body_html)
     index_html = index_html.replace("<!-- PAGE_DESCRIPTION -->", read_file("./templates/page-description-" + lang + ".html"))
@@ -992,6 +996,7 @@ def render_index_html(lang, articles, tags):
     index_html = index_html.replace("$$TITLE_ID$$", slug_raw)
     index_html = index_html.replace("$$LANG$$", lang)
     index_html = index_html.replace("$$SLUG$$", "")
+    index_html = index_html.replace("$$SELECT_FAITH$$", select_faith)
     index_html = index_html.replace("$$ROOT_HREF$$", root_href)
     index_html = index_html.replace("$$PAGE_HREF$$", root_href + "/" + lang + "/" + slug_raw)
     index_html = index_html.replace("<link rel=\"preload\" href=\"/static/img/logo/logo-smooth.svg\" as=\"image\">", "<link rel=\"preload\" href=\"/static/img/ornament/sun-verginasun-black.svg\" as=\"image\">")

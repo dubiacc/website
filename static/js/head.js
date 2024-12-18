@@ -7110,6 +7110,7 @@ addContentLoadHandler(GW.contentLoadHandlers.rewriteIndexFooterLogoLinkHref = (e
 
     eventInfo.container.querySelectorAll("#footer-decoration-container .footer-logo").forEach(footerLogo => {
         footerLogo.href = "#top";
+        footerLogo.title="Back to top";
     });
 }, "rewrite", (info) => (info.container == document.body
     && /\/(index)?$/.test(location.pathname)));
