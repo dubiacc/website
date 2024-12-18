@@ -1151,6 +1151,4 @@ write_file(generate_searchindex("en", articles), "./en/index.json")
 write_file(render_index_html("en", articles, TAGS), "./en.html")
 write_file(render_index_html("de", articles, TAGS), "./de.html")
 
-index_html = render_index_html("en", articles, TAGS)
-index_html = index_html.replace("<!-- REDIRECT_JS -->", read_file("./templates/redirect.js"))
-write_file(index_html, "./index.html")
+write_file(read_file("./templates/selectlang.html"), "./index.html")
