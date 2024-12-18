@@ -777,12 +777,23 @@ def render_index_sections(lang, sections):
         section_id = s["id"]
         section_title = s["title"]
         if "links" in s:
-            section_links = s["links"]
-            ret += render_index_section(lang, section_id, "", section_title, section_links)
+            ret += render_index_section(lang, section_id, "", section_title, s["links"])
+        elif "texts" in s:
+            ret += render_index_section_texts(lang, section_id, "", section_title, s["texts"])
         elif "link" in s:
             section_links = s["link"]
             ret += render_index_section_img(lang, section_id, "", section_title, section_links["slug"], section_links["img"], section_links["title"])
     return ret 
+
+def render_section_items_texts(lang, texts):
+    section_items = ""
+    for t in texts:
+        if t == "":
+            t = "<br/>"
+        elif not(t.startswith("<")):
+            t = "<p style='text-indent: 0px;'>" + t + "</p>"
+        section_items += t
+    return section_items
 
 def render_section_items_img(lang, link, img, title):
     section_items = ""
@@ -821,6 +832,15 @@ def render_index_section(lang, id, classes, title, links):
     section_html = section_html.replace("$$SECTION_NAME$$", title)
     section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title)
     section_html = section_html.replace("<!-- SECTION_ITEMS -->", render_section_items(lang, links))
+    return section_html
+
+def render_index_section_texts(lang, id, classes, title, txts):
+    section_html = read_file("./templates/index.section.html")
+    section_html = section_html.replace("$$SECTION_ID$$", id)
+    section_html = section_html.replace("$$SECTION_CLASSES$$", classes)
+    section_html = section_html.replace("$$SECTION_NAME$$", title)
+    section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title)
+    section_html = section_html.replace("<!-- SECTION_ITEMS -->", render_section_items_texts(lang, txts))
     return section_html
 
 def render_index_section_img(lang, id, classes, title, link, img, t):

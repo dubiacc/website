@@ -164,7 +164,7 @@
                 "id": "bibeln",
                 "title": "Bibeln und Kirchenväter",
                 "links": [
-                    {"slug": "https://k-bibel.de/", "title": "K-Bibel.de: Katholische Bibelübersetzung"},
+                    {"slug": "https://k-bibel.de/", "title": "K-Bibel.de"},
                     {"slug": "https://vulgata.online/", "title": "Vulgata Online"},
                     {"slug": "https://biblehub.com/interlinear/", "title": "Interlinear Bibel (BibleHub)"},
                     {"slug": "https://logeion.uchicago.edu/", "title": "Logeion: Griechische / Hebräische Quelltexte (Univ. Chicago)"},
@@ -210,8 +210,45 @@
             { 
                 "id": "kontakt",
                 "title": "Kontakt",
-                "links": [
-                    
+                "texts": [
+                    "<strong><em>Angaben gemäß § 5 TMG und § 55 Abs. 2 RStV</em></strong>",
+                    "",
+                    "",
+                    "Felix Schütt",
+                    "c/o Postflex #5878",
+                    "Emsdettener Str. 10",
+                    "48268 Greven",
+                    "",
+                    "<strong><em>EU-Streitschlichtung</em></strong>",
+                    "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:",
+                    "",
+                    "<a href='https://ec.europa.eu/consumers/odr' rel='nofollow'>https://ec.europa.eu/consumers/odr</a>",
+                    "",
+                    "Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
+                    "",
+                    "<strong><em>Korrekturen und Fehler</em></strong>",
+                    "",
+                    "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                ]
+            },
+            { 
+                "id": "datenschutz",
+                "title": "Datenschutz",
+                "texts": [
+                    "Die folgenden Informationen werden von uns beim Aufruf einer Website gespeichert:",
+                    "",
+                    "<ul>",
+                    "<li><a href='https://de.wikipedia.org/wiki/IP-Adresse' rel='nofollow'>IP-Adresse</a></li>",
+                    "<li>Land der IP-Adresse</li>",
+                    "<li>URL der angefragten Webseite</li>",
+                    "<li><a href='https://de.wikipedia.org/wiki/Referrer' rel='nofollow'>HTTP-Referrer</a></li>",
+                    "</ul>",
+                    "",
+                    "Wir speichern diese Informationen für <strong>eine Speicherdauer von 7 Tagen</strong> für rein statistische und anonyme Abfragen (z.B. um zu sehen, woher die Artikel verlinkt sind). Die Daten sind anonymisiert, so dass wir auf Auskunfts- oder Löschungsanträge nicht reagieren können.",
+                    "",
+                    "Ihre Daten werden von Zeit zu Zeit analysiert (z.B.: Wie viele wöchentliche einzelne Benutzer lesen welche Artikel).",
+                    "",
+                    "Wenn Sie sich weiter schützen wollen, verwenden Sie einen VPN oder blockieren Sie HTTP-Verbindungen zu analytics.dubia.cc in Ihrem Browser."
                 ]
             }
         ]
@@ -244,13 +281,13 @@
                 "id": "bibles",
                 "title": "Bibles and Church Fathers",
                 "links": [
-                    {"slug": "https://www.drbo.org/", "title": "Douay-Rheims Online: Catholic Bible Translation(s)"},
+                    {"slug": "https://www.drbo.org/", "title": "Douay-Rheims Online"},
                     {"slug": "https://vulgata.online/", "title": "Vulgata Online"},
-                    {"slug": "https://biblehub.com/interlinear/", "title": "BibleHub: Interlinear Bible (Hebrew - Greek)"},
-                    {"slug": "https://logeion.uchicago.edu/", "title": "Logeion: Greek / Hebrew source texts (Univ. Chicago)"},
-                    {"slug": "https://bkv.unifr.ch/en", "title": "Library of the Church Fathers (Univ. Freiburg)"},
-                    {"slug": "https://canonlaw.ninja/", "title": "CanonLaw.ninja - search engine for Canon Law"},
-                    {"slug": "https://catenabible.com/", "title": "Catena Bible - Bible with annotations by the Church Fathers"},
+                    {"slug": "https://biblehub.com/interlinear/", "title": "BibleHub: Hebrew - Greek Bible"},
+                    {"slug": "https://logeion.uchicago.edu/", "title": "Logeion: Greek / Hebrew source texts"},
+                    {"slug": "https://bkv.unifr.ch/en", "title": "Library of the Church Fathers"},
+                    {"slug": "https://canonlaw.ninja/", "title": "CanonLaw.ninja"},
+                    {"slug": "https://catenabible.com/", "title": "Catena Bible - Church Fathers by bible verse"},
                     {"slug": "https://ccel.org/", "title": "CCEL - Christian Classics Ethereal Library"}
                 ]
             },
@@ -290,10 +327,47 @@
             { 
                 "id": "contact",
                 "title": "Contact",
-                "links": [
-                    
+                "texts": [
+                    "<strong><em>Info according to § 5 TMG and § 55 Abs. 2 RStV</em></strong>",
+                    "",
+                    "",
+                    "Felix Schütt",
+                    "c/o Postflex #5878",
+                    "Emsdettener Str. 10",
+                    "48268 Greven",
+                    "",
+                    "<strong><em>EU dispute resolution</em></strong>",
+                    "The European Commission provides a platform for online dispute resolution (ODR):",
+                    "",
+                    "<a href='https://ec.europa.eu/consumers/odr' rel='nofollow'>https://ec.europa.eu/consumers/odr</a>",
+                    "",
+                    "We are not willing or obliged to participate in dispute resolution proceedings before a consumer arbitration board.",
+                    "",
+                    "<strong><em>Corrections and suggestions</em></strong>",
+                    "",
+                    "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
                 ]
-            }
+            },
+            { 
+                "id": "privacy",
+                "title": "Privacy",
+                "texts": [
+                    "The following information is recorded by us after requesting a website:",
+                    "",
+                    "<ul>",
+                    "<li><a href='https://en.wikipedia.org/wiki/IP_address' rel='nofollow'>IP address</a></li>",
+                    "<li>Country of the IP address</li>",
+                    "<li>URL of the requested website</li>",
+                    "<li><a href='https://en.wikipedia.org/wiki/HTTP_referer' rel='nofollow'>HTTP referrer</a></li>",
+                    "</ul>",
+                    "",
+                    "We store this information for <strong>a storage period of 7 days</strong> for purely statistical and anonymous queries (e.g. to see where the articles are linked from). The data is anonymized, so we cannot respond to requests for information or deletion.",
+                    "",
+                    "Your data is analyzed from time to time (e.g: How many weekly unique users from which countries use our site and read which articles).",
+                    "",
+                    "If you want to protect yourself further, use a VPN or block HTTP connections to analytics.dubia.cc in your browser."
+                ]
+            } 
         ]
     }
 }
