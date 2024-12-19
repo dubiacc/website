@@ -1,0 +1,10 @@
+[package]
+name = "md2json2"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+base64 = "0.22.1"
+sha2 = "0.10.8"
+strsim = "0.11.1"
+walkdir = "*"
