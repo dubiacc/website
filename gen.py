@@ -108,10 +108,7 @@ def generate_gitignore(articles_dict):
     gitignore = "\r\n".join(filenames)
     return gitignore
 
-# returns the <head> element of the page
-def head(templates, lang, obj, title_id):
-    head = templates["head"]
-    
+def get_title(lang, obj):
     title = obj.get("title", "")
     if title == "":
         title = "Discover the true Catholic Faith - dubia.cc"
@@ -119,13 +116,21 @@ def head(templates, lang, obj, title_id):
             title = "Entdecke den wahren katholischen Glauben - dubia.cc"
     else:
         title = title + " - dubia.cc"
+    return title
 
-    description = obj.get("description", "")
-    if description == "":
-        description = "dubia is a collection of articles about the traditional Catholic faith. Did the Church really teach...? Answers to errors and questions, prayers, and more!"
+def get_description(lang, obj):
+    d = str(obj.get("description", ""))
+    if d == "":
+        d = "dubia is a collection of articles about the traditional Catholic faith. Did the Church really teach...? Answers to errors and questions, prayers, and more!"
         if lang == "de":
-            description = "dubia ist eine Sammlung von Artikeln über den traditionellen katholischen Glauben. Hat die Kirche wirklich ...? Antworten auf Irrtümer, Gebete, uvm."
+            d = "dubia ist eine Sammlung von Artikeln über den traditionellen katholischen Glauben. Hat die Kirche wirklich...? Antworten auf Irrtümer, Gebete, uvm."
+    return d
 
+# returns the <head> element of the page
+def head(templates, lang, obj, title_id):
+    head = templates["head"]
+    title = get_title(lang, obj)
+    description = get_description(lang, obj)
     head = head.replace("$$TITLE$$", title)
     head = head.replace("$$DESCRIPTION$$", description)
     head = head.replace("$$TITLE_ID$$", title_id)
@@ -958,11 +963,20 @@ def render_index_html(lang, articles, tags):
     index_body_html = index_body_html.replace("<!-- SECTIONS -->", render_index_first_section(lang, tags, articles))
     index_body_html = index_body_html.replace("<!-- SECTION_EXTRA -->", render_other_index_sections(lang, tags, articles))
     logo_svg = read_file("./static/img/logo/full.svg")
+    
+    keywords = ["catholic", "church", "church fathers", "faith", "meaning of life", "evolution", "protestant", "islam"]
+    if lang == "de":
+        keywords = ["katholisch", "kirche", "kirchenväter", "glauben", "sinn des lebens", "evolution", "evangelisch", "islam"]
+    
     pagemeta = {
         "title": readme.get("title", ""),
-        "description": "",
+        "description": readme.get("tagline", ""),
+        "keywords": keywords,
         "img": {},
     }
+    title = get_title(lang, pagemeta)
+    description = get_description(lang, pagemeta)
+
     shtml = search_html(lang)
     search = read_file("./templates/search.html")
     search = search.replace("<!-- SEARCH -->", shtml)
@@ -994,7 +1008,8 @@ def render_index_html(lang, articles, tags):
     index_html = index_html.replace("<!-- HEADER_NAVIGATION -->", header_navigation(templates, lang, False))
     index_html = index_html.replace("<!-- MULTILANG_TAGS -->", multilang)
     index_html = index_html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content")
-    index_html = index_html.replace("$$TITLE$$", pagemeta["title"])
+    index_html = index_html.replace("$$TITLE$$", title)
+    index_html = index_html.replace("$$DESCRIPTION$$", description)
     index_html = index_html.replace("$$TITLE_ID$$", slug_raw)
     index_html = index_html.replace("$$LANG$$", lang)
     index_html = index_html.replace("$$SLUG$$", "")
