@@ -1,9 +1,10 @@
 # Dürfen wir Priester "Vater" nennen?
 
-> "Auch sollt ihr niemanden auf Erden euren Vater nennen; denn nur einer ist euer Vater, der im Himmel."
-> [Matthäus 23,9](https://k-bibel.de/ARN/Mt23#9)
+Das folgende Zitat wird oft benutzt, um zu "widerlegen", dass katholische Priester nicht "Pater", "Father", oder sonstwie betitelt werden dürfen:
 
-Dieses Zitat wird oft benutzt, um zu "widerlegen", dass katholische Priester nicht "Pater", "Father", oder sonstig betitelt werden dürfen. Allerdings ist diese Auslegung falsch.
+> Auch sollt ihr niemanden auf Erden euren Vater nennen; denn nur einer ist euer Vater, der im Himmel.
+> 
+> -- [Matthäus 23,9](https://k-bibel.de/ARN/Mt23#9)
 
 ## Kontext und Erklärung
 

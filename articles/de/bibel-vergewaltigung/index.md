@@ -1,75 +1,109 @@
 # Erlaubt die Bibel Vergewaltigung?
 
-Einige behaupten, dass der folgende Bibelvers Vergewaltigung billige:
+Immer wieder taucht die Behauptung auf, dass der folgende Bibelvers 
+Vergewaltigung billige:
 
-> "Wenn ein Mann eine Jungfrau trifft, die nicht verlobt ist, und sie vergewaltigt und sie entdeckt werden, soll er dem Vater des Mädchens fünfzig Silberstücke zahlen. Er muss das Mädchen heiraten, weil er sie verletzt hat."  
-> — 5. Mose 22,28-29
+> Wenn ein Mann eine Jungfrau trifft, die nicht verlobt ist, und sie vergewaltigt
+> und sie entdeckt werden, soll er dem Vater des Mädchens fünfzig Silberstücke zahlen. 
+> Er muss das Mädchen heiraten, weil er sie verletzt hat.
+> 
+> —- [5. Mose 22:28-29](https://biblehub.com/interlinear/deuteronomy/22-28.htm): [ARN Übersetzung](https://k-bibel.de/ARN/Deuteronomium22#28-29)
 
-## Analyse des Bibelverses
+Einige Verse vorher wird aber die Vergewaltigung von (verlobten) Frauen mit Todesstrafe belegt:
 
-### Wichtige Punkte zu beachten:
+> Wenn aber ein Mann eine verlobte Jungfrau auf dem Felde trifft 
+> und wohnt ihr bei, ihr Gewalt antuend, so soll er allein sterben;
+> 
+> -- [5. Mose 22:25](https://biblehub.com/interlinear/deuteronomy/22-25.htm): [ARN Übersetzung](https://k-bibel.de/ARN/Deuteronomium22#25)
 
-#### Kontext und Übersetzung
-Die Heilige Schrift wurde ursprünglich auf Hebräisch verfasst. Daher ist es essenziell, die ursprünglichen hebräischen Wörter und ihren Kontext zu untersuchen.
+Weil es keinen Sinn macht, bei verlobten Frauen Todesstrafe zu verordnen,
+bei freien Frauen aber nicht, sehen wir uns den hebräischen Quelltext genauer an.
 
-### Die hebräischen Wörter:
+## taphas
 
-- **Taphas (תָּפַשׂ):** Bedeutet "ergreifen", "halten" oder "handhaben". Es impliziert nicht notwendigerweise Gewalt.
-- **Shakab (שָׁכַב):** Bedeutet "sich hinlegen" und wird oft im Kontext sexueller Beziehungen verwendet, kann aber sowohl freiwillig als auch unfreiwillig sein.
+Der [ursprüngliche Vers](https://biblehub.com/text/deuteronomy/22-28.htm) 
+benutzt das Wort [taphas](https://biblehub.com/hebrew/8610.htm) - es wird zwar 
+in der Definition als "ergreifen, erbeuten" übersetzt, allerdings kann es auch 
+in der Bedeutung auch "manipulieren, fangen, handhaben, legen, festhalten, 
+stoppen, sichern, überraschen" heißen. 
 
-### Beispiele für die Verwendung von Taphas und Shakab:
+> **taphas**
+> 
+> Das hebräische Verb "taphas" bedeutet in erster Linie ergreifen oder festhalten. 
+> Es drückt die Handlung aus, etwas oder jemanden zu ergreifen, oft mit Gewalt oder Autorität. 
+> 
+> Der Begriff wird in verschiedenen Kontexten verwendet, einschließlich der physischen 
+> Ergreifung, des geistigen Ergreifens und des metaphorischen Besitzes. Er kann sowohl 
+> eine positive Handlung bedeuten, wie das Ergreifen von Weisheit, als auch eine negative, 
+> wie das Ergreifen eines Feindes.
+>
+> -- [Strong's Lexicon: taphas](https://biblehub.com/hebrew/8610.htm)
 
-- **Jeremia 2,8:** Das Wort *taphas* wird verwendet, um das Handhaben des Gesetzes zu beschreiben, ohne Gewalt zu implizieren.  
-  > "Die Priester fragten nicht: 'Wo ist der HERR?' Die mit dem Gesetz umgingen (*taphas*), kannten mich nicht; die Hirten lehnten sich gegen mich auf."
+## shakab
 
-- **3. Mose 15,18:** *Shakab* bezieht sich auf einvernehmliche sexuelle Beziehungen.  
-  > "Wenn ein Mann bei einer Frau liegt und dabei Samenerguss stattfindet, sollen beide im Wasser baden und bis zum Abend unrein sein."
+"taphas" wird im Alten Testament eher im Bezug auf militärische Ergreifungen benutzt, 
+weniger im Bezug auf sexuelle Übergriffe, in denen das Wort 
+[shakab](https://biblehub.com/hebrew/7901.htm) ("liegen", "sich hinlegen", "schlafen mit")
+üblich ist.
 
-Diese Beispiele zeigen, dass die Begriffe nicht zwingend auf Vergewaltigung hindeuten.
+> **Vergewaltigung von Dina**
+>
+> Da sah sie Sichem, der Sohn des Heviters Hemor, der Fürst jenes Landes, und gewann sie lieb. 
+> Und er entführte sie und schlief bei ihr, der Jungfrau Gewalt antuend (shakab).
+> 
+> -- [1. Mose 34:2](https://biblehub.com/interlinear/genesis/34-2.htm): [ARN Übersetzung](https://k-bibel.de/ARN/Genesis34#2)
 
-### Vergleich mit anderen Bibelstellen
+> **Regelungen bei nicht nachweisbaren Ehebruch**
+> 
+> Rede zu den Söhnen Israels und sage ihnen: Wenn ein verheiratetes 
+> Weib sich vergeht und, ihren Ehemann verachtend, einem andern Manne beiwohnt 
+> (shakab), und der Ehemann es nicht nachweisen kann (lit: "und 
+> Sie nicht ergriffen - taphas - wurden"), sondern der Ehebruch verborgen bleibt 
+> und durch Zeugen nicht erwiesen werden kann, weil sie nicht 
+> im Ehebruche betroffen worden ist;
+> 
+> -- [4. Mose 5:13](https://biblehub.com/text/numbers/5-13.htm): [ARN Übersetzung](https://k-bibel.de/ARN/Numeri5#13)
 
-In **5. Mose 22,25** wird für Vergewaltigung das Wort *chazaq* (חָזַק) verwendet, das "zwingen" oder "Gewalt anwenden" bedeutet:  
+In diesem Kontext wird klar, dass taphas sich auf das physische Ergreifen und 
+shakab sich auf das sexuelle Ergreifen bezieht.
 
-> "Wenn aber ein Mann eine verlobte junge Frau auf dem Feld trifft, sie überwältigt (*chazaq*) und bei ihr liegt, soll der Mann sterben, der bei ihr gelegen hat."
+## Meinungen von Theologen
 
-Die unterschiedliche Wortwahl deutet darauf hin, dass es sich in Vers 28 nicht um Vergewaltigung handelt.
+> 5. Mose 22,28-29 spricht nicht von Vergewaltigung, sondern von 
+> einem Fall, in dem ein Mann eine Jungfrau verführt hat und daher 
+> moralisch verpflichtet ist, sie zu heiraten.
+>
+> -- [Greg L. Bahnsen](src): [quelle](src)
 
-Ebenso sind folgende Stellen wichtig:
+> Das 'Ergreifen' und 'Beiwohnen' impliziert ihre Zustimmung und 
+> ist kein Ausdruck einer Vergewaltigung, wie es in 5. Mose 22,25 der Fall ist.
+>
+> -- [John Gill](src): [quelle](src)
 
-- **Genesis 34,1-7:** Bei der Vergewaltigung Dinas wird ein anderes Verb verwendet, was die Unterscheidung unterstreicht.
-- **Exodus 22,16-17:**  
-  > "Wenn jemand eine unberührte Jungfrau verführt (*pathah*), die noch nicht verlobt ist, und bei ihr liegt, soll er den Brautpreis für sie entrichten und sie zur Frau nehmen."
+> Das in Vers 28 verwendete Verb ist schwächer als das für 'zwingen' 
+> verwendete Verb in Vers 25 und impliziert nicht notwendigerweise Gewalt.
+>
+> -- [James Jordan](src): [quelle](src)
 
-Das Wort *pathah* bedeutet "verführen" oder "überreden".
+> Der Verführer einer unverlobten Jungfrau war verpflichtet, sie zu 
+> heiraten, den Brautpreis zu zahlen und verlor das Recht auf Scheidung.
+>
+> -- [Meredith Kline](src): [quelle](src)
 
----
+## Zusammenfassung
 
-### Theologen und Bibelkommentatore
+Sinngemäß wird das Gesetz wiederholt in 2. Mose 22, 16-17,
+allerdings hier mit dem Wort pathah ("verführen", "überreden").
 
-- **The New Interpreter's Study Bible:**  
-  > "Die Gesetzgebung in 5. Mose 22,28-29 befasst sich mit Fällen von Verführung, in denen angenommen wird, dass die Frau der sexuellen Beziehung zugestimmt hat."  
+> **Strafe bei Verführung von Jungfrauen**
+>
+> Wer eine Jungfrau verführt (patah), die noch unverlobt ist, 
+> und ihr beiwohnt, der steure sie aus und nehme sie zur Frau.
+> 
+> -- [2. Mose 22, 16](https://biblehub.com/interlinear/exodus/22-16.htm): [ARN Übersetzung](https://k-bibel.de/ARN/Exodus22#16-17)
 
-- **Greg L. Bahnsen:**  
-  > "5. Mose 22,28-29 spricht nicht von Vergewaltigung, sondern von einem Fall, in dem ein Mann eine Jungfrau verführt hat und daher moralisch verpflichtet ist, sie zu heiraten."
-
-- **John Gill:**  
-  > "Das 'Ergreifen' und 'Beiwohnen' impliziert ihre Zustimmung und ist kein Ausdruck einer Vergewaltigung, wie es in 5. Mose 22,25 der Fall ist."
-
-- **James Jordan:**  
-  > "Das in Vers 28 verwendete Verb ist schwächer als das für 'zwingen' verwendete Verb in Vers 25 und impliziert nicht notwendigerweise Gewalt."
-
-- **Meredith Kline:**  
-  > "Der Verführer einer unverlobten Jungfrau war verpflichtet, sie zu heiraten, den Brautpreis zu zahlen und verlor das Recht auf Scheidung."
-
-- **Matthew Henry:**  
-  > "Wenn beide zustimmen, ist der Mann verpflichtet, sie zu heiraten und darf sich nie von ihr scheiden lassen."
-
----
-
-## Schlussfolgerung
-
-Eine genaue Analyse von **5. Mose 22,28-29** unter Berücksichtigung des hebräischen Textes und des Kontextes legt nahe, dass es sich um einen Fall von Verführung und nicht um Vergewaltigung handelt. Der Mann muss die Verantwortung für seine Handlungen übernehmen, was den sozialen Normen der damaligen Zeit entspricht.
+Es macht somit logisch keinen Sinn, dass in diesem Kontext von 
+Vergewaltigung, statt von Verführung, die Rede ist.
 
 ```
 {
