@@ -287,24 +287,24 @@ def text_from_par(paragraph):
         target += p.get("data", {}).get("text", "")
     return target
 
-def render_rosary_glorybe(templates, decade, id, prev_id, next_id):
-    rosary_template = read_file("./templates/tools.rosary.glorybe.html")
+def render_rosary_glorybe(templates, lang, decade, id, prev_id, next_id):
+    rosary_template = read_file("./templates/tools.rosary.glorybe." + lang + ".html")
     rosary_template = rosary_template.replace("$$ID$$", id)
     rosary_template = rosary_template.replace("$$PREV_ID$$", prev_id)
     rosary_template = rosary_template.replace("$$NEXT_ID$$", next_id)
     rosary_template = rosary_template.replace("$$DECADE$$", decade)
     return rosary_template
 
-def render_rosary_fatima(templates, decade, id, prev_id, next_id):
-    rosary_template = read_file("./templates/tools.rosary.fatima.html")
+def render_rosary_fatima(templates, lang, decade, id, prev_id, next_id):
+    rosary_template = read_file("./templates/tools.rosary.fatima." + lang + ".html")
     rosary_template = rosary_template.replace("$$ID$$", id)
     rosary_template = rosary_template.replace("$$PREV_ID$$", prev_id)
     rosary_template = rosary_template.replace("$$NEXT_ID$$", next_id)
     rosary_template = rosary_template.replace("$$DECADE$$", decade)
     return rosary_template
 
-def render_rosary_ourfather(templates, decade, id, prev_id, next_id):
-    rosary_template = read_file("./templates/tools.rosary.ourfather.html")
+def render_rosary_ourfather(templates, lang, decade, id, prev_id, next_id):
+    rosary_template = read_file("./templates/tools.rosary.ourfather." + lang + ".html")
     rosary_template = rosary_template.replace("$$ID$$", id)
     rosary_template = rosary_template.replace("$$PREV_ID$$", prev_id)
     rosary_template = rosary_template.replace("$$NEXT_ID$$", next_id)
@@ -321,10 +321,17 @@ def render_rosary_body(templates, lang, pagemeta):
     hm_start = "Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern und gebenedeit ist die Frucht deines Leibes Jesus, "
     hm_end = " Heilige Maria, Mutter Gottes, bitte für uns Sünder, jetzt und in der Stunde unseres Todes."
     
-    rosary_template = read_file("./templates/tools.rosary.html")
-    rosary_template = rosary_template.replace("<!-- OURFATHER -->", render_rosary_ourfather(templates, "Anfang", "intro-05", "intro-04", "intro-06"))
-    rosary_template = rosary_template.replace("<!-- GLORYBE -->", render_rosary_glorybe(templates, "Anfang", "intro-09", "intro-08", "intro-10"))
-    rosary_template = rosary_template.replace("<!-- FATIMA -->", render_rosary_fatima(templates, "Anfang", "intro-10", "intro-09", "decade-1-ourfather"))
+    if lang == "en":
+        hm_start = "Hail, Mary, full of grace, the Lord is with thee. Blessed art thou amongst women and blessed is the fruit of thy womb, Jesus, "
+        hm_end = " Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death."
+
+    rosary_template = read_file("./templates/tools.rosary." + lang + ".html")
+    start = "Anfang"
+    if lang == "en":
+        start = "Start"
+    rosary_template = rosary_template.replace("<!-- OURFATHER -->", render_rosary_ourfather(templates, lang, start, "intro-05", "intro-04", "intro-06"))
+    rosary_template = rosary_template.replace("<!-- GLORYBE -->", render_rosary_glorybe(templates, lang, start, "intro-09", "intro-08", "intro-10"))
+    rosary_template = rosary_template.replace("<!-- FATIMA -->", render_rosary_fatima(templates, lang, start, "intro-10", "intro-09", "decade-1-ourfather"))
     rosary_template = rosary_template.replace("<!-- NAV_01 -->", render_nav(templates, lang, "intro-00"))
     rosary_template = rosary_template.replace("<!-- NAV_02 -->", render_nav(templates, lang, "intro-11"))
     rosary_template = rosary_template.replace("<!-- END -->", read_file("./templates/tools.rosary.outro." + lang + ".html"))
@@ -335,7 +342,7 @@ def render_rosary_body(templates, lang, pagemeta):
     hm_add = [
         "den du, o Jungfrau, vom Heiligen Geist empfangen hast.",
         "den du, o Jungfrau, zu Elisabeth getragen hast.",
-        "den du, o Jungfrau, <sup>in Bethlehem</sup> geboren hast.",
+        "den du, o Jungfrau, in Bethlehem geboren hast.",
         "den du, o Jungfrau, im Tempel aufgeopfert hast.",
         "den du, o Jungfrau, im Tempel wiedergefunden hast.",
 
@@ -351,6 +358,27 @@ def render_rosary_body(templates, lang, pagemeta):
         "der dich, o Jungfrau, in den Himmel aufgenommen hat.",
         "der dich, o Jungfrau, im Himmel gekrönt hat.",
     ]
+
+    if lang == "en":
+        hm_add = [
+            "whom you, O Virgin, received from the Holy Spirit.", 
+            "whom you, O Virgin, carried to Elizabeth.",
+            "to whom, O Virgin, you gave birth in Bethlehem.", 
+            "whom you, O Virgin, offered up in the temple.", 
+            "whom you, O Virgin, found again in the temple.", 
+
+            "who sweated blood for us.", 
+            "who was scourged for us.",
+            "who was crowned with thorns for us.", 
+            "who bore the heavy cross for us.", 
+            "who died for us on the cross.", 
+
+            "who rose from the dead.", 
+            "who ascended into heaven.", 
+            "who sent us the Holy Spirit.", 
+            "who took you, O Virgin, up into heaven.", 
+            "who crowned you, O Virgin, in heaven.", 
+        ]
 
     for i in range(1, 16):
 
@@ -372,7 +400,7 @@ def render_rosary_body(templates, lang, pagemeta):
         else:
             ourfather_next = "s" + mysteries[str(i)]["prayers"]["1"]["image"]
         
-        mst.append(render_rosary_ourfather(templates, decade, "decade-" + str(i) + "-ourfather", ourfather_prev, ourfather_next))
+        mst.append(render_rosary_ourfather(templates, lang, decade, "decade-" + str(i) + "-ourfather", ourfather_prev, ourfather_next))
 
         for q in range(1, 11):
             pr = mys["prayers"][str(q)]
@@ -404,7 +432,7 @@ def render_rosary_body(templates, lang, pagemeta):
     
         glorybe_prev = mys["prayers"]["10"]["image"]
         glorybe_next = "decade-" + str(i) + "-fatima"
-        mst.append(render_rosary_glorybe(templates, decade, "decade-" + str(i) + "-glorybe", glorybe_prev, glorybe_next))
+        mst.append(render_rosary_glorybe(templates, lang, decade, "decade-" + str(i) + "-glorybe", glorybe_prev, glorybe_next))
 
         fatima_prev = "decade-" + str(i) + "-glorybe"
         fatima_next = ""
@@ -414,7 +442,7 @@ def render_rosary_body(templates, lang, pagemeta):
         else:
             fatima_next = "decade-" + str(i + 1) + "-ourfather"
         
-        mst.append(render_rosary_fatima(templates, decade, "decade-" + str(i) + "-fatima", fatima_prev, fatima_next))
+        mst.append(render_rosary_fatima(templates, lang, decade, "decade-" + str(i) + "-fatima", fatima_prev, fatima_next))
         
         if i % 5 == 0:
             mst.append(render_nav(templates, lang, "nav-" + str(i)))
