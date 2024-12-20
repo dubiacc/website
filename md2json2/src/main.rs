@@ -102,7 +102,7 @@ struct ArticleSection {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "t", content = "d", rename_all = "lowercase")]
 enum Paragraph {
-    Sentences { s: Vec<Sentence> },
+    Sentences { s: Vec<SentenceItem> },
     Quote { q: Quote },
     Image { i: Image }
 }
@@ -119,9 +119,7 @@ enum SentenceItem {
         text: String,
     },
     Link {
-        text: String,
-        href: String,
-        ltype: LinkType,
+        l: Link,
     },
     Footnote {
         id: String,
@@ -151,6 +149,43 @@ struct VectorizedArticles {
 }
 
 #[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
+struct Link {
+    text: String,
+    href: String,
+}
+
+impl Link {
+    pub fn new(s: &str) -> Option<Self> {
+
+        let mut s = s.trim().to_string();
+        if s.starts_with("[") {
+            s = s.replacen("[", "", 1);
+        } else {
+            return None;
+        }
+
+        let iter = s.split("](").collect::<Vec<_>>();
+        let alt = iter.get(0)?.to_string();
+        let mut rest = iter.get(1)?.to_string();
+        if rest.ends_with(")") {
+            rest = rest.split(")").next()?.to_string();
+        } else {
+            return None;
+        }
+
+        let href = rest.split_whitespace().nth(0)?.to_string();
+        let title = rest.split_whitespace().nth(1)
+            .map(|s| s.trim().replace("\"", "").replace("'", "").replace("`", ""))
+            .unwrap_or(alt.clone());
+    
+        Some(Self {
+            href,
+            text: title,
+        })
+    }
+}
+
+#[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
 struct Image {
     href: String, 
     alt: String,
@@ -165,7 +200,7 @@ fn parse_paragraph(s: &str) -> Paragraph {
         Paragraph::Quote { q }
     } else {
         Paragraph::Sentences {
-            s: s.split_inclusive(".").map(|q| Sentence::new(q.trim())).collect(),
+            s: Sentence::new(s.trim()).items,
         }
     }
 }
@@ -283,20 +318,65 @@ impl ArticleType {
 impl Quote {
     fn new(s: &str) -> Option<Self> {
 
-        let lines = s.trim().lines()
-        .map(|l| l.trim())
-        .filter(|l| l.starts_with(">"))
-        .map(|l| l.replacen(">", "", 1).trim().to_string())
-        .collect::<Vec<_>>();
-        
+        let mut lines = s.trim().lines()
+            .map(|l| l.trim())
+            .filter(|l| l.trim().starts_with(">"))
+            .map(|l| l.replacen(">", "", 1).trim().to_string())
+            .collect::<Vec<_>>();
+
+        if lines.is_empty() {
+            return None;
+        }
+
         let title = lines.iter()
             .find(|s| s.starts_with("**"))
+            .cloned();
+
+        if let Some(t) = title.as_deref() {
+            lines.retain(|l| l.as_str() != t);
+        }
+
+        let title = title
             .map(|l| l.replace("**", ""))
             .unwrap_or_default();
 
-        let author_line = lines.iter().find(|s| s.trim().starts_with("--"))?.replacen("--", "", 1);
-        let author_link = author_line.split(":").nth(0)?;
-        let source = author_line.split(":").nth(1);
+        let author_line = lines.iter()
+            .find(|s| s.trim().starts_with("--") || s.trim().starts_with("—-"))
+            .cloned();
+        
+        if let Some(t) = author_line.as_deref() {
+            lines.retain(|l| l.as_str() != t);
+        }
+        
+        let author_line = author_line
+            .map(|s| s.replacen("--", "", 1).replacen("—-", "", 1).trim().to_string())
+            .unwrap_or_default();
+
+        let mut author = String::new();
+        let mut author_link = String::new();
+        let mut source = String::new();
+        let mut source_link = String::new();
+
+        let mut author_line = &author_line[..];
+
+        if let Some((next_link, to_delete)) = take_next_link(&author_line) {
+            author = next_link.text;
+            author_link = next_link.href;
+            author_line = &author_line[to_delete..];
+        }
+
+        let next_link_start = author_line
+        .char_indices()
+        .find_map(|(idx, c)| if c == '[' { Some(idx) } else { None });
+
+        if let Some(nls) = next_link_start {
+            author_line = &author_line[nls..];
+        }
+
+        if let Some((next_link, _)) = take_next_link(&author_line) {
+            source = next_link.text;
+            source_link = next_link.href;
+        }
 
         let lines = lines.iter()
             .filter(|s| !s.starts_with("**"))
@@ -304,23 +384,81 @@ impl Quote {
             .cloned()
             .collect::<Vec<_>>();
 
-        let quote = lines
+        let mut quote = lines
             .split(|s| s.trim().is_empty())
             .map(|q| q.join(" "))
             .filter(|s| !s.trim().is_empty())
             .collect::<Vec<String>>();
 
-        Some(Quote {
+        if let Some(fl) = quote.first_mut() {
+            if fl.trim().starts_with("\"") {
+                *fl = fl.replacen("\"", "", 1);
+            } else if fl.trim().starts_with("'") {
+                *fl = fl.replacen("'", "", 1);
+            } else if fl.trim().starts_with("`") {
+                *fl = fl.replacen("`", "", 1);
+            } 
+        }
+
+        if let Some(fl) = quote.last_mut() {
+            if fl.trim().ends_with("\"") {
+                *fl = fl.replacen("\"", "", 1);
+            } else if fl.trim().ends_with("'") {
+                *fl = fl.replacen("'", "", 1);
+            } else if fl.trim().ends_with("`") {
+                *fl = fl.replacen("`", "", 1);
+            } 
+        }
+
+        let q = Quote {
             title,
             quote,
-            author: String::new(),
-            author_link: String::new(),
-            source: String::new(),
-            source_link: String::new(),
-        })
+            author,
+            author_link,
+            source,
+            source_link,
+        };
+
+        Some(q)
     }
 }
 
+// Given a string, returns the extracted link + number of bytes to be consumed
+fn take_next_link(s: &str) -> Option<(Link, usize)> {
+
+    if !s.trim().starts_with("[") {
+        return None;
+    }
+
+    let end = s.char_indices()
+    .find_map(|(id, ch)| {
+        if ch == ')' { Some(id) } else { None }
+    })?;
+
+    let substring = &s[..(end + 1)];
+
+    Link::new(substring).map(|q| (q, end + 1))
+}
+
+#[test]
+fn test_quote_2() {
+    let s = "
+        > Wenn ein Mann eine Jungfrau trifft, die nicht verlobt ist
+        > 
+        > —- [5. Mose 22,28-29](https://k-bibel.de/ARN/Deuteronomium22#28-29)
+    ";
+
+    assert_eq!(Quote::new(s), Some(Quote {
+        title: "Heading".to_string(),
+        quote: vec![
+            "Wenn ein Mann eine Jungfrau trifft, die nicht verlobt ist".to_string(), 
+        ],
+        author: "5. Mose 22,28-29".to_string(),
+        author_link: "https://k-bibel.de/ARN/Deuteronomium22#28-29".to_string(),
+        source: "".to_string(),
+        source_link: "".to_string(),
+    }))
+}
 #[test]
 fn test_quote() {
 
@@ -339,33 +477,85 @@ fn test_quote() {
 
     assert_eq!(Quote::new(s), Some(Quote {
         title: "Heading".to_string(),
-        quote: vec!["LineA LineB LineC".to_string(), "LineD LineE".to_string()],
+        quote: vec![
+            "LineA LineB LineC".to_string(), 
+            "LineD LineE".to_string()
+        ],
         author: "Test".to_string(),
         author_link: "https://wikipedia.org/Test".to_string(),
         source: "de juiribus".to_string(),
         source_link: "test.pdf".to_string(),
     }))
+}
 
+// parses the footnote from a "[^note]" text
+fn parse_footnote_maintext(s: &str) -> Option<(String, usize)> {
+    
+    if !s.trim().starts_with("[^") {
+        return None;
+    }
+
+    let end = s.char_indices().find_map(|(idx, c)| {
+        if c == ']' {
+            Some(idx)
+        } else {
+            None
+        }
+    })?;
+
+    let substring = s[2..end].to_string();
+    Some((substring, end + 1))
 }
 
 impl Sentence {
     fn new(s: &str) -> Self {
 
-        /*
-        SentenceItem {
-            Text(String),
-            Link {
-                text: String,
-                href: String,
-                ltype: LinkType,
-            },
-            Footnote(String),
-        }
-        */
+        let mut items = Vec::new();
+        let mut cur_sentence = Vec::new();
+        let mut iter = s.char_indices().peekable();
 
-        Self {
-            items: vec![SentenceItem::Text { text: s.trim().to_string() }]
+        while let Some((idx, c)) = iter.next() {
+            let next = iter.peek();
+            match (c, next.map(|q| q.1)) {
+                ('[', Some('^')) => match parse_footnote_maintext(&s[idx..]) {
+                    Some((footnote_id, chars_to_skip)) => {
+                        if !cur_sentence.is_empty() {
+                            items.push(SentenceItem::Text { text: cur_sentence.iter().cloned().collect() });
+                        }
+                        items.push(SentenceItem::Footnote { id: footnote_id });
+                        cur_sentence.clear();
+                        for i in 0..chars_to_skip.saturating_sub(1) {
+                            let _ = iter.next();
+                        }
+                    },
+                    None => {
+                        cur_sentence.push(c);
+                    }
+                },
+                ('[', _) => match take_next_link(&s[idx..]) {
+                    Some((link, chars_to_skip)) => {
+                        if !cur_sentence.is_empty() {
+                            items.push(SentenceItem::Text { text: cur_sentence.iter().cloned().collect() });
+                        }
+                        items.push(SentenceItem::Link { l: link });
+                        cur_sentence.clear();
+                        for i in 0..chars_to_skip.saturating_sub(1) {
+                            let _ = iter.next();
+                        }
+                    },
+                    None => {
+                        cur_sentence.push(c);
+                    }
+                },
+                _ => { cur_sentence.push(c); },
+            }
         }
+
+        if !cur_sentence.is_empty() {
+            items.push(SentenceItem::Text { text: cur_sentence.iter().cloned().collect() });
+        }
+
+        Self { items }
     }
 }
 
@@ -377,7 +567,7 @@ fn test_sentence() {
             SentenceItem::Text { text: "This is a sentence with a footnote".to_string() },
             SentenceItem::Footnote { id: "15".to_string() },
             SentenceItem::Text { text: " and a ".to_string() },
-            SentenceItem::Link { text: "link".to_string(), href: "url".to_string(), ltype: LinkType::Other },
+            SentenceItem::Link { l: Link { text: "link".to_string(), href: "url".to_string() } },
             SentenceItem::Text { text: ".".to_string() },
         ]
     })
