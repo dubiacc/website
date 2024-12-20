@@ -3,7 +3,6 @@ use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 use serde_derive::{Serialize, Deserialize};
 use take_until::TakeUntilExt;
-use split_iter::Splittable;
 
 #[derive(Debug, Default)]
 struct LoadedArticles {
@@ -39,6 +38,7 @@ struct ParsedArticle {
     sha256: String,
     img: Option<Image>,
     summary: Vec<Paragraph>,
+    article_abstract: Vec<Paragraph>,
     sections: Vec<ArticleSection>,
     footnotes: Vec<String>,
 }
@@ -46,7 +46,7 @@ struct ParsedArticle {
 impl VectorizedArticle {
     pub fn analyze(
         &self, 
-        id: &str, 
+        id: &str,
         articles: &BTreeMap<String, VectorizedArticle>
     ) -> ParsedArticleAnalyzed {
         let similar = get_similar_articles(self, id, articles);
@@ -60,8 +60,8 @@ impl VectorizedArticle {
             summary: self.parsed.summary.clone(),
             sections: self.parsed.sections.clone(),
             related: similar,
+            article_abstract: self.parsed.article_abstract.clone(),
             footnotes: self.parsed.footnotes.clone(),
-            bibliography: BTreeMap::new(), // todo
         }
     }
 }
@@ -75,10 +75,10 @@ struct ParsedArticleAnalyzed {
     sha256: String,
     img: Option<Image>,
     summary: Vec<Paragraph>,
+    article_abstract: Vec<Paragraph>,
     sections: Vec<ArticleSection>,
     related: Vec<String>,
     footnotes: Vec<String>, // BTreeMap<String, Paragraph>,
-    bibliography: BTreeMap<String, Paragraph>,
 }
 
 #[derive(Debug, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -102,7 +102,7 @@ struct ArticleSection {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "t", content = "d", rename_all = "lowercase")]
 enum Paragraph {
-    Sentences { s: Vec<SentenceItem> },
+    Sentence { s: Vec<SentenceItem> },
     Quote { q: Quote },
     Image { i: Image }
 }
@@ -199,7 +199,7 @@ fn parse_paragraph(s: &str) -> Paragraph {
     } else if let Some(q) = Quote::new(s.trim()) {
         Paragraph::Quote { q }
     } else {
-        Paragraph::Sentences {
+        Paragraph::Sentence {
             s: Sentence::new(s.trim()).items,
         }
     }
@@ -225,27 +225,36 @@ fn sha256(s: &str) -> String {
     base64::prelude::BASE64_URL_SAFE_NO_PAD.encode(result)
 }
 
-fn parse_article(s: &str) -> ParsedArticle {
-        
-    let title = s.lines()
-        .filter(|s| s.starts_with("# "))
-        .map(|q| q.replace("# ", "").trim().to_string())
-        .next()
-        .unwrap_or_default();
+fn gather_footnotes(l: &[&str]) -> (Vec<String>, BTreeSet<usize>) {
+    let mut to_ignore = BTreeSet::new();
+    let mut target = Vec::new();
+    for (i, l) in l.iter().enumerate() {
+        if l.trim().starts_with("[^") && l.contains("]:") {
+            to_ignore.insert(i);
+            target.push(l.to_string());
+        }
+    }
+    (target, to_ignore)
+}
 
-    let sha256 = sha256(&s);
-
+fn extract_config(l: &[&str]) -> (Config, BTreeSet<usize>) {
     let mut codeblock = Vec::new();
+    let mut to_ignore = BTreeSet::new();
     let mut in_cb = false;
-    for l in s.lines() {
+    for (i, l) in l.iter().enumerate() {
         if l.contains("```") {
             if in_cb {
-                in_cb = false; 
+                in_cb = false;
+                to_ignore.insert(i);
             } else {
                 in_cb = codeblock.is_empty();
+                if in_cb {
+                    to_ignore.insert(i);
+                }
             }
         } else if in_cb {
-            codeblock.push(l.trim().clone());
+            codeblock.push(l.trim());
+            to_ignore.insert(i);
         }
     }
 
@@ -253,39 +262,83 @@ fn parse_article(s: &str) -> ParsedArticle {
         &codeblock.join("\r\n")
     ).unwrap_or_default();
 
-    let lines_before_heading = s.lines()
-        .take_until(|s| s.starts_with("# "))
-        .filter(|s| !s.starts_with("# "))
-        .collect::<Vec<_>>().join("\r\n");
+    (config, to_ignore)
+}
 
-    let mut lines_after_heading = s.lines().rev()
-        .take_until(|s| s.starts_with("# "))
-        .filter(|s| !s.starts_with("# "))
+fn parse_article(s: &str) -> ParsedArticle {
+    
+    let lines = s.lines().collect::<Vec<_>>();
+    let (title_line, title) = lines.iter().enumerate()
+        .filter(|(i, s)| s.starts_with("# "))
+        .map(|(i, q)| (i, q.replace("# ", "").trim().to_string()))
+        .next()
+        .unwrap_or((0, String::new()));
+
+    let sha256 = sha256(&s);
+
+    let (config, lines_to_ignore) = extract_config(&lines);
+
+    let lines_before_heading = lines
+        .iter().enumerate()
+        .filter_map(|(i, l)| if lines_to_ignore.contains(&i) || i >= title_line { None } else { Some(*l) })
         .collect::<Vec<_>>();
 
-    lines_after_heading.reverse();
-    let lines_after_heading = lines_after_heading.join("\r\n");
+    let lines_after_heading = lines
+        .iter().enumerate()
+        .filter_map(|(i, l)| if lines_to_ignore.contains(&i) || i <= title_line { None } else { Some(*l) })
+        .collect::<Vec<_>>();
 
-    let mut footnotes = Vec::new();
-    let mut sections = Vec::new();
-    let mut last_section = Vec::new();
+    let article_abstract = lines_after_heading
+        .iter()
+        .take_while(|s| !s.contains("# "))
+        .cloned()
+        .collect::<Vec<_>>();
 
-    for l in lines_after_heading.lines() {
-        if l.trim().starts_with("[^") && l.contains("]:") {
-            footnotes.push(l.to_string());
-        } else if l.contains("# ") {
-            let indent = l.chars().filter(|c| *c == '#').count();
-            let title = l.replace("#", "").trim().to_string();
-            sections.push(ArticleSection {
-                title,
-                indent,
-                pars: parse_paragraphs(&last_section.join("\r\n"))
-            });
-            last_section = Vec::new();
+    let lines_after_heading = lines_after_heading[article_abstract.len()..].to_vec();
+    let (footnotes, footnote_lines) = gather_footnotes(&lines_after_heading);
+    let lines_after_heading = lines_after_heading.iter().enumerate().filter_map(|(i, s)| {
+        if footnote_lines.contains(&i) {
+            None
         } else {
-            last_section.push(l.trim().to_string());
+            Some(s)
         }
-    }
+    }).collect::<Vec<_>>();
+
+    let mut sections = lines_after_heading
+    .iter().enumerate()
+    .filter_map(|(i, s)| {
+        if s.contains("# ") {
+            Some(i)
+        } else {
+            None
+        }
+    }).collect::<Vec<_>>();
+    sections.push(lines_after_heading.len());
+
+    let sections = sections.windows(2).filter_map(|s| {
+        
+        let (start_line, end_line) = match s {
+            [s, e] => (*s, *e),
+            _ => return None,
+        };
+
+        let l = lines_after_heading.get(start_line)?;
+        let indent = l.chars().filter(|c| *c == '#').count();
+        let title = l.replace("#", "").trim().to_string();
+
+        let lines = ((start_line + 1)..end_line)
+            .filter_map(|i| lines_after_heading.get(i))
+            .map(|s| **s)
+            .collect::<Vec<_>>();
+
+        let pars = parse_paragraphs(&lines.join("\r\n"));
+
+        Some(ArticleSection {
+            title,
+            indent,
+            pars,
+        })
+    }).collect::<Vec<_>>();
 
     ParsedArticle {
         title,
@@ -294,7 +347,8 @@ fn parse_article(s: &str) -> ParsedArticle {
         authors: config.authors,
         sha256: sha256,
         img: None,
-        summary: parse_paragraphs(&lines_before_heading),
+        summary: parse_paragraphs(&lines_before_heading.join("\r\n")),
+        article_abstract: parse_paragraphs(&article_abstract.join("\r\n")),
         sections,
         footnotes,
     }
@@ -520,11 +574,13 @@ impl Sentence {
                 ('[', Some('^')) => match parse_footnote_maintext(&s[idx..]) {
                     Some((footnote_id, chars_to_skip)) => {
                         if !cur_sentence.is_empty() {
-                            items.push(SentenceItem::Text { text: cur_sentence.iter().cloned().collect() });
+                            items.push(SentenceItem::Text { 
+                                text: cur_sentence.iter().cloned().collect::<String>().lines().collect::<Vec<_>>().join(" ") 
+                            });
                         }
                         items.push(SentenceItem::Footnote { id: footnote_id });
                         cur_sentence.clear();
-                        for i in 0..chars_to_skip.saturating_sub(1) {
+                        for _ in 0..chars_to_skip.saturating_sub(1) {
                             let _ = iter.next();
                         }
                     },
@@ -535,11 +591,13 @@ impl Sentence {
                 ('[', _) => match take_next_link(&s[idx..]) {
                     Some((link, chars_to_skip)) => {
                         if !cur_sentence.is_empty() {
-                            items.push(SentenceItem::Text { text: cur_sentence.iter().cloned().collect() });
+                            items.push(SentenceItem::Text { 
+                                text: cur_sentence.iter().cloned().collect::<String>().lines().collect::<Vec<_>>().join(" ") 
+                            });
                         }
                         items.push(SentenceItem::Link { l: link });
                         cur_sentence.clear();
-                        for i in 0..chars_to_skip.saturating_sub(1) {
+                        for _ in 0..chars_to_skip.saturating_sub(1) {
                             let _ = iter.next();
                         }
                     },
@@ -552,7 +610,9 @@ impl Sentence {
         }
 
         if !cur_sentence.is_empty() {
-            items.push(SentenceItem::Text { text: cur_sentence.iter().cloned().collect() });
+            items.push(SentenceItem::Text { 
+                text: cur_sentence.iter().cloned().collect::<String>().lines().collect::<Vec<_>>().join(" ") 
+            });
         }
 
         Self { items }
@@ -752,7 +812,7 @@ fn main() -> Result<(), String> {
     }).collect::<BTreeMap<_, _>>();
 
     let json = serde_json::to_string_pretty(&articles).unwrap_or_default();
-    
+
     println!("{json}");
 
     Ok(())
