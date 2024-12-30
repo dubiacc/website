@@ -29,12 +29,6 @@ def write_file(string, path):
     text_file.write(string)
     text_file.close()
 
-# Chunks an array into chunks of maximum n items
-def chunks(lst, n):
-    """Yield successive n-sized chunks from lst."""
-    for i in range(0, len(lst), n):
-        yield lst[i:i + n]
-
 # Loads templates from the /templates folder, so while generating articles
 # we don't have to touch the filesystem. Also does some preliminary CSS inlining.
 def load_templates():
@@ -1177,6 +1171,7 @@ for lang, year in articles_by_date.items():
     for y, links in a2.items():
         ad2[lang].append({ "id": "y" + y, "title": y, "links": links })
     ad2[lang].reverse()
+
 write_file(render_special_page(templates, "de", ad2.get("de", []), { "title": "Neueste Links", "description": "Neueste Links", "img": { }}, "de-neues"), "./de/neues.html")
 write_file(render_special_page(templates, "en", ad2.get("en", []), { "title": "Newest Links", "description": "Newest links", "img": { }}, "en-newest"), "./en/newest.html")
 

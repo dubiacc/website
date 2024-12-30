@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 base64 = "0.22.1"
+collection_macros = "0.2.0"
 serde = "1.0.216"
 serde_derive = "1.0.216"
 serde_json = "1.0.133"

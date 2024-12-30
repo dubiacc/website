@@ -2,7 +2,6 @@ use std::path::Path;
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 use serde_derive::{Serialize, Deserialize};
-use take_until::TakeUntilExt;
 
 #[derive(Debug, Default)]
 struct LoadedArticles {
@@ -79,6 +78,19 @@ struct ParsedArticleAnalyzed {
     sections: Vec<ArticleSection>,
     related: Vec<String>,
     footnotes: Vec<String>, // BTreeMap<String, Paragraph>,
+}
+
+impl ParsedArticleAnalyzed {
+    pub fn is_prayer(&self) -> bool {
+        self.tags.iter().any(|s| s == "gebet" || s == "prayer")
+    }
+    pub fn get_date(&self) -> Option<(&str, &str, &str)> {
+        let mut iter = self.date.split("-");
+        let year = iter.next()?;
+        let month = iter.next()?;
+        let day = iter.next()?;
+        Some((year, month, day))
+    }
 }
 
 #[derive(Debug, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -269,7 +281,7 @@ fn parse_article(s: &str) -> ParsedArticle {
     
     let lines = s.lines().collect::<Vec<_>>();
     let (title_line, title) = lines.iter().enumerate()
-        .filter(|(i, s)| s.starts_with("# "))
+        .filter(|(_, s)| s.starts_with("# "))
         .map(|(i, q)| (i, q.replace("# ", "").trim().to_string()))
         .next()
         .unwrap_or((0, String::new()));
@@ -790,6 +802,443 @@ fn load_articles(dir: &Path) -> Result<LoadedArticles, String> {
     Ok(LoadedArticles { langs })
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct SectionLink {
+    slug: String,
+    title: String,
+}
+
+type Lang = String;
+type Slug = String;
+type Tag = String;
+type Year = String;
+type Month = String;
+type Day = String;
+
+type ArticlesByTag = BTreeMap<Lang, BTreeMap<Tag, Vec<SectionLink>>>;
+type ArticlesByDate = BTreeMap<Lang, BTreeMap<Year, BTreeMap<Month, BTreeMap<Day, Vec<SectionLink>>>>>;
+
+fn is_prod() -> bool {
+    std::env::args().any(|a| a.contains("production"))
+}
+
+fn get_root_href() -> &'static str {
+    if is_prod() {
+        "https://dubia.cc"
+    } else {
+        "http://127.0.0.1:8080"
+    }
+}
+
+fn generate_gitignore(articles: &LoadedArticles) -> String {
+    let mut filenames = BTreeSet::new();
+    for (lang, k) in articles.langs.iter() {
+        filenames.insert(format!("/{lang}"));
+        filenames.insert(format!("/{lang}2"));
+    }
+    filenames.insert("/venv".into());
+    filenames.insert("*.md.json".into());
+    filenames.insert("md2json-bin".into());
+    filenames.insert("index.json".into());
+    filenames.insert("index.html".into());
+    filenames.insert(".DS_Store".into());
+    filenames.insert("/md2json/target".into());
+    filenames.insert("/md2json2/target".into());
+    filenames.insert("/img2avif/target".into());
+    filenames.insert("/md2json/out.txt".into());
+    filenames.insert("/venv/*".into());
+    return filenames.into_iter().collect::<Vec<_>>().join("\r\n");
+}
+
+fn get_title(lang: &str, a: &ParsedArticleAnalyzed) -> String {
+    if !a.title.trim().is_empty() {
+        return a.title.clone();
+    }
+    match lang {
+        "de" => "Entdecke den wahren katholischen Glauben - dubia.cc".into(),
+        "en" => "Discover the true Catholic Faith - dubia.cc".into(),
+        _ => String::new()
+    }
+}
+
+fn si2text(si: &[SentenceItem]) -> String {
+    si.iter().map(|s| match s {
+        SentenceItem::Footnote { id } => String::new(),
+        SentenceItem::Link { l } => l.text.clone(),
+        SentenceItem::Text { text } => text.clone(),
+    }).collect::<Vec<_>>().join("")
+}
+
+fn par2text(p: &Paragraph) -> String {
+    match p {
+        Paragraph::Sentence { s } => return si2text(s),
+        _ => String::new(),
+    }
+}
+
+// Returns the description for the <head> tag
+fn get_description(lang: &str, a: &ParsedArticleAnalyzed) -> String {
+    let try1 = a.summary.get(0).map(|s| par2text(s)).unwrap_or_default();
+    if !try1.trim().is_empty() {
+        return try1.trim().to_string();
+    }
+    let try1 = a.article_abstract.get(0).map(par2text).unwrap_or_default();
+    if !try1.trim().is_empty() {
+        return try1.trim().to_string();
+    }
+    let sec1 = a.sections.get(0).and_then(|s| s.pars.get(0)).map(par2text).unwrap_or_default();
+    if !sec1.trim().is_empty() {
+        return sec1.trim().to_string();
+    }
+    match lang {
+        "en" => "dubia is a collection of articles about the traditional Catholic faith. Did the Church really teach...? Answers to errors and questions, prayers, and more!",
+        "de" => "dubia ist eine Sammlung von Artikeln über den traditionellen katholischen Glauben. Hat die Kirche wirklich...? Antworten auf Irrtümer, Gebete, uvm.",
+        _ => "",
+    }.into()
+}
+
+fn generate_dropcap_css(a: &ParsedArticleAnalyzed) -> String {
+    
+    if a.is_prayer() {
+        return String::new();
+    }
+
+    let try1 = a.article_abstract.get(0).map(par2text).unwrap_or_default();
+    let sec1 = a.sections.get(0).and_then(|s| s.pars.get(0)).map(par2text).unwrap_or_default();
+    let mut c = None;
+    if !try1.trim().is_empty() {
+        c = try1.trim().chars().next()
+    } else if !sec1.trim().is_empty() {
+        c = sec1.trim().chars().next();
+    }
+
+    let c = match c {
+        Some(s) => if s.is_ascii_alphabetic() { 
+            s.to_ascii_uppercase() 
+        } else { return String::new(); },
+        _ => return String::new(),
+    };
+
+
+    let dropcap_map = &[
+        ('A', "U+0041"),
+        ('B', "U+0042"),
+        ('C', "U+0043"),
+        ('D', "U+0044"),
+        ('E', "U+0045"),
+        ('F', "U+0046"),
+        ('G', "U+0047"),
+        ('H', "U+0048"),
+        ('I', "U+0049"),
+        ('J', "U+004A"),
+        ('K', "U+004B"),
+        ('L', "U+004C"),
+        ('M', "U+004D"),
+        ('N', "U+004E"),
+        ('O', "U+004F"),
+        ('P', "U+0050"),
+        ('Q', "U+0051"),
+        ('R', "U+0052"),
+        ('S', "U+0053"),
+        ('T', "U+0054"),
+        ('U', "U+0055"),
+        ('V', "U+0056"),
+        ('W', "U+0057"),
+        ('X', "U+0058"),
+        ('Y', "U+0059"),
+        ('Z', "U+005A"),
+    ];
+
+    let unicode_range = match dropcap_map.iter().find(|s| c == s.0).map(|q| q.1) {
+        Some(s) => s,
+        None => return String::new(),
+    };
+
+    let text = vec![
+        "@font-face {".to_string(),
+        "    font-family: 'Kanzlei Initialen';".to_string(),
+        format!("    src: url('/static/font/dropcap/kanzlei/Kanzlei-Initialen-{c}.ttf') format('truetype');"),
+        "    font-display: swap;".to_string(),
+        format!("    unicode-range: {unicode_range};"),
+        "}".to_string(),
+    ];
+
+    text.join("\r\n")
+}
+
+fn head(
+    a: &ParsedArticleAnalyzed, 
+    lang: &str,
+    title_id: &str
+) -> String {
+
+    let darklight = include_str!("../../templates/darklight.html");
+    let head_css = include_str!("../../static/css/head.css");
+    let style_css = include_str!("../../static/css/style.css");
+    let critical_css = head_css.to_string() + style_css;
+    let critical_css_2 = "<style id='critical-css'>\r\n".to_string() + &critical_css + "    </style>";
+
+    let mut head = include_str!("../../templates/head.html").to_string();
+    head = head.replace("<!-- DARKLIGHT_STYLES -->", &darklight);
+    head = head.replace("<!-- CRITICAL_CSS -->", &critical_css_2);
+    let title = get_title(lang, a);
+    let description = get_description(lang, a);
+
+    head = head.replace("$$TITLE$$", &title);
+    head = head.replace("$$DESCRIPTION$$", &description);
+    head = head.replace("$$TITLE_ID$$", title_id);
+
+    let drc = format!("<style>{}</style>", generate_dropcap_css(a));
+    head = head.replace("<!-- DROPCAP_CSS -->", &drc);
+    head = head.replace("$$KEYWORDS$$", &a.tags.join(", "));
+    head = head.replace("$$DATE$$", &a.date);
+    head = head.replace("$$AUTHOR$$", &a.authors.join(", "));
+
+    head = head.replace("$$IMG$$", &a.img.as_ref().map(|s| s.href.clone()).unwrap_or_default());
+    head = head.replace("$$IMG_ALT$$", &a.img.as_ref().map(|s| s.title.clone()).unwrap_or_default());
+    head = head.replace("$$LANG$$", lang);
+    head = head.replace("$$ROOT_HREF$$", &get_root_href());
+    let page_href = get_root_href().to_string() + "/" + lang + "/" + title_id;
+    head = head.replace("$$PAGE_HREF$$", &page_href);
+
+    let skip = match lang {
+        "de" => "Zum Hauptinhalt springen",
+        "en" => "Skip to main content",
+        _ => "",
+    };
+    head = head.replace("$$SKIP_TO_MAIN_CONTENT$$", skip);
+
+    let contact = match lang {
+        "en" => "en/about",
+        "de" => "de/impressum",
+        _ => "",
+    };
+    head = head.replace("$$CONTACT_URL$$", contact);
+    head = head.replace("$$SLUG$$", title_id);
+    head
+}
+
+fn header_navigation(
+    lang: &str, 
+    display_logo: bool
+) -> String {
+    use collection_macros::btreemap;
+    
+    let descs = btreemap!{
+        "de" => btreemap!{
+            "homepage_desc" => "Startseite: Kategorisierte Liste aller deutschen Artikel",
+            "all_articles_desc" => "Durchsuche alle deutschen Artikel",
+            "all_articles_title" => "Themen",
+            "shop_desc" => "Unterstütze unser Apostolat mit deinem Einkauf in unserem Shop!",
+            "shop_title" => "Shop",
+            "shop_link" =>  "de/shop",
+            "about_desc" => "Über diese Seite, Kontakt und Rechtliches",
+            "about_title" => "Impressum",
+            "tools_desc" => "Software und Hilfsmittel zum Latein-Lernen, Gebetssammlungen, Online Mess- und Bibelbücher, Online-Bücherei u.v.m",
+            "tools_title" => "Ressourcen",
+            "newest_desc" => "Artikel sortiert nach Datum",
+            "newest_title" => "Neues",
+            "about_link" => "de/impressum",
+            "homepage_link" => "de",
+            "all_articles_link" => "de/themen",
+            "newest_link" => "de/neues",
+            "tools_link" => "de/ressourcen",
+        },
+        "en" => btreemap!{
+            "homepage_desc" => "Homepage",
+            "all_articles_desc" => "Search all English articles by category / tag",
+            "all_articles_title" => "Topics",
+            "shop_desc" => "Support our apostolate with your purchase in our store!",
+            "shop_title" => "Shop",
+            "shop_link" => "en/shop",
+            "about_desc" => "Imprint, contact and legal information",
+            "about_title" => "About",
+            "tools_desc" => "Software and aids for learning Latin, prayer collections, online Mass and Bible books, online library and much more",
+            "tools_title" => "Tools",
+            "newest_desc" => "Articles sorted by date",
+            "newest_title" => "Newest",
+            "about_link" => "en/about",
+            "homepage_link" => "en",
+            "all_articles_link" => "en/topics",
+            "newest_link" => "en/newest",
+            "tools_link" => "en/tools",
+        },
+    };
+
+    let logo = if display_logo {
+        let homepage_logo = "/static/img/logo/logo-smooth.svg#logo";
+        let homepage_link = get_root_href().to_string() + "/" + lang;
+        let hpd = descs[lang]["homepage_desc"];
+        let logo1 = format!("<a class='logo has-content' rel='home me contents' href='{homepage_link}' data-attribute-title='{hpd}'>");
+        let logo2 = format!("<svg class='logo-image' viewBox='0 0 64 75'><use href='{homepage_logo}'></use></svg>");
+        vec![logo1, logo2, "</a>".to_string()].join("")
+    } else {
+        String::new()
+    };
+    
+    let mut header_nav = include_str!("../../templates/header-navigation.html").to_string();
+    header_nav = header_nav.replace("$$HOMEPAGE_LOGO$$", &logo);
+    header_nav = header_nav.replace("$$TOOLS_DESC$$", descs[lang]["tools_desc"]);
+    header_nav = header_nav.replace("$$TOOLS_TITLE$$", descs[lang]["tools_title"]);
+    header_nav = header_nav.replace("$$TOOLS_LINK$$", descs[lang]["tools_link"]);
+    header_nav = header_nav.replace("$$ABOUT_DESC$$", descs[lang]["about_desc"]);
+    header_nav = header_nav.replace("$$ABOUT_TITLE$$", descs[lang]["about_title"]);
+    header_nav = header_nav.replace("$$ABOUT_LINK$$", descs[lang]["about_link"]);
+    header_nav = header_nav.replace("$$ALL_ARTICLES_TITLE$$", descs[lang]["all_articles_title"]);
+    header_nav = header_nav.replace("$$ALL_ARTICLES_DESC$$", descs[lang]["all_articles_desc"]);
+    header_nav = header_nav.replace("$$ALL_ARTICLES_LINK$$", descs[lang]["all_articles_link"]);
+    header_nav = header_nav.replace("$$NEWEST_DESC$$", descs[lang]["newest_desc"]);
+    header_nav = header_nav.replace("$$NEWEST_TITLE$$", descs[lang]["newest_title"]);
+    header_nav = header_nav.replace("$$NEWEST_LINK$$", descs[lang]["newest_link"]);
+    header_nav = header_nav.replace("$$SHOP_DESC$$", descs[lang]["shop_desc"]);
+    header_nav = header_nav.replace("$$SHOP_TITLE$$", descs[lang]["shop_title"]);
+    header_nav = header_nav.replace("$$SHOP_LINK$$", descs[lang]["shop_link"]);
+    header_nav
+}
+
+fn link_tags(
+    lang: &str, 
+    tags: &[String]
+) -> String {
+    String::new()
+}
+
+fn table_of_contents(
+    lang: &str, 
+    a: &ParsedArticleAnalyzed,
+) -> String {
+    if a.is_prayer() {
+        return String::new();
+    }
+    String::new()
+}
+
+fn page_desciption(
+    lang: &str, 
+    a: &ParsedArticleAnalyzed,
+) -> String {
+    if a.is_prayer() {
+        return String::new();
+    }
+    String::new()
+}
+
+fn page_metadata(
+    lang: &str, 
+    a: &ParsedArticleAnalyzed,
+) -> String {
+    if a.is_prayer() {
+        return String::new();
+    }
+    String::new()
+}
+
+fn body_abstract(
+    lang: &str,
+    summary: &[Paragraph],
+) -> String {
+    String::new()
+}
+
+fn body_content(
+    lang: &str,
+    sections: &[ArticleSection],
+) -> String {
+    String::new()
+}
+
+fn body_noscript(
+    lang: &str,
+) -> String {
+    String::new()
+}
+
+fn article2html(
+    lang: &str, 
+    slug: &str, 
+    a: &ParsedArticleAnalyzed, 
+    prod: bool,
+    articles_by_tag: &mut ArticlesByTag,
+    articles_by_date: &mut ArticlesByDate,
+) -> Option<String> {
+    
+    static HTML: &str = include_str!("../../templates/lorem.html");
+
+    match (lang, slug) {
+        ("de", "rosenkranz") |
+        ("en", "rosary") => return None, // TODO
+        _ => { },
+    }
+
+    for t in a.tags.iter() {
+        articles_by_tag.entry(lang.to_string())
+        .or_insert_with(|| BTreeMap::new())
+        .entry(t.to_string())
+        .or_insert_with(|| Vec::new())
+        .push(SectionLink { slug: slug.to_string(), title: a.title.to_string() });
+    }
+
+    if !a.is_prayer() {
+        match a.get_date() {
+            Some((y, m, d)) => {
+                articles_by_date
+                .entry(lang.to_string())
+                .or_insert_with(|| BTreeMap::new())
+                .entry(y.to_string())
+                .or_insert_with(|| BTreeMap::new())
+                .entry(m.to_string())
+                .or_insert_with(|| BTreeMap::new())
+                .entry(d.to_string())
+                .or_insert_with(|| Vec::new())
+                .push(SectionLink { slug: slug.to_string(), title: a.title.to_string() });
+            },
+            None => {
+                println!("article {lang}/{slug} has no date");
+            }
+        };
+
+    }
+
+    let title_id = lang.to_string() + "-" + slug;
+    
+    let html = HTML.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(a, lang, title_id.as_str()));
+    let html = html.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true));
+    let html = html.replace("<!-- LINK_TAGS -->", &link_tags(lang, &a.tags));
+    let html = html.replace("<!-- TOC -->", &table_of_contents(lang, &a));
+    let html = html.replace("<!-- PAGE_DESCRIPTION -->", &page_desciption(lang, &a));
+    let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a));
+    let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(lang, &a.summary));
+    let html = html.replace("<!-- BODY_CONTENT -->", &body_content(lang, &a.sections));
+    let html = html.replace("<!-- BODY_NOSCRIPT -->", &body_noscript(lang));
+
+    let skip = match lang {
+        "de" => "Zum Hauptinhalt springen",
+        "en" => "Skip to main content",
+        _ => return None,
+    };
+    let html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", skip);
+    let contact = match lang {
+        "de" => "de/impressum",
+        "en" => "en/about",
+        _ => return None,
+    };
+    
+    let root_href = match prod {
+        true => "https://dubia.cc",
+        false => "http://127.0.0.1:8080",
+    };
+
+    let html = html.replace("$$CONTACT_URL$$", contact);
+    let html = html.replace("$$TITLE$$", &a.title);
+    let html = html.replace("$$TITLE_ID$$", &title_id);
+    let html = html.replace("$$LANG$$", &lang);
+    let html = html.replace("$$SLUG$$", slug);
+    let html = html.replace("$$ROOT_HREF$$", root_href);
+    let html = html.replace("$$PAGE_HREF$$", &(root_href.to_string() + "/" + slug));
+
+    Some(html)
+}
+
 fn main() -> Result<(), String> {
 
     let mut cwd = std::env::current_dir()
@@ -811,9 +1260,28 @@ fn main() -> Result<(), String> {
         (lang.clone(), s)
     }).collect::<BTreeMap<_, _>>();
 
-    let json = serde_json::to_string_pretty(&articles).unwrap_or_default();
+    let mut articles_by_tag = ArticlesByTag::default();
+    let mut articles_by_date = ArticlesByDate::default();
 
-    println!("{json}");
+    for (lang, articles) in articles {
+        for (slug, a) in articles {
+            
+            let s = article2html(
+                &lang, 
+                &slug, 
+                &a, 
+                true, 
+                &mut articles_by_tag, 
+                &mut articles_by_date
+            );
+
+            if let Some(s) = s {
+                let path = cwd.join(lang.clone() + "2");
+                let _ = std::fs::create_dir_all(&path);
+                let _ = std::fs::write(path.join(slug + ".html"), s);
+            }
+        }
+    }
 
     Ok(())
 }
