@@ -226,8 +226,19 @@
 		setTimeout(injectHeadScript, 1300);
 	</script>
 	<img src="/static/img/watercolor.avif" alt="Watercolor decoration" id="watercolor" decoding="async" height="1026" width="2050" decoding="async" style="position:absolute;height:auto;top:0px;min-width:500px;max-width:900px;width:100%;filter:contrast(1.5);right:0px;z-index:-999;" />
-    <!-- Basic IP-based analytics, only tracks statistics about country + article -->
-    <script defer="" src="https://analytics.dubia.cc?p=$$TITLE_ID$$" type="application/javascript" ></script>
+    
+	<!-- Basic IP-based analytics, only tracks statistics about country + article -->
+    <script defer="" type="text/javascript">
+		setTimeout(function() {
+			try {
+				let req = new XMLHttpRequest();
+				req.open("GET", "https://analytics.dubia.cc?p=$$TITLE_ID$$");
+				req.send();
+			} catch (error) {
+				// ignore
+			}
+		}, 2000);
+	  </script>
 </body>
 <div id="popup-container" class="popup-container" style="z-index: 10000;"></div>
 </html>

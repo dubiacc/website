@@ -984,7 +984,7 @@ fn head(
     head = head.replace("<!-- DARKLIGHT_STYLES -->", &darklight);
     head = head.replace("<!-- CRITICAL_CSS -->", &critical_css_2);
     let title = get_title(lang, a);
-    let description = get_description(lang, a);
+    let description = get_description(lang, a).replace("\"", "'");
 
     head = head.replace("$$TITLE$$", &title);
     head = head.replace("$$DESCRIPTION$$", &description);
@@ -1227,7 +1227,7 @@ fn page_desciption(
         return String::new();
     }
     let descr = get_description(lang, a);
-    format!("<div class='page-description'><p>{descr}</p></div>")
+    format!("<div class='page-description' style='max-width: 600px;margin: 0 auto;'><p>{descr}</p></div>")
 }
 
 type AuthorsMap = BTreeMap<String, Author>;
@@ -1314,7 +1314,7 @@ fn page_metadata(
     Ok(page_meta)
 }
 
-fn render_paragraph(par: &Paragraph, dropcap: bool) -> String {
+fn render_paragraph(par: &Paragraph, dropcap: bool, is_abstract: bool) -> String {
     let mut target = String::new();
     match par {
         Paragraph::Sentence { s } => {
@@ -1327,11 +1327,11 @@ fn render_paragraph(par: &Paragraph, dropcap: bool) -> String {
                             let rest = text.chars().skip(1).collect::<String>();
                             target += &rest;
                         } else {
-                            target += text;
+                            target += &text;
                         }
                     }
                     SentenceItem::Link { l } => {
-                        target += &format!("<a href='{}'>{}</a>", l.href, l.text);
+                        target += &format!("<a class='link-annotated link-page has-icon has-annotation spawns-popup' href='{}'>{}</a>", l.href, l.text);
                     }
                     SentenceItem::Footnote { id } => {
                         // TODO!
@@ -1340,7 +1340,8 @@ fn render_paragraph(par: &Paragraph, dropcap: bool) -> String {
             }
         },
         Paragraph::Quote { q } => {
-            target += "<span class='blockquote'>";
+            let lv = if is_abstract { "2" } else { "1" };
+            target += &format!("<blockquote class='blockquote-level-{lv}' style='margin-top:10px;margin-bottom: 10px;'>");
             if !q.title.is_empty() {
                 target += "<strong>";
                 target += &q.title;
@@ -1348,26 +1349,27 @@ fn render_paragraph(par: &Paragraph, dropcap: bool) -> String {
             }
 
             for p in q.quote.iter() {
-                target += "<p>";
+                target += "<p class='first-block first-graf'>";
                 target += p;
                 target += "</p>";
             }
             
-            if !q.author.is_empty() && q.source.is_empty() {
-                target += "<br/><p>";
+            if !(q.author.is_empty() && q.source.is_empty()) {
+                target += "<em style='padding-left:10px;'>";
                 if !q.author.is_empty() {
-                    target += &format!("<em><a href='{}'>{}</a></em>", q.author_link, q.author);
+                    target += &format!("<a class='link-annotated link-page has-icon has-annotation spawns-popup' href='{}'>{}</a>", q.author_link, q.author);
                 }
     
-                if q.source.is_empty() {
-                    target += "&nbsp;--&nbsp;";
-                    target += &format!("<em><a href='{}'>{}</a></em>", q.source_link, q.source);
-
+                if !q.source.is_empty() {
+                    if !q.author.is_empty() {
+                        target += "&nbsp;—&nbsp;";
+                    }
+                    target += &format!("<a class='link-annotated link-page has-icon has-annotation spawns-popup' href='{}'>{}</a>", q.source_link, q.source);
                 }
-                target += "</p>"
+                target += "</em>"
             }
 
-            target += "</span>"
+            target += "</blockquote>"
         },
         Paragraph::Image { i } => {
             // TODO: inline images
@@ -1386,16 +1388,18 @@ fn body_abstract(
         return String::new();
     }
 
-    let mut target = "<p class='first-block first-graf intro-graf block dropcap-kanzlei' style='--bsm: 0;'>".to_string();
-    target += &render_paragraph(&summary[0], true); 
+    let mut target = "<blockquote class='blockquote-level-1 block'>".to_string();
+    target += "<p class='first-block first-graf intro-graf dropcap-kanzlei' style='--bsm: 0;display:block;min-height:7em;'>";
+    target += &render_paragraph(&summary[0], true, true); 
     target += "</p>";
 
     for par in summary.iter().skip(1) {
-        target += "<p class='block' style='--bsm: 0;'>";
-        target += &render_paragraph(par, false);
+        target += "<p style='--bsm: 0;'>";
+        target += &render_paragraph(par, false, true);
         target += "</p>";
     }
 
+    target += "</blockquote>";
     target
 }
 
@@ -1406,8 +1410,8 @@ fn render_section(
     
     let mut section = include_str!("../../templates/section.html").to_string();
 
-    let first_par = a.pars.get(0).map(|p| render_paragraph(p, false)).unwrap_or_default();
-    let other_pars = a.pars.iter().skip(1).map(|p| render_paragraph(p, false)).collect::<Vec<_>>().join("\r\n");
+    let first_par = a.pars.get(0).map(|p| render_paragraph(p, false, false)).unwrap_or_default();
+    let other_pars = a.pars.iter().skip(1).map(|p| render_paragraph(p, false, false)).collect::<Vec<_>>().join("\r\n");
 
     let header = &a.title;
     let level = a.indent;
@@ -1498,7 +1502,7 @@ fn article2html(
     let html = html.replace("<!-- TOC -->", &table_of_contents(lang, &a));
     let html = html.replace("<!-- PAGE_DESCRIPTION -->", &page_desciption(lang, &a));
     let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a, authors)?);
-    let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(&a.summary));
+    let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(&a.article_abstract));
     let html = html.replace("<!-- BODY_CONTENT -->", &body_content(lang, &a.sections));
     let html = html.replace("<!-- BODY_NOSCRIPT -->", &body_noscript());
 

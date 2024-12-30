@@ -1,3 +1,6 @@
+Die Verwirrung um 5. Mose 22:28-29 entspringt aus einer 
+fehlerhaften Übersetzung von "Vergewaltigung" statt "Verführung".
+
 # Erlaubt die Bibel Vergewaltigung?
 
 Immer wieder taucht die Behauptung auf, dass der folgende Bibelvers 
@@ -16,7 +19,7 @@ Einige Verse vorher wird aber die Vergewaltigung von (verlobten) Frauen mit Tode
 > 
 > -- [5. Mose 22:25](https://biblehub.com/interlinear/deuteronomy/22-25.htm): [ARN Übersetzung](https://k-bibel.de/ARN/Deuteronomium22#25)
 
-Weil es keinen Sinn macht, bei verlobten Frauen Todesstrafe zu verordnen,
+Weil es keinen Sinn ergibt, bei verlobten Frauen Todesstrafe zu verordnen,
 bei freien Frauen aber nicht, sehen wir uns den hebräischen Quelltext genauer an.
 
 ## taphas
@@ -102,7 +105,7 @@ allerdings hier mit dem Wort pathah ("verführen", "überreden").
 > 
 > -- [2. Mose 22, 16](https://biblehub.com/interlinear/exodus/22-16.htm): [ARN Übersetzung](https://k-bibel.de/ARN/Exodus22#16-17)
 
-Es macht somit logisch keinen Sinn, dass in diesem Kontext von 
+Es ergibt somit logisch keinen Sinn, dass in diesem Kontext von 
 Vergewaltigung, statt von Verführung, die Rede ist.
 
 ```
