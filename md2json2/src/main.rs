@@ -6,12 +6,7 @@ use serde_derive::{Serialize, Deserialize};
 
 #[derive(Debug, Default)]
 struct LoadedArticles {
-    langs: BTreeMap<String, Articles>,
-}
-
-#[derive(Debug, Default)]
-struct Articles {
-    map: BTreeMap<String, String>,
+    langs: BTreeMap<Lang, BTreeMap<Slug, String>>,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -23,10 +18,19 @@ enum ArticleType {
 
 #[derive(Debug)]
 struct VectorizedArticle {
-    src: String,
     words: Vec<usize>,
     atype: ArticleType,
     parsed: ParsedArticle,
+}
+
+#[derive(Debug, Default)]
+struct VectorizedArticles {
+    map: BTreeMap<Lang, BTreeMap<Slug, VectorizedArticle>>,
+}
+
+#[derive(Debug, Default)]
+struct AnalyzedArticles {
+    map: BTreeMap<Lang, BTreeMap<Slug, ParsedArticleAnalyzed>>,
 }
 
 #[derive(Debug, Default)]
@@ -43,25 +47,27 @@ struct ParsedArticle {
     footnotes: Vec<String>,
 }
 
-impl VectorizedArticle {
-    pub fn analyze(
-        &self, 
-        id: &str,
-        articles: &BTreeMap<String, VectorizedArticle>
-    ) -> ParsedArticleAnalyzed {
-        let similar = get_similar_articles(self, id, articles);
-        ParsedArticleAnalyzed {
-            title: self.parsed.title.clone(),
-            date: self.parsed.date.clone(),
-            tags: self.parsed.tags.clone(),
-            authors: self.parsed.authors.clone(),
-            sha256: self.parsed.sha256.clone(),
-            img: self.parsed.img.clone(),
-            summary: self.parsed.summary.clone(),
-            sections: self.parsed.sections.clone(),
-            related: similar,
-            article_abstract: self.parsed.article_abstract.clone(),
-            footnotes: self.parsed.footnotes.clone(),
+impl VectorizedArticles {
+    pub fn analyze(&self) -> AnalyzedArticles {
+        AnalyzedArticles {
+            map: self.map.iter().map(|(lang, v)| {
+                (lang.clone(), v.iter().map(|(slug, vectorized)| {
+                    let similar = get_similar_articles(vectorized, slug, v);
+                    (slug.clone(), ParsedArticleAnalyzed {
+                        title: vectorized.parsed.title.clone(),
+                        date: vectorized.parsed.date.clone(),
+                        tags: vectorized.parsed.tags.clone(),
+                        authors: vectorized.parsed.authors.clone(),
+                        sha256: vectorized.parsed.sha256.clone(),
+                        img: vectorized.parsed.img.clone(),
+                        summary: vectorized.parsed.summary.clone(),
+                        sections: vectorized.parsed.sections.clone(),
+                        related: similar,
+                        article_abstract: vectorized.parsed.article_abstract.clone(),
+                        footnotes: vectorized.parsed.footnotes.clone(),
+                    })
+                }).collect())
+            }).collect()
         }
     }
 }
@@ -154,11 +160,6 @@ struct Quote {
     author_link: String,
     source: String,
     source_link: String,
-}
-
-#[derive(Debug, Default)]
-struct VectorizedArticles {
-    map: BTreeMap<String, VectorizedArticle>,
 }
 
 #[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
@@ -704,7 +705,7 @@ fn test_image() {
     assert_eq!(Image::new(s), None);
 }
 
-impl Articles {
+impl LoadedArticles {
     pub fn vectorize(&self) -> VectorizedArticles {
     
         fn get_words_of_article(s: &str) -> Vec<&str> {
@@ -713,21 +714,26 @@ impl Articles {
             .collect()
         }
 
-        let all_words = self.map.values().flat_map(|c| get_words_of_article(c)).collect::<BTreeSet<_>>();
-        let all_words_indexed = all_words.iter().enumerate().map(|(i, s)| (*s, i)).collect::<BTreeMap<_, _>>();
         VectorizedArticles {
-            map: self.map.iter().map(|(k, v)| {
-                let embedding = get_words_of_article(v)
-                .into_iter()
-                .filter_map(|q| all_words_indexed.get(q).copied()).collect();
-                let atype = ArticleType::new(v);
+            map: self.langs.iter().map(|(k, v)| {
 
-                (k.clone(), VectorizedArticle {
-                    src: v.clone(),
-                    words: embedding,
-                    atype: atype,
-                    parsed: parse_article(v),
-                })
+                let all_words = v.values().flat_map(|c| get_words_of_article(c)).collect::<BTreeSet<_>>();
+                let all_words_indexed = all_words.iter().enumerate().map(|(i, s)| (*s, i)).collect::<BTreeMap<_, _>>();
+
+                (k.clone(), v.iter().map(|(k, v2)| {
+
+                    let embedding = get_words_of_article(v2)
+                    .into_iter()
+                    .filter_map(|q| all_words_indexed.get(q).copied()).collect();
+                    
+                    let atype = ArticleType::new(v2);
+                    
+                    (k.clone(), VectorizedArticle {
+                        words: embedding,
+                        atype: atype,
+                        parsed: parse_article(v2),
+                    })
+                }).collect())
             }).collect()
         }
     }
@@ -796,8 +802,8 @@ fn load_articles(dir: &Path) -> Result<LoadedArticles, String> {
     let mut langs = BTreeMap::new();
     for (lang, id, contents) in entries {
         langs.entry(lang)
-        .or_insert_with(|| Articles::default())
-        .map.insert(id, contents);
+        .or_insert_with(|| BTreeMap::default())
+        .insert(id, contents);
     }
 
     Ok(LoadedArticles { langs })
@@ -816,6 +822,7 @@ type Year = String;
 type Month = String;
 type Day = String;
 
+// type Articles = BTreeMap<Lang, BTreeMap<Slug, VectorizedArticle>>;
 type ArticlesByTag = BTreeMap<Lang, BTreeMap<Tag, Vec<SectionLink>>>;
 type ArticlesByDate = BTreeMap<Lang, BTreeMap<Year, BTreeMap<Month, BTreeMap<Day, Vec<SectionLink>>>>>;
 
@@ -833,7 +840,7 @@ fn get_root_href() -> &'static str {
 
 fn generate_gitignore(articles: &LoadedArticles) -> String {
     let mut filenames = BTreeSet::new();
-    for (lang, k) in articles.langs.iter() {
+    for lang in articles.langs.keys() {
         filenames.insert(format!("/{lang}"));
         filenames.insert(format!("/{lang}2"));
         filenames.insert(format!("{lang}.html"));
@@ -865,7 +872,7 @@ fn get_title(lang: &str, a: &ParsedArticleAnalyzed) -> String {
 
 fn si2text(si: &[SentenceItem]) -> String {
     si.iter().map(|s| match s {
-        SentenceItem::Footnote { id } => String::new(),
+        SentenceItem::Footnote { .. } => String::new(),
         SentenceItem::Link { l } => l.text.clone(),
         SentenceItem::Text { text } => text.clone(),
     }).collect::<Vec<_>>().join("")
@@ -1314,7 +1321,13 @@ fn page_metadata(
     Ok(page_meta)
 }
 
-fn render_paragraph(par: &Paragraph, dropcap: bool, is_abstract: bool) -> String {
+fn render_paragraph(
+    lang: &str,
+    par: &Paragraph, 
+    dropcap: bool, 
+    is_abstract: bool, 
+    article_id: &str
+) -> String {
     let mut target = String::new();
     match par {
         Paragraph::Sentence { s } => {
@@ -1372,15 +1385,44 @@ fn render_paragraph(par: &Paragraph, dropcap: bool, is_abstract: bool) -> String
             target += "</blockquote>"
         },
         Paragraph::Image { i } => {
+
+            
+            let href = if i.href.contains("://") {
+                i.href.clone()
+            } else {
+                get_root_href().to_string() + "/articles/" + lang + "/" + article_id + "/" + &i.href
+            };
+
             // TODO: inline images
-            target += &format!("<img src='{}' alt='{}' title='{}' />", i.href, i.alt, i.title);
+            target += &render_image(&Image { 
+                href: href, 
+                alt: i.alt.clone(), 
+                title: i.title.clone(),
+                inline: i.inline,
+            });
         },
     }
 
     target
 }
 
+fn render_image(i: &Image) -> String {
+
+    // TODO: width="1400" height="1400" data-aspect-ratio="1 / 1" style="aspect-ratio: 1 / 1; width: 678px;"
+    let template = match !i.inline {
+        true => include_str!("../../templates/figure.float.html").replace("$$DIRECTION$$", "right"),
+        false => include_str!("../../templates/figure.html").to_string(),
+    };
+
+    template
+    .replace("$$IMG_ALT$$", &i.alt)
+    .replace("$$IMG_HREF$$", &i.href)
+    .replace("$$IMG_CAPTION$$", &i.title)
+}
+
 fn body_abstract(
+    lang: &str,
+    article_id: &str,
     summary: &[Paragraph],
 ) -> String {
     
@@ -1390,12 +1432,12 @@ fn body_abstract(
 
     let mut target = "<blockquote class='blockquote-level-1 block'>".to_string();
     target += "<p class='first-block first-graf intro-graf dropcap-kanzlei' style='--bsm: 0;display:block;min-height:7em;'>";
-    target += &render_paragraph(&summary[0], true, true); 
+    target += &render_paragraph(lang, &summary[0], true, true, article_id); 
     target += "</p>";
 
     for par in summary.iter().skip(1) {
         target += "<p style='--bsm: 0;'>";
-        target += &render_paragraph(par, false, true);
+        target += &render_paragraph(lang, par, false, true, article_id);
         target += "</p>";
     }
 
@@ -1406,12 +1448,13 @@ fn body_abstract(
 fn render_section(
     lang: &str,
     a: &ArticleSection,
+    slug: &str,
 ) -> String {
     
     let mut section = include_str!("../../templates/section.html").to_string();
 
-    let first_par = a.pars.get(0).map(|p| render_paragraph(p, false, false)).unwrap_or_default();
-    let other_pars = a.pars.iter().skip(1).map(|p| render_paragraph(p, false, false)).collect::<Vec<_>>().join("\r\n");
+    let first_par = a.pars.get(0).map(|p| render_paragraph(lang, p, false, false, slug)).unwrap_or_default();
+    let other_pars = a.pars.iter().skip(1).map(|p| render_paragraph(lang, p, false, false, slug)).collect::<Vec<_>>().join("\r\n");
 
     let header = &a.title;
     let level = a.indent;
@@ -1435,10 +1478,11 @@ fn render_section(
 
 fn body_content(
     lang: &str,
+    slug: &str,
     sections: &[ArticleSection],
 ) -> String {
     sections.iter()
-    .map(|q| render_section(lang, q))
+    .map(|q| render_section(lang, q, slug))
     .collect::<Vec<_>>()
     .join("\r\n")
 }
@@ -1502,8 +1546,8 @@ fn article2html(
     let html = html.replace("<!-- TOC -->", &table_of_contents(lang, &a));
     let html = html.replace("<!-- PAGE_DESCRIPTION -->", &page_desciption(lang, &a));
     let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a, authors)?);
-    let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(&a.article_abstract));
-    let html = html.replace("<!-- BODY_CONTENT -->", &body_content(lang, &a.sections));
+    let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(lang, slug, &a.article_abstract));
+    let html = html.replace("<!-- BODY_CONTENT -->", &body_content(lang, &slug, &a.sections));
     let html = html.replace("<!-- BODY_NOSCRIPT -->", &body_noscript());
 
     let skip = match lang {
@@ -1551,20 +1595,13 @@ fn main() -> Result<(), String> {
 
     let articles = load_articles(&dir)?;
     let _ = std::fs::write(cwd.join(".gitignore"), generate_gitignore(&articles));
-    let articles = articles.langs;
-    let articles = articles.iter().map(|(lang, a)| {
-        let vectorized = a.vectorize();
-        let s = vectorized.map
-            .iter()
-            .map(|(k, v)| (k.clone(), v.analyze(k, &vectorized.map)))
-            .collect::<BTreeMap<_, _>>();
-        (lang.clone(), s)
-    }).collect::<BTreeMap<_, _>>();
+    let vectorized = articles.vectorize();
+    let analyzed = vectorized.analyze();
 
     let mut articles_by_tag = ArticlesByTag::default();
     let mut articles_by_date = ArticlesByDate::default();
 
-    for (lang, articles) in articles {
+    for (lang, articles) in analyzed.map.iter() {
         for (slug, a) in articles {
             
             let s = article2html(
@@ -1581,7 +1618,7 @@ fn main() -> Result<(), String> {
                 Ok(s) => {
                     let path = cwd.join(lang.clone() + "2");
                     let _ = std::fs::create_dir_all(&path);
-                    let _ = std::fs::write(path.join(slug + ".html"), s);
+                    let _ = std::fs::write(path.join(slug.to_string() + ".html"), s);
                 },
                 Err(e) if e.is_empty() => { },
                 Err(q) => return Err(q),
