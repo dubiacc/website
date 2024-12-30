@@ -1,6 +1,7 @@
 use std::path::Path;
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
+use collection_macros::btreemap;
 use serde_derive::{Serialize, Deserialize};
 
 #[derive(Debug, Default)]
@@ -835,6 +836,7 @@ fn generate_gitignore(articles: &LoadedArticles) -> String {
     for (lang, k) in articles.langs.iter() {
         filenames.insert(format!("/{lang}"));
         filenames.insert(format!("/{lang}2"));
+        filenames.insert(format!("{lang}.html"));
     }
     filenames.insert("/venv".into());
     filenames.insert("*.md.json".into());
@@ -1100,7 +1102,36 @@ fn link_tags(
     lang: &str, 
     tags: &[String]
 ) -> String {
-    String::new()
+
+    let root_href = get_root_href();
+
+    let tags_str = tags.iter().map(|t| {
+        let t_descr = match lang {
+            "en" => "Link to ".to_string() + t + " tag",
+            "de" => "Link zum Thema ".to_string() + t,
+            _ => "".to_string(),
+        };
+        let t_url = match lang {
+            "en" => "en/topics",
+            "de" => "de/themen",
+            _ => "",
+        };
+        let t1 = format!("<a href='{root_href}/{t_url}#{t}'");
+        let t2 = "class='link-tag link-page link-annotated icon-not has-annotation spawns-popup' rel='tag' ";
+        let t3 = format!(" data-attribute-title='{t_descr}'>{t}</a>");
+        t1 + t2 + &t3
+    }).collect::<Vec<_>>().join(", ");
+    format!("<div class='link-tags'><p>{tags_str}</p></div>")
+}
+
+fn gen_section_id(s: &str) -> String {
+    s.chars().filter_map(|c| if c.is_ascii_alphanumeric() {
+        Some(c.to_ascii_lowercase())
+    } else if c.is_whitespace() {
+        Some('-')
+    } else {
+        None
+    }).collect()
 }
 
 fn table_of_contents(
@@ -1110,7 +1141,82 @@ fn table_of_contents(
     if a.is_prayer() {
         return String::new();
     }
-    String::new()
+
+    if a.sections.is_empty() {
+        return String::new();
+    }
+    
+    let mut target = "<div id='TOC' class='TOC'>".to_string();
+    target += "<ul class='list-level-1'>";
+    let mut cur_level = a.sections[0].indent;
+    let orig_cur_level = cur_level;
+
+    for section in a.sections.iter() {
+        let header = &section.title;
+        let level = section.indent;
+        let section_id = gen_section_id(&section.title);
+
+        if level > cur_level {
+            target += &format!("<ul class='list-level-{}'>", level - 1);
+        }
+
+        while level < cur_level {
+            target += "</ul>";
+            cur_level -= 1;
+        }
+
+        cur_level = level;
+        target += "<li>";
+        target += &format!(
+            "<a href='#{section_id}' id='toc-{section_id}' class='decorate-not has-content spawns-popup'>{header}</a>"
+        );
+        target += "</li>";
+    }
+
+    while orig_cur_level < cur_level {
+        target += "</ul>";
+        cur_level -= 1;
+    }
+
+    let footnotes_id = "footnotes";
+    let similar_id = "similar";
+    let bibliography_id = "bibliography";
+    let backlinks_id = "backlinks";
+
+    let meta = btreemap! {
+        "en" => btreemap! {
+            "collapse_button_title" => "Collapse table of contents",
+            "footnotes_title" => "Footnotes",
+            "similar_title" => "Similar articles",
+            "bibliography_title" => "Bibliography",
+            "backlinks_title" => "Backlinks",
+        },
+        "de" => btreemap! {
+            "collapse_button_title" => "Inhaltsverzeichnis zusammenklappen",
+            "footnotes_title" => "Fußnoten",
+            "similar_title" => "Ähnliche Artikel",
+            "bibliography_title" => "Bibliographie",
+            "backlinks_title" => "Verweise",
+        }
+    };
+
+    let collapse_button_title = meta[lang]["collapse_button_title"];
+    let footnotes_title = meta[lang]["footnotes_title"];
+    let similar_title = meta[lang]["similar_title"];
+    let bibliography_title = meta[lang]["bibliography_title"];
+    let backlinks_title = meta[lang]["backlinks_title"];
+
+    let s = "class='link-self decorate-not has-content spawns-popup'";
+
+    target += &format!("<li><a {s} id='toc-backlinks' href='#{backlinks_id}'>{backlinks_title}</a></li>");
+    target += &format!("<li><a {s} id='toc-footnotes' href='#{footnotes_id}'>{footnotes_title}</a></li>");
+    target += &format!("<li><a {s} id='toc-similar' href='#{similar_id}'>{similar_title}</a></li>");
+    target += &format!("<li><a {s} id='toc-bibliography' href='#{bibliography_id}'>{bibliography_title}</a></li>");
+    target += &format!("</ul>");
+    target += &format!("<button class='toc-collapse-toggle-button' title='{collapse_button_title}' tabindex='-1'><span></span></button>");
+    target += &format!("</div>");
+
+    target
 }
 
 fn page_desciption(
@@ -1120,37 +1226,221 @@ fn page_desciption(
     if a.is_prayer() {
         return String::new();
     }
-    String::new()
+    let descr = get_description(lang, a);
+    format!("<div class='page-description'><p>{descr}</p></div>")
+}
+
+type AuthorsMap = BTreeMap<String, Author>;
+
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord)]
+struct Author {
+    displayname: String,
+    #[serde(default)]
+    contact: Option<String>,
+    #[serde(default)]
+    donate: BTreeMap<String, String>
+}
+
+fn read_authors_map(s: &str) -> AuthorsMap {
+    serde_json::from_str(&s).unwrap_or_default()
 }
 
 fn page_metadata(
     lang: &str, 
     a: &ParsedArticleAnalyzed,
-) -> String {
+    authors: &AuthorsMap,
+) -> Result<String, String> {
+
     if a.is_prayer() {
-        return String::new();
+        return Ok(String::new());
     }
-    String::new()
+
+    let mut page_meta = include_str!("../../templates/page-metadata.html").to_string();
+    let date = a.date.clone();
+    let date_desc = date.clone();
+    let date_title = date.clone();
+
+    let authors_link = a.authors.iter().map(|s| {
+        let id = s.replace(":", "-");
+        let name = authors.get(s).map(|q| &q.displayname)
+        .ok_or_else(|| format!("author {s} not found for article {}", a.title))?;
+        
+        let u = "/static/img/icon/icons.svg#info-circle-regular";
+        let style = format!("data-link-icon='info-circle-regular' data-link-icon-type='svg' style=\"--link-icon-url: url('{u}');\"");
+        let classes = "class='backlinks link-self has-icon has-content spawns-popup has-indicator-hook'";
+        
+        let mut link = format!("<a href='/{lang}/author/{id}' data-attribute-title='{name}' {style} {classes}>");
+        link += &format!("{name}<span class='indicator-hook'></span><span class='link-icon-hook'>⁠</span></a>");
+
+        Ok(link)
+    }).collect::<Result<Vec<_>, String>>()?.join(", ");
+
+    let meta = btreemap! {
+        "de" => btreemap! {
+            "backlinks_desc" => "Liste der anderen Seiten, die auf diese Seite verweisen",
+            "backlinks_title" => "verweise",
+            "similar_desc" => "Ähnliche Artikel",
+            "similar_title" => "ähnlich",
+            "bibliography_desc" => "Bibliographie der auf dieser Seite zitierten Links",
+            "bibliography_title" => "bibliografie",
+        },
+        "en" => btreemap! {
+            "backlinks_desc" => "List of other pages which link to this page",
+            "backlinks_title" => "backlinks",
+            "similar_desc" => "Similar articles for this link",
+            "similar_title" => "similar",
+            "bibliography_desc" => "Bibliography of links cited in this page",
+            "bibliography_title" => "bibliography",
+        },
+    };
+
+    let backlinks_desc = meta[lang]["backlinks_desc"];
+    let backlinks_title = meta[lang]["backlinks_title"];
+    let similar_desc = meta[lang]["similar_desc"];
+    let similar_title = meta[lang]["similar_title"];
+    let bibliography_desc = meta[lang]["bibliography_desc"];
+    let bibliography_title = meta[lang]["bibliography_title"];
+
+    page_meta = page_meta.replace("$$DATE_DESC$$", &date_desc);
+    page_meta = page_meta.replace("$$DATE_TITLE$$", &date_title);
+    page_meta = page_meta.replace("$$BACKLINKS_DESC$$", backlinks_desc);
+    page_meta = page_meta.replace("$$BACKLINKS_TITLE$$", backlinks_title);
+    page_meta = page_meta.replace("$$SIMILAR_DESC$$", similar_desc);
+    page_meta = page_meta.replace("$$SIMILAR_TITLE$$", similar_title);
+    page_meta = page_meta.replace("$$BIBLIOGRAPHY_DESC$$", bibliography_desc);
+    page_meta = page_meta.replace("$$BIBLIOGRAPHY_TITLE$$", bibliography_title);
+    page_meta = page_meta.replace("<!-- AUTHORS -->", &authors_link);
+    
+    Ok(page_meta)
+}
+
+fn render_paragraph(par: &Paragraph, dropcap: bool) -> String {
+    let mut target = String::new();
+    match par {
+        Paragraph::Sentence { s } => {
+            for (i, item) in s.iter().enumerate() {
+                match item {
+                    SentenceItem::Text { text } => {
+                        if dropcap && i == 0 {
+                            let drc = text.chars().next().map(|s| s.to_string()).unwrap_or_default();
+                            target += &format!("<span class='dropcap'>{drc}</span>");
+                            let rest = text.chars().skip(1).collect::<String>();
+                            target += &rest;
+                        } else {
+                            target += text;
+                        }
+                    }
+                    SentenceItem::Link { l } => {
+                        target += &format!("<a href='{}'>{}</a>", l.href, l.text);
+                    }
+                    SentenceItem::Footnote { id } => {
+                        // TODO!
+                    }
+                }
+            }
+        },
+        Paragraph::Quote { q } => {
+            target += "<span class='blockquote'>";
+            if !q.title.is_empty() {
+                target += "<strong>";
+                target += &q.title;
+                target += "</strong>";
+            }
+
+            for p in q.quote.iter() {
+                target += "<p>";
+                target += p;
+                target += "</p>";
+            }
+            
+            if !q.author.is_empty() && q.source.is_empty() {
+                target += "<br/><p>";
+                if !q.author.is_empty() {
+                    target += &format!("<em><a href='{}'>{}</a></em>", q.author_link, q.author);
+                }
+    
+                if q.source.is_empty() {
+                    target += "&nbsp;--&nbsp;";
+                    target += &format!("<em><a href='{}'>{}</a></em>", q.source_link, q.source);
+
+                }
+                target += "</p>"
+            }
+
+            target += "</span>"
+        },
+        Paragraph::Image { i } => {
+            // TODO: inline images
+            target += &format!("<img src='{}' alt='{}' title='{}' />", i.href, i.alt, i.title);
+        },
+    }
+
+    target
 }
 
 fn body_abstract(
-    lang: &str,
     summary: &[Paragraph],
 ) -> String {
-    String::new()
+    
+    if summary.is_empty() {
+        return String::new();
+    }
+
+    let mut target = "<p class='first-block first-graf intro-graf block dropcap-kanzlei' style='--bsm: 0;'>".to_string();
+    target += &render_paragraph(&summary[0], true); 
+    target += "</p>";
+
+    for par in summary.iter().skip(1) {
+        target += "<p class='block' style='--bsm: 0;'>";
+        target += &render_paragraph(par, false);
+        target += "</p>";
+    }
+
+    target
+}
+
+fn render_section(
+    lang: &str,
+    a: &ArticleSection,
+) -> String {
+    
+    let mut section = include_str!("../../templates/section.html").to_string();
+
+    let first_par = a.pars.get(0).map(|p| render_paragraph(p, false)).unwrap_or_default();
+    let other_pars = a.pars.iter().skip(1).map(|p| render_paragraph(p, false)).collect::<Vec<_>>().join("\r\n");
+
+    let header = &a.title;
+    let level = a.indent;
+    let section_id = gen_section_id(&header);
+    let section_descr = match lang {
+        "de" => format!("Link zum Abschnitt '{header}'"),
+        "en" => format!("Link to section '{header}'"),
+        _ => String::new(),
+    };
+
+    section = section.replace("$$LEVEL$$", &level.saturating_sub(1).to_string());
+    section = section.replace("$$SECTION_ID$$", &section_id);
+    section = section.replace("$$SECTION_DESCR$$", &section_descr);
+    section = section.replace("$$SECTION_TITLE$$", &header);
+    section = section.replace("<!-- FIRST_PARAGRAPH -->", &first_par);
+    
+    section += &other_pars;
+
+    section
 }
 
 fn body_content(
     lang: &str,
     sections: &[ArticleSection],
 ) -> String {
-    String::new()
+    sections.iter()
+    .map(|q| render_section(lang, q))
+    .collect::<Vec<_>>()
+    .join("\r\n")
 }
 
-fn body_noscript(
-    lang: &str,
-) -> String {
-    String::new()
+fn body_noscript() -> String {
+    include_str!("../../templates/body-noscript.html").to_string()
 }
 
 fn article2html(
@@ -1160,13 +1450,14 @@ fn article2html(
     prod: bool,
     articles_by_tag: &mut ArticlesByTag,
     articles_by_date: &mut ArticlesByDate,
-) -> Option<String> {
+    authors: &AuthorsMap,
+) -> Result<String, String> {
     
     static HTML: &str = include_str!("../../templates/lorem.html");
 
     match (lang, slug) {
         ("de", "rosenkranz") |
-        ("en", "rosary") => return None, // TODO
+        ("en", "rosary") => return Err(String::new()), // TODO
         _ => { },
     }
 
@@ -1206,21 +1497,21 @@ fn article2html(
     let html = html.replace("<!-- LINK_TAGS -->", &link_tags(lang, &a.tags));
     let html = html.replace("<!-- TOC -->", &table_of_contents(lang, &a));
     let html = html.replace("<!-- PAGE_DESCRIPTION -->", &page_desciption(lang, &a));
-    let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a));
-    let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(lang, &a.summary));
+    let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a, authors)?);
+    let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(&a.summary));
     let html = html.replace("<!-- BODY_CONTENT -->", &body_content(lang, &a.sections));
-    let html = html.replace("<!-- BODY_NOSCRIPT -->", &body_noscript(lang));
+    let html = html.replace("<!-- BODY_NOSCRIPT -->", &body_noscript());
 
     let skip = match lang {
         "de" => "Zum Hauptinhalt springen",
         "en" => "Skip to main content",
-        _ => return None,
+        _ => return Err(format!("unknown language {lang}")),
     };
     let html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", skip);
     let contact = match lang {
         "de" => "de/impressum",
         "en" => "en/about",
-        _ => return None,
+        _ => return Err(format!("unknown language {lang}")),
     };
     
     let root_href = match prod {
@@ -1236,7 +1527,7 @@ fn article2html(
     let html = html.replace("$$ROOT_HREF$$", root_href);
     let html = html.replace("$$PAGE_HREF$$", &(root_href.to_string() + "/" + slug));
 
-    Some(html)
+    Ok(html)
 }
 
 fn main() -> Result<(), String> {
@@ -1248,9 +1539,15 @@ fn main() -> Result<(), String> {
         cwd = cwd.parent().ok_or("cannot find /articles dir in current path")?.to_path_buf();
     }
 
+    let authors = std::fs::read_to_string(&cwd.join("authors.json"))
+    .map_err(|e| e.to_string())?;
+    let authors_map = read_authors_map(&authors);
+
     let dir = cwd.join("articles");
 
-    let articles = load_articles(&dir)?.langs;
+    let articles = load_articles(&dir)?;
+    let _ = std::fs::write(cwd.join(".gitignore"), generate_gitignore(&articles));
+    let articles = articles.langs;
     let articles = articles.iter().map(|(lang, a)| {
         let vectorized = a.vectorize();
         let s = vectorized.map
@@ -1272,13 +1569,18 @@ fn main() -> Result<(), String> {
                 &a, 
                 true, 
                 &mut articles_by_tag, 
-                &mut articles_by_date
+                &mut articles_by_date,
+                &authors_map,
             );
 
-            if let Some(s) = s {
-                let path = cwd.join(lang.clone() + "2");
-                let _ = std::fs::create_dir_all(&path);
-                let _ = std::fs::write(path.join(slug + ".html"), s);
+            match s {
+                Ok(s) => {
+                    let path = cwd.join(lang.clone() + "2");
+                    let _ = std::fs::create_dir_all(&path);
+                    let _ = std::fs::write(path.join(slug + ".html"), s);
+                },
+                Err(e) if e.is_empty() => { },
+                Err(q) => return Err(q),
             }
         }
     }
