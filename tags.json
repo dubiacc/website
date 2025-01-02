@@ -188,22 +188,26 @@
             {
                 "id": "mode-fuer-sie",
                 "title": "Katholische Mode für Sie",
-                "link": {"slug": "https://etsy.com", "img": "/static/img/shop/womansfashion.avif", "title": "Frauenmode auf etsy.de" }
+                "img": "/static/img/shop/womansfashion.avif",
+                "link": {"slug": "https://etsy.com", "title": "Frauenmode auf etsy.de" }
             },
             { 
                 "id": "mode-fuer-ihn",
                 "title": "Katholische Mode für Ihn",
-                "link": {"slug": "https://etsy.com", "img": "/static/img/shop/mensfashion.avif", "title": "Herrenmode auf etsy.de" }
+                "img": "/static/img/shop/mensfashion.avif", 
+                "link": {"slug": "https://etsy.com", "title": "Herrenmode auf etsy.de" }
             },
             { 
                 "id": "rosenkraenze",
                 "title": "Paracord Rosenkränze",
-                "link": {"slug": "https://etsy.com", "img": "/static/img/shop/rosary.avif", "title": "Rosenkränze auf etsy.de"  }
+                "img": "/static/img/shop/rosary.avif", 
+                "link": {"slug": "https://etsy.com", "title": "Rosenkränze auf etsy.de"  }
             },
             { 
                 "id": "buecher",
                 "title": "Katholische Bücher",
-                "link": {"slug": "https://lulu.com", "img": "/static/img/shop/books.avif", "title": "Bücher auf lulu.com"  }
+                "img": "/static/img/shop/books.avif", 
+                "link": {"slug": "https://lulu.com", "title": "Bücher auf lulu.com"  }
             }
         ],
         "about": [
@@ -305,22 +309,26 @@
             { 
                 "id": "fashion-f",
                 "title": "Catholic Fashion for Her",
-                "link": {"slug": "https://etsy.com", "img": "/static/img/shop/womansfashion.avif", "title": "Shop on etsy.com"  }
+                "img": "/static/img/shop/womansfashion.avif", 
+                "link": {"slug": "https://etsy.com", "title": "Shop on etsy.com"  }
             },
             { 
                 "id": "fashion-m",
                 "title": "Catholic Fashion for Him",
-                "link": {"slug": "https://etsy.com", "img": "/static/img/shop/mensfashion.avif", "title": "Shop on etsy.com" }
+                "img": "/static/img/shop/mensfashion.avif", 
+                "link": {"slug": "https://etsy.com", "title": "Shop on etsy.com" }
             },
             { 
                 "id": "rosaries",
                 "title": "Paracord Rosaries",
-                "link": {"slug": "https://etsy.com", "img": "/static/img/shop/rosary.avif", "title": "Shop on etsy.com" }
+                "img": "/static/img/shop/rosary.avif", 
+                "link": {"slug": "https://etsy.com", "title": "Shop on etsy.com" }
             },
             { 
                 "id": "books",
                 "title": "Catholic Books",
-                "link": {"slug": "https://lulu.com", "img": "/static/img/shop/books.avif", "title": "Shop on lulu.com" }
+                "img": "/static/img/shop/books.avif", 
+                "link": {"slug": "https://lulu.com", "title": "Shop on lulu.com" }
             }
         ],
         "about": [

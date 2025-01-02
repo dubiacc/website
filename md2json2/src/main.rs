@@ -809,7 +809,7 @@ fn load_articles(dir: &Path) -> Result<LoadedArticles, String> {
     Ok(LoadedArticles { langs })
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 struct SectionLink {
     slug: String,
     title: String,
@@ -1578,8 +1578,430 @@ fn article2html(
     Ok(html)
 }
 
+fn render_page_author_pages(
+    articles: &AnalyzedArticles,
+    authors: &AuthorsMap
+) -> Result<BTreeMap<String, Vec<(String, String)>>, String> {
+    
+    let mut finalmap = BTreeMap::new();
+    for lang in articles.map.keys() {
+        
+        let (contact_str, donate_str) = match lang.as_str() {
+            "de" => ("Kontakt", "Spenden"),
+            "en" => ("Contact", "Donate"),
+            _ => return Err("unknown language".to_string()),
+        };
+    
+        for (id, v) in authors.iter() {
+            let name = &v.displayname;
+            let contact_url = v.contact.as_deref();
+            let mut dn = String::new();
+            for (platform, link) in v.donate.iter() {
+                
+                let s = match platform.as_str() {
+                    "paypal" => format!("<p><a href='{link}'>PayPal</a></p>"),
+                    "github" => format!("<p><a href='{link}'>Ko-Fi</a></p>"),
+                    "ko-fi" => format!("<p><a href='{link}'>GitHub Sponsors</a></p>"),
+                    _ => return Err(format!("unknown platform {platform} for user {id} in authors.json")),
+                };
+            
+                dn.push_str(&s);
+            }
+            
+            let mut t = format!("<!doctype html><html><head><title>{name}</title></head><body>");
+            t += &format!("<h1>{name}</h1>");
+            if let Some(contact_url) = contact_url {
+                t += &format!("<h2>{contact_str}</h2>");
+                t += &format!("<a href='{contact_url}'>{contact_url}</a>");
+            }
+
+            if !dn.is_empty() {
+                t += &format!("<h2>{donate_str}</h2>");
+                t += &dn;
+            }
+            t += &format!("</body></html>");
+
+            finalmap.entry(lang.clone())
+            .or_insert_with(|| Vec::new())
+            .push((id.to_lowercase().replace(":", "-"), t));
+        }
+    }
+
+    Ok(finalmap)
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+struct SearchIndex {
+    git: String,
+    articles: BTreeMap<Slug, SearchIndexArticle>
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+struct SearchIndexArticle {
+    title: String,
+    sha256: String,
+}
+
+fn generate_search_index(articles: &AnalyzedArticles) -> BTreeMap<Lang, SearchIndex>{
+
+    articles.map.iter().map(|(lang, a)| {
+
+        let s = a.values().map(|r| r.sha256.clone()).collect::<Vec<_>>().join(" ");
+        let version = sha256(&s);
+        let articles = a.iter()
+        .map(|(slug, readme)| {
+            let sia = SearchIndexArticle {
+                title: readme.title.clone(),
+                sha256: readme.sha256.clone(),
+            };
+            (slug.clone(), sia)
+        }).collect();
+
+        (lang.clone(), SearchIndex {
+            git: version,
+            articles,
+        })
+    }).collect()
+}
+
+// Lang => (SearchBarHtml, SearchJS)
+fn search_html(articles: &AnalyzedArticles) -> BTreeMap<Lang, (String, String)> {
+    articles.map.iter().map(|(lang, a)| {
+
+        let s = a.values().map(|r| r.sha256.clone()).collect::<Vec<_>>().join(" ");
+        let version = sha256(&s);
+
+        let searchbar_placeholder = match lang.as_str() {
+            "de" => "Stichwort, Thema, Frage, ...",
+            "en" => "Keyword, topic, question, ...",
+            _ => "",
+        };
+
+        let searchbar = match lang.as_str() {
+            "de" => "Suchen",
+            "en" => "Search",
+            _ => "",
+        };
+
+        let no_results = match lang.as_str() {
+            "de" => "Keine Ergebnisse gefunden.",
+            "en" => "No results found.",
+            _ => "",
+        };
+
+        let mut searchbar_html = include_str!("../../templates/searchbar.html").to_string();
+        searchbar_html = searchbar_html.replace("$$VERSION$$", &version);
+        searchbar_html = searchbar_html.replace("$$SEARCHBAR_PLACEHOLDER$$", &searchbar_placeholder);
+        searchbar_html = searchbar_html.replace("$$SEARCH$$", &searchbar);
+        let mut search_js = include_str!("../../static/js/search.js").to_string();
+        search_js = search_js.replace("$$LANG$$", lang);
+        search_js = search_js.replace("$$VERSION$$", &version);
+        search_js = search_js.replace("$$NO_RESULTS$$", no_results);
+        (lang.clone(), (searchbar_html, search_js))
+    }).collect()
+}
+
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+struct IBelieveIn {
+    title: String,
+    option: String,
+    tag: String,
+    featured: Vec<Slug>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+struct IwantToLearn {
+    title: String,
+    featured: Vec<Slug>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+struct TagSection1 {
+    id: String,
+    title: String,
+    links: Vec<SectionLink>,
+}
+
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+struct TagSection2 {
+    id: String,
+    title: String,
+    img: String,
+    link: SectionLink,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+struct TagSection3 {
+    id: String,
+    title: String,
+    texts: Vec<String>,
+}
+
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+struct Tags {
+    ibelievein: Vec<IBelieveIn>,
+    iwanttolearn: BTreeMap<Slug, IwantToLearn>,
+    tags: BTreeMap<String, String>,
+    ressources: Vec<TagSection1>,
+    shop: Vec<TagSection2>,
+    about: Vec<TagSection3>,
+}
+
+struct SpecialPage {
+    id: &'static str,
+    filepath: &'static str,
+    title: &'static str,
+    description: &'static str,
+    content: String,
+}
+
+fn get_special_pages(
+    lang: &str,
+    tags: &BTreeMap<Lang, Tags>,
+    by_tag: &ArticlesByTag,
+    by_date: &ArticlesByDate,
+) -> Result<Vec<SpecialPage>, String> {
+    let tags = tags.get(lang).ok_or_else(|| format!("unknown language {lang} not found in tags.json"))?;
+    let default = BTreeMap::new();
+    let default2 = BTreeMap::new();
+    match lang {
+        "de" => Ok(vec![
+            SpecialPage {
+                title: "Themen",
+                filepath: "themen.html",
+                id: "de-themen",
+                description: "Themenübersicht",
+                content: render_index_sections(
+                    lang, 
+                    by_tag.get(lang).unwrap_or(&default).iter().filter_map(|(k, v)| {
+                        let id = k.clone();
+                        let title = tags.tags.get(&id)?;
+                        Some(((id.to_string(), title.to_string()), v.clone()))
+                    }).collect()
+                ),
+            },
+            SpecialPage {
+                title: "Neueste Links",
+                filepath: "neues.html",
+                id: "de-neues",
+                description: "Neueste Links",
+                content: render_index_sections(lang, by_date.get(lang).unwrap_or(&default2).iter().rev().map(|(year, months)| {
+                    ((format!("jahr-{year}"), year.clone()), months.iter().flat_map(|(m, days)| {
+                        days.iter().flat_map(move |(d, a)| a.iter().map(move |a| {
+                            SectionLink {
+                                slug: a.slug.to_string(),
+                                title: format!("{m}-{d}: {}", a.title),
+                            }
+                        }))
+                    }).collect())
+                }).collect()),
+            },
+            SpecialPage {
+                title: "Ressourcen",
+                filepath: "ressourcen.html",
+                id: "de-ressourcen",
+                description: "Ressourcen",
+                content: render_resources_sections(lang, &tags.ressources),
+            },
+            SpecialPage {
+                title: "Shop",
+                filepath: "shop.html",
+                id: "de-shop",
+                description: "Shop",
+                content: render_shop_sections(&tags.shop),
+            },
+            SpecialPage {
+                title: "Impressum",
+                filepath: "impressum.html",
+                id: "de-impressum",
+                description: "Impressum",
+                content: render_about_sections(&tags.about),
+            },
+        ]),
+        "en" => Ok(vec![
+            SpecialPage {
+                title: "Topics",
+                filepath: "topics.html",
+                id: "en-topics",
+                description: "List of topics",
+                content: render_index_sections(
+                    lang, 
+                    by_tag.get(lang).unwrap_or(&default).iter().filter_map(|(k, v)| {
+                        let id = k.clone();
+                        let title = tags.tags.get(&id)?;
+                        Some(((id.to_string(), title.to_string()), v.clone()))
+                    }).collect()
+                ),
+            },
+            SpecialPage {
+                title: "Newest Links",
+                filepath: "newest.html",
+                id: "en-newest",
+                description: "Newest Links",
+                content: render_index_sections(lang, by_date.get(lang).unwrap_or(&default2).iter().map(|(year, months)| {
+                    ((format!("year-{year}"), year.clone()), months.iter().flat_map(|(m, days)| {
+                        days.iter().flat_map(move |(d, a)| a.iter().map(move |a| {
+                            SectionLink {
+                                slug: a.slug.to_string(),
+                                title: format!("{m}-{d}: {}", a.title),
+                            }
+                        }))
+                    }).collect())
+                }).collect()),
+            },
+            SpecialPage {
+                title: "Tools",
+                filepath: "tools.html",
+                id: "en-tools",
+                description: "Tools",
+                content: render_resources_sections(lang, &tags.ressources),
+            },
+            SpecialPage {
+                title: "Shop",
+                filepath: "shop.html",
+                id: "en-shop",
+                description: "Shop",
+                content: render_shop_sections(&tags.shop),
+            },
+            SpecialPage {
+                title: "About",
+                filepath: "about.html",
+                id: "en-about",
+                description: "About",
+                content: render_about_sections(&tags.about),
+            },
+        ]),
+        _ => Err(format!("get_special_pages: unknown language {lang}"))
+    }
+}
+
+fn special2html(lang: &str, page: &SpecialPage) -> (String, String) {
+    let mut special = include_str!("../../templates/special.html").to_string();
+    let a = ParsedArticleAnalyzed {
+        title: page.title.to_string(),
+        summary: vec![Paragraph::Sentence { s: vec![SentenceItem::Text { text: page.description.to_string() } ] }],
+        .. Default::default()
+    };
+    special = special.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(&a, lang, &page.id));
+    special = special.replace("<!-- BODY_ABSTRACT -->", &page.content);
+    special = special.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true));
+    special = special.replace("$$TITLE$$", &page.title);
+    special = special.replace("$$LANG$$", lang);
+    special = special.replace("$$ROOT_HREF$$", &get_root_href());
+    (page.filepath.to_string(), special)
+}
+
+fn tags_map(s: &str) -> Result<BTreeMap<String, Tags>, String> {
+    serde_json::from_str(s).map_err(|e| format!("tags.json: {}", e))
+}
+
+fn render_section_items_texts(texts: &[String]) -> String {
+    texts.iter().map(|s| {
+        if s.trim().is_empty() {
+            "<br/>".to_string()
+        } else if !s.trim().starts_with("<") {
+            format!("<p style='text-indent: 0px;'>{s}</p>")
+        } else {
+            s.clone()
+        }
+    }).collect::<Vec<_>>().join("\r\n")
+}
+
+fn render_section_items_img(link: &str, img: &str, title: &str) -> String {
+    let s1 = "justify-content: flex-end;margin-top:10px;width: 100%;min-height: 440px;display: flex;";
+    let s2 = "flex-direction:column;height: 100%;background-size: cover;";
+    let style = format!("{s1}{s2}background-image: url({img});");
+
+    let p1 = "font-variant-caps: small-caps;background: var(--background-color);border-radius:5px;";
+    let p2 = "border: 2px solid var(--GW-H1-border-color); text-align: center; text-decoration: underline;";
+    let p3 = "text-indent: 0px;margin: 10px;padding: 10px 20px;";
+    let p_style = p1.to_string() + p2 + p3;
+
+    format!("<a href='{link}' style='{style}'><p style='{p_style}'>{title}</p></a>")
+}
+
+fn render_section_items(lang: &str, links: &[SectionLink]) -> String {
+    links.iter().enumerate().map(|(i, l)| {
+        let first = i == 0;
+        let slug = &l.slug;
+        let section_title = &l.title;
+        let bsm = if !first { "0" } else { "4" };
+        let final_link = if slug.starts_with("http") { 
+            slug.clone() 
+        } else { 
+            get_root_href().to_string() + "/" + lang + "/" + slug 
+        };
+
+        vec![
+            format!("<li class='block link-modified-recently-list-item dark-mode-invert' style='--bsm:{bsm};'>"),
+            format!("  <p class='in-list first-graf block' style='--bsm: 0;'><a href='{final_link}'"),
+            format!("      id='{lang}-{slug}'"),
+            format!("      class='link-annotated link-page link-modified-recently in-list has-annotation spawns-popup'"),
+            format!("      data-attribute-title='{section_title}'>{section_title}</a></p>"),
+            format!("</li>"),
+        ].join("\r\n")
+    }).collect::<Vec<_>>().join("\r\n")
+}
+
+fn render_index_section(lang: &str, id: &str, classes: &str, title: &str, links: &[SectionLink]) -> String {
+    let mut section_html = include_str!("../../templates/index.section.html").to_string();
+    section_html = section_html.replace("$$SECTION_ID$$", id);
+    section_html = section_html.replace("$$SECTION_CLASSES$$", classes);
+    section_html = section_html.replace("$$SECTION_NAME$$", title);
+    section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title);
+    section_html = section_html.replace("<!-- SECTION_ITEMS -->", &render_section_items(lang, links));
+    section_html
+}
+
+fn render_index_section_texts(id: &str, classes: &str, title: &str, txts: &[String]) -> String {
+    let mut section_html = include_str!("../../templates/index.section.html").to_string();
+    section_html = section_html.replace("$$SECTION_ID$$", id);
+    section_html = section_html.replace("$$SECTION_CLASSES$$", classes);
+    section_html = section_html.replace("$$SECTION_NAME$$", title);
+    section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title);
+    section_html = section_html.replace("<!-- SECTION_ITEMS -->", &&render_section_items_texts(txts));
+    section_html
+}
+
+fn render_index_section_img(id: &str, classes: &str, title: &str, link: &str, img: &str, t: &str) -> String {
+    let mut section_html = include_str!("../../templates/index.section.html").to_string();
+    section_html = section_html.replace("$$SECTION_ID$$", id);
+    section_html = section_html.replace("$$SECTION_CLASSES$$", classes);
+    section_html = section_html.replace("$$SECTION_NAME$$", title);
+    section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title);
+    section_html = section_html.replace("<!-- SECTION_ITEMS -->", &&render_section_items_img(link, img, t));
+    section_html
+}
+
+fn render_index_sections(lang: &str, s: Vec<((String, String), Vec<SectionLink>)>) -> String {
+    s.iter().map(|((id, title), links)| {
+        render_index_section(lang, id, "", title, links)
+    }).collect::<Vec<_>>().join("\r\n")
+}
+
+fn render_resources_sections(lang: &str, s: &Vec<TagSection1>) -> String {
+    s.iter().map(|s| {
+        let section_id = &s.id;
+        let section_title = &s.title;
+        render_index_section(lang, section_id, "", section_title, &s.links)
+    }).collect::<Vec<_>>().join("\r\n")
+}
+
+fn render_shop_sections(s: &Vec<TagSection2>) -> String {
+    s.iter().map(|s| {
+        render_index_section_img(&s.id, "", &s.title, &s.link.slug, &s.img, &s.link.title)
+    }).collect::<Vec<_>>().join("\r\n")
+}
+
+fn render_about_sections(s: &Vec<TagSection3>) -> String {
+    s.iter().map(|s| {
+        render_index_section_texts(&s.id, "", &s.title, &s.texts)
+    }).collect::<Vec<_>>().join("\r\n")
+}
+
 fn main() -> Result<(), String> {
 
+    // Setup 
     let mut cwd = std::env::current_dir()
         .map_err(|e| e.to_string())?;
     
@@ -1591,13 +2013,18 @@ fn main() -> Result<(), String> {
     .map_err(|e| e.to_string())?;
     let authors_map = read_authors_map(&authors);
 
+    let tags = std::fs::read_to_string(&cwd.join("tags.json"))
+    .map_err(|e| e.to_string())?;
+    let tags = tags_map(&tags)?;
+
     let dir = cwd.join("articles");
 
+    // Load, parse and analyze articles
     let articles = load_articles(&dir)?;
-    let _ = std::fs::write(cwd.join(".gitignore"), generate_gitignore(&articles));
     let vectorized = articles.vectorize();
     let analyzed = vectorized.analyze();
 
+    // Render and write articles
     let mut articles_by_tag = ArticlesByTag::default();
     let mut articles_by_date = ArticlesByDate::default();
 
@@ -1625,6 +2052,38 @@ fn main() -> Result<(), String> {
             }
         }
     }
+
+    // Write author pages
+    let author_pages = render_page_author_pages(&analyzed, &authors_map)?;
+    for (lang, authors) in author_pages.iter() {
+        let _ = std::fs::create_dir_all(cwd.join(&lang).join("author"));
+        for (a, v) in authors {
+            let _ = std::fs::write(cwd.join(&lang).join("author").join(&format!("{a}.html")), v);
+        }
+    }
+
+    // Generate search index
+    let si = generate_search_index(&analyzed);
+    for (lang, si) in si.iter() {
+        let json = serde_json::to_string(&si).unwrap_or_default();
+        let _ = std::fs::write(cwd.join(lang.to_string() + "2").join("index.json"), json);
+    }
+
+    // Write special pages
+    let langs = analyzed.map.keys().cloned().collect::<Vec<_>>();
+    for l in langs {
+        let sp = get_special_pages(&l, &tags, &articles_by_tag, &articles_by_date)?;
+        for s in sp.iter() {
+            let (path, html) = special2html(&l, s);
+            let _ = std::fs::write(cwd.join(l.to_string() + "2").join(path), &html);
+        }
+    }
+
+    // Write index pages
+
+
+    // Write gitignore
+    let _ = std::fs::write(cwd.join(".gitignore"), generate_gitignore(&articles));
 
     Ok(())
 }
