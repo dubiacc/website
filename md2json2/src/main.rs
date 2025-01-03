@@ -1,7 +1,6 @@
 use std::path::Path;
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
-use collection_macros::btreemap;
 use serde_derive::{Serialize, Deserialize};
 
 #[derive(Debug, Default)]
@@ -31,6 +30,14 @@ struct VectorizedArticles {
 #[derive(Debug, Default)]
 struct AnalyzedArticles {
     map: BTreeMap<Lang, BTreeMap<Slug, ParsedArticleAnalyzed>>,
+}
+
+impl AnalyzedArticles {
+    pub fn get_chars(&self) -> BTreeSet<char> {
+        self.map.values()
+        .flat_map(|v| v.values().flat_map(|p| p.get_chars()))
+        .collect()
+    }
 }
 
 #[derive(Debug, Default)]
@@ -91,6 +98,17 @@ impl ParsedArticleAnalyzed {
     pub fn is_prayer(&self) -> bool {
         self.tags.iter().any(|s| s == "gebet" || s == "prayer")
     }
+    pub fn get_chars(&self) -> Vec<char> {
+        let mut c = self.title.chars().collect::<Vec<_>>();
+        c.extend(self.date.chars());
+        c.extend(self.tags.iter().flat_map(|q| q.chars()));
+        c.extend(self.summary.iter().flat_map(|s| s.get_chars()));
+        c.extend(self.article_abstract.iter().flat_map(|s| s.get_chars()));
+        c.extend(self.sections.iter().flat_map(|s| s.title.chars()));
+        c.extend(self.sections.iter().flat_map(|s| s.pars.iter().flat_map(|r| r.get_chars())));
+        c.extend(self.footnotes.iter().flat_map(|s| s.chars()));
+        c
+    }
     pub fn get_date(&self) -> Option<(&str, &str, &str)> {
         let mut iter = self.date.split("-");
         let year = iter.next()?;
@@ -124,6 +142,26 @@ enum Paragraph {
     Sentence { s: Vec<SentenceItem> },
     Quote { q: Quote },
     Image { i: Image }
+}
+
+impl Paragraph {
+    pub fn get_chars(&self) -> Vec<char> {
+        match self {
+            Paragraph::Sentence { s } => s.iter().flat_map(|z| match z {
+                SentenceItem::Text { text } => text.chars().collect::<Vec<_>>(),
+                SentenceItem::Link { l } => l.text.chars().collect::<Vec<_>>(),
+                SentenceItem::Footnote { id } => id.chars().collect::<Vec<_>>(),
+            }).collect::<Vec<_>>(),
+            Paragraph::Quote { q } => {
+                let mut p = q.quote.iter().flat_map(|p| p.chars()).collect::<Vec<_>>();
+                p.extend(q.title.chars());
+                p.extend(q.author.chars());
+                p.extend(q.source.chars());
+                p
+            }
+            Paragraph::Image { i } => i.title.chars().collect(),
+        }
+    }
 }
 
 #[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
@@ -862,15 +900,12 @@ fn generate_gitignore(articles: &LoadedArticles) -> String {
     return filenames.into_iter().collect::<Vec<_>>().join("\r\n");
 }
 
-fn get_title(lang: &str, a: &ParsedArticleAnalyzed) -> String {
+fn get_title(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
     if !a.title.trim().is_empty() {
-        return a.title.clone();
+        return Ok(a.title.clone());
     }
-    match lang {
-        "de" => "Entdecke den wahren katholischen Glauben - dubia.cc".into(),
-        "en" => "Discover the true Catholic Faith - dubia.cc".into(),
-        _ => String::new()
-    }
+
+    get_string(meta, lang, "index-title")
 }
 
 fn si2text(si: &[SentenceItem]) -> String {
@@ -889,24 +924,21 @@ fn par2text(p: &Paragraph) -> String {
 }
 
 // Returns the description for the <head> tag
-fn get_description(lang: &str, a: &ParsedArticleAnalyzed) -> String {
+fn get_description(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
     let try1 = a.summary.get(0).map(|s| par2text(s)).unwrap_or_default();
     if !try1.trim().is_empty() {
-        return try1.trim().to_string();
+        return Ok(try1.trim().to_string());
     }
     let try1 = a.article_abstract.get(0).map(par2text).unwrap_or_default();
     if !try1.trim().is_empty() {
-        return try1.trim().to_string();
+        return Ok(try1.trim().to_string());
     }
     let sec1 = a.sections.get(0).and_then(|s| s.pars.get(0)).map(par2text).unwrap_or_default();
     if !sec1.trim().is_empty() {
-        return sec1.trim().to_string();
+        return Ok(sec1.trim().to_string());
     }
-    match lang {
-        "en" => "dubia is a collection of articles about the traditional Catholic faith. Did the Church really teach...? Answers to errors and questions, prayers, and more!",
-        "de" => "dubia ist eine Sammlung von Artikeln über den traditionellen katholischen Glauben. Hat die Kirche wirklich...? Antworten auf Irrtümer, Gebete, uvm.",
-        _ => "",
-    }.into()
+
+    get_string(meta, lang, "index-desc")
 }
 
 fn generate_dropcap_css(a: &ParsedArticleAnalyzed) -> String {
@@ -1008,7 +1040,7 @@ fn strip_comments(s: &str) -> String {
 fn minify_css(s: &str) -> String {
     use minifier::css;
     let s = strip_comments(s);
-    let s = s.replace("xmlns=\"http://www.w3.org/2000/svg\"", "");
+    /*
     let s = match css::minify(&s) {
         Ok(o) => o.to_string(),
         Err(e) => {
@@ -1017,163 +1049,116 @@ fn minify_css(s: &str) -> String {
             s.to_string()
         },  
     };
+     */
     s
+}
+
+fn get_string(meta: &MetaJson, lang: &str, key: &str) -> Result<String, String> {
+    Ok(meta.strings.get(lang)
+        .ok_or_else(|| format!("meta.json: strings: unknown lang {lang}"))?
+        .get(key)
+        .ok_or_else(|| format!("meta.json: strings: {lang}: missing key {key}"))?.clone())
 }
 
 fn head(
     a: &ParsedArticleAnalyzed, 
     lang: &str,
-    title_id: &str
-) -> String {
+    title_id: &str,
+    meta: &MetaJson
+) -> Result<String, String> {
 
     let darklight = include_str!("../../templates/darklight.html");
     let head_css = include_str!("../../static/css/head.css");
     let style_css = include_str!("../../static/css/style.css");
     let critical_css = minify_css(&(head_css.to_string() + "\r\n" + &style_css));
     let critical_css_2 = "<style id='critical-css'>\r\n".to_string() + &critical_css + "    </style>";
+    
+    let title = get_title(lang, a, meta)?;
+    let description = get_description(lang, a, meta)?.replace("\"", "'");
+    let drc = format!("<style>{}</style>", generate_dropcap_css(a));
+    let page_href = get_root_href().to_string() + "/" + lang + "/" + title_id;
 
     let mut head = include_str!("../../templates/head.html").to_string();
     head = head.replace("<!-- DARKLIGHT_STYLES -->", &darklight);
     head = head.replace("<!-- CRITICAL_CSS -->", &critical_css_2);
-    let title = get_title(lang, a);
-    let description = get_description(lang, a).replace("\"", "'");
-
     head = head.replace("$$TITLE$$", &title);
     head = head.replace("$$DESCRIPTION$$", &description);
     head = head.replace("$$TITLE_ID$$", title_id);
-
-    let drc = format!("<style>{}</style>", generate_dropcap_css(a));
     head = head.replace("<!-- DROPCAP_CSS -->", &drc);
     head = head.replace("$$KEYWORDS$$", &a.tags.join(", "));
     head = head.replace("$$DATE$$", &a.date);
     head = head.replace("$$AUTHOR$$", &a.authors.join(", "));
-
     head = head.replace("$$IMG$$", &a.img.as_ref().map(|s| s.href.clone()).unwrap_or_default());
     head = head.replace("$$IMG_ALT$$", &a.img.as_ref().map(|s| s.title.clone()).unwrap_or_default());
     head = head.replace("$$LANG$$", lang);
     head = head.replace("$$ROOT_HREF$$", &get_root_href());
-    let page_href = get_root_href().to_string() + "/" + lang + "/" + title_id;
     head = head.replace("$$PAGE_HREF$$", &page_href);
-
-    let skip = match lang {
-        "de" => "Zum Hauptinhalt springen",
-        "en" => "Skip to main content",
-        _ => "",
-    };
-    head = head.replace("$$SKIP_TO_MAIN_CONTENT$$", skip);
-
-    let contact = match lang {
-        "en" => "en/about",
-        "de" => "de/impressum",
-        _ => "",
-    };
-    head = head.replace("$$CONTACT_URL$$", contact);
+    head = head.replace("$$SKIP_TO_MAIN_CONTENT$$", &get_string(meta, lang, "page-smc")?);
+    head = head.replace("$$CONTACT_URL$$", &get_string(meta, lang, "link-about")?);
     head = head.replace("$$SLUG$$", title_id);
-    head
+
+    Ok(head)
 }
 
 fn header_navigation(
     lang: &str, 
-    display_logo: bool
-) -> String {
-    use collection_macros::btreemap;
-    
-    let descs = btreemap!{
-        "de" => btreemap!{
-            "homepage_desc" => "Startseite: Kategorisierte Liste aller deutschen Artikel",
-            "all_articles_desc" => "Durchsuche alle deutschen Artikel",
-            "all_articles_title" => "Themen",
-            "shop_desc" => "Unterstütze unser Apostolat mit deinem Einkauf in unserem Shop!",
-            "shop_title" => "Shop",
-            "shop_link" =>  "de/shop",
-            "about_desc" => "Über diese Seite, Kontakt und Rechtliches",
-            "about_title" => "Impressum",
-            "tools_desc" => "Software und Hilfsmittel zum Latein-Lernen, Gebetssammlungen, Online Mess- und Bibelbücher, Online-Bücherei u.v.m",
-            "tools_title" => "Ressourcen",
-            "newest_desc" => "Artikel sortiert nach Datum",
-            "newest_title" => "Neues",
-            "about_link" => "de/impressum",
-            "homepage_link" => "de",
-            "all_articles_link" => "de/themen",
-            "newest_link" => "de/neues",
-            "tools_link" => "de/ressourcen",
-        },
-        "en" => btreemap!{
-            "homepage_desc" => "Homepage",
-            "all_articles_desc" => "Search all English articles by category / tag",
-            "all_articles_title" => "Topics",
-            "shop_desc" => "Support our apostolate with your purchase in our store!",
-            "shop_title" => "Shop",
-            "shop_link" => "en/shop",
-            "about_desc" => "Imprint, contact and legal information",
-            "about_title" => "About",
-            "tools_desc" => "Software and aids for learning Latin, prayer collections, online Mass and Bible books, online library and much more",
-            "tools_title" => "Tools",
-            "newest_desc" => "Articles sorted by date",
-            "newest_title" => "Newest",
-            "about_link" => "en/about",
-            "homepage_link" => "en",
-            "all_articles_link" => "en/topics",
-            "newest_link" => "en/newest",
-            "tools_link" => "en/tools",
-        },
-    };
+    display_logo: bool,
+    meta: &MetaJson,
+) -> Result<String, String> {
 
+    let homepage_logo = include_str!("../../static/img/logo/logo-smooth-path.svg");
     let logo = if display_logo {
-        let homepage_logo = "/static/img/logo/logo-smooth.svg#logo";
         let homepage_link = get_root_href().to_string() + "/" + lang;
-        let hpd = descs[lang]["homepage_desc"];
+        let hpd = get_string(meta, lang, "nav-homepage-desc")?;
         let logo1 = format!("<a class='logo has-content' rel='home me contents' href='{homepage_link}' data-attribute-title='{hpd}'>");
-        let logo2 = format!("<svg class='logo-image' viewBox='0 0 64 75'><use href='{homepage_logo}'></use></svg>");
+        let logo2 = format!("<svg class='logo-image' viewBox='0 0 64 75'>{homepage_logo}</svg>");
         vec![logo1, logo2, "</a>".to_string()].join("")
     } else {
         String::new()
     };
     
     let mut header_nav = include_str!("../../templates/header-navigation.html").to_string();
+    
     header_nav = header_nav.replace("$$HOMEPAGE_LOGO$$", &logo);
-    header_nav = header_nav.replace("$$TOOLS_DESC$$", descs[lang]["tools_desc"]);
-    header_nav = header_nav.replace("$$TOOLS_TITLE$$", descs[lang]["tools_title"]);
-    header_nav = header_nav.replace("$$TOOLS_LINK$$", descs[lang]["tools_link"]);
-    header_nav = header_nav.replace("$$ABOUT_DESC$$", descs[lang]["about_desc"]);
-    header_nav = header_nav.replace("$$ABOUT_TITLE$$", descs[lang]["about_title"]);
-    header_nav = header_nav.replace("$$ABOUT_LINK$$", descs[lang]["about_link"]);
-    header_nav = header_nav.replace("$$ALL_ARTICLES_TITLE$$", descs[lang]["all_articles_title"]);
-    header_nav = header_nav.replace("$$ALL_ARTICLES_DESC$$", descs[lang]["all_articles_desc"]);
-    header_nav = header_nav.replace("$$ALL_ARTICLES_LINK$$", descs[lang]["all_articles_link"]);
-    header_nav = header_nav.replace("$$NEWEST_DESC$$", descs[lang]["newest_desc"]);
-    header_nav = header_nav.replace("$$NEWEST_TITLE$$", descs[lang]["newest_title"]);
-    header_nav = header_nav.replace("$$NEWEST_LINK$$", descs[lang]["newest_link"]);
-    header_nav = header_nav.replace("$$SHOP_DESC$$", descs[lang]["shop_desc"]);
-    header_nav = header_nav.replace("$$SHOP_TITLE$$", descs[lang]["shop_title"]);
-    header_nav = header_nav.replace("$$SHOP_LINK$$", descs[lang]["shop_link"]);
-    header_nav
+    header_nav = header_nav.replace("$$TOOLS_DESC$$", &get_string(meta, lang, "nav-tools-desc")?);
+    header_nav = header_nav.replace("$$TOOLS_TITLE$$", &get_string(meta, lang, "nav-tools-title")?);
+    header_nav = header_nav.replace("$$TOOLS_LINK$$", &get_string(meta, lang, "nav-tools-link")?);
+    header_nav = header_nav.replace("$$ABOUT_DESC$$", &get_string(meta, lang, "nav-about-desc")?);
+    header_nav = header_nav.replace("$$ABOUT_TITLE$$", &get_string(meta, lang, "nav-about-title")?);
+    header_nav = header_nav.replace("$$ABOUT_LINK$$", &get_string(meta, lang, "nav-about-link")?);
+    header_nav = header_nav.replace("$$ALL_ARTICLES_TITLE$$", &get_string(meta, lang, "nav-articles-title")?);
+    header_nav = header_nav.replace("$$ALL_ARTICLES_DESC$$", &get_string(meta, lang, "nav-articles-desc")?);
+    header_nav = header_nav.replace("$$ALL_ARTICLES_LINK$$", &get_string(meta, lang, "nav-articles-link")?);
+    header_nav = header_nav.replace("$$NEWEST_DESC$$", &get_string(meta, lang, "nav-newest-desc")?);
+    header_nav = header_nav.replace("$$NEWEST_TITLE$$", &get_string(meta, lang, "nav-newest-title")?);
+    header_nav = header_nav.replace("$$NEWEST_LINK$$", &get_string(meta, lang, "nav-newest-link")?);
+    header_nav = header_nav.replace("$$SHOP_DESC$$", &get_string(meta, lang, "nav-shop-desc")?);
+    header_nav = header_nav.replace("$$SHOP_TITLE$$", &get_string(meta, lang, "nav-shop-title")?);
+    header_nav = header_nav.replace("$$SHOP_LINK$$", &get_string(meta, lang, "nav-shop-link")?);
+    
+    Ok(header_nav)
 }
 
 fn link_tags(
     lang: &str, 
-    tags: &[String]
-) -> String {
+    tags: &[String],
+    meta: &MetaJson,
+) -> Result<String, String> {
 
     let root_href = get_root_href();
 
+    let t_descr_string = get_string(meta, lang, "link-tags-descr")?;
+    let t_url = get_string(meta, lang, "nav-articles-link")?;
+
     let tags_str = tags.iter().map(|t| {
-        let t_descr = match lang {
-            "en" => "Link to ".to_string() + t + " tag",
-            "de" => "Link zum Thema ".to_string() + t,
-            _ => "".to_string(),
-        };
-        let t_url = match lang {
-            "en" => "en/topics",
-            "de" => "de/themen",
-            _ => "",
-        };
+        let t_descr = t_descr_string.replace("$$TAG$$", t);
         let t1 = format!("<a href='{root_href}/{t_url}#{t}'");
         let t2 = "class='link-tag link-page link-annotated icon-not has-annotation spawns-popup' rel='tag' ";
         let t3 = format!(" data-attribute-title='{t_descr}'>{t}</a>");
         t1 + t2 + &t3
     }).collect::<Vec<_>>().join(", ");
-    format!("<div class='link-tags'><p>{tags_str}</p></div>")
+
+    Ok(format!("<div class='link-tags'><p>{tags_str}</p></div>"))
 }
 
 fn gen_section_id(s: &str) -> String {
@@ -1189,13 +1174,14 @@ fn gen_section_id(s: &str) -> String {
 fn table_of_contents(
     lang: &str, 
     a: &ParsedArticleAnalyzed,
-) -> String {
+    meta: &MetaJson
+) -> Result<String, String> {
     if a.is_prayer() {
-        return String::new();
+        return Ok(String::new());
     }
 
     if a.sections.is_empty() {
-        return String::new();
+        return Ok(String::new());
     }
     
     let mut target = "<div id='TOC' class='TOC'>".to_string();
@@ -1235,28 +1221,11 @@ fn table_of_contents(
     let bibliography_id = "bibliography";
     let backlinks_id = "backlinks";
 
-    let meta = btreemap! {
-        "en" => btreemap! {
-            "collapse_button_title" => "Collapse table of contents",
-            "footnotes_title" => "Footnotes",
-            "similar_title" => "Similar articles",
-            "bibliography_title" => "Bibliography",
-            "backlinks_title" => "Backlinks",
-        },
-        "de" => btreemap! {
-            "collapse_button_title" => "Inhaltsverzeichnis zusammenklappen",
-            "footnotes_title" => "Fußnoten",
-            "similar_title" => "Ähnliche Artikel",
-            "bibliography_title" => "Bibliographie",
-            "backlinks_title" => "Verweise",
-        }
-    };
-
-    let collapse_button_title = meta[lang]["collapse_button_title"];
-    let footnotes_title = meta[lang]["footnotes_title"];
-    let similar_title = meta[lang]["similar_title"];
-    let bibliography_title = meta[lang]["bibliography_title"];
-    let backlinks_title = meta[lang]["backlinks_title"];
+    let collapse_button_title = get_string(meta, lang, "collapse-button-title")?;
+    let footnotes_title = get_string(meta, lang, "footnotes-title")?;
+    let similar_title = get_string(meta, lang, "similar-title")?;
+    let bibliography_title = get_string(meta, lang, "bibliography-title")?;
+    let backlinks_title = get_string(meta, lang, "backlinks-title")?;
 
     let s = "class='link-self decorate-not has-content spawns-popup'";
 
@@ -1268,21 +1237,77 @@ fn table_of_contents(
     target += &format!("<button class='toc-collapse-toggle-button' title='{collapse_button_title}' tabindex='-1'><span></span></button>");
     target += &format!("</div>");
 
-    target
+    Ok(target)
 }
 
 fn page_desciption(
     lang: &str, 
     a: &ParsedArticleAnalyzed,
-) -> String {
+    meta: &MetaJson,
+) -> Result<String, String> {
     if a.is_prayer() {
-        return String::new();
+        return Ok(String::new());
     }
-    let descr = get_description(lang, a);
-    format!("<div class='page-description' style='max-width: 600px;margin: 0 auto;'><p>{descr}</p></div>")
+    let descr = get_description(lang, a, meta)?;
+    Ok(format!("<div class='page-description' style='max-width: 600px;margin: 0 auto;'><p>{descr}</p></div>"))
 }
 
-type AuthorsMap = BTreeMap<String, Author>;
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+struct Tags {
+    ibelievein: Vec<IBelieveIn>,
+    iwanttolearn: BTreeMap<Slug, IwantToLearn>,
+    tags: BTreeMap<String, String>,
+    ressources: Vec<TagSection1>,
+    shop: Vec<TagSection2>,
+    about: Vec<TagSection3>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+struct IBelieveIn {
+    title: String,
+    option: String,
+    tag: String,
+    featured: Vec<Slug>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+struct IwantToLearn {
+    title: String,
+    featured: Vec<Slug>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+struct TagSection1 {
+    id: String,
+    title: String,
+    links: Vec<SectionLink>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+struct TagSection2 {
+    id: String,
+    title: String,
+    img: String,
+    link: SectionLink,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+struct TagSection3 {
+    id: String,
+    title: String,
+    texts: Vec<String>,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct MetaJson {
+    // translation strings
+    #[serde(default)]
+    strings: BTreeMap<Lang, BTreeMap<String, String>>,
+    #[serde(default)]
+    authors: BTreeMap<String, Author>,
+    #[serde(default)]
+    tags: BTreeMap<Lang, Tags>,
+}
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord)]
 struct Author {
@@ -1293,14 +1318,14 @@ struct Author {
     donate: BTreeMap<String, String>
 }
 
-fn read_authors_map(s: &str) -> AuthorsMap {
+fn read_meta_json(s: &str) -> MetaJson {
     serde_json::from_str(&s).unwrap_or_default()
 }
 
 fn page_metadata(
     lang: &str, 
     a: &ParsedArticleAnalyzed,
-    authors: &AuthorsMap,
+    meta: &MetaJson,
 ) -> Result<String, String> {
 
     if a.is_prayer() {
@@ -1313,8 +1338,9 @@ fn page_metadata(
     let date_title = date.clone();
 
     let authors_link = a.authors.iter().map(|s| {
+        
         let id = s.replace(":", "-");
-        let name = authors.get(s).map(|q| &q.displayname)
+        let name = meta.authors.get(s).map(|q| &q.displayname)
         .ok_or_else(|| format!("author {s} not found for article {}", a.title))?;
         
         let u = "/static/img/icon/icons.svg#info-circle-regular";
@@ -1327,40 +1353,21 @@ fn page_metadata(
         Ok(link)
     }).collect::<Result<Vec<_>, String>>()?.join(", ");
 
-    let meta = btreemap! {
-        "de" => btreemap! {
-            "backlinks_desc" => "Liste der anderen Seiten, die auf diese Seite verweisen",
-            "backlinks_title" => "verweise",
-            "similar_desc" => "Ähnliche Artikel",
-            "similar_title" => "ähnlich",
-            "bibliography_desc" => "Bibliographie der auf dieser Seite zitierten Links",
-            "bibliography_title" => "bibliografie",
-        },
-        "en" => btreemap! {
-            "backlinks_desc" => "List of other pages which link to this page",
-            "backlinks_title" => "backlinks",
-            "similar_desc" => "Similar articles for this link",
-            "similar_title" => "similar",
-            "bibliography_desc" => "Bibliography of links cited in this page",
-            "bibliography_title" => "bibliography",
-        },
-    };
-
-    let backlinks_desc = meta[lang]["backlinks_desc"];
-    let backlinks_title = meta[lang]["backlinks_title"];
-    let similar_desc = meta[lang]["similar_desc"];
-    let similar_title = meta[lang]["similar_title"];
-    let bibliography_desc = meta[lang]["bibliography_desc"];
-    let bibliography_title = meta[lang]["bibliography_title"];
+    let backlinks_desc = get_string(meta, lang, "meta-backlinks-desc")?;
+    let backlinks_title = get_string(meta, lang, "meta-backlinks-title")?;
+    let similar_desc = get_string(meta, lang, "meta-similar-desc")?;
+    let similar_title = get_string(meta, lang, "meta-similar-title")?;
+    let bibliography_desc = get_string(meta, lang, "meta-bibliography-desc")?;
+    let bibliography_title = get_string(meta, lang, "meta-bibliography-title")?;
 
     page_meta = page_meta.replace("$$DATE_DESC$$", &date_desc);
     page_meta = page_meta.replace("$$DATE_TITLE$$", &date_title);
-    page_meta = page_meta.replace("$$BACKLINKS_DESC$$", backlinks_desc);
-    page_meta = page_meta.replace("$$BACKLINKS_TITLE$$", backlinks_title);
-    page_meta = page_meta.replace("$$SIMILAR_DESC$$", similar_desc);
-    page_meta = page_meta.replace("$$SIMILAR_TITLE$$", similar_title);
-    page_meta = page_meta.replace("$$BIBLIOGRAPHY_DESC$$", bibliography_desc);
-    page_meta = page_meta.replace("$$BIBLIOGRAPHY_TITLE$$", bibliography_title);
+    page_meta = page_meta.replace("$$BACKLINKS_DESC$$", &backlinks_desc);
+    page_meta = page_meta.replace("$$BACKLINKS_TITLE$$", &backlinks_title);
+    page_meta = page_meta.replace("$$SIMILAR_DESC$$", &similar_desc);
+    page_meta = page_meta.replace("$$SIMILAR_TITLE$$", &similar_title);
+    page_meta = page_meta.replace("$$BIBLIOGRAPHY_DESC$$", &bibliography_desc);
+    page_meta = page_meta.replace("$$BIBLIOGRAPHY_TITLE$$", &bibliography_title);
     page_meta = page_meta.replace("<!-- AUTHORS -->", &authors_link);
     
     Ok(page_meta)
@@ -1494,7 +1501,8 @@ fn render_section(
     lang: &str,
     a: &ArticleSection,
     slug: &str,
-) -> String {
+    meta: &MetaJson,
+) -> Result<String, String> {
     
     let mut section = include_str!("../../templates/section.html").to_string();
 
@@ -1504,11 +1512,8 @@ fn render_section(
     let header = &a.title;
     let level = a.indent;
     let section_id = gen_section_id(&header);
-    let section_descr = match lang {
-        "de" => format!("Link zum Abschnitt '{header}'"),
-        "en" => format!("Link to section '{header}'"),
-        _ => String::new(),
-    };
+    let section_descr = get_string(meta, lang, "section-link-to")?
+        .replace("$$HEADER$$", &header);
 
     section = section.replace("$$LEVEL$$", &level.saturating_sub(1).to_string());
     section = section.replace("$$SECTION_ID$$", &section_id);
@@ -1518,18 +1523,19 @@ fn render_section(
     
     section += &other_pars;
 
-    section
+    Ok(section)
 }
 
 fn body_content(
     lang: &str,
     slug: &str,
     sections: &[ArticleSection],
-) -> String {
-    sections.iter()
-    .map(|q| render_section(lang, q, slug))
-    .collect::<Vec<_>>()
-    .join("\r\n")
+    meta: &MetaJson,
+) -> Result<String, String> {
+    Ok(sections.iter()
+    .map(|q| render_section(lang, q, slug, meta))
+    .collect::<Result<Vec<_>, _>>()?
+    .join("\r\n"))
 }
 
 fn body_noscript() -> String {
@@ -1540,10 +1546,9 @@ fn article2html(
     lang: &str, 
     slug: &str, 
     a: &ParsedArticleAnalyzed, 
-    prod: bool,
     articles_by_tag: &mut ArticlesByTag,
     articles_by_date: &mut ArticlesByDate,
-    authors: &AuthorsMap,
+    meta: &MetaJson,
 ) -> Result<String, String> {
     
     static HTML: &str = include_str!("../../templates/lorem.html");
@@ -1585,39 +1590,27 @@ fn article2html(
 
     let title_id = lang.to_string() + "-" + slug;
     
-    let html = HTML.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(a, lang, title_id.as_str()));
-    let html = html.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true));
-    let html = html.replace("<!-- LINK_TAGS -->", &link_tags(lang, &a.tags));
-    let html = html.replace("<!-- TOC -->", &table_of_contents(lang, &a));
-    let html = html.replace("<!-- PAGE_DESCRIPTION -->", &page_desciption(lang, &a));
-    let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a, authors)?);
+    let html = HTML.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(a, lang, title_id.as_str(), meta)?);
+    let html = html.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true, meta)?);
+    let html = html.replace("<!-- LINK_TAGS -->", &link_tags(lang, &a.tags, meta)?);
+    let html = html.replace("<!-- TOC -->", &table_of_contents(lang, &a, meta)?);
+    let html = html.replace("<!-- PAGE_DESCRIPTION -->", &page_desciption(lang, &a, meta)?);
+    let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a, meta)?);
     let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(lang, slug, &a.article_abstract));
-    let html = html.replace("<!-- BODY_CONTENT -->", &body_content(lang, &slug, &a.sections));
+    let html = html.replace("<!-- BODY_CONTENT -->", &body_content(lang, &slug, &a.sections, meta)?);
     let html = html.replace("<!-- BODY_NOSCRIPT -->", &body_noscript());
 
-    let skip = match lang {
-        "de" => "Zum Hauptinhalt springen",
-        "en" => "Skip to main content",
-        _ => return Err(format!("unknown language {lang}")),
-    };
-    let html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", skip);
-    let contact = match lang {
-        "de" => "de/impressum",
-        "en" => "en/about",
-        _ => return Err(format!("unknown language {lang}")),
-    };
-    
-    let root_href = match prod {
-        true => "https://dubia.cc",
-        false => "http://127.0.0.1:8080",
-    };
+    let skip = get_string(meta, lang, "page-smc")?;
+    let html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", &skip);
+    let contact = get_string(meta, lang, "link-about")?;
+    let root_href = get_root_href();
 
-    let html = html.replace("$$CONTACT_URL$$", contact);
+    let html = html.replace("$$CONTACT_URL$$", &contact);
     let html = html.replace("$$TITLE$$", &a.title);
     let html = html.replace("$$TITLE_ID$$", &title_id);
     let html = html.replace("$$LANG$$", &lang);
     let html = html.replace("$$SLUG$$", slug);
-    let html = html.replace("$$ROOT_HREF$$", root_href);
+    let html = html.replace("$$ROOT_HREF$$", &root_href);
     let html = html.replace("$$PAGE_HREF$$", &(root_href.to_string() + "/" + slug));
 
     Ok(html)
@@ -1625,19 +1618,16 @@ fn article2html(
 
 fn render_page_author_pages(
     articles: &AnalyzedArticles,
-    authors: &AuthorsMap
+    meta: &MetaJson
 ) -> Result<BTreeMap<String, Vec<(String, String)>>, String> {
     
     let mut finalmap = BTreeMap::new();
     for lang in articles.map.keys() {
         
-        let (contact_str, donate_str) = match lang.as_str() {
-            "de" => ("Kontakt", "Spenden"),
-            "en" => ("Contact", "Donate"),
-            _ => return Err("unknown language".to_string()),
-        };
-    
-        for (id, v) in authors.iter() {
+        let contact_str = get_string(meta, lang, "author-contact")?;
+        let donate_str = get_string(meta, lang, "author-donate")?;
+        
+        for (id, v) in meta.authors.iter() {
             let name = &v.displayname;
             let contact_url = v.contact.as_deref();
             let mut dn = String::new();
@@ -1712,29 +1702,17 @@ fn generate_search_index(articles: &AnalyzedArticles) -> BTreeMap<Lang, SearchIn
 type SearchHtmlResult = BTreeMap<Lang, (String, String, String)>;
 
 // Lang => (SearchBarHtml, SearchJS)
-fn search_html(articles: &AnalyzedArticles) -> SearchHtmlResult {
+fn search_html(articles: &AnalyzedArticles, meta: &MetaJson) -> Result<SearchHtmlResult, String> {
     articles.map.iter().map(|(lang, a)| {
 
         let s = a.values().map(|r| r.sha256.clone()).collect::<Vec<_>>().join(" ");
         let version = sha256(&s);
 
-        let searchbar_placeholder = match lang.as_str() {
-            "de" => "Stichwort, Thema, Frage, ...",
-            "en" => "Keyword, topic, question, ...",
-            _ => "",
-        };
-
-        let searchbar = match lang.as_str() {
-            "de" => "Suchen",
-            "en" => "Search",
-            _ => "",
-        };
-
-        let no_results = match lang.as_str() {
-            "de" => "Keine Ergebnisse gefunden.",
-            "en" => "No results found.",
-            _ => "",
-        };
+        let searchbar_placeholder = get_string(meta, lang, "searchbar-placeholder")?;
+        let searchbar = get_string(meta, lang, "searchbar-text")?;
+        let no_results = get_string(meta, lang, "search-no-results")?;
+        let searchpage_title = get_string(meta, lang, "searchpage-title")?;
+        let searchpage_desc = get_string(meta, lang, "searchpage-desc")?;
 
         let mut searchbar_html = include_str!("../../templates/searchbar.html").to_string();
         searchbar_html = searchbar_html.replace("$$VERSION$$", &version);
@@ -1743,224 +1721,146 @@ fn search_html(articles: &AnalyzedArticles) -> SearchHtmlResult {
         
         let mut search_html = include_str!("../../templates/search.html").to_string();
         search_html = search_html.replace("<!-- SEARCH -->", &searchbar_html);
-        search_html = search_html.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true));
+        search_html = search_html.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true, meta)?);
         search_html = search_html.replace("$$LANG$$", lang);
         search_html = search_html.replace("$$ROOT_HREF$$", &get_root_href());
-        let title = match lang.as_str() {
-            "de" => "Suche - dubia.cc",
-            "en" => "Search - dubia.cc",
-            _ => "",
-        };
-        let description = match lang.as_str() {
-            "de" => "Durchsuche dubia.cc",
-            "en" => "Search dubia.cc",
-            _ => "",
-        };
+
         let parsed = ParsedArticleAnalyzed {
-            title: title.to_string(),
-            summary: vec![Paragraph::Sentence { s: vec![SentenceItem::Text { text: description.to_string() }] }],
+            title: searchpage_title.to_string() + " - dubia.cc",
+            summary: vec![Paragraph::Sentence { s: vec![SentenceItem::Text { text: searchpage_desc.to_string() }] }],
             .. Default::default()
         };
-        search_html = search_html.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(&parsed, lang, &format!("{lang}-search")));
-        search_html = search_html.replace("$$TITLE$$", title);
+        search_html = search_html.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(&parsed, lang, &format!("{lang}-search"), meta)?);
+        search_html = search_html.replace("$$TITLE$$", &searchpage_title);
 
         let mut search_js = include_str!("../../static/js/search.js").to_string();
         search_js = search_js.replace("$$LANG$$", lang);
         search_js = search_js.replace("$$VERSION$$", &version);
-        search_js = search_js.replace("$$NO_RESULTS$$", no_results);
+        search_js = search_js.replace("$$NO_RESULTS$$", &no_results);
 
-        (lang.clone(), (searchbar_html, search_html, search_js))
+        Ok((lang.clone(), (searchbar_html, search_html, search_js)))
     }).collect()
 }
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-struct IBelieveIn {
-    title: String,
-    option: String,
-    tag: String,
-    featured: Vec<Slug>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-struct IwantToLearn {
-    title: String,
-    featured: Vec<Slug>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-struct TagSection1 {
-    id: String,
-    title: String,
-    links: Vec<SectionLink>,
-}
-
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-struct TagSection2 {
-    id: String,
-    title: String,
-    img: String,
-    link: SectionLink,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-struct TagSection3 {
-    id: String,
-    title: String,
-    texts: Vec<String>,
-}
-
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-struct Tags {
-    ibelievein: Vec<IBelieveIn>,
-    iwanttolearn: BTreeMap<Slug, IwantToLearn>,
-    tags: BTreeMap<String, String>,
-    ressources: Vec<TagSection1>,
-    shop: Vec<TagSection2>,
-    about: Vec<TagSection3>,
-}
-
 struct SpecialPage {
-    id: &'static str,
-    filepath: &'static str,
-    title: &'static str,
-    description: &'static str,
+    id: String,
+    filepath: String,
+    title: String,
+    description: String,
     content: String,
 }
 
 fn get_special_pages(
     lang: &str,
-    tags: &BTreeMap<Lang, Tags>,
+    meta: &MetaJson,
     by_tag: &ArticlesByTag,
     by_date: &ArticlesByDate,
 ) -> Result<Vec<SpecialPage>, String> {
-    let tags = tags.get(lang).ok_or_else(|| format!("unknown language {lang} not found in tags.json"))?;
+
+    let tags = meta.tags.get(lang)
+    .ok_or_else(|| format!("unknown language {lang} not found in tags.json"))?;
+
     let default = BTreeMap::new();
     let default2 = BTreeMap::new();
-    match lang {
-        "de" => Ok(vec![
-            SpecialPage {
-                title: "Themen",
-                filepath: "themen.html",
-                id: "de-themen",
-                description: "Themenübersicht",
-                content: render_index_sections(
-                    lang, 
-                    by_tag.get(lang).unwrap_or(&default).iter().filter_map(|(k, v)| {
-                        let id = k.clone();
-                        let title = tags.tags.get(&id)?;
-                        Some(((id.to_string(), title.to_string()), v.clone()))
-                    }).collect()
-                ),
-            },
-            SpecialPage {
-                title: "Neueste Links",
-                filepath: "neues.html",
-                id: "de-neues",
-                description: "Neueste Links",
-                content: render_index_sections(lang, by_date.get(lang).unwrap_or(&default2).iter().rev().map(|(year, months)| {
-                    ((format!("jahr-{year}"), year.clone()), months.iter().flat_map(|(m, days)| {
-                        days.iter().flat_map(move |(d, a)| a.iter().map(move |a| {
-                            SectionLink {
-                                slug: a.slug.to_string(),
-                                title: format!("{m}-{d}: {}", a.title),
-                            }
-                        }))
-                    }).collect())
-                }).collect()),
-            },
-            SpecialPage {
-                title: "Ressourcen",
-                filepath: "ressourcen.html",
-                id: "de-ressourcen",
-                description: "Ressourcen",
-                content: render_resources_sections(lang, &tags.ressources),
-            },
-            SpecialPage {
-                title: "Shop",
-                filepath: "shop.html",
-                id: "de-shop",
-                description: "Shop",
-                content: render_shop_sections(&tags.shop),
-            },
-            SpecialPage {
-                title: "Impressum",
-                filepath: "impressum.html",
-                id: "de-impressum",
-                description: "Impressum",
-                content: render_about_sections(&tags.about),
-            },
-        ]),
-        "en" => Ok(vec![
-            SpecialPage {
-                title: "Topics",
-                filepath: "topics.html",
-                id: "en-topics",
-                description: "List of topics",
-                content: render_index_sections(
-                    lang, 
-                    by_tag.get(lang).unwrap_or(&default).iter().filter_map(|(k, v)| {
-                        let id = k.clone();
-                        let title = tags.tags.get(&id)?;
-                        Some(((id.to_string(), title.to_string()), v.clone()))
-                    }).collect()
-                ),
-            },
-            SpecialPage {
-                title: "Newest Links",
-                filepath: "newest.html",
-                id: "en-newest",
-                description: "Newest Links",
-                content: render_index_sections(lang, by_date.get(lang).unwrap_or(&default2).iter().map(|(year, months)| {
-                    ((format!("year-{year}"), year.clone()), months.iter().flat_map(|(m, days)| {
-                        days.iter().flat_map(move |(d, a)| a.iter().map(move |a| {
-                            SectionLink {
-                                slug: a.slug.to_string(),
-                                title: format!("{m}-{d}: {}", a.title),
-                            }
-                        }))
-                    }).collect())
-                }).collect()),
-            },
-            SpecialPage {
-                title: "Tools",
-                filepath: "tools.html",
-                id: "en-tools",
-                description: "Tools",
-                content: render_resources_sections(lang, &tags.ressources),
-            },
-            SpecialPage {
-                title: "Shop",
-                filepath: "shop.html",
-                id: "en-shop",
-                description: "Shop",
-                content: render_shop_sections(&tags.shop),
-            },
-            SpecialPage {
-                title: "About",
-                filepath: "about.html",
-                id: "en-about",
-                description: "About",
-                content: render_about_sections(&tags.about),
-            },
-        ]),
-        _ => Err(format!("get_special_pages: unknown language {lang}"))
-    }
+    
+    let topics_content = render_index_sections(
+        lang, 
+        by_tag.get(lang).unwrap_or(&default).iter().filter_map(|(k, v)| {
+            let id = k.clone();
+            let title = tags.tags.get(&id)?;
+            Some(((id.to_string(), title.to_string()), v.clone()))
+        }).collect()
+    );
+
+    let newest_content = render_index_sections(lang, by_date.get(lang).unwrap_or(&default2).iter().rev().map(|(year, months)| {
+        ((format!("y{year}"), year.clone()), months.iter().flat_map(|(m, days)| {
+            days.iter().flat_map(move |(d, a)| a.iter().map(move |a| {
+                SectionLink {
+                    slug: a.slug.to_string(),
+                    title: format!("{m}-{d}: {}", a.title),
+                }
+            }))
+        }).collect())
+    }).collect());
+
+    let topics_title = get_string(meta, lang, "special-topics-title")?;
+    let topics_html = get_string(meta, lang, "special-topics-path")?;
+    let topics_id = get_string(meta, lang, "special-topics-id")?;
+    let topics_desc = get_string(meta, lang, "special-topics-desc")?;
+    
+    let newest_title = get_string(meta, lang, "special-newest-title")?;
+    let newest_html = get_string(meta, lang, "special-newest-path")?;
+    let newest_id = get_string(meta, lang, "special-newest-id")?;
+    let newest_desc = get_string(meta, lang, "special-newest-desc")?;
+
+    let tools_title = get_string(meta, lang, "special-tools-title")?;
+    let tools_html = get_string(meta, lang, "special-tools-path")?;
+    let tools_id = get_string(meta, lang, "special-tools-id")?;
+    let tools_desc = get_string(meta, lang, "special-tools-desc")?;
+
+    let shop_title = get_string(meta, lang, "special-shop-title")?;
+    let shop_html = get_string(meta, lang, "special-shop-path")?;
+    let shop_id = get_string(meta, lang, "special-shop-id")?;
+    let shop_desc = get_string(meta, lang, "special-shop-desc")?;
+    
+    let about_title = get_string(meta, lang, "special-about-title")?;
+    let about_html = get_string(meta, lang, "special-about-path")?;
+    let about_id = get_string(meta, lang, "special-about-id")?;
+    let about_desc = get_string(meta, lang, "special-about-desc")?;
+    
+    Ok(vec![
+        SpecialPage {
+            title: topics_title,
+            filepath: topics_html,
+            id: topics_id,
+            description: topics_desc,
+            content: topics_content,
+        },
+        SpecialPage {
+            title: newest_title,
+            filepath: newest_html,
+            id: newest_id,
+            description: newest_desc,
+            content: newest_content,
+        },
+        SpecialPage {
+            title: tools_title,
+            filepath: tools_html,
+            id: tools_id,
+            description: tools_desc,
+            content: render_resources_sections(lang, &tags.ressources),
+        },
+        SpecialPage {
+            title: shop_title,
+            filepath: shop_html,
+            id: shop_id,
+            description: shop_desc,
+            content: render_shop_sections(&tags.shop),
+        },
+        SpecialPage {
+            title: about_title,
+            filepath: about_html,
+            id: about_id,
+            description: about_desc,
+            content: render_about_sections(&tags.about),
+        },
+    ])
 }
 
-fn special2html(lang: &str, page: &SpecialPage) -> (String, String) {
+fn special2html(lang: &str, page: &SpecialPage, meta: &MetaJson) -> Result<(String, String), String> {
     let mut special = include_str!("../../templates/special.html").to_string();
     let a = ParsedArticleAnalyzed {
         title: page.title.to_string(),
         summary: vec![Paragraph::Sentence { s: vec![SentenceItem::Text { text: page.description.to_string() } ] }],
         .. Default::default()
     };
-    special = special.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(&a, lang, &page.id));
+    special = special.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(&a, lang, &page.id, meta)?);
     special = special.replace("<!-- BODY_ABSTRACT -->", &page.content);
-    special = special.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true));
+    special = special.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true, meta)?);
     special = special.replace("$$TITLE$$", &page.title);
     special = special.replace("$$LANG$$", lang);
     special = special.replace("$$ROOT_HREF$$", &get_root_href());
-    (page.filepath.to_string(), special)
+    Ok((page.filepath.to_string(), special))
 }
 
 fn tags_map(s: &str) -> Result<BTreeMap<String, Tags>, String> {
@@ -2075,7 +1975,8 @@ fn render_index_first_section(
     lang: &str,
     tags: &Tags,
     articles: &AnalyzedArticles,
-) -> String {
+    meta: &MetaJson,
+) -> Result<String, String> {
 
     let mut first_section = include_str!("../../templates/index.first-section.html").to_string();
     let mut other_sections = "<style>.section-hidden { display: none; }</style>".to_string();
@@ -2126,57 +2027,14 @@ fn render_index_first_section(
         */
     }
 
+    let text_ibelieve = get_string(meta, lang, "i-believe-in")?;
 
-
-    let text_ibelieve = match lang {
-        "de" => "Ich glaube an",
-        "en" => "I believe in",
-        _ => "",
-    };
     first_section = first_section.replace("$$I_BELIEVE_IN$$", &text_ibelieve);
     first_section = first_section.replace("<!-- SECTIONS -->", &sections);
     first_section = first_section.replace("<!-- OTHER_SECTIONS -->", &other_sections);
     first_section = first_section.replace("<!-- OPTIONS -->", &options);
-    first_section
-    /*
-        for t in tags[lang]["ibelievein"]:
-            featured = []
-            for f in t["featured"]:
-                slug = f
-                title = articles[lang + "/" + slug].get("title", "")
-                featured.append({ "slug": slug, "title": title })
-            t["featured"] = featured
 
-        text_ibelieve = "I believe in"
-        if lang == "de":
-            text_ibelieve = "Ich glaube an"
-
-        ibelievein = tags[lang]["ibelievein"]
-        first_section = read_file("./templates/index.first-section.html")
-        other_sections = "<style>.section-hidden { display: none; }</style>"
-        sections = ""
-        options = ""
-        first = True
-
-        for t in ibelievein:
-            li_items = render_section_items(lang, t["featured"])
-            display_hidden = "display:none;"
-            if first:
-                display_hidden = ""
-            classes = "index-first-section list list-level-1"
-            sections += "<ul id='index-section-" + t["tag"] + "' class='" + classes + "' style='margin-top:20px;" + display_hidden + "'>" + li_items + "</ul>"
-            options += "<option value='" + t["tag"] + "'>" + t["option"] + "</option>"
-            for q in ibelievein:
-                if t["tag"] == q["tag"]:
-                    continue
-                hidden_class = "section-hidden"
-                if first:
-                    hidden_class = ""
-                other_sections += render_index_section(lang, q["tag"],  hidden_class + " invert invert-of-" + t["tag"], q["title"], q["featured"])
-            first = False
-
-    */
-
+    Ok(first_section)
 }
 
 fn render_other_index_sections(
@@ -2205,11 +2063,11 @@ fn render_other_index_sections(
 fn render_index_html(
     lang: &str, 
     articles: &AnalyzedArticles, 
-    tags: &BTreeMap<Lang, Tags>,
+    meta: &MetaJson,
     search_html: &SearchHtmlResult,
 ) -> Result<String, String> {
     
-    let tags = tags.get(lang)
+    let tags = meta.tags.get(lang)
     .ok_or_else(|| format!("render_index_html: unknown language {lang}"))?;
 
     let (searchbar_html, _, _) = search_html.get(lang)
@@ -2218,31 +2076,12 @@ fn render_index_html(
     let multilang = include_str!("../../templates/multilang.tags.html");
     let logo_svg = include_str!("../../static/img/logo/full.svg");
     
-    let title = get_title(lang, &ParsedArticleAnalyzed::default());
-    let description = get_description(lang, &ParsedArticleAnalyzed::default());
-    let keywords = match lang {
-        "en" => vec![
-            "catholic", 
-            "church", 
-            "church fathers", 
-            "faith", 
-            "meaning of life", 
-            "evolution", 
-            "protestant", 
-            "islam"
-        ],
-        "de" => vec![
-            "katholisch", 
-            "kirche", 
-            "kirchenväter", 
-            "glauben", 
-            "sinn des lebens", 
-            "evolution", 
-            "evangelisch", 
-            "islam"
-        ],
-        _ => vec![],
-    }.into_iter().map(String::from).collect();
+    let title = get_title(lang, &ParsedArticleAnalyzed::default(), meta)?;
+    let description = get_description(lang, &ParsedArticleAnalyzed::default(), meta)?;
+    let keywords = get_string(meta, lang, "index-keywords")?
+        .split(",")
+        .map(|q| q.trim().to_string())
+        .collect();
 
     let a = ParsedArticleAnalyzed {
         title: title.clone(),
@@ -2251,56 +2090,28 @@ fn render_index_html(
         .. Default::default()
     };
 
-    let select_faith = match lang {
-        "de" => "Glauben auswählen",
-        "en" => "Select Faith",
-        _ => "",
-    };
+    let select_faith = get_string(meta, lang, "index-select-faith")?;
 
-    let page_help_content = match lang {
-        "de" => vec![
-            "Einstellungen zu <em>Nachtmodus</em> (<span class='icon-moon-solid'></span>),",
-            "<em>Lesemodus</em> (<span class='icon-book-open-solid'></span>), ",
-            "<em>Popups</em> (<span class='icon-message-slash-solid'></span>) und ",
-            "<em>Suche</em> (<span class='icon-magnifying-glass'></span>) finden Sie im Menü in der ",
-            "<span class='desktop-not'>unteren rechten</span>",
-            "<span class='mobile-not'>oberen rechten</span> ",
-            "Ecke (<span class='icon-gear-solid'></span>)",
-        ],
-        "en" => vec![
-            "To use <em>dark-mode</em> (<span class='icon-moon-solid'></span>) or",
-            "<em>reader-mode</em> (<span class='icon-book-open-solid'></span>), or ",
-            "<em>disable popups</em> (<span class='icon-message-slash-solid'></span>), or ",
-            "<em>search</em> the site (<span class='icon-magnifying-glass'></span>), use the floating toggle bar in the ",
-            "<span class='desktop-not'>lower-right</span>",
-            "<span class='mobile-not'>upper-right</span> ",
-            "corner (<span class='icon-gear-solid'></span>)</p>",
-        ],
-        _ => vec![],
-    }.join("");
+    let page_help_content = vec![
+        get_string(meta, lang, "index-help-1")?,
+        get_string(meta, lang, "index-help-2")?,
+        get_string(meta, lang, "index-help-3")?,
+        get_string(meta, lang, "index-help-4")?,
+        get_string(meta, lang, "index-help-5")?,
+        get_string(meta, lang, "index-help-6")?,
+        get_string(meta, lang, "index-help-7")?,
+    ].join("");
     
     let page_help = include_str!("../../templates/navigation-help.html")
     .replace("$$PAGE_HELP$$", &page_help_content);
 
-    let page_descr = match lang {
-        "de" => vec![
-            "<strong>dubia.cc</strong> ist die eine deutsche<br/>",
-            "Sammlung an Artikeln über den<br/>",
-            "traditionellen katholischen Glauben",
-        ],
-        "en" => vec![
-            "<strong>dubia.cc</strong> is a collection",
-            "<br/>of articles explaining the<br/>",
-            "traditional Catholic faith",
-        ],
-        _ => vec![],
-    }.join("");
-
+    let page_descr = get_string(meta, lang, "index-subtitle")?;
     let page_description = include_str!("../../templates/page-description.html")
-    .replace("$$DESCR$$", &page_descr);
+        .replace("$$DESCR$$", &page_descr);
 
     let mut index_body_html = include_str!("../../templates/index-body.html").to_string();
-    index_body_html = index_body_html.replace("<!-- SECTIONS -->", &render_index_first_section(lang, tags, articles));
+    index_body_html = index_body_html.replace("<!-- SECTIONS -->", &render_index_first_section(lang, tags, articles, meta)?);
+    index_body_html = index_body_html.replace("$$I_WANT_TO_LEARN_MORE_ABOUT$$", &get_string(meta, lang, "i-want-to-learn-more")?);
     index_body_html = index_body_html.replace("<!-- SECTION_EXTRA -->", &render_other_index_sections(lang, tags, articles)?);
     index_body_html = index_body_html.replace("<!-- SEARCHBAR -->", &searchbar_html);
 
@@ -2309,9 +2120,9 @@ fn render_index_html(
     index_html = index_html.replace("<!-- BODY_ABSTRACT -->", &index_body_html);
     index_html = index_html.replace("<!-- PAGE_DESCRIPTION -->", &page_description);
     index_html = index_html.replace("<!-- SVG_LOGO_INLINE -->", logo_svg);
-    index_html = index_html.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(&a, lang, &title_id));
+    index_html = index_html.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(&a, lang, &title_id, meta)?);
     index_html = index_html.replace("<!-- PAGE_HELP -->", &page_help);
-    index_html = index_html.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, false));
+    index_html = index_html.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, false, meta)?);
     index_html = index_html.replace("<!-- MULTILANG_TAGS -->", multilang);
     index_html = index_html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content");
     index_html = index_html.replace("$$TITLE$$", &title);
@@ -2319,10 +2130,10 @@ fn render_index_html(
     index_html = index_html.replace("$$TITLE_ID$$", &title_id);
     index_html = index_html.replace("$$LANG$$", lang);
     index_html = index_html.replace("$$SLUG$$", "");
-    index_html = index_html.replace("$$SELECT_FAITH$$", select_faith);
+    index_html = index_html.replace("$$SELECT_FAITH$$", &select_faith);
     index_html = index_html.replace("$$ROOT_HREF$$", get_root_href());
     index_html = index_html.replace("$$PAGE_HREF$$", &(get_root_href().to_string() + "/" + lang));
-    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/img/logo/logo-smooth.svg\" as=\"image\">", "<link rel=\"preload\" href=\"/static/img/ornament/sun-verginasun-black.svg\" as=\"image\">");
+    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/img/logo/logo-smooth.svg\" as=\"image\">", "");
     index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/ssfp/ssp/SourceSansPro-BASIC-Regular.ttf\" as=\"font\" type=\"font/ttf\" crossorigin>", "");
     index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/quivira/Quivira-SUBSETTED.ttf\" as=\"font\" type=\"font/ttf\" crossorigin>", "");
     
@@ -2330,23 +2141,11 @@ fn render_index_html(
 }
 
 fn minify(input: &str) -> Vec<u8> {
-    let min = minify_html::Cfg {
-        do_not_minify_doctype: true,
-        ensure_spec_compliant_unquoted_attribute_values: false,
-        keep_closing_tags: true,
-        keep_html_and_head_opening_tags: true,
-        keep_spaces_between_attributes: true,
-        keep_comments: false,
-        keep_input_type_text_attr: true,
-        keep_ssi_comments: false,
-        preserve_brace_template_syntax: true,
-        preserve_chevron_percent_template_syntax: true,
-        minify_css: true,
-        minify_js: true,
-        remove_bangs: true,
-        remove_processing_instructions: true,
-    };
-    minify_html::minify(input.as_bytes(), &min)
+    let mut minified = vec![];
+    html5minify::Minifier::new(&mut minified)
+        .minify(&mut input.as_bytes())
+        .expect("Failed to minify HTML");
+    minified
 }
 
 fn main() -> Result<(), String> {
@@ -2359,13 +2158,9 @@ fn main() -> Result<(), String> {
         cwd = cwd.parent().ok_or("cannot find /articles dir in current path")?.to_path_buf();
     }
 
-    let authors = std::fs::read_to_string(&cwd.join("authors.json"))
+    let meta = std::fs::read_to_string(&cwd.join("meta.json"))
     .map_err(|e| e.to_string())?;
-    let authors_map = read_authors_map(&authors);
-
-    let tags = std::fs::read_to_string(&cwd.join("tags.json"))
-    .map_err(|e| e.to_string())?;
-    let tags = tags_map(&tags)?;
+    let meta_map = read_meta_json(&meta);
 
     let dir = cwd.join("articles");
 
@@ -2385,10 +2180,9 @@ fn main() -> Result<(), String> {
                 &lang, 
                 &slug, 
                 &a, 
-                true, 
                 &mut articles_by_tag, 
                 &mut articles_by_date,
-                &authors_map,
+                &meta_map,
             );
 
             match s {
@@ -2404,7 +2198,7 @@ fn main() -> Result<(), String> {
     }
 
     // Write author pages
-    let author_pages = render_page_author_pages(&analyzed, &authors_map)?;
+    let author_pages = render_page_author_pages(&analyzed, &meta_map)?;
     for (lang, authors) in author_pages.iter() {
         let _ = std::fs::create_dir_all(cwd.join(&lang).join("author"));
         for (a, v) in authors {
@@ -2422,19 +2216,19 @@ fn main() -> Result<(), String> {
     // Write special pages
     let langs = analyzed.map.keys().cloned().collect::<Vec<_>>();
     for l in langs.iter() {
-        let sp = get_special_pages(&l, &tags, &articles_by_tag, &articles_by_date)?;
+        let sp = get_special_pages(&l, &meta_map, &articles_by_tag, &articles_by_date)?;
         for s in sp.iter() {
-            let (path, html) = special2html(&l, s);
-            let _ = std::fs::write(cwd.join(l).join(path), &minify(&html));
+            let (path, html) = special2html(&l, s, &meta_map)?;
+            let _ = std::fs::write(cwd.join(l).join(path), &&html);
         }
     }
 
     // Write index + /search pages
-    let si = search_html(&analyzed);
+    let si = search_html(&analyzed, &meta_map)?;
     for (lang, (_searchbar_html, search_html, search_js)) in si.iter() {
         let _ = std::fs::write(cwd.join(lang).join("search.js"), search_js);
         let _ = std::fs::write(cwd.join(lang).join("search.html"), &minify(&search_html));
-        let index_html = render_index_html(lang, &analyzed, &tags, &si)?;
+        let index_html = render_index_html(lang, &analyzed, &meta_map, &si)?;
         let _ = std::fs::write(cwd.join(&format!("{lang}.html")), &minify(&index_html));
         let _ = std::fs::write(cwd.join(lang).join("head.js"), &strip_comments(include_str!("../../static/js/head.js")));
     }

@@ -1039,7 +1039,7 @@ def render_index_html(lang, articles, tags):
     index_html = index_html.replace("$$SELECT_FAITH$$", select_faith)
     index_html = index_html.replace("$$ROOT_HREF$$", root_href)
     index_html = index_html.replace("$$PAGE_HREF$$", root_href + "/" + lang + "/" + slug_raw)
-    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/img/logo/logo-smooth.svg\" as=\"image\">", "<link rel=\"preload\" href=\"/static/img/ornament/sun-verginasun-black.svg\" as=\"image\">")
+    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/img/logo/logo-smooth.svg\" as=\"image\">", "")
     index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/ssfp/ssp/SourceSansPro-BASIC-Regular.ttf\" as=\"font\" type=\"font/ttf\" crossorigin>", "")
     index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/quivira/Quivira-SUBSETTED.ttf\" as=\"font\" type=\"font/ttf\" crossorigin>", "")
     return index_html

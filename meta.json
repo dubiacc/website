@@ -1,0 +1,955 @@
+{
+    "strings": {
+        "de": {
+            "index-title": "Entdecke den wahren katholischen Glauben - dubia.cc",
+            "index-desc": "dubia ist eine Sammlung von Artikeln über den traditionellen katholischen Glauben. Hat die Kirche wirklich...? Antworten auf Irrtümer, Gebete, uvm.",
+            "index-subtitle": "<strong>dubia.cc</strong> ist die eine deutsche<br/>Sammlung an Artikeln über den<br/>traditionellen katholischen Glauben",
+            "index-keywords": "katholisch, kirche, kirchenväter, glauben, sinn des lebens, evolution, evangelisch, islam",
+            "index-help-1": "Einstellungen zu <em>Nachtmodus</em> (<span class='icon-moon-solid'></span>),",
+            "index-help-2": "<em>Lesemodus</em> (<span class='icon-book-open-solid'></span>), ",
+            "index-help-3": "<em>Popups</em> (<span class='icon-message-slash-solid'></span>) und ",
+            "index-help-4": "<em>Suche</em> (<span class='icon-magnifying-glass'></span>) finden Sie im Menü in der ",
+            "index-help-5": "<span class='desktop-not'>unteren rechten</span>",
+            "index-help-6": "<span class='mobile-not'>oberen rechten</span> ",
+            "index-help-7": "Ecke (<span class='icon-gear-solid'></span>)",
+            "index-select-faith": "Glauben auswählen",
+            "page-smc": "Zum Hauptinhalt springen",
+            "link-about": "de/impressum",
+            "nav-homepage-desc": "Startseite",
+            "nav-articles-desc": "Durchsuche alle deutschen Artikel",
+            "nav-articles-title": "Themen",
+            "nav-shop-desc": "Unterstütze unser Apostolat mit deinem Einkauf in unserem Shop!",
+            "nav-shop-title": "Shop",
+            "nav-shop-link":  "de/shop",
+            "nav-about-desc": "Über diese Seite, Kontakt und Rechtliches",
+            "nav-about-title": "Impressum",
+            "nav-tools-desc": "Software und Hilfsmittel zum Latein-Lernen, Gebetssammlungen, Online Mess- und Bibelbücher, Online-Bücherei u.v.m",
+            "nav-tools-title": "Ressourcen",
+            "nav-newest-desc": "Artikel sortiert nach Datum",
+            "nav-newest-title": "Neues",
+            "nav-about-link": "de/impressum",
+            "nav-articles-link": "de/themen",
+            "nav-newest-link": "de/neues",
+            "nav-tools-link": "de/ressourcen",
+            "link-tags-descr": "Link zum Thema $$TAG$$",
+            "collapse-button-title": "Inhaltsverzeichnis zusammenklappen",
+            "footnotes-title": "Fußnoten",
+            "similar-title": "Ähnliche Artikel",
+            "bibliography-title": "Bibliographie",
+            "backlinks-title": "Verweise",
+            "meta-backlinks-desc": "Liste der anderen Seiten, die auf diese Seite verweisen",
+            "meta-backlinks-title": "verweise",
+            "meta-similar-desc": "Ähnliche Artikel",
+            "meta-similar-title": "Ähnliche Artikel",
+            "meta-bibliography-desc": "Bibliographie der auf dieser Seite zitierten Links",
+            "meta-bibliography-title": "bibliografie",
+            "section-link-to": "Link zum Abschnitt '$$HEADER$$'",
+            "author-contact": "Kontakt",
+            "author-donate": "Spenden",
+            "i-want-to-learn-more": "Ich möchte mehr über ... lernen:",
+            "i-believe-in": "Ich glaube an",
+            "searchbar-placeholder": "Stichwort, Thema, Frage, ...",
+            "searchbar-text": "Suchen",
+            "search-no-results": "Keine Ergebnisse gefunden.",
+            "searchpage-title": "Suche",
+            "searchpage-desc": "Durchsuche dubia.cc",
+            "special-topics-title": "Themen",
+            "special-topics-path": "themen.html",
+            "special-topics-id": "de-themen",
+            "special-topics-desc": "Themenübersicht",
+            "special-newest-title": "Neueste Links",
+            "special-newest-path": "neues.html",
+            "special-newest-id": "de-neues",
+            "special-newest-desc": "Neueste Links",
+            "special-tools-title": "Ressourcen",
+            "special-tools-path": "ressourcen.html",
+            "special-tools-id": "de-ressourcen",
+            "special-tools-desc": "Ressourcen",
+            "special-shop-title": "Shop",
+            "special-shop-path": "shop.html",
+            "special-shop-id": "de-shop",
+            "special-shop-desc": "Shop",
+            "special-about-title": "Impressum",
+            "special-about-path": "impressum.html",
+            "special-about-id": "de-impressum",
+            "special-about-desc": "Impressum"
+        },
+        "en": {
+            "index-title": "Discover the true Catholic Faith - dubia.cc",
+            "index-desc": "dubia is a collection of articles about the traditional Catholic faith. Did the Church really teach...? Answers to errors and questions, prayers, and more!",
+            "index-subtitle": "<strong>dubia.cc</strong> is a collection<br/>of articles explaining the<br/>traditional Catholic faith",
+            "index-keywords": "catholic, church, church fathers, faith, meaning of life, evolution, protestant, islam",
+            "index-help-1": "To use <em>dark-mode</em> (<span class='icon-moon-solid'></span>) or",
+            "index-help-2": "<em>reader-mode</em> (<span class='icon-book-open-solid'></span>), or ",
+            "index-help-3": "<em>disable popups</em> (<span class='icon-message-slash-solid'></span>), or ",
+            "index-help-4": "<em>search</em> the site (<span class='icon-magnifying-glass'></span>), use the floating toggle bar in the ",
+            "index-help-5": "<span class='desktop-not'>lower-right</span>",
+            "index-help-6": "<span class='mobile-not'>upper-right</span> ",
+            "index-help-7": "corner (<span class='icon-gear-solid'></span>)</p>",
+            "index-select-faith": "Select faith",
+            "page-smc": "Skip to main content",
+            "link-about": "en/about",
+            "nav-homepage-desc": "Homepage",
+            "nav-articles-desc": "Search all English articles by category / tag",
+            "nav-articles-title": "Topics",
+            "nav-shop-desc": "Support our apostolate with your purchase in our store!",
+            "nav-shop-title": "Shop",
+            "nav-shop-link": "en/shop",
+            "nav-about-desc": "Imprint, contact and legal information",
+            "nav-about-title": "About",
+            "nav-tools-desc": "Software and aids for learning Latin, prayer collections, online Mass and Bible books, online library and much more",
+            "nav-tools-title": "Tools",
+            "nav-newest-desc": "Articles sorted by date",
+            "nav-newest-title": "Newest",
+            "nav-about-link": "en/about",
+            "nav-articles-link": "en/topics",
+            "nav-newest-link": "en/newest",
+            "nav-tools-link": "en/tools",
+            "link-tags-descr": "Link to $$TAG$$ tag",
+            "collapse-button-title": "Collapse table of contents",
+            "footnotes-title": "Footnotes",
+            "similar-title": "Similar articles",
+            "bibliography-title": "Bibliography",
+            "backlinks-title": "Backlinks",
+            "meta-backlinks-desc": "List of other pages which link to this page",
+            "meta-backlinks-title": "backlinks",
+            "meta-similar-desc": "Similar articles for this link",
+            "meta-similar-title": "similar",
+            "meta-bibliography-desc": "Bibliography of links cited in this page",
+            "meta-bibliography-title": "bibliography",
+            "section-link-to": "Link to section '$$HEADER$$'",
+            "author-contact": "Contact",
+            "author-donate": "Donate",
+            "i-want-to-learn-more": "I want to learn more about...",
+            "i-believe-in": "I believe in",
+            "searchbar-placeholder": "Keyword, topic, question, ...",
+            "searchbar-text": "Search",
+            "search-no-results": "No results found.",
+            "searchpage-title": "Search",
+            "searchpage-desc": "Search articles from dubia.cc",
+            "special-topics-title": "Topics",
+            "special-topics-path": "topics.html",
+            "special-topics-id": "en-topics",
+            "special-topics-desc": "List of topics",
+            "special-newest-title": "Newest Links",
+            "special-newest-path": "newest.html",
+            "special-newest-id": "en-newest",
+            "special-newest-desc": "Newest Links",
+            "special-tools-title": "Tools",
+            "special-tools-path": "tools.html",
+            "special-tools-id": "en-tools",
+            "special-tools-desc": "Tools",
+            "special-shop-title": "Shop",
+            "special-shop-path": "shop.html",
+            "special-shop-id": "en-shop",
+            "special-shop-desc": "Shop",
+            "special-about-title": "About",
+            "special-about-path": "about.html",
+            "special-about-id": "en-about",
+            "special-about-desc": "About"
+        },
+        "fr": {
+            "index-title": "Découvre la véritable foi catholique - dubia.cc",
+            "index-desc": "dubia est une collection d'articles sur la foi catholique traditionnelle. L'Église a-t-elle vraiment...? Réponses aux erreurs, prières, etc.",
+            "index-subtitle": "<strong>dubia.cc</strong> est la collection<br/>française d'articles sur la<br/>foi catholique traditionnelle",
+            "index-keywords": "catholique, église, pères de l'église, foi, sens de la vie, évolution, évangélique, islam",
+            "index-help-1": "Paramètres pour le <em>mode nuit</em> (<span class='icon-moon-solid'></span>),",
+            "index-help-2": "<em>mode lecture</em> (<span class='icon-book-open-solid'></span>), ",
+            "index-help-3": "<em>Popups</em> (<span class='icon-message-slash-solid'></span>) et ",
+            "index-help-4": "la <em>Recherche</em> (<span class='icon-magnifying-glass'></span>) se trouvent dans le menu dans le ",
+            "index-help-5": "<span class='desktop-not'>coin inférieur droit</span>",
+            "index-help-6": "<span class='mobile-not'>coin supérieur droit</span> ",
+            "index-help-7": "(<span class='icon-gear-solid'></span>)",
+            "index-select-faith": "Sélectionner la foi",
+            "page-smc": "Aller au contenu principal",
+            "link-about": "fr/impression",
+            "nav-homepage-desc": "Page d'accueil",
+            "nav-articles-desc": "Parcourir tous les articles en français",
+            "nav-articles-title": "Sujets",
+            "nav-shop-desc": "Soutenez notre apostolat avec vos achats dans notre boutique !",
+            "nav-shop-title": "Boutique",
+            "nav-shop-link": "fr/shop",
+            "nav-about-desc": "À propos de ce site, contact et informations légales",
+            "nav-about-title": "Mentions légales",
+            "nav-tools-desc": "Logiciels et outils pour apprendre le latin, collections de prières, livres de messe et bibles en ligne, bibliothèque en ligne, etc.",
+            "nav-tools-title": "Ressources",
+            "nav-newest-desc": "Articles classés par date",
+            "nav-newest-title": "By date",
+            "nav-about-link": "fr/impression",
+            "nav-articles-link": "fr/sujets",
+            "nav-newest-link": "fr/nouveau",
+            "nav-tools-link": "fr/ressources",
+            "link-tags-descr": "Lien vers le sujet $$TAG$$",
+            "collapse-button-title": "Réduire la table des matières",
+            "footnotes-title": "Notes de bas de page",
+            "similar-title": "Articles similaires",
+            "bibliography-title": "Bibliographie",
+            "backlinks-title": "Renvois",
+            "meta-backlinks-desc": "Liste des autres pages qui renvoient à cette page",
+            "meta-backlinks-title": "renvois",
+            "meta-similar-desc": "Articles similaires",
+            "meta-similar-title": "Articles similaires",
+            "meta-bibliography-desc": "Bibliographie des liens cités sur cette page",
+            "meta-bibliography-title": "bibliographie",
+            "section-link-to": "Lien vers la section '$$HEADER$$'",
+            "author-contact": "Contact",
+            "author-donate": "Faire un don",
+            "i-want-to-learn-more": "Je veux en savoir plus sur ... :",
+            "i-believe-in": "Je crois en",
+            "searchbar-placeholder": "Mot-clé, sujet, question, ...",
+            "searchbar-text": "Rechercher",
+            "search-no-results": "Aucun résultat trouvé.",
+            "searchpage-title": "Recherche",
+            "searchpage-desc": "Recherche sur dubia.cc",
+            "special-topics-title": "Sujets",
+            "special-topics-path": "sujets.html",
+            "special-topics-id": "fr-sujets",
+            "special-topics-desc": "Aperçu des sujets",
+            "special-newest-title": "Nouveaux articles",
+            "special-newest-path": "nouveau.html",
+            "special-newest-id": "fr-nouveau",
+            "special-newest-desc": "Nouveaux articles",
+            "special-tools-title": "Ressources",
+            "special-tools-path": "ressources.html",
+            "special-tools-id": "fr-ressources",
+            "special-tools-desc": "Ressources",
+            "special-shop-title": "Boutique",
+            "special-shop-path": "botique.html",
+            "special-shop-id": "fr-botique",
+            "special-shop-desc": "Boutique",
+            "special-about-title": "Impression",
+            "special-about-path": "impression.html",
+            "special-about-id": "fr-impression",
+            "special-about-desc": "Impression"
+        },
+        "pl": {
+            "index-title": "Odkryj prawdziwą wiarę katolicką – dubia.cc",
+            "index-desc": "dubia to zbiór artykułów o tradycyjnej wierze katolickiej. Czy Kościół rzeczywiście…? Odpowiedzi na błędy, modlitwy i wiele więcej.",
+            "index-subtitle": "<strong>dubia.cc</strong> to polski<br/>zbiór artykułów o<br/>tradycyjnej wierze katolickiej",
+            "index-keywords": "katolicki, kościół, ojcowie kościoła, wiara, sens życia, ewolucja, ewangelicki, islam",
+            "index-help-1": "Ustawienia dotyczące <em>trybu nocnego</em> (<span class='icon-moon-solid'></span>),",
+            "index-help-2": "<em>trybu czytania</em> (<span class='icon-book-open-solid'></span>), ",
+            "index-help-3": "<em>Popupów</em> (<span class='icon-message-slash-solid'></span>) oraz ",
+            "index-help-4": "<em>wyszukiwania</em> (<span class='icon-magnifying-glass'></span>) znajdziesz w menu w ",
+            "index-help-5": "<span class='desktop-not'>prawym dolnym</span>",
+            "index-help-6": "<span class='mobile-not'>prawym górnym</span> ",
+            "index-help-7": "rogu (<span class='icon-gear-solid'></span>)",
+            "index-select-faith": "Wybierz wiarę",
+            "page-smc": "Przejdź do głównej treści",
+            "link-about": "pl/informacje",
+            "nav-homepage-desc": "Strona główna",
+            "nav-articles-desc": "Przeglądaj wszystkie polskie artykuły",
+            "nav-articles-title": "Tematy",
+            "nav-shop-desc": "Wesprzyj nasze apostolstwo, robiąc zakupy w naszym sklepie!",
+            "nav-shop-title": "Sklep",
+            "nav-shop-link": "pl/sklep",
+            "nav-about-desc": "O tej stronie, kontakt i informacje prawne",
+            "nav-about-title": "Informacje",
+            "nav-tools-desc": "Oprogramowanie i narzędzia do nauki łaciny, zbiory modlitw, mszały i Biblie online, biblioteka cyfrowa i wiele więcej",
+            "nav-tools-title": "Zasoby",
+            "nav-newest-desc": "Artykuły posortowane według daty",
+            "nav-newest-title": "Najnowsze",
+            "nav-about-link": "pl/informacje",
+            "nav-articles-link": "pl/tematy",
+            "nav-newest-link": "pl/najnowsze",
+            "nav-tools-link": "pl/zasoby",
+            "link-tags-descr": "Link do tematu $$TAG$$",
+            "collapse-button-title": "Zwiń spis treści",
+            "footnotes-title": "Przypisy",
+            "similar-title": "Podobne artykuły",
+            "bibliography-title": "Bibliografia",
+            "backlinks-title": "Odniesienia",
+            "meta-backlinks-desc": "Lista innych stron, które odsyłają do tej strony",
+            "meta-backlinks-title": "odniesienia",
+            "meta-similar-desc": "Podobne artykuły",
+            "meta-similar-title": "Podobne artykuły",
+            "meta-bibliography-desc": "Bibliografia linków cytowanych na tej stronie",
+            "meta-bibliography-title": "bibliografia",
+            "section-link-to": "Link do sekcji „$$HEADER$$”",
+            "author-contact": "Kontakt",
+            "author-donate": "Wesprzyj",
+            "i-want-to-learn-more": "Chcę dowiedzieć się więcej o…",
+            "i-believe-in": "Wierzę w",
+            "searchbar-placeholder": "Słowo kluczowe, temat, pytanie…",
+            "searchbar-text": "Szukaj",
+            "search-no-results": "Nie znaleziono wyników.",
+            "searchpage-title": "Szukaj",
+            "searchpage-desc": "Przeszukaj dubia.cc",
+            "special-topics-title": "Tematy",
+            "special-topics-path": "tematy.html",
+            "special-topics-id": "pl-tematy",
+            "special-topics-desc": "Przegląd tematów",
+            "special-newest-title": "Najnowsze linki",
+            "special-newest-path": "najnowsze.html",
+            "special-newest-id": "pl-najnowsze",
+            "special-newest-desc": "Najnowsze linki",
+            "special-tools-title": "Zasoby",
+            "special-tools-path": "zasoby.html",
+            "special-tools-id": "pl-zasoby",
+            "special-tools-desc": "Zasoby",
+            "special-shop-title": "Sklep",
+            "special-shop-path": "sklep.html",
+            "special-shop-id": "pl-sklep",
+            "special-shop-desc": "Sklep",
+            "special-about-title": "Informacje prawne",
+            "special-about-path": "informacje.html",
+            "special-about-id": "pl-informacje",
+            "special-about-desc": "Informacje prawne"
+        },
+        "br": {
+            "index-title": "Descubra a verdadeira fé católica - dubia.cc",
+            "index-desc": "dubia é uma coleção de artigos sobre a fé católica tradicional. Será que a Igreja realmente...? Respostas a erros, orações e muito mais.",
+            "index-subtitle": "<strong>dubia.cc</strong> é a coleção brasileira<br/>de artigos sobre a<br/>fé católica tradicional",
+            "index-keywords": "católico, igreja, padres da igreja, fé, sentido da vida, evolução, evangélico, islã",
+            "index-help-1": "Configurações para o <em>modo noturno</em> (<span class='icon-moon-solid'></span>),",
+            "index-help-2": "<em>modo de leitura</em> (<span class='icon-book-open-solid'></span>), ",
+            "index-help-3": "<em>Popups</em> (<span class='icon-message-slash-solid'></span>) e ",
+            "index-help-4": "a <em>pesquisa</em> (<span class='icon-magnifying-glass'></span>) estão no menu, no ",
+            "index-help-5": "<span class='desktop-not'>canto inferior direito</span>",
+            "index-help-6": "<span class='mobile-not'>canto superior direito</span> ",
+            "index-help-7": "(<span class='icon-gear-solid'></span>)",
+            "index-select-faith": "Selecione a fé",
+            "page-smc": "Ir para o conteúdo principal",
+            "link-about": "br/impressao",
+            "nav-homepage-desc": "Página inicial",
+            "nav-articles-desc": "Explore todos os artigos em português",
+            "nav-articles-title": "Tópicos",
+            "nav-shop-desc": "Apoie nosso apostolado comprando em nossa loja!",
+            "nav-shop-title": "Loja",
+            "nav-shop-link": "br/loja",
+            "nav-about-desc": "Sobre este site, contato e informações legais",
+            "nav-about-title": "Informações legais",
+            "nav-tools-desc": "Software e ferramentas para aprender latim, coleções de orações, missais e bíblias online, biblioteca virtual e muito mais",
+            "nav-tools-title": "Recursos",
+            "nav-newest-desc": "Artigos ordenados por data",
+            "nav-newest-title": "Novidades",
+            "nav-about-link": "br/impressao",
+            "nav-articles-link": "br/topicos",
+            "nav-newest-link": "br/recentes",
+            "nav-tools-link": "br/recursos",
+            "link-tags-descr": "Link para o tópico $$TAG$$",
+            "collapse-button-title": "Recolher o índice",
+            "footnotes-title": "Notas de rodapé",
+            "similar-title": "Artigos relacionados",
+            "bibliography-title": "Bibliografia",
+            "backlinks-title": "Referências cruzadas",
+            "meta-backlinks-desc": "Lista de outras páginas que fazem referência a esta",
+            "meta-backlinks-title": "referências",
+            "meta-similar-desc": "Artigos relacionados",
+            "meta-similar-title": "Artigos relacionados",
+            "meta-bibliography-desc": "Bibliografia dos links citados nesta página",
+            "meta-bibliography-title": "bibliografia",
+            "section-link-to": "Link para a seção '$$HEADER$$'",
+            "author-contact": "Contato",
+            "author-donate": "Doar",
+            "i-want-to-learn-more": "Quero aprender mais sobre...",
+            "i-believe-in": "Eu creio em",
+            "searchbar-placeholder": "Palavra-chave, tópico, pergunta...",
+            "searchbar-text": "Buscar",
+            "search-no-results": "Nenhum resultado encontrado.",
+            "searchpage-title": "Busca",
+            "searchpage-desc": "Pesquisar em dubia.cc",
+            "special-topics-title": "Tópicos",
+            "special-topics-path": "topicos.html",
+            "special-topics-id": "br-topicos",
+            "special-topics-desc": "Visão geral dos tópicos",
+            "special-newest-title": "Links mais recentes",
+            "special-newest-path": "recentes.html",
+            "special-newest-id": "br-recentes",
+            "special-newest-desc": "Links mais recentes",
+            "special-tools-title": "Recursos",
+            "special-tools-path": "recursos.html",
+            "special-tools-id": "br-recursos",
+            "special-tools-desc": "Recursos",
+            "special-shop-title": "Loja",
+            "special-shop-path": "loja.html",
+            "special-shop-id": "br-loja",
+            "special-shop-desc": "Loja",
+            "special-about-title": "Informações legais",
+            "special-about-path": "impressao.html",
+            "special-about-id": "br-impressao",
+            "special-about-desc": "Informações legais"
+        },
+        "es": {
+            "index-title": "Descubre la verdadera fe católica - dubia.cc",
+            "index-desc": "dubia es una colección de artículos sobre la fe católica tradicional. ¿Realmente la Iglesia...? Respuestas a errores, oraciones y mucho más.",
+            "index-subtitle": "<strong>dubia.cc</strong> es la colección en español<br/>de artículos sobre la<br/>fe católica tradicional",
+            "index-keywords": "católico, iglesia, padres de la iglesia, fe, sentido de la vida, evolución, evangélico, islam",
+            "index-help-1": "Configuración para el <em>modo nocturno</em> (<span class='icon-moon-solid'></span>),",
+            "index-help-2": "<em>modo lectura</em> (<span class='icon-book-open-solid'></span>), ",
+            "index-help-3": "<em>Popups</em> (<span class='icon-message-slash-solid'></span>) y ",
+            "index-help-4": "la <em>búsqueda</em> (<span class='icon-magnifying-glass'></span>) se encuentra en el menú en ",
+            "index-help-5": "<span class='desktop-not'>la esquina inferior derecha</span>",
+            "index-help-6": "<span class='mobile-not'>la esquina superior derecha</span> ",
+            "index-help-7": "(<span class='icon-gear-solid'></span>)",
+            "index-select-faith": "Seleccionar la fe",
+            "page-smc": "Saltar al contenido principal",
+            "link-about": "es/aviso-legal",
+            "nav-homepage-desc": "Página de inicio",
+            "nav-articles-desc": "Explora todos los artículos en español",
+            "nav-articles-title": "Temas",
+            "nav-shop-desc": "¡Apoya nuestro apostolado con tus compras en nuestra tienda!",
+            "nav-shop-title": "Tienda",
+            "nav-shop-link": "es/tienda",
+            "nav-about-desc": "Acerca de este sitio, contacto e información legal",
+            "nav-about-title": "Aviso legal",
+            "nav-tools-desc": "Software y herramientas para aprender latín, colecciones de oraciones, misales y Biblias en línea, biblioteca en línea, etc.",
+            "nav-tools-title": "Recursos",
+            "nav-newest-desc": "Artículos ordenados por fecha",
+            "nav-newest-title": "Novedades",
+            "nav-about-link": "es/aviso-legal",
+            "nav-articles-link": "es/temas",
+            "nav-newest-link": "es/recientes",
+            "nav-tools-link": "es/recursos",
+            "link-tags-descr": "Enlace al tema $$TAG$$",
+            "collapse-button-title": "Contraer la tabla de contenido",
+            "footnotes-title": "Notas a pie de página",
+            "similar-title": "Artículos similares",
+            "bibliography-title": "Bibliografía",
+            "backlinks-title": "Referencias",
+            "meta-backlinks-desc": "Lista de otras páginas que enlazan a esta",
+            "meta-backlinks-title": "referencias",
+            "meta-similar-desc": "Artículos similares",
+            "meta-similar-title": "Artículos similares",
+            "meta-bibliography-desc": "Bibliografía de los enlaces citados en esta página",
+            "meta-bibliography-title": "bibliografía",
+            "section-link-to": "Enlace a la sección '$$HEADER$$'",
+            "author-contact": "Contacto",
+            "author-donate": "Donar",
+            "i-want-to-learn-more": "Quiero aprender más sobre...",
+            "i-believe-in": "Creo en",
+            "searchbar-placeholder": "Palabra clave, tema, pregunta...",
+            "searchbar-text": "Buscar",
+            "search-no-results": "No se encontraron resultados.",
+            "searchpage-title": "Buscar",
+            "searchpage-desc": "Buscar en dubia.cc",
+            "special-topics-title": "Temas",
+            "special-topics-path": "temas.html",
+            "special-topics-id": "es-temas",
+            "special-topics-desc": "Resumen de temas",
+            "special-newest-title": "Enlaces más recientes",
+            "special-newest-path": "recientes.html",
+            "special-newest-id": "es-recientes",
+            "special-newest-desc": "Enlaces más recientes",
+            "special-tools-title": "Recursos",
+            "special-tools-path": "recursos.html",
+            "special-tools-id": "es-recursos",
+            "special-tools-desc": "Recursos",
+            "special-shop-title": "Tienda",
+            "special-shop-path": "tienda.html",
+            "special-shop-id": "es-tienda",
+            "special-shop-desc": "Tienda",
+            "special-about-title": "Aviso legal",
+            "special-about-path": "aviso-legal.html",
+            "special-about-id": "es-aviso-legal",
+            "special-about-desc": "Aviso legal"
+        }
+    },
+    "authors": {
+        "discord:821379162828439581": {
+            "displayname": "Test User",
+            "contact": "https://discord.gg/sYHehWCPJh",
+            "donate": {
+                "ko-fi": "https://ko-fi.com",
+                "paypal": "https://paypal.me"
+            }
+        },
+        "discord:1236084336340762656": {
+            "displayname": "𝑅𝑎𝑚𝑜𝑛🇻🇦",
+            "contact": "https://discord.gg/sYHehWCPJh"
+        },
+        "discord:296693580016386048": {
+            "displayname": "Gabriel Amator Dei",
+            "contact": "https://discord.gg/sYHehWCPJh",
+            "donate": {
+                "ko-fi": "https://ko-fi.com/gabrielamatordei",
+                "github": "https://github.com/sponsors/GabrielAmatorDei"
+            }
+        },
+        "github:fschutt": {
+            "displayname": "Felix Schütt",
+            "contact": "https://github.com/fschutt",
+            "donate": {
+                "github": "https://github.com/sponsors/fschutt"
+            }
+        }
+    },
+    "tags": {
+        "de": {
+            "ibelievein": [
+                {
+                    "title": "Naturalismus / Agnostizismus",
+                    "option": "die Wissenschaft",
+                    "tag": "evolution",
+                    "featured": [
+                    ]
+                },
+                {
+                    "title": "Atheismus",
+                    "option": "keinen Gott",
+                    "tag": "atheismus",
+                    "featured": [
+                    ]
+                },
+                {
+                    "title": "Evangelische Kirche",
+                    "option": "die evangelische Kirche",
+                    "tag": "evangelisch",
+                    "featured": [
+                    ]
+                },
+                {
+                    "title": "Islam",
+                    "option": "den Islam",
+                    "tag": "islam",
+                    "featured": [
+                    ]
+                },
+                {
+                    "title": "Zeugen Jehovas",
+                    "option": "die Zeugen Jehovas",
+                    "tag": "zeugen-jehovas",
+                    "featured": [
+                    ]
+                },
+                {
+                    "title": "II. Vatikanum",
+                    "option": "eine Sedisvakanz",
+                    "tag": "sedisvakantismus",
+                    "featured": [
+                    ]
+                },
+                {
+                    "title": "Orthodoxie",
+                    "option": "die orthodoxe Kirche",
+                    "tag": "orthodoxie",
+                    "featured": [
+                    ]
+                },
+                {
+                    "title": "Judaismus",
+                    "option": "das Judentum",
+                    "tag": "judentum",
+                    "featured": [
+                    ]
+                },
+                {
+                    "title": "Buddhismus",
+                    "option": "Buddhismus",
+                    "tag": "buddhismus",
+                    "featured": [
+                    ]
+                },
+                {
+                    "title": "Hinduismus",
+                    "option": "Hinduismus",
+                    "tag": "hinduismus",
+                    "featured": [
+                    ]
+                },
+                {
+                    "title": "Sonstige",
+                    "option": "andere Götter",
+                    "tag": "polytheismus",
+                    "featured": [
+                    ]
+                }
+            ],
+            "iwanttolearn": {
+                "kirchenvaeter": {
+                    "title": "Kirchenväter",
+                    "featured": [
+                    ]
+                },
+                "apostel": {
+                    "title": "Apostel und Frühkirche",
+                    "featured": [
+                    ]
+                },
+                "kath-morallehre": {
+                    "title": "Moral-und Soziallehre",
+                    "featured": [
+                    ]
+                },
+                "geschichte": {
+                    "title": "Kirchengeschichte",
+                    "featured": [
+                    ]
+                },
+                "theologie": {
+                    "title": "Theologie / Thomistik",
+                    "featured": [
+                    ]
+                },
+                "philosophie": {
+                    "title": "Philosophie",
+                    "featured": [
+                    ]
+                },
+                "kanonische-fragen": {
+                    "title": "Kanonisches Recht",
+                    "featured": [
+                    ]
+                }
+            },
+            "tags": {
+                "islam": "Islam",
+                "judentum": "Judentum",
+                "ost-orthodoxie": "Östliche Orthodoxie",
+                "orientale-orthodoxie": "Orientale Orthodoxie",
+                "atheismus": "Atheismus",
+                "geschichte": "Geschichte",
+                "polytheismus": "Polytheismus",
+                "evangelisch": "Evangelische Kirche",
+                "sedisvakantismus": "Sedisvakantismus",
+                "kanon": "Kanon",
+                "mittelalter": "Mittelalter",
+                "kirchenvaeter": "Kirchenväter",
+                "evolution": "Evolution",
+                "moral": "Morallehre",
+                "gnostizismus": "Gnostizismus",
+                "fruehkirche": "Frühkirche",
+                "gebet": "Gebete",
+                "frage": "Frage"
+            },
+            "ressources": [
+                { 
+                    "id": "gebete",
+                    "title": "Gebete",
+                    "links": [
+                        {"slug": "rosenkranz", "title": "Rosenkranz"},
+                        {"slug": "angelus", "title": "Angelus"},
+                        {"slug": "morgengruss", "title": "Morgengruß zum Herzen Jesu"},
+                        {"slug": "abendgruss", "title": "Abendgruß zum Herzen Jesu"},
+                        {"slug": "weihe-menschengeschlecht", "title": "Weihe des Menschengeschlechtes"},
+                        {"slug": "arbeitergebet", "title": "Arbeitergebet zum Hl. Josef"},
+                        {"slug": "mutter-der-hilfe", "title": "Zur Mutter der immerwährenden Hilfe"},
+                        {"slug": "hl-josef-schutzherr", "title": "Heiliger Joseph, Schutzherr der Kirche"},
+                        {"slug": "salve-regina", "title": "Salve Regina"},
+                        {"slug": "gebet-fuer-papst", "title": "Gebet für den Papst"},
+                        {"slug": "gebet-birgitta-schweden", "title": "Gebet der Hl. Birgitta von Schweden"}
+                    ]
+                },
+                {
+                    "id": "bibeln",
+                    "title": "Bibeln und Kirchenväter",
+                    "links": [
+                        {"slug": "https://k-bibel.de/", "title": "K-Bibel.de"},
+                        {"slug": "https://vulgata.online/", "title": "Vulgata Online"},
+                        {"slug": "https://biblehub.com/interlinear/", "title": "Interlinear Bibel (BibleHub)"},
+                        {"slug": "https://logeion.uchicago.edu/", "title": "Logeion: Griechische / Hebräische Quelltexte (Univ. Chicago)"},
+                        {"slug": "https://bkv.unifr.ch/de", "title": "Bibliothek der Kirchenväter (Univ. Freiburg)"},
+                        {"slug": "https://canonlaw.ninja/", "title": "CanonLaw.ninja - Suchmaschine für kanonisches Recht"},
+                        {"slug": "https://catenabible.com/", "title": "Catena Bible - Bibel mit Fußnoten von Kirchenvätern"},
+                        {"slug": "https://ccel.org/", "title": "CCEL - Christian Classics Ethereal Library"}
+                    ]
+                },
+                { 
+                    "id": "messe",
+                    "title": "Lateinischen Messen",
+                    "links": [
+                        {"slug": "https://www.latinmass.com/find-latin-mass", "title": "latinmass.com/find-latin-mass"},
+                        {"slug": "https://latinmassdir.org", "title": "LatinMassDir.org"},
+                        {"slug": "https://sspx.org/en/mass-centers", "title": "Interaktive Karte von Messorten der FSSPX"}
+                    ]
+                }
+            ],
+            "shop": [
+                {
+                    "id": "mode-fuer-sie",
+                    "title": "Katholische Mode für Sie",
+                    "img": "/static/img/shop/womansfashion.avif",
+                    "link": {"slug": "https://etsy.com", "title": "Frauenmode auf etsy.de" }
+                },
+                { 
+                    "id": "mode-fuer-ihn",
+                    "title": "Katholische Mode für Ihn",
+                    "img": "/static/img/shop/mensfashion.avif", 
+                    "link": {"slug": "https://etsy.com", "title": "Herrenmode auf etsy.de" }
+                },
+                { 
+                    "id": "rosenkraenze",
+                    "title": "Paracord Rosenkränze",
+                    "img": "/static/img/shop/rosary.avif", 
+                    "link": {"slug": "https://etsy.com", "title": "Rosenkränze auf etsy.de"  }
+                },
+                { 
+                    "id": "buecher",
+                    "title": "Katholische Bücher",
+                    "img": "/static/img/shop/books.avif", 
+                    "link": {"slug": "https://lulu.com", "title": "Bücher auf lulu.com"  }
+                }
+            ],
+            "about": [
+                { 
+                    "id": "kontakt",
+                    "title": "Kontakt",
+                    "texts": [
+                        "<strong><em>Angaben gemäß § 5 TMG und § 55 Abs. 2 RStV</em></strong>",
+                        "",
+                        "",
+                        "Felix Schütt",
+                        "c/o Postflex #5878",
+                        "Emsdettener Str. 10",
+                        "48268 Greven",
+                        "",
+                        "<strong><em>EU-Streitschlichtung</em></strong>",
+                        "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:",
+                        "",
+                        "<a href='https://ec.europa.eu/consumers/odr' rel='nofollow'>https://ec.europa.eu/consumers/odr</a>",
+                        "",
+                        "Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
+                        "",
+                        "<strong><em>Korrekturen und Fehler</em></strong>",
+                        "",
+                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                    ]
+                },
+                { 
+                    "id": "datenschutz",
+                    "title": "Datenschutz",
+                    "texts": [
+                        "Die folgenden Informationen werden von uns beim Aufruf einer Website gespeichert:",
+                        "",
+                        "<ul>",
+                        "<li><a href='https://de.wikipedia.org/wiki/IP-Adresse' rel='nofollow'>IP-Adresse</a></li>",
+                        "<li>Land der IP-Adresse</li>",
+                        "<li>URL der angefragten Webseite</li>",
+                        "<li><a href='https://de.wikipedia.org/wiki/Referrer' rel='nofollow'>HTTP-Referrer</a></li>",
+                        "</ul>",
+                        "",
+                        "Wir speichern diese Informationen für <strong>eine Speicherdauer von 7 Tagen</strong> für rein statistische und anonyme Abfragen (z.B. um zu sehen, woher die Artikel verlinkt sind). Die Daten sind anonymisiert, so dass wir auf Auskunfts- oder Löschungsanträge nicht reagieren können.",
+                        "",
+                        "Ihre Daten werden von Zeit zu Zeit analysiert (z.B.: Wie viele wöchentliche einzelne Benutzer lesen welche Artikel).",
+                        "",
+                        "Wenn Sie sich weiter schützen wollen, verwenden Sie einen VPN oder blockieren Sie HTTP-Verbindungen zu analytics.dubia.cc in Ihrem Browser."
+                    ]
+                }
+            ]
+        },
+        "en": {
+            "ibelievein": [
+                {
+                    "title": "Naturalism / Agnosticism",
+                    "option": "science",
+                    "tag": "evolution",
+                    "featured": []
+                },
+                {
+                    "title": "Atheism",
+                    "option": "no God",
+                    "tag": "atheismus",
+                    "featured": []
+                },
+                {
+                    "title": "Protestant Church",
+                    "option": "the Protestant Church",
+                    "tag": "evangelisch",
+                    "featured": []
+                },
+                {
+                    "title": "Islam",
+                    "option": "Islam",
+                    "tag": "islam",
+                    "featured": []
+                },
+                {
+                    "title": "Jehovah’s Witnesses",
+                    "option": "Jehovah’s Witnesses",
+                    "tag": "jehovahs-witness",
+                    "featured": []
+                },
+                {
+                    "title": "Second Vatican Council",
+                    "option": "Sedevacantism",
+                    "tag": "sedevacantism",
+                    "featured": []
+                },
+                {
+                    "title": "Orthodoxy",
+                    "option": "Orthodoxy",
+                    "tag": "orthodoxy",
+                    "featured": []
+                },
+                {
+                    "title": "Judaism",
+                    "option": "Judaism",
+                    "tag": "judaism",
+                    "featured": []
+                },
+                {
+                    "title": "Buddhism",
+                    "option": "Buddhism",
+                    "tag": "buddhism",
+                    "featured": []
+                },
+                {
+                    "title": "Hinduism",
+                    "option": "Hinduism",
+                    "tag": "hinduism",
+                    "featured": []
+                },
+                {
+                    "title": "Others",
+                    "option": "other gods",
+                    "tag": "polytheism",
+                    "featured": []
+                }
+            ],
+            "iwanttolearn": {
+                "church-fathers": {
+                    "title": "Church Fathers",
+                    "featured": []
+                },
+                "apostles": {
+                    "title": "Apostles and Early Church",
+                    "featured": []
+                },
+                "catholic-morality": {
+                    "title": "Moral and Social Teaching",
+                    "featured": []
+                },
+                "history": {
+                    "title": "Church History",
+                    "featured": []
+                },
+                "theology": {
+                    "title": "Theology / Thomism",
+                    "featured": []
+                },
+                "philosophy": {
+                    "title": "Philosophy",
+                    "featured": []
+                },
+                "canon-law": {
+                    "title": "Canon Law",
+                    "featured": []
+                }
+            },
+            "tags": {
+                "islam": "Islam",
+                "judaism": "Judaism",
+                "eastern-orthodoxy": "Eastern Orthodoxy",
+                "oriental-orthodoxy": "Oriental Orthodoxy",
+                "atheism": "Atheism",
+                "history": "History",
+                "polytheism": "Polytheism",
+                "protestant": "Protestantism",
+                "sedevacantism": "Sedevacantism",
+                "canon-law": "Canon Law",
+                "middle-ages": "Middle Ages",
+                "church-fathers": "Church Fathers",
+                "evolution": "Evolution",
+                "moral-teaching": "Moral Teaching",
+                "gnosticism": "Gnosticism",
+                "early-church": "Early Church",
+                "prayer": "Prayers",
+                "question": "Question"
+            },
+            "ressources": [
+                { 
+                    "id": "prayers",
+                    "title": "Prayers",
+                    "links": [
+                        {"slug": "rosary", "title": "Rosary"}
+                    ]
+                },
+                {
+                    "id": "bibles",
+                    "title": "Bibles and Church Fathers",
+                    "links": [
+                        {"slug": "https://www.drbo.org/", "title": "Douay-Rheims Online"},
+                        {"slug": "https://vulgata.online/", "title": "Vulgata Online"},
+                        {"slug": "https://biblehub.com/interlinear/", "title": "BibleHub: Hebrew - Greek Bible"},
+                        {"slug": "https://logeion.uchicago.edu/", "title": "Logeion: Greek / Hebrew source texts"},
+                        {"slug": "https://bkv.unifr.ch/en", "title": "Library of the Church Fathers"},
+                        {"slug": "https://canonlaw.ninja/", "title": "CanonLaw.ninja"},
+                        {"slug": "https://catenabible.com/", "title": "Catena Bible - Church Fathers by bible verse"},
+                        {"slug": "https://ccel.org/", "title": "CCEL - Christian Classics Ethereal Library"}
+                    ]
+                },
+                { 
+                    "id": "messe",
+                    "title": "Latin Mass Locations",
+                    "links": [
+                        {"slug": "https://www.latinmass.com/find-latin-mass", "title": "latinmass.com/find-latin-mass"},
+                        {"slug": "https://latinmassdir.org", "title": "LatinMassDir.org"},
+                        {"slug": "https://sspx.org/en/mass-centers", "title": "SSPX Mass Centers"}
+                    ]
+                }
+            ],
+            "shop": [
+                { 
+                    "id": "fashion-f",
+                    "title": "Catholic Fashion for Her",
+                    "img": "/static/img/shop/womansfashion.avif", 
+                    "link": {"slug": "https://etsy.com", "title": "Shop on etsy.com"  }
+                },
+                { 
+                    "id": "fashion-m",
+                    "title": "Catholic Fashion for Him",
+                    "img": "/static/img/shop/mensfashion.avif", 
+                    "link": {"slug": "https://etsy.com", "title": "Shop on etsy.com" }
+                },
+                { 
+                    "id": "rosaries",
+                    "title": "Paracord Rosaries",
+                    "img": "/static/img/shop/rosary.avif", 
+                    "link": {"slug": "https://etsy.com", "title": "Shop on etsy.com" }
+                },
+                { 
+                    "id": "books",
+                    "title": "Catholic Books",
+                    "img": "/static/img/shop/books.avif", 
+                    "link": {"slug": "https://lulu.com", "title": "Shop on lulu.com" }
+                }
+            ],
+            "about": [
+                { 
+                    "id": "contact",
+                    "title": "Contact",
+                    "texts": [
+                        "<strong><em>Info according to § 5 TMG and § 55 Abs. 2 RStV</em></strong>",
+                        "",
+                        "",
+                        "Felix Schütt",
+                        "c/o Postflex #5878",
+                        "Emsdettener Str. 10",
+                        "48268 Greven",
+                        "",
+                        "<strong><em>EU dispute resolution</em></strong>",
+                        "The European Commission provides a platform for online dispute resolution (ODR):",
+                        "",
+                        "<a href='https://ec.europa.eu/consumers/odr' rel='nofollow'>https://ec.europa.eu/consumers/odr</a>",
+                        "",
+                        "We are not willing or obliged to participate in dispute resolution proceedings before a consumer arbitration board.",
+                        "",
+                        "<strong><em>Corrections and suggestions</em></strong>",
+                        "",
+                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                    ]
+                },
+                { 
+                    "id": "privacy",
+                    "title": "Privacy",
+                    "texts": [
+                        "The following information is recorded by us after requesting a website:",
+                        "",
+                        "<ul>",
+                        "<li><a href='https://en.wikipedia.org/wiki/IP_address' rel='nofollow'>IP address</a></li>",
+                        "<li>Country of the IP address</li>",
+                        "<li>URL of the requested website</li>",
+                        "<li><a href='https://en.wikipedia.org/wiki/HTTP_referer' rel='nofollow'>HTTP referrer</a></li>",
+                        "</ul>",
+                        "",
+                        "We store this information for <strong>a storage period of 7 days</strong> for purely statistical and anonymous queries (e.g. to see where the articles are linked from). The data is anonymized, so we cannot respond to requests for information or deletion.",
+                        "",
+                        "Your data is analyzed from time to time (e.g: How many weekly unique users from which countries use our site and read which articles).",
+                        "",
+                        "If you want to protect yourself further, use a VPN or block HTTP connections to analytics.dubia.cc in your browser."
+                    ]
+                } 
+            ]
+        }
+    }
+}
