@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" style="width: 100%;height: 100%;padding: 0px;margin: 0px;">
+    <head>
+        <!-- this page should never be indexed -->
+        <title>dubia.cc</title>
+        <meta name="description" content="dubia is a collection of articles about the traditional Catholic faith. Did the Church really teach...? Answers to errors and questions, prayers, and more!" />
+        <link rel="alternate" hreflang="en" href="https://dubia.cc/en" />
+        <link rel="alternate" hreflang="de" href="https://dubia.cc/de" />
+        <link rel="alternate" hreflang="x-default" href="https://dubia.cc" />
+
+        <link id="favicon" rel="icon" type="image/png" href="https://dubia.cc/static/img/logo/logo-sm-32.avif">
+        <link id="favicon-dark" rel="icon" type="image/png" href="https://dubia.cc/static/img/logo/logo-sm-32.avif" media="not all">
+        <link id="favicon-apple-touch" rel="apple-touch-icon" type="image/png" href="https://dubia.cc/static/img/logo/logo-sm-192.avif">
+        <link id="favicon-apple-touch-dark" rel="apple-touch-icon" type="image/png" href="https://dubia.cc/static/img/logo/logo-sm-dark-192.avif" media="not all">
+    
+    </head>
+    <body style="width: 100%;height: 100%;padding: 0px;margin: 0px;background:#131313;">
+        <noscript>
+            <div style="width:100%;height:100%;">
+                <ul style="list-style-type:none;margin:0px;padding:0px;margin-top:20px;">
+                    <li style="margin:20px;border: 1px solid white;border-radius:5px;text-align: center;"><a href="/en"><div style="color:white !important;font-size:2em;width:100%;height:100%;padding:50px 0px;font-weight: bold;" >English</div></a></li>
+                    <li style="margin:20px;border: 1px solid white;border-radius:5px;text-align: center;"><a href="/de"><div style="color:white !important;font-size:2em;width:100%;height:100%;padding:50px 0px;font-weight: bold;" >Deutsch</div></a></li>
+                </ul>
+            </div>
+        </noscript>
+        <script>
+            "use strict";
+            var userLang = window.navigator.language || window.navigator.userLanguage;
+            if (userLang.includes("de")) {
+                window.location.href = '/de'
+            } else {
+                window.location.href = '/en'
+            }
+        </script>
+    </body>
+</html>
