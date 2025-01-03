@@ -230,6 +230,7 @@ fn parse_paragraphs(s: &str) -> Vec<Paragraph> {
     .collect()
 }
 
+#[cfg(feature = "external")]
 fn sha256(s: &str) -> String {
     use sha2::{Sha256, Digest};
     use base64::Engine;
@@ -740,6 +741,7 @@ impl LoadedArticles {
 }
 
 /// return similar articles based on string distance for article N
+#[cfg(feature = "external")]
 fn get_similar_articles(
     s: &VectorizedArticle, 
     id: &str, 
@@ -779,6 +781,7 @@ fn get_similar_articles(
     target.into_iter().take(10).map(|s| s.1.clone()).collect()
 }
 
+#[cfg(feature = "external")]
 fn load_articles(dir: &Path) -> Result<LoadedArticles, String> {
 
     let entries = 
@@ -1664,8 +1667,10 @@ fn generate_search_index(articles: &AnalyzedArticles) -> BTreeMap<Lang, SearchIn
     }).collect()
 }
 
+type SearchHtmlResult = BTreeMap<Lang, (String, String, String)>;
+
 // Lang => (SearchBarHtml, SearchJS)
-fn search_html(articles: &AnalyzedArticles) -> BTreeMap<Lang, (String, String)> {
+fn search_html(articles: &AnalyzedArticles) -> SearchHtmlResult {
     articles.map.iter().map(|(lang, a)| {
 
         let s = a.values().map(|r| r.sha256.clone()).collect::<Vec<_>>().join(" ");
@@ -1693,11 +1698,36 @@ fn search_html(articles: &AnalyzedArticles) -> BTreeMap<Lang, (String, String)> 
         searchbar_html = searchbar_html.replace("$$VERSION$$", &version);
         searchbar_html = searchbar_html.replace("$$SEARCHBAR_PLACEHOLDER$$", &searchbar_placeholder);
         searchbar_html = searchbar_html.replace("$$SEARCH$$", &searchbar);
+        
+        let mut search_html = include_str!("../../templates/search.html").to_string();
+        search_html = search_html.replace("<!-- SEARCH -->", &searchbar_html);
+        search_html = search_html.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true));
+        search_html = search_html.replace("$$LANG$$", lang);
+        search_html = search_html.replace("$$ROOT_HREF$$", &get_root_href());
+        let title = match lang.as_str() {
+            "de" => "Suche - dubia.cc",
+            "en" => "Search - dubia.cc",
+            _ => "",
+        };
+        let description = match lang.as_str() {
+            "de" => "Durchsuche dubia.cc",
+            "en" => "Search dubia.cc",
+            _ => "",
+        };
+        let parsed = ParsedArticleAnalyzed {
+            title: title.to_string(),
+            summary: vec![Paragraph::Sentence { s: vec![SentenceItem::Text { text: description.to_string() }] }],
+            .. Default::default()
+        };
+        search_html = search_html.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(&parsed, lang, &format!("{lang}-search")));
+        search_html = search_html.replace("$$TITLE$$", title);
+
         let mut search_js = include_str!("../../static/js/search.js").to_string();
         search_js = search_js.replace("$$LANG$$", lang);
         search_js = search_js.replace("$$VERSION$$", &version);
         search_js = search_js.replace("$$NO_RESULTS$$", no_results);
-        (lang.clone(), (searchbar_html, search_js))
+
+        (lang.clone(), (searchbar_html, search_html, search_js))
     }).collect()
 }
 
@@ -1999,6 +2029,266 @@ fn render_about_sections(s: &Vec<TagSection3>) -> String {
     }).collect::<Vec<_>>().join("\r\n")
 }
 
+fn render_index_first_section(
+    lang: &str,
+    tags: &Tags,
+    articles: &AnalyzedArticles,
+) -> String {
+
+    let mut first_section = include_str!("../../templates/index.first-section.html").to_string();
+    let mut other_sections = "<style>.section-hidden { display: none; }</style>".to_string();
+    let mut sections = String::new();
+    let mut options = String::new();
+
+    for (i, t) in tags.ibelievein.iter().enumerate() {
+
+        let featured = t.featured.iter().filter_map(|id| {
+            Some(SectionLink {
+                title: articles.map.get(lang)?.get(id)?.title.clone(),
+                slug: id.to_string(),
+            })
+        }).collect::<Vec<_>>();
+        
+        let items = render_section_items(lang, &featured);
+        let first = i == 0;
+        let display_hidden = match first {
+            true => "",
+            false => "display:none;",
+        };
+        let classes = "index-first-section list list-level-1";
+        let tag = &t.tag;
+        let option = &t.option;
+        sections += &format!("<ul id='index-section-{tag}' class='{classes}' style='margin-top:20px;{display_hidden}'>{items}</ul>");
+        options += &format!("<option value='{tag}'>{option}</option>");
+        let other_sections_html = tags.ibelievein.iter()
+            .filter(|q| q.tag != t.tag)
+            .map(|q| {
+
+                let hidden_class = match first {
+                    true => "",
+                    false => "section-hidden",
+                };
+
+                let classes = format!("{hidden_class} invert invert-of-{tag}");
+                let other_featured = q.featured.iter().filter_map(|id| {
+                    Some(SectionLink {
+                        title: articles.map.get(lang)?.get(id)?.title.clone(),
+                        slug: id.to_string(),
+                    })
+                }).collect::<Vec<_>>();
+                
+                render_index_section(lang, &q.tag,  &classes, &q.title, &other_featured)
+            }).collect::<Vec<_>>().join("");
+        other_sections += &other_sections_html;
+    }
+
+
+
+    let text_ibelieve = match lang {
+        "de" => "Ich glaube an",
+        "en" => "I believe in",
+        _ => "",
+    };
+    first_section = first_section.replace("$$I_BELIEVE_IN$$", &text_ibelieve);
+    first_section = first_section.replace("<!-- SECTIONS -->", &sections);
+    first_section = first_section.replace("<!-- OTHER_SECTIONS -->", &other_sections);
+    first_section = first_section.replace("<!-- OPTIONS -->", &options);
+    first_section
+    /*
+        for t in tags[lang]["ibelievein"]:
+            featured = []
+            for f in t["featured"]:
+                slug = f
+                title = articles[lang + "/" + slug].get("title", "")
+                featured.append({ "slug": slug, "title": title })
+            t["featured"] = featured
+
+        text_ibelieve = "I believe in"
+        if lang == "de":
+            text_ibelieve = "Ich glaube an"
+
+        ibelievein = tags[lang]["ibelievein"]
+        first_section = read_file("./templates/index.first-section.html")
+        other_sections = "<style>.section-hidden { display: none; }</style>"
+        sections = ""
+        options = ""
+        first = True
+
+        for t in ibelievein:
+            li_items = render_section_items(lang, t["featured"])
+            display_hidden = "display:none;"
+            if first:
+                display_hidden = ""
+            classes = "index-first-section list list-level-1"
+            sections += "<ul id='index-section-" + t["tag"] + "' class='" + classes + "' style='margin-top:20px;" + display_hidden + "'>" + li_items + "</ul>"
+            options += "<option value='" + t["tag"] + "'>" + t["option"] + "</option>"
+            for q in ibelievein:
+                if t["tag"] == q["tag"]:
+                    continue
+                hidden_class = "section-hidden"
+                if first:
+                    hidden_class = ""
+                other_sections += render_index_section(lang, q["tag"],  hidden_class + " invert invert-of-" + t["tag"], q["title"], q["featured"])
+            first = False
+
+    */
+
+}
+
+fn render_other_index_sections(
+    lang: &str,
+    tags: &Tags,
+    articles: &AnalyzedArticles,
+) -> Result<String, String> {
+
+    let articles = articles.map.get(lang)
+    .ok_or_else(|| format!("render_other_index_sections: unknown language {lang}"))?;
+
+    Ok(tags.iwanttolearn.iter().map(|(id, v)| {
+
+        let featured = v.featured.iter().filter_map(|f_id| {
+            let featured_title = articles.get(f_id)?.title.clone();
+            Some(SectionLink {
+                slug: f_id.to_string(),
+                title: featured_title,
+            })
+        }).collect::<Vec<_>>();
+
+        render_index_section(lang, id, "", &v.title, &featured)
+    }).collect::<Vec<_>>().join(""))
+}
+
+fn render_index_html(
+    lang: &str, 
+    articles: &AnalyzedArticles, 
+    tags: &BTreeMap<Lang, Tags>,
+    search_html: &SearchHtmlResult,
+) -> Result<String, String> {
+    
+    let tags = tags.get(lang)
+    .ok_or_else(|| format!("render_index_html: unknown language {lang}"))?;
+
+    let (searchbar_html, _, _) = search_html.get(lang)
+    .ok_or_else(|| format!("render_index_html (searchbar_html): unknown language {lang}"))?;
+
+    let multilang = include_str!("../../templates/multilang.tags.html");
+    let logo_svg = include_str!("../../static/img/logo/full.svg");
+    
+    let title = get_title(lang, &ParsedArticleAnalyzed::default());
+    let description = get_description(lang, &ParsedArticleAnalyzed::default());
+    let keywords = match lang {
+        "en" => vec![
+            "catholic", 
+            "church", 
+            "church fathers", 
+            "faith", 
+            "meaning of life", 
+            "evolution", 
+            "protestant", 
+            "islam"
+        ],
+        "de" => vec![
+            "katholisch", 
+            "kirche", 
+            "kirchenväter", 
+            "glauben", 
+            "sinn des lebens", 
+            "evolution", 
+            "evangelisch", 
+            "islam"
+        ],
+        _ => vec![],
+    }.into_iter().map(String::from).collect();
+
+    let a = ParsedArticleAnalyzed {
+        title: title.clone(),
+        summary: vec![Paragraph::Sentence { s: vec![SentenceItem::Text { text: description.clone() }] }],
+        tags: keywords,
+        .. Default::default()
+    };
+
+    let select_faith = match lang {
+        "de" => "Glauben auswählen",
+        "en" => "Select Faith",
+        _ => "",
+    };
+
+    let page_help_content = match lang {
+        "de" => vec![
+            "Einstellungen zu <em>Nachtmodus</em> (<span class='icon-moon-solid'></span>),",
+            "<em>Lesemodus</em> (<span class='icon-book-open-solid'></span>), ",
+            "<em>Popups</em> (<span class='icon-message-slash-solid'></span>) und ",
+            "<em>Suche</em> (<span class='icon-magnifying-glass'></span>) finden Sie im Menü in der ",
+            "<span class='desktop-not'>unteren rechten</span>",
+            "<span class='mobile-not'>oberen rechten</span> ",
+            "Ecke (<span class='icon-gear-solid'></span>)",
+        ],
+        "en" => vec![
+            "To use <em>dark-mode</em> (<span class='icon-moon-solid'></span>) or",
+            "<em>reader-mode</em> (<span class='icon-book-open-solid'></span>), or ",
+            "<em>disable popups</em> (<span class='icon-message-slash-solid'></span>), or ",
+            "<em>search</em> the site (<span class='icon-magnifying-glass'></span>), use the floating toggle bar in the ",
+            "<span class='desktop-not'>lower-right</span>",
+            "<span class='mobile-not'>upper-right</span> ",
+            "corner (<span class='icon-gear-solid'></span>)</p>",
+        ],
+        _ => vec![],
+    }.join("");
+    
+    let page_help = include_str!("../../templates/navigation-help.html")
+    .replace("$$PAGE_HELP$$", &page_help_content);
+
+    let page_descr = match lang {
+        "de" => vec![
+            "<strong>dubia.cc</strong> ist die eine deutsche<br/>",
+            "Sammlung an Artikeln über den<br/>",
+            "traditionellen katholischen Glauben",
+        ],
+        "en" => vec![
+            "<strong>dubia.cc</strong> is a collection",
+            "<br/>of articles explaining the<br/>",
+            "traditional Catholic faith",
+        ],
+        _ => vec![],
+    }.join("");
+
+    let page_description = include_str!("../../templates/page-description.html")
+    .replace("$$DESCR$$", &page_descr);
+
+    let mut index_body_html = include_str!("../../templates/index-body.html").to_string();
+    index_body_html = index_body_html.replace("<!-- SECTIONS -->", &render_index_first_section(lang, tags, articles));
+    index_body_html = index_body_html.replace("<!-- SECTION_EXTRA -->", &render_other_index_sections(lang, tags, articles)?);
+    index_body_html = index_body_html.replace("<!-- SEARCHBAR -->", &searchbar_html);
+
+    let title_id = format!("{lang}-index");
+    let mut index_html = include_str!("../../templates/index-template.html").to_string();
+    index_html = index_html.replace("<!-- BODY_ABSTRACT -->", &index_body_html);
+    index_html = index_html.replace("<!-- PAGE_DESCRIPTION -->", &page_description);
+    index_html = index_html.replace("<!-- SVG_LOGO_INLINE -->", logo_svg);
+    index_html = index_html.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(&a, lang, &title_id));
+    index_html = index_html.replace("<!-- PAGE_HELP -->", &page_help);
+    index_html = index_html.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, false));
+    index_html = index_html.replace("<!-- MULTILANG_TAGS -->", multilang);
+    index_html = index_html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content");
+    index_html = index_html.replace("$$TITLE$$", &title);
+    index_html = index_html.replace("$$DESCRIPTION$$", &description);
+    index_html = index_html.replace("$$TITLE_ID$$", &title_id);
+    index_html = index_html.replace("$$LANG$$", lang);
+    index_html = index_html.replace("$$SLUG$$", "");
+    index_html = index_html.replace("$$SELECT_FAITH$$", select_faith);
+    index_html = index_html.replace("$$ROOT_HREF$$", get_root_href());
+    index_html = index_html.replace("$$PAGE_HREF$$", &(get_root_href().to_string() + "/" + lang));
+    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/img/logo/logo-smooth.svg\" as=\"image\">", "<link rel=\"preload\" href=\"/static/img/ornament/sun-verginasun-black.svg\" as=\"image\">");
+    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/ssfp/ssp/SourceSansPro-BASIC-Regular.ttf\" as=\"font\" type=\"font/ttf\" crossorigin>", "");
+    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/quivira/Quivira-SUBSETTED.ttf\" as=\"font\" type=\"font/ttf\" crossorigin>", "");
+    
+    Ok(index_html)
+}
+
+fn minify(input: &str) -> Vec<u8> {
+    minify_html::minify(input.as_bytes(), &minify_html::Cfg::default())
+}
+
 fn main() -> Result<(), String> {
 
     // Setup 
@@ -2043,9 +2333,9 @@ fn main() -> Result<(), String> {
 
             match s {
                 Ok(s) => {
-                    let path = cwd.join(lang.clone() + "2");
+                    let path = cwd.join(lang);
                     let _ = std::fs::create_dir_all(&path);
-                    let _ = std::fs::write(path.join(slug.to_string() + ".html"), s);
+                    let _ = std::fs::write(path.join(slug.to_string() + ".html"), &minify(&s));
                 },
                 Err(e) if e.is_empty() => { },
                 Err(q) => return Err(q),
@@ -2058,7 +2348,7 @@ fn main() -> Result<(), String> {
     for (lang, authors) in author_pages.iter() {
         let _ = std::fs::create_dir_all(cwd.join(&lang).join("author"));
         for (a, v) in authors {
-            let _ = std::fs::write(cwd.join(&lang).join("author").join(&format!("{a}.html")), v);
+            let _ = std::fs::write(cwd.join(&lang).join("author").join(&format!("{a}.html")), &minify(&v));
         }
     }
 
@@ -2066,21 +2356,27 @@ fn main() -> Result<(), String> {
     let si = generate_search_index(&analyzed);
     for (lang, si) in si.iter() {
         let json = serde_json::to_string(&si).unwrap_or_default();
-        let _ = std::fs::write(cwd.join(lang.to_string() + "2").join("index.json"), json);
+        let _ = std::fs::write(cwd.join(lang).join("index.json"), json);
     }
 
     // Write special pages
     let langs = analyzed.map.keys().cloned().collect::<Vec<_>>();
-    for l in langs {
+    for l in langs.iter() {
         let sp = get_special_pages(&l, &tags, &articles_by_tag, &articles_by_date)?;
         for s in sp.iter() {
             let (path, html) = special2html(&l, s);
-            let _ = std::fs::write(cwd.join(l.to_string() + "2").join(path), &html);
+            let _ = std::fs::write(cwd.join(l).join(path), &minify(&html));
         }
     }
 
-    // Write index pages
-
+    // Write index + /search pages
+    let si = search_html(&analyzed);
+    for (lang, (_searchbar_html, search_html, search_js)) in si.iter() {
+        let _ = std::fs::write(cwd.join(lang).join("search.js"), search_js);
+        let _ = std::fs::write(cwd.join(lang).join("search.html"), &minify(&search_html));
+        let index_html = render_index_html(lang, &analyzed, &tags, &si)?;
+        let _ = std::fs::write(cwd.join(&format!("{lang}.html")), &minify(&index_html));
+    }
 
     // Write gitignore
     let _ = std::fs::write(cwd.join(".gitignore"), generate_gitignore(&articles));

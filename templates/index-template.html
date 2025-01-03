@@ -171,7 +171,7 @@
 			function injectSearchScript() {
 				var resource = document.createElement('script'); 
 				resource.defer = "true";
-				resource.src = "/static/js/search-$$LANG$$.js";
+				resource.src = "/$$LANG$$/search.js";
 				var script = document.getElementById('scratchpad');
 				script.parentNode.insertBefore(resource, script);
 			}
