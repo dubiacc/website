@@ -29,7 +29,7 @@ jobs:
         run: |
           cp ./md2json2/md2json-linux ./md2json-bin
           chmod +x ./md2json-bin
-          ./md2json-bin
+          ./md2json-bin --production
       - name: Remove unnecessary files
         run: |
           rm -rf ./*.DS_Store
