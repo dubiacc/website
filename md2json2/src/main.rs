@@ -978,6 +978,48 @@ fn generate_dropcap_css(a: &ParsedArticleAnalyzed) -> String {
     text.join("\r\n")
 }
 
+fn strip_comments(s: &str) -> String {
+    let mut inside = false;
+    let chars = s.chars().collect::<Vec<_>>();
+    let mut c = Vec::new();
+    let mut i = chars.iter().peekable();
+    while let Some(a) = i.next() {
+        if *a == '/' {
+            if i.peek().copied().copied() == Some('*') {
+                let _ = i.next();
+                inside = true;
+                continue;
+            }
+        } else if *a == '*' {
+            if i.peek().copied().copied() == Some('/') {
+                let _ = i.next();
+                inside = false;
+                continue;
+            }
+        }
+
+        if !inside {
+            c.push(*a);
+        }
+    }
+    c.into_iter().collect()
+}
+
+fn minify_css(s: &str) -> String {
+    use minifier::css;
+    let s = strip_comments(s);
+    let s = s.replace("xmlns=\"http://www.w3.org/2000/svg\"", "");
+    let s = match css::minify(&s) {
+        Ok(o) => o.to_string(),
+        Err(e) => {
+            println!("error cssmin: {e:?}");
+            let _ = std::fs::write("./output.css", &s);
+            s.to_string()
+        },  
+    };
+    s
+}
+
 fn head(
     a: &ParsedArticleAnalyzed, 
     lang: &str,
@@ -987,7 +1029,7 @@ fn head(
     let darklight = include_str!("../../templates/darklight.html");
     let head_css = include_str!("../../static/css/head.css");
     let style_css = include_str!("../../static/css/style.css");
-    let critical_css = head_css.to_string() + style_css;
+    let critical_css = minify_css(&(head_css.to_string() + "\r\n" + &style_css));
     let critical_css_2 = "<style id='critical-css'>\r\n".to_string() + &critical_css + "    </style>";
 
     let mut head = include_str!("../../templates/head.html").to_string();
@@ -2060,6 +2102,7 @@ fn render_index_first_section(
         let option = &t.option;
         sections += &format!("<ul id='index-section-{tag}' class='{classes}' style='margin-top:20px;{display_hidden}'>{items}</ul>");
         options += &format!("<option value='{tag}'>{option}</option>");
+        /*
         let other_sections_html = tags.ibelievein.iter()
             .filter(|q| q.tag != t.tag)
             .map(|q| {
@@ -2080,6 +2123,7 @@ fn render_index_first_section(
                 render_index_section(lang, &q.tag,  &classes, &q.title, &other_featured)
             }).collect::<Vec<_>>().join("");
         other_sections += &other_sections_html;
+        */
     }
 
 
@@ -2286,7 +2330,23 @@ fn render_index_html(
 }
 
 fn minify(input: &str) -> Vec<u8> {
-    minify_html::minify(input.as_bytes(), &minify_html::Cfg::default())
+    let min = minify_html::Cfg {
+        do_not_minify_doctype: true,
+        ensure_spec_compliant_unquoted_attribute_values: false,
+        keep_closing_tags: true,
+        keep_html_and_head_opening_tags: true,
+        keep_spaces_between_attributes: true,
+        keep_comments: false,
+        keep_input_type_text_attr: true,
+        keep_ssi_comments: false,
+        preserve_brace_template_syntax: true,
+        preserve_chevron_percent_template_syntax: true,
+        minify_css: true,
+        minify_js: true,
+        remove_bangs: true,
+        remove_processing_instructions: true,
+    };
+    minify_html::minify(input.as_bytes(), &min)
 }
 
 fn main() -> Result<(), String> {
@@ -2376,6 +2436,7 @@ fn main() -> Result<(), String> {
         let _ = std::fs::write(cwd.join(lang).join("search.html"), &minify(&search_html));
         let index_html = render_index_html(lang, &analyzed, &tags, &si)?;
         let _ = std::fs::write(cwd.join(&format!("{lang}.html")), &minify(&index_html));
+        let _ = std::fs::write(cwd.join(lang).join("head.js"), &strip_comments(include_str!("../../static/js/head.js")));
     }
 
     // Write gitignore

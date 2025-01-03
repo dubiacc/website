@@ -6,13 +6,18 @@ edition = "2021"
 [dependencies]
 base64 = "0.22.1"
 collection_macros = "0.2.0"
-minify-html = "0.15.0"
+minify-html = "*"
+css-minify = "*"
+minifier = "*"
 serde = "1.0.216"
 serde_derive = "1.0.216"
 serde_json = "1.0.133"
 sha2 = { version = "0.10.8", optional = true }
 strsim = { version = "0.11.1", optional = true }
 walkdir = { version = "*", optional = true }
+regex = "1.11.1"
+minify-js = "0.6.0"
+better-minify-js = "0.7.0"
 
 [features]
 default = ["external"]

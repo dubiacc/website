@@ -1,7 +1,0 @@
-# macos: install with `brew install mingw-w64` (NOTE: this can take a while to install)
-[target.x86_64-pc-windows-gnu]
-linker = "x86_64-w64-mingw32-gcc"
-
-# macos: install with `brew install SergioBenitez/osxct/x86_64-unknown-linux-gnu`
-[target.x86_64-unknown-linux-gnu]
-linker = "x86_64-unknown-linux-gnu-gcc"
