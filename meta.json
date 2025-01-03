@@ -738,13 +738,13 @@
                 {
                     "title": "Atheism",
                     "option": "no God",
-                    "tag": "atheismus",
+                    "tag": "atheism",
                     "featured": []
                 },
                 {
                     "title": "Protestant Church",
-                    "option": "the Protestant Church",
-                    "tag": "evangelisch",
+                    "option": "Protestantism",
+                    "tag": "protestantism",
                     "featured": []
                 },
                 {
@@ -840,7 +840,7 @@
                 "middle-ages": "Middle Ages",
                 "church-fathers": "Church Fathers",
                 "evolution": "Evolution",
-                "moral-teaching": "Moral Teaching",
+                "catholic-morality": "Catholic Morality",
                 "gnosticism": "Gnosticism",
                 "early-church": "Early Church",
                 "prayer": "Prayers",

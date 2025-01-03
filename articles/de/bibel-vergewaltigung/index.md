@@ -70,29 +70,6 @@ weniger im Bezug auf sexuelle Übergriffe, in denen das Wort
 In diesem Kontext wird klar, dass taphas sich auf das physische Ergreifen und 
 shakab sich auf das sexuelle Ergreifen bezieht.
 
-## Meinungen von Theologen
-
-> 5. Mose 22,28-29 spricht nicht von Vergewaltigung, sondern von 
-> einem Fall, in dem ein Mann eine Jungfrau verführt hat und daher 
-> moralisch verpflichtet ist, sie zu heiraten.
->
-> -- [Greg L. Bahnsen](src): [quelle](src)
-
-> Das 'Ergreifen' und 'Beiwohnen' impliziert ihre Zustimmung und 
-> ist kein Ausdruck einer Vergewaltigung, wie es in 5. Mose 22,25 der Fall ist.
->
-> -- [John Gill](src): [quelle](src)
-
-> Das in Vers 28 verwendete Verb ist schwächer als das für 'zwingen' 
-> verwendete Verb in Vers 25 und impliziert nicht notwendigerweise Gewalt.
->
-> -- [James Jordan](src): [quelle](src)
-
-> Der Verführer einer unverlobten Jungfrau war verpflichtet, sie zu 
-> heiraten, den Brautpreis zu zahlen und verlor das Recht auf Scheidung.
->
-> -- [Meredith Kline](src): [quelle](src)
-
 ## Zusammenfassung
 
 Sinngemäß wird das Gesetz wiederholt in 2. Mose 22, 16-17,

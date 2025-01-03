@@ -9,20 +9,25 @@ fn main() -> Result<(), String> {
         cwd = cwd.parent().ok_or("cannot find /static dir in current path")?.to_path_buf();
     }
 
-    let dir = cwd.join("static");
+    let dirs = vec![
+        cwd.join("static"),
+        cwd.join("articles"),
+    ];
 
-    walkdir::WalkDir::new(dir)
-    .into_iter()
-    .for_each(|entry| {
-        if let Ok(entry) = entry {
-            let entry = entry.path();
-            let filename = entry.file_name().and_then(|s| s.to_str()).unwrap_or("");
-            let allowed = ["png", "jpeg", "jpg", "webp", "bmp"];
-            if !filename.ends_with("avif") && allowed.iter().any(|s| filename.ends_with(s)) {
-                let _ = image2avif(&entry);
+    for dir in dirs.iter() {
+        walkdir::WalkDir::new(dir)
+        .into_iter()
+        .for_each(|entry| {
+            if let Ok(entry) = entry {
+                let entry = entry.path();
+                let filename = entry.file_name().and_then(|s| s.to_str()).unwrap_or("");
+                let allowed = ["png", "jpeg", "jpg", "webp", "bmp"];
+                if !filename.ends_with("avif") && allowed.iter().any(|s| filename.ends_with(s)) {
+                    let _ = image2avif(&entry);
+                }
             }
-        }
-    });
+        });
+    }
 
     Ok(())
 }
