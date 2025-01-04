@@ -949,10 +949,6 @@ fn gen_sw_paths(cwd: &Path, articles: &AnalyzedArticles, meta: &MetaJson) -> Str
         }
     }).collect::<Vec<_>>();
 
-    for (lang, slug, image, rev) in l {
-        a.push(format!("    {{ url: '/{lang}/{slug}/{image}', revision: '{rev}' }}"));
-    }
-
     // /index.html
     a.push(format!("    {{ url: '/index.html', revision: '{}' }}", sha256(include_str!("../../index.html"))));
 
@@ -998,6 +994,15 @@ fn gen_sw_paths(cwd: &Path, articles: &AnalyzedArticles, meta: &MetaJson) -> Str
     a.push(format!("    {{ url: '/static/img/ornament/three-wavy-lines-ornament-right.svg', revision: '1' }}", )); // never changes
     a.push(format!("    {{ url: '/static/img/ornament/three-wavy-lines-ornament-left.svg', revision: '1' }}", )); // never changes
     a.push(format!("    {{ url: '/static/img/shop/rosary.avif', revision: '1' }}", )); // never changes
+
+    a.push(format!("    {{ url: '/static/img/logo/logo-sm-32.avif', revision: '1' }}"));
+    a.push(format!("    {{ url: '/static/img/logo/logo-sm-dark-32.avif', revision: '1' }}"));
+    a.push(format!("    {{ url: '/death.html', revision: '1' }}"));
+    a.push(format!("    {{ url: '/manifest.json', revision: '1' }}"));
+
+    for (lang, slug, image, rev) in l {
+        a.push(format!("    {{ url: '/{lang}/{slug}/{image}', revision: '{rev}' }}"));
+    }
 
     format!("workbox.precaching.precacheAndRoute([\r\n{}\r\n]);", a.join(",\r\n"))
 }
@@ -1162,9 +1167,9 @@ fn strip_comments(s: &str) -> String {
 }
 
 fn minify_css(s: &str) -> String {
-    use minifier::css;
     let s = strip_comments(s);
     /*
+    use minifier::css;
     let s = match css::minify(&s) {
         Ok(o) => o.to_string(),
         Err(e) => {
