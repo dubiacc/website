@@ -93,3 +93,8 @@ Gott in Einheit bringt. Diese Realität ist sowohl biblisch begründet als auch
 durch die Kirchenväter, den Katechismus und die Theologie bezeugt. Jeder Mensch
 ist eingeladen, diese Realität im Glauben anzunehmen.  
 
+```
+{
+    "date": "1680-01-01"
+}
+```

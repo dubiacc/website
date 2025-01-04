@@ -121,6 +121,6 @@ dieselben Sünden begehen [(Matthäus 7,2)](https://k-bibel.de/ARN/Matthäus7#2)
 
 ```
 {
-    "date": "2025-01-04"
+    "date": "1680-01-04"
 }
 ```

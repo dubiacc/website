@@ -1,4 +1,4 @@
-# Ist der Wein für die Kommunion notwendig?
+# Braucht die Kommunion den Wein?
 
 ## Katechismus nach dem Hl. Borromeo
 
@@ -100,3 +100,9 @@ der ganze Christus gegenwärtig.
 [^1]: Papst Gelasius, *De consiliis distinctis*, 2. Kapitel 12.
 
 [^2]: Zwölftes Konzil von Toledo, *Oan. 5*.
+
+```
+{
+    "date": "1680-01-01"
+}
+```

@@ -79,7 +79,7 @@ Wolfgang Behringer in Europa unter 1000 verurteile Hexen durch kirchliche Gerich
 Somit ergibt sich eine Prozentuelle Tötung der Hexen durch die Katholische Kirche 
 von "nur" 2% und die restlichen 98% sind dem weltlichen Gericht durch Kaiser 
 und Königreiche zu verdanken. Aus den Zahlen ist ersichtlich dass die Hexenverfolgung, 
-viel eher eine Praktik der Weltlichen Macht als der der Kirche war.
+viel eher eine Praktik der weltlichen Macht als der der Kirche war.
 
 ## Kirche gegen Aberglauben
 

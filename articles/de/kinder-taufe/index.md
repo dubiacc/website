@@ -75,3 +75,9 @@ Von außerbiblischen Christen haben wir ebenso weitere Zeugnisse für die Kinder
 [^1]: [Infant Baptism – Catholic Answers](https://www.catholic.com/magazine/online-edition/infant-baptism)  
 [^2]: [Early Teachings on Infant Baptism – Catholic Answers](https://www.catholic.com/tract/early-teachings-on-infant-baptism)  
 [^3]: [Infant Baptism – Church Fathers](https://www.churchfathers.org/infant-baptism)
+
+```
+{
+    "date": "1680-01-01"
+}
+```
