@@ -22,7 +22,7 @@ fn main() -> Result<(), String> {
                 let entry = entry.path();
                 let filename = entry.file_name().and_then(|s| s.to_str()).unwrap_or("");
                 let allowed = ["png", "jpeg", "jpg", "webp", "bmp"];
-                if !filename.ends_with("avif") && allowed.iter().any(|s| filename.ends_with(s)) {
+                if !filename.ends_with("avif") && !filename.contains("logo-sm") && allowed.iter().any(|s| filename.ends_with(s)) {
                     let _ = image2avif(&entry);
                 }
             }

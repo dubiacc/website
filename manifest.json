@@ -1,10 +1,21 @@
 {
-    "name": "dubia",
+    "name": "dubia.cc: Catholic apologetics, articles and prayers",
+    "description": "dubia is a Catholic apologetics resource for traditional Catholic articles",
     "id": "dubia.cc/v1",
+    "scope": "https://dubia.cc",
+    "scope_extensions": [],
+    "handle_links": "not-preferred",
+    "launch_handler": {
+        "client_mode": ["navigate-existing", "auto"]
+    },
+    "file_handlers": [],
+    "protocol_handlers": [],
     "short_name": "dubia",
     "start_url": "index.html",
     "display": "standalone",
     "background_color": "#161616",
+    "theme_color": "#161616",
+    "dir": "auto",
     "categories": ["education"],
     "display_override": ["minimal-ui"],
     "orientation": "portrait-primary",
