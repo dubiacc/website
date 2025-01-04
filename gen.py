@@ -52,7 +52,7 @@ def load_templates():
     return templates
 
 def get_root_href():
-    root_href = "http://127.0.0.1:8080"
+    root_href = "http://localhost/:8080"
     if is_prod():
         root_href = "https://dubia.cc"
     return root_href
@@ -651,7 +651,7 @@ def generate_dropcap_css(initiale):
 
     text = "@font-face {"
     text += "    font-family: 'Kanzlei Initialen';"
-    text += "    src: url('/static/font/dropcap/kanzlei/Kanzlei-Initialen-" + initiale + ".ttf') format('truetype');"
+    text += "    src: url('/static/font/kanzlei/Kanzlei-Initialen-" + initiale + ".ttf') format('truetype');"
     text += "    font-display: swap;"
     text += "    unicode-range: " + dropcap_map[initiale] + ";"
     text += "}"
@@ -980,7 +980,7 @@ def render_special_page(templates, lang, sections, pagemeta, page_id):
     return special
            
 def render_index_html(lang, articles, tags):
-    index_html = read_file("./templates/index-template.html")
+    index_html = read_file("./templates/index.html")
     multilang = read_file("./templates/multilang.tags.html")
     index_body_html = read_file("./templates/index-body.html")
     index_body_html = index_body_html.replace("<!-- SECTIONS -->", render_index_first_section(lang, tags, articles))

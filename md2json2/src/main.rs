@@ -875,8 +875,131 @@ fn get_root_href() -> &'static str {
     if is_prod() {
         "https://dubia.cc"
     } else {
-        "http://127.0.0.1:8080"
+        "http://localhost:8080"
     }
+}
+
+fn gen_serviceworker_js(cwd: &Path, articles: &AnalyzedArticles, meta: &MetaJson) -> String {
+    let mut s = include_str!("../../templates/sw.js").to_string();
+    s = s.replace("workbox.precaching.precacheAndRoute([]);", &gen_sw_paths(cwd, articles, meta));
+    s = s.replace("importScripts('/static/js/workbox-sw.js');", include_str!("../../static/js/workbox-sw.js"));
+    s
+}
+
+fn gen_sw_paths(cwd: &Path, articles: &AnalyzedArticles, meta: &MetaJson) -> String {
+    
+    let mut site_revision = Vec::new();
+    let mut a = articles.map.iter().flat_map(|(lang, v)| {
+        
+        let mut q = v.iter().map(move |(slug, a)| {
+            format!("    {{ url: '/{lang}/{slug}.html', revision: '{}' }}", a.sha256)
+        }).collect::<Vec<_>>();
+
+        q.extend(v.iter().map(|(slug, a)| {
+            site_revision.push(a.sha256.clone());
+            format!("    {{ url: '/articles/{lang}/{slug}/index.md', revision: '{}' }}", a.sha256)
+        }));
+
+        q
+    }).collect::<Vec<_>>();
+
+    let site_revision = sha256(&site_revision.join(" "));
+    for l in articles.map.keys() {
+        a.push(format!("    {{ url: '/{l}.html', revision: '{site_revision}' }}"));
+        a.push(format!("    {{ url: '/{l}/search.js', revision: '{site_revision}' }}"));
+        a.push(format!("    {{ url: '/{l}/search.html', revision: '{site_revision}' }}"));
+        a.push(format!("    {{ url: '/{l}/head.js', revision: '{site_revision}' }}"));
+        a.push(format!("    {{ url: '/{l}/index.json', revision: '{site_revision}' }}"));
+    }
+
+    for author in meta.authors.keys() {
+        for lang in articles.map.keys() {
+            let q = author.replace(":", "-");
+            let meta_v = sha256(&serde_json::to_string(&meta).unwrap_or_default());
+            a.push(format!("    {{ url: '/{lang}/author/{q}.html', revision: '{meta_v}' }}"));
+        }
+    }
+
+    for lang in articles.map.keys() {
+        for sp in get_special_pages(lang, meta, &ArticlesByTag::default(), &ArticlesByDate::default()).unwrap_or_default() {
+            a.push(format!("    {{ url: '/{lang}/{}', revision: '{site_revision}' }}", sp.filepath));
+        }
+    }
+
+    // add all images from articles
+    let l = walkdir::WalkDir::new(cwd.join("articles"),)
+    .max_depth(5)
+    .into_iter()
+    .filter_map(|entry| {
+        let entry = entry.map_err(|e| e.to_string()).ok()?;
+        let entry = entry.path();
+        let ext = entry.extension().and_then(|s| s.to_str());
+        let fname = entry.file_name()?.to_str()?.to_string();
+        let last_modified = format!("{:?}", entry.metadata().ok()?.modified().ok()?)
+        .chars().filter(|c| c.is_numeric()).collect::<String>();
+
+        if ext == Some(".avif") || ext == Some("avif") {
+            let slug = entry.parent()?;
+            let lang = slug.parent()?;
+            let slug = slug.file_name()?.to_str()?.to_string();
+            let lang = lang.file_name()?.to_str()?.to_string();
+            Some((lang, slug, fname, last_modified))
+        } else {
+            None
+        }
+    }).collect::<Vec<_>>();
+
+    for (lang, slug, image, rev) in l {
+        a.push(format!("    {{ url: '/{lang}/{slug}/{image}', revision: '{rev}' }}"));
+    }
+
+    // /index.html
+    a.push(format!("    {{ url: '/index.html', revision: '{}' }}", sha256(include_str!("../../index.html"))));
+
+    // author pages
+    // special pages
+
+    // fonts
+    a.push(format!("    {{ url: '/static/font/ssp/SourceSansPro-BASIC-Semibold.woff2', revision: '1' }}"));
+    a.push(format!("    {{ url: '/static/font/ssp/SourceSansPro-BASIC-Bold.woff2', revision: '1' }}"));
+    a.push(format!("    {{ url: '/static/font/ssp/SourceSansPro-BASIC-RegularItalic.woff2', revision: '1' }}"));
+    a.push(format!("    {{ url: '/static/font/ssp/SourceSansPro-BASIC-Regular.woff2', revision: '1' }}"));
+    a.push(format!("    {{ url: '/static/font/ssp/SourceSansPro-BASIC-BoldItalic.woff2', revision: '1' }}"));
+    a.push(format!("    {{ url: '/static/font/ssp/SourceSansPro-BASIC-SemiboldItalic.woff2', revision: '1' }}"));
+    a.push(format!("    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-Regular.woff2', revision: '1' }}"));
+    a.push(format!("    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-RegularItalic.woff2', revision: '1' }}"));
+    a.push(format!("    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-Bold.woff2', revision: '1' }}"));
+    a.push(format!("    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-SemiboldItalic.woff2', revision: '1' }}"));
+    a.push(format!("    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-Semibold.woff2', revision: '1' }}"));
+    a.push(format!("    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-BoldItalic.woff2', revision: '1' }}"));
+
+    for i in 'A'..'Z' {
+        a.push(format!("    {{ url: '/static/font/kanzlei/Kanzlei-Initialen-{i}.ttf', revision: '1' }}", )); // never changes
+    }
+
+    a.push(format!("    {{ url: '/static/js/search.js', revision: '{}' }}", sha256(include_str!("../../static/js/search.js"))));
+    a.push(format!("    {{ url: '/static/js/head.js', revision: '{}' }}", sha256(include_str!("../../static/js/head.js"))));
+    a.push(format!("    {{ url: '/static/css/head.css', revision: '{}' }}", sha256(include_str!("../../static/css/head.css"))));
+    a.push(format!("    {{ url: '/static/css/style.css', revision: '{}' }}", sha256(include_str!("../../static/css/style.css"))));
+    
+    a.push(format!("    {{ url: '/static/img/logo/logo-smooth.svg', revision: '1' }}"));
+    a.push(format!("    {{ url: '/static/img/watercolor.avif', revision: '1' }}", )); // never changes
+    a.push(format!("    {{ url: '/static/img/death.avif', revision: '1' }}", )); // never changes
+    a.push(format!("    {{ url: '/static/img/icon/icons.svg', revision: '1' }}", )); // never changes
+    a.push(format!("    {{ url: '/static/img/shop/books.avif', revision: '1' }}", )); // never changes
+    a.push(format!("    {{ url: '/static/img/shop/donation.avif', revision: '1' }}", )); // never changes
+    a.push(format!("    {{ url: '/static/img/shop/mensfashion.avif', revision: '1' }}", )); // never changes
+    a.push(format!("    {{ url: '/static/img/shop/womansfashion.avif', revision: '1' }}", )); // never changes
+    a.push(format!("    {{ url: '/static/img/shop/rosary.avif', revision: '1' }}", )); // never changes
+    a.push(format!("    {{ url: '/static/img/ornament/asterism-triplewhitestar.svg', revision: '1' }}", )); // never changes
+    a.push(format!("    {{ url: '/static/img/ornament/sun-verginasun-black.svg', revision: '1' }}", )); // never changes
+    a.push(format!("    {{ url: '/static/img/ornament/japanesecrest-tsukinihoshi-dottedmoon.svg', revision: '1' }}", )); // never changes
+    a.push(format!("    {{ url: '/static/img/ornament/sequential-nav-icons-arabesque.svg', revision: '1' }}", )); // never changes
+    a.push(format!("    {{ url: '/static/img/ornament/three-wavy-lines-ornament-right.svg', revision: '1' }}", )); // never changes
+    a.push(format!("    {{ url: '/static/img/ornament/three-wavy-lines-ornament-left.svg', revision: '1' }}", )); // never changes
+    a.push(format!("    {{ url: '/static/img/shop/rosary.avif', revision: '1' }}", )); // never changes
+
+    format!("workbox.precaching.precacheAndRoute([\r\n{}\r\n]);", a.join(",\r\n"))
 }
 
 fn generate_gitignore(articles: &LoadedArticles) -> String {
@@ -888,6 +1011,7 @@ fn generate_gitignore(articles: &LoadedArticles) -> String {
     }
     filenames.insert("/venv".into());
     filenames.insert("*.md.json".into());
+    filenames.insert("sw.js".into());
     filenames.insert("md2json-bin".into());
     filenames.insert("index.json".into());
     filenames.insert("index.html".into());
@@ -1001,7 +1125,7 @@ fn generate_dropcap_css(a: &ParsedArticleAnalyzed) -> String {
     let text = vec![
         "@font-face {".to_string(),
         "    font-family: 'Kanzlei Initialen';".to_string(),
-        format!("    src: url('/static/font/dropcap/kanzlei/Kanzlei-Initialen-{c}.ttf') format('truetype');"),
+        format!("    src: url('/static/font/kanzlei/Kanzlei-Initialen-{c}.ttf') format('truetype');"),
         "    font-display: swap;".to_string(),
         format!("    unicode-range: {unicode_range};"),
         "}".to_string(),
@@ -1939,7 +2063,7 @@ fn render_index_section_img(lang: &str, id: &str, title: &str, link: &str, img: 
     let mut section_html = include_str!("../../templates/index.section.html").to_string();
     section_html = section_html.replace("$$SECTION_ID$$", id);
     let nav_shop_link = get_string(meta, lang, "nav-shop-link").unwrap_or_default();
-    section_html = section_html.replace("$$LANG$$", &format!("{lang}/{nav_shop_link}"));
+    section_html = section_html.replace("$$LANG$$", &nav_shop_link);
     section_html = section_html.replace("$$PAGE_HREF$$", &get_root_href());
     section_html = section_html.replace("$$SECTION_CLASSES$$", "");
     section_html = section_html.replace("$$SECTION_NAME$$", title);
@@ -2119,7 +2243,7 @@ fn render_index_html(
     index_body_html = index_body_html.replace("<!-- SEARCHBAR -->", &searchbar_html);
 
     let title_id = format!("{lang}-index");
-    let mut index_html = include_str!("../../templates/index-template.html").to_string();
+    let mut index_html = include_str!("../../templates/index.html").to_string();
     index_html = index_html.replace("<!-- BODY_ABSTRACT -->", &index_body_html);
     index_html = index_html.replace("<!-- PAGE_DESCRIPTION -->", &page_description);
     index_html = index_html.replace("<!-- SVG_LOGO_INLINE -->", logo_svg);
@@ -2143,6 +2267,8 @@ fn render_index_html(
 }
 
 fn minify(input: &str) -> Vec<u8> {
+    let s = include_str!("../../templates/sw-inject.js");
+    let input = input.replace("<!-- INJECT_SW -->", &format!("<script>{s}</script>"));
     let mut minified = vec![];
     html5minify::Minifier::new(&mut minified)
         .minify(&mut input.as_bytes())
@@ -2236,6 +2362,9 @@ fn main() -> Result<(), String> {
 
     // Write gitignore
     let _ = std::fs::write(cwd.join(".gitignore"), generate_gitignore(&articles));
+
+    // Write serviceworker
+    let _ = std::fs::write(cwd.join("sw.js"), gen_serviceworker_js(&cwd, &analyzed, &meta_map));
 
     Ok(())
 }

@@ -1,0 +1,43 @@
+{
+    "name": "dubia",
+    "id": "dubia.cc/v1",
+    "short_name": "dubia",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#161616",
+    "categories": ["education"],
+    "display_override": ["minimal-ui"],
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/static/img/logo/logo-sm-dark-16.png",
+            "type": "image/avif", 
+            "sizes": "16x16"
+        },
+        {
+            "src": "/static/img/logo/logo-sm-dark-32.png",
+            "type": "image/avif", 
+            "sizes": "32x32"
+        },
+        {
+            "src": "/static/img/logo/logo-sm-dark-64.png",
+            "type": "image/avif", 
+            "sizes": "64x64"
+        },
+        {
+            "src": "/static/img/logo/logo-sm-dark-128.png",
+            "type": "image/avif", 
+            "sizes": "128x128"
+        },
+        {
+            "src": "/static/img/logo/logo-sm-dark-192.png",
+            "type": "image/avif", 
+            "sizes": "192x192"
+        },
+        {
+            "src": "/static/img/logo/logo-sm-dark-512.png",
+            "type": "image/avif", 
+            "sizes": "512x512"
+        }
+    ]
+}
