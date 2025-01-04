@@ -27,9 +27,9 @@
 /*******************/
 
 :root {
-    --GW-serif-font-stack: "Source Serif Pro", "Apple Garamond", "Baskerville", "Libre Baskerville", "Droid Serif", "Times New Roman", "Times", serif, "Noto Emoji", "Quivira";
-    --GW-sans-serif-font-stack: "Source Sans Pro", "Lucida Sans Unicode", "Helvetica", "Trebuchet MS", sans-serif, "Noto Emoji", "Quivira";
-    --GW-monospaced-font-stack: "IBM Plex Mono", "Liberation Mono", "Consolas", "Courier", monospace, "Noto Emoji", "Quivira";
+    --GW-serif-font-stack: "Source Serif Pro", "Apple Garamond", "Baskerville", "Libre Baskerville", "Droid Serif", "Times New Roman", "Times", serif, "Noto Emoji";
+    --GW-sans-serif-font-stack: "Source Sans Pro", "Lucida Sans Unicode", "Helvetica", "Trebuchet MS", sans-serif, "Noto Emoji";
+    --GW-monospaced-font-stack: "IBM Plex Mono", "Liberation Mono", "Consolas", "Courier", monospace, "Noto Emoji";
 
     --GW-body-text-font-size: 20px;
 
@@ -2616,7 +2616,7 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	font-family: 'Source Serif Pro';
 	font-weight: 400;
 	font-style: normal;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Regular.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Regular.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -2624,7 +2624,7 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	font-family: 'Source Serif Pro';
 	font-weight: 400;
 	font-style: italic;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-RegularItalic.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-RegularItalic.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -2633,7 +2633,7 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	font-family: 'Source Serif Pro';
 	font-weight: 600;
 	font-style: normal;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Semibold.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Semibold.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -2642,7 +2642,7 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	font-family: 'Source Serif Pro';
 	font-weight: 700;
 	font-style: normal;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Bold.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Bold.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -2651,7 +2651,7 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	font-family: 'Source Sans Pro';
 	font-weight: 400;
 	font-style: normal;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-Regular.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-Regular.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -2659,7 +2659,7 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	font-family: 'Source Sans Pro';
 	font-weight: 400;
 	font-style: italic;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-RegularItalic.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-RegularItalic.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -2668,7 +2668,7 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	font-family: 'Source Sans Pro';
 	font-weight: 700;
 	font-style: normal;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-Bold.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-Bold.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }

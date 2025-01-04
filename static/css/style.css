@@ -8,7 +8,7 @@
 	font-family: 'Source Serif Pro';
 	font-weight: 200;
 	font-style: normal;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-ExtraLight.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-ExtraLight.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -16,7 +16,7 @@
 	font-family: 'Source Serif Pro';
 	font-weight: 200;
 	font-style: italic;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-ExtraLightItalic.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-ExtraLightItalic.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -24,7 +24,7 @@
 	font-family: 'Source Serif Pro';
 	font-weight: 300;
 	font-style: normal;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Light.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Light.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -32,7 +32,7 @@
 	font-family: 'Source Serif Pro';
 	font-weight: 300;
 	font-style: italic;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-LightItalic.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-LightItalic.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -40,7 +40,7 @@
 	font-family: 'Source Serif Pro';
 	font-weight: 400;
 	font-style: normal;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Regular.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Regular.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -48,7 +48,7 @@
 	font-family: 'Source Serif Pro';
 	font-weight: 400;
 	font-style: italic;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-RegularItalic.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-RegularItalic.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -56,7 +56,7 @@
 	font-family: 'Source Serif Pro';
 	font-weight: 600;
 	font-style: normal;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Semibold.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Semibold.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -64,7 +64,7 @@
 	font-family: 'Source Serif Pro';
 	font-weight: 600;
 	font-style: italic;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-SemiboldItalic.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-SemiboldItalic.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -72,7 +72,7 @@
 	font-family: 'Source Serif Pro';
 	font-weight: 700;
 	font-style: normal;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Bold.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Bold.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -80,7 +80,7 @@
 	font-family: 'Source Serif Pro';
 	font-weight: 700;
 	font-style: italic;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-BoldItalic.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-BoldItalic.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -88,7 +88,7 @@
 	font-family: 'Source Serif Pro';
 	font-weight: 900;
 	font-style: normal;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Black.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Black.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -96,7 +96,7 @@
 	font-family: 'Source Serif Pro';
 	font-weight: 900;
 	font-style: italic;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-BlackItalic.ttf') format('truetype');
+	src: url('/static/font/ssfp/SourceSerifPro-BASIC-BlackItalic.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -109,7 +109,7 @@
 	font-family: 'Source Sans Pro';
 	font-weight: 200;
 	font-style: normal;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-ExtraLight.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-ExtraLight.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -117,7 +117,7 @@
 	font-family: 'Source Sans Pro';
 	font-weight: 200;
 	font-style: italic;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-ExtraLightItalic.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-ExtraLightItalic.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -125,7 +125,7 @@
 	font-family: 'Source Sans Pro';
 	font-weight: 300;
 	font-style: normal;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-Light.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-Light.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -133,7 +133,7 @@
 	font-family: 'Source Sans Pro';
 	font-weight: 300;
 	font-style: italic;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-LightItalic.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-LightItalic.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -141,7 +141,7 @@
 	font-family: 'Source Sans Pro';
 	font-weight: 400;
 	font-style: normal;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-Regular.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-Regular.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -149,7 +149,7 @@
 	font-family: 'Source Sans Pro';
 	font-weight: 400;
 	font-style: italic;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-RegularItalic.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-RegularItalic.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -157,7 +157,7 @@
 	font-family: 'Source Sans Pro';
 	font-weight: 600;
 	font-style: normal;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-Semibold.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-Semibold.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -165,7 +165,7 @@
 	font-family: 'Source Sans Pro';
 	font-weight: 600;
 	font-style: italic;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-SemiboldItalic.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-SemiboldItalic.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -173,7 +173,7 @@
 	font-family: 'Source Sans Pro';
 	font-weight: 700;
 	font-style: normal;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-Bold.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-Bold.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -181,7 +181,7 @@
 	font-family: 'Source Sans Pro';
 	font-weight: 700;
 	font-style: italic;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-BoldItalic.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-BoldItalic.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -189,7 +189,7 @@
 	font-family: 'Source Sans Pro';
 	font-weight: 900;
 	font-style: normal;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-Black.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-Black.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
@@ -197,55 +197,10 @@
 	font-family: 'Source Sans Pro';
 	font-weight: 900;
 	font-style: italic;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-BlackItalic.ttf') format('truetype');
+	src: url('/static/font/ssp/SourceSansPro-BASIC-BlackItalic.woff2') format('woff2');
 	font-display: swap;
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
-
-/*****************/
-/* IBM PLEX MONO */
-/*****************/
-
-@font-face {
-	font-family: 'IBM Plex Mono';
-	font-weight: normal;
-	font-style: normal;
-	src: url('/static/font/ibm-plex-mono/IBMPlexMono-Regular.otf') format('opentype');
-	font-display: swap;
-}
-@font-face {
-	font-family: 'IBM Plex Mono';
-	font-weight: normal;
-	font-style: italic;
-	src: url('/static/font/ibm-plex-mono/IBMPlexMono-RegularItalic.otf') format('opentype');
-	font-display: swap;
-}
-@font-face {
-	font-family: 'IBM Plex Mono';
-	font-weight: bold;
-	font-style: normal;
-	src: url('/static/font/ibm-plex-mono/IBMPlexMono-Bold.otf') format('opentype');
-	font-display: swap;
-}
-@font-face {
-	font-family: 'IBM Plex Mono';
-	font-weight: bold;
-	font-style: italic;
-	src: url('/static/font/ibm-plex-mono/IBMPlexMono-BoldItalic.otf') format('opentype');
-	font-display: swap;
-}
-
-/***********/
-/* QUIVIRA */
-/***********/
-
-@font-face {
-	font-family: 'Quivira';
-	font-weight: normal;
-	src: url('/static/font/quivira/Quivira-SUBSETTED.ttf') format('truetype');
-	font-display: swap;
-}
-
 
 /*************/
 /* VARIABLES */
@@ -7328,7 +7283,7 @@ a[data-link-icon-type*='text'] {
     --link-icon-size: 0.75em;
     --link-icon-offset-x: 0.12em;
     --link-icon-offset-y: 0.25em;
-    --link-icon-font: Noto Emoji, Quivira, var(--GW-serif-font-stack);
+    --link-icon-font: Noto Emoji, var(--GW-serif-font-stack);
     --link-icon-font-weight: 600;
     --link-icon-font-style: normal;
     --link-icon-text-decoration: none;
@@ -7354,12 +7309,12 @@ a[data-link-icon-type*='text'] .link-icon-hook::after {
 }
 
 a[data-link-icon-type*='sans'] {
-    --link-icon-font: Noto Emoji, Quivira, var(--GW-sans-serif-font-stack);
+    --link-icon-font: Noto Emoji, var(--GW-sans-serif-font-stack);
 }
 
 a[data-link-icon-type*='mono'] {
     --link-icon-opacity: 0.7;
-    --link-icon-font: Noto Emoji, Quivira, var(--GW-monospaced-font-stack);
+    --link-icon-font: Noto Emoji, var(--GW-monospaced-font-stack);
 }
 
 a[data-link-icon-type*='bold'] {

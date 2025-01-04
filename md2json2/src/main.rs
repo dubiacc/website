@@ -1635,8 +1635,8 @@ fn render_page_author_pages(
                 
                 let s = match platform.as_str() {
                     "paypal" => format!("<p><a href='{link}'>PayPal</a></p>"),
-                    "github" => format!("<p><a href='{link}'>Ko-Fi</a></p>"),
-                    "ko-fi" => format!("<p><a href='{link}'>GitHub Sponsors</a></p>"),
+                    "github" => format!("<p><a href='{link}'>GitHub Sponsors</a></p>"),
+                    "ko-fi" => format!("<p><a href='{link}'>Ko-Fi</a></p>"),
                     _ => return Err(format!("unknown platform {platform} for user {id} in authors.json")),
                 };
             
@@ -1835,7 +1835,7 @@ fn get_special_pages(
             filepath: shop_html,
             id: shop_id,
             description: shop_desc,
-            content: render_shop_sections(&tags.shop),
+            content: render_shop_sections(lang, &tags.shop, meta),
         },
         SpecialPage {
             title: about_title,
@@ -1935,10 +1935,13 @@ fn render_index_section_texts(id: &str, classes: &str, title: &str, txts: &[Stri
     section_html
 }
 
-fn render_index_section_img(id: &str, classes: &str, title: &str, link: &str, img: &str, t: &str) -> String {
+fn render_index_section_img(lang: &str, id: &str, title: &str, link: &str, img: &str, t: &str, meta: &MetaJson) -> String {
     let mut section_html = include_str!("../../templates/index.section.html").to_string();
     section_html = section_html.replace("$$SECTION_ID$$", id);
-    section_html = section_html.replace("$$SECTION_CLASSES$$", classes);
+    let nav_shop_link = get_string(meta, lang, "nav-shop-link").unwrap_or_default();
+    section_html = section_html.replace("$$LANG$$", &format!("{lang}/{nav_shop_link}"));
+    section_html = section_html.replace("$$PAGE_HREF$$", &get_root_href());
+    section_html = section_html.replace("$$SECTION_CLASSES$$", "");
     section_html = section_html.replace("$$SECTION_NAME$$", title);
     section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title);
     section_html = section_html.replace("<!-- SECTION_ITEMS -->", &&render_section_items_img(link, img, t));
@@ -1959,9 +1962,9 @@ fn render_resources_sections(lang: &str, s: &Vec<TagSection1>) -> String {
     }).collect::<Vec<_>>().join("\r\n")
 }
 
-fn render_shop_sections(s: &Vec<TagSection2>) -> String {
+fn render_shop_sections(lang: &str, s: &Vec<TagSection2>, meta: &MetaJson) -> String {
     s.iter().map(|s| {
-        render_index_section_img(&s.id, "", &s.title, &s.link.slug, &s.img, &s.link.title)
+        render_index_section_img(lang, &s.id, &s.title, &s.link.slug, &s.img, &s.link.title, meta)
     }).collect::<Vec<_>>().join("\r\n")
 }
 
@@ -2134,8 +2137,7 @@ fn render_index_html(
     index_html = index_html.replace("$$ROOT_HREF$$", get_root_href());
     index_html = index_html.replace("$$PAGE_HREF$$", &(get_root_href().to_string() + "/" + lang));
     index_html = index_html.replace("<link rel=\"preload\" href=\"/static/img/logo/logo-smooth.svg\" as=\"image\">", "");
-    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/ssfp/ssp/SourceSansPro-BASIC-Regular.ttf\" as=\"font\" type=\"font/ttf\" crossorigin>", "");
-    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/quivira/Quivira-SUBSETTED.ttf\" as=\"font\" type=\"font/ttf\" crossorigin>", "");
+    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/ssfp/ssp/SourceSansPro-BASIC-Regular.subset.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>", "");
     
     Ok(index_html)
 }
@@ -2147,7 +2149,6 @@ fn minify(input: &str) -> Vec<u8> {
         .expect("Failed to minify HTML");
     minified
 }
-
 fn main() -> Result<(), String> {
 
     // Setup 

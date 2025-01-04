@@ -313,3 +313,10 @@ so spiegelt er sich auch in den Heiligen wieder.
 
 Wenn es also Gott gefällt, wenn man das Kreuz und seinen körperlich gewordenen 
 Sohn verehrt, so auch die Heiligen, welche seine Spiegelbilder sind.
+
+```
+{
+    "date": "2025-01-04",
+    "authors": ["discord:296693580016386048"]
+}
+```
