@@ -1,71 +1,110 @@
-# Ist die Eucharistie nur symbolisch?
+# Ist das Abendmahl nur ein Symbol?
 
-## Einführung
-
-Die Eucharistie ist eines der zentralen Sakramente des katholischen Glaubens.
-Doch ist sie lediglich ein symbolischer Akt, oder geschieht in ihr eine
-wirkliche Verwandlung? Um dies zu klären, ziehen wir die Bibel, die
-Kirchenväter, den Katechismus und die Theologie heran.
+Ist das letzte Abendmahl ein symbolischer Akt zum Erinnern an Christi Opfer,
+oder, wie Katholiken lehren, ist es ein Opferakt, in dem Christus in 
+Fleisch und Blut vorhanden ist?
 
 ## Biblische Grundlagen
 
-> „Während des Mahls nahm Jesus das Brot und sprach den Lobpreis; dann brach er
-> das Brot, reichte es den Jüngern und sagte: ‚Nehmt und esst; das ist mein
-> Leib.‘ Dann nahm er den Kelch, sprach das Dankgebet, gab ihn den Jüngern und
-> sagte: ‚Trinkt alle daraus; das ist mein Blut des Bundes, das für viele
-> vergossen wird zur Vergebung der Sünden.‘“ 
-> [Matthäus 26:26-29](https://k-bibel.de/ARN/Matthäus26#26-29)
-
-> „Ich bin das lebendige Brot, das vom Himmel herabgekommen ist. Wer von diesem
+> Ich bin das lebendige Brot, das vom Himmel herabgekommen ist. Wer von diesem
 > Brot isst, wird in Ewigkeit leben. Das Brot, das ich geben werde, ist mein
 > Fleisch für das Leben der Welt. (…) Mein Fleisch ist wahrhaft eine Speise und
-> mein Blut ist wahrhaft ein Trank.“ 
-> [Johannes 6:51-58](https://k-bibel.de/ARN/Johannes6#51-58)
+> mein Blut ist wahrhaft ein Trank.
+> 
+> -- [Johannes 6:51-58](https://k-bibel.de/ARN/Johannes6#51-58)
 
-> „Ist der Kelch des Segens, über den wir den Segen sprechen, nicht Teilhabe am
-> Blut Christi? Ist das Brot, das wir brechen, nicht Teilhabe am Leib Christi?“
-> [1 Korinther 10:16-17](https://k-bibel.de/ARN/1Korinther10#16-17)
+Nach dieser Stelle sehen wir, dass selbst die Juden sich streiten, ob dies 
+symbolisch oder wortwörtlich gemeint war:
 
-Diese Stellen verdeutlichen, dass Christus selbst von einer realen Gegenwart
-seines Leibes und Blutes spricht, nicht bloß von einer symbolischen Handlung.
+> Da stritten die Juden untereinander, und sprachen: Wie kann dieser uns 
+> sein Fleisch zu essen geben?
+> 
+> -- [Johannes 6,53](https://k-bibel.de/ARN/Johannes6#53)
 
-## Zeugnisse der Kirchenväter
+Wenn Jesus den Satz nur symbolisch gemeint hätte, wäre seine Lehre ja nicht 
+schwer zu glauben gewesen: "Nehmt dieses Brot und gedenkt meiner." - warum würden
+sich Jünger deswegen von ihm abwenden? Es wäre genauso unkontrovers wie eine 
+Gedenkensfeier bei einem Firmentreffen.
 
-> **Justin der Märtyrer**  
-> „Er nahm dieses geschaffene Ding, Brot, und dankte dafür und sagte: ‚Dies ist
+> Von der Zeit an traten viele von seinen Jüngern zurück, und 
+> wandelten nicht mehr mit ihm.
+>
+> -- [Johannes 6, 67](https://k-bibel.de/ARN/Johannes6#67)
+
+> Jesus aber sprach zu ihnen: Wahrlich, wahrlich, ich sage euch: Wenn ihr das 
+> Fleisch des Menschensohnes nicht essen und sein Blut nicht trinken werdet, 
+> so werdet ihr das Leben nicht in euch haben!
+>
+> -- [Johannes 6,54](https://k-bibel.de/ARN/Johannes6#54)
+
+Zusätzlich sehen wir auch, dass Jesus ausdrücklich betont, dass niemand in den 
+Himmel kommt, ohne sein Fleisch zu essen. Wäre - wie die evangelische Kirche lehrt - 
+die Kommunion nicht notwendig, sondern nur Glaube und vielleicht noch die Taufe (in einigen 
+Freikirchen wird nichtmal das mehr als notwendig gesehen), dann machen diese Worte 
+Jesu überhaupt keinen Sinn.
+
+> Ist der Kelch des Segens, über den wir den Segen sprechen, nicht Teilhabe am
+> Blut Christi? Ist das Brot, das wir brechen, nicht Teilhabe am Leib Christi?
+> 
+> -- [1 Korinther 10:16-17](https://k-bibel.de/ARN/1Korinther10#16-17)
+
+Protestanten versuchen, zu erklären, dass hiermit der "mystische Leib Christi"
+gemeint ist, also Teilhabe an der Gemeinschaft, nicht aber am physischen Leib.
+Allerdings ist diese Erklärung unlogisch, denn jeder Katholik ist automatisch
+Teil des mystischen Leibes, somit ist eine speziellere Teilhabe am mystischen 
+Leib nicht möglich. Es muss also der physische Leib gemeint sein.
+
+## Kirchenväter
+
+Es gibt zwei Wege, zu widerlegen, dass hiermit wirklich der physische Leib Christi 
+gemeint ist: der erste ist es, in die Tradition zu schauen und zu sehen, ob diese 
+neue Lehre von der Symbolik und dem "mystischen Leib" schon immer geglaubt wurde.
+Wir finden das Gegenteil:
+
+> Lasst uns Gott gehorchen, und ihm nicht widersprechen; wenn auch das, was gesagt 
+> wird, entweder unsern Gedanken, oder unsern Augen zu widersprechen scheint; denn 
+> seine Rede ist untrüglich; unser Sinn aber wird leicht betrogen.
+>
+> -- [Hl. Chrysostomos](https://de.wikipedia.org/wiki/Johannes_Chrysostomos): [44. / 45. Homilie über den hl. Johannes]()
+
+> Er nahm dieses geschaffene Ding, Brot, und dankte dafür und sagte: ‚Dies ist
 > mein Leib.‘ Und ebenso den Kelch, der Teil dieser Schöpfung ist, zu der wir
 > gehören, bekannte er als sein Blut und lehrte das neue Opfer des neuen
-> Bundes.“[^1]
+> Bundes.
+>
+> -- [Justin der Märtyrer](https://de.wikipedia.org/wiki/Justin_der_M%C3%A4rtyrer): [Ante-Nicene Fathers Volume 1, XVII](https://ccel.org/ccel/schaff/anf01.ix.vi.xviii.html)
 
-[^1]: https://ccel.org/ccel/schaff/anf01.ix.vi.xviii.html
+> Christus ist unser Brot; weil Christus das Leben ist, und Brot ist Leben. 
+> [...] Sein Leib wird als Brot betrachtet: ‚Das ist mein Leib.‘
+>
+> -- [Tertullian (150 - 220)](https://de.wikipedia.org/wiki/Tertullian): [Latin Christianity, Tertullian, VI.](https://ccel.org/ccel/schaff/anf03.vi.iv.vi.html)
 
-> **Tertullian**  
-> „Christus ist unser Brot; weil Christus das Leben ist, und Brot ist Leben.
-> (…) Sein Leib wird als Brot betrachtet: ‚Das ist mein Leib.‘“[^2]
-
-[^2]: https://ccel.org/ccel/schaff/anf03.vi.iv.vi.html
-
-> **Hl. Hippolytus**  
-> „Denn er war das Passah, das seit alters verkündet worden war und das an diesem
-> bestimmten Tag erfüllt wurde.“[^3]
-
-[^3]: https://www.catholiccrossreference.online/fathers/index.php/Matthew%2026:26
+> Denn er war das Passah, das seit Alters [her] verkündet worden war und das an diesem
+> bestimmten Tag erfüllt wurde.
+>
+> -- [Hl. Hippolyt von Rom](https://de.wikipedia.org/wiki/Hippolyt_von_Rom): [Fragments from Other Writings of Hippolytus](https://www.catholiccrossreference.online/fathers/index.php/Matthew%2026:26)
 
 Die Kirchenväter betonen die Realität der eucharistischen Verwandlung, nicht
 eine bloße symbolische Bedeutung.
 
-## Der Katechismus der Katholischen Kirche
+## Katechismus von Trient (1551)
 
-> „Durch die Konsekration des Brotes und Weines geschieht eine Verwandlung der
-> ganzen Substanz des Brotes in die Substanz des Leibes Christi, unseres Herrn,
-> und der ganzen Substanz des Weines in die Substanz seines Blutes.“[^4]
-
-[^4]: (Katechismus, Nr. 1376)
-
->„Christus wird in diesem Sakrament gegenwärtig durch die Verwandlung des Brotes
-> und des Weines in den Leib und das Blut Christi.“[^5]
-
-[^5] (Katechismus, Nr. 1375)
+> Nachdem der Apostel erwähnt hat, dass das Brod und 
+> der Wein vom Herrn verwondelt (consecrirt), und die heiligen 
+> Geheimnisse den Aposteln zu verwalten übergeben worden seyen, fügt
+> er bei: 
+> 
+> "Es prüfe aber der Mensch sich selbst, und dann esse er von 
+> diesem Brode, und trinke von dem Kelche. Denn wer unwürdig isst und 
+> trinkt, isst und trinkt sich das Gericht, weil er den Leib des 
+> Herrn nicht unterscheidet." - [1. Korinther 11, 28](https://k-bibel.de/ARN/1Korinther11#28)
+>
+> Wäre aber, wie die Ketzer faseln, im Sakramente nichts Anderes 
+> zu verehren, als ein Gedächtniss und Zeichen des Leidens Christi, 
+> wozu war es dann nöthig, mit so ernsten Worten die Gläubigen zu 
+> ermahnen, dass sie sich selbst prüfen sollen?
+>
+> -- [Katechismus von Trient (1551), S. 242](https://archive.org/details/bub_gb_NOw_AAAAcAAJ/page/242/mode/2up)
 
 ## Theologische Argumente gegen die Symbolik
 
@@ -84,14 +123,6 @@ Kannibalismus betrachtet werden. Der Leib Christi ist verklärt und göttlich.
 Seine Substanz wird weder verringert noch physisch konsumiert. Dies
 unterscheidet sich grundlegend von weltlichen Begriffen des Kannibalismus.
 [Mehr dazu (catholic.com)](https://www.catholic.com/qa/is-receiving-the-eucharist-cannibalism)
-
-## Zusammenfassung
-
-Die Eucharistie ist weit mehr als ein symbolischer Akt. Sie ist die reale
-Gegenwart Christi, die uns geistlich nährt, unsere Seele erhebt und uns mit
-Gott in Einheit bringt. Diese Realität ist sowohl biblisch begründet als auch
-durch die Kirchenväter, den Katechismus und die Theologie bezeugt. Jeder Mensch
-ist eingeladen, diese Realität im Glauben anzunehmen.  
 
 ```
 {

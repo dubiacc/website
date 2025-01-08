@@ -51,7 +51,35 @@ struct ParsedArticle {
     summary: Vec<Paragraph>,
     article_abstract: Vec<Paragraph>,
     sections: Vec<ArticleSection>,
-    footnotes: Vec<String>,
+    footnotes: Vec<Footnote>,
+}
+
+impl ParsedArticle {
+    pub fn get_bibliography(&self) -> Vec<Link> {
+        self.sections.iter().flat_map(|l| {
+            l.pars.iter().flat_map(|p| match p {
+                Paragraph::Sentence { s } => s.iter().filter_map(|s| match s {
+                    SentenceItem::Link { l } => Some(l.clone()),
+                    _ => None,
+                }).collect::<Vec<_>>(),
+                Paragraph::Quote { q } => {
+                    let mut links = q.get_links();
+                    for l in q.quote.iter() {
+                        if let Paragraph::Sentence { s } = l {
+                            for t in s.iter() {
+                                if let SentenceItem::Link { l } = t {
+                                    // TODO: add titles to link!
+                                    links.push(l.clone());
+                                }
+                            }
+                        }
+                    }
+                    links
+                }
+                Paragraph::Image { i } => Vec::new(),
+            })
+        }).collect()
+    }
 }
 
 impl VectorizedArticles {
@@ -67,10 +95,11 @@ impl VectorizedArticles {
                         authors: vectorized.parsed.authors.clone(),
                         sha256: vectorized.parsed.sha256.clone(),
                         img: vectorized.parsed.img.clone(),
-                        summary: vectorized.parsed.summary.clone(),
+                        subtitle: vectorized.parsed.summary.clone(),
+                        summary: vectorized.parsed.article_abstract.clone(),
                         sections: vectorized.parsed.sections.clone(),
-                        related: similar,
-                        article_abstract: vectorized.parsed.article_abstract.clone(),
+                        similar: similar,
+                        bibliography: vectorized.parsed.get_bibliography(),
                         footnotes: vectorized.parsed.footnotes.clone(),
                     })
                 }).collect())
@@ -81,17 +110,77 @@ impl VectorizedArticles {
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
 struct ParsedArticleAnalyzed {
+    // title of the article
     title: String,
+    // date of the article (yyyy-mm-dd)
     date: String,
+    // tags of the article
     tags: Vec<String>,
+    // authors
     authors: Vec<String>,
+    // sha256 hash of the article contents
     sha256: String,
+    // social media preview image
     img: Option<Image>,
+    // subtitle: displayed below the title
+    subtitle: Vec<Paragraph>,
+    // summary: displayed as the first section
     summary: Vec<Paragraph>,
-    article_abstract: Vec<Paragraph>,
+    // sections of the article
     sections: Vec<ArticleSection>,
-    related: Vec<String>,
-    footnotes: Vec<String>, // BTreeMap<String, Paragraph>,
+    // similar articles to this one based on word matching
+    similar: Vec<SectionLink>,
+    // all links used in this page
+    bibliography: Vec<Link>,
+    // footnote annotations
+    footnotes: Vec<Footnote>,
+}
+
+#[derive(Debug, Default, PartialEq, Eq, PartialOrd, Ord, Clone, Serialize, Deserialize)]
+struct Footnote {
+    pub id: String,
+    pub text: Vec<SentenceItem>,
+}
+
+impl Footnote {
+    pub fn get_chars(&self) -> Vec<char> {
+        let mut v = self.id.chars().collect::<Vec<_>>();
+        v.extend(si2text(&self.text).chars());
+        v
+    }
+}
+
+fn parse_footnote(s: &str) -> Option<Footnote> {
+    if !(s.trim().starts_with("[^") && s.contains("]:")) {
+        return None;
+    }
+
+    let (id, rest) = s.split_once(":")?;
+    let id = id.replace("[^", "").replace("]", "").trim().to_string();
+    let text = Sentence::new(rest.trim()).items;
+    Some(Footnote { id, text })
+}
+
+#[test]
+fn test_parse_footnote() {
+
+    let s = "[^1]: Some text";
+    assert_eq!(parse_footnote(s).unwrap(), Footnote {
+        id: "1".to_string(), 
+        text: vec![
+            SentenceItem::Text { text: "Some text".to_string() },
+        ]
+    });
+
+    let s = "[^ref]: Some text with [a link](https://example.com).";
+    assert_eq!(parse_footnote(s).unwrap(), Footnote {
+        id: "ref".to_string(), 
+        text: vec![
+            SentenceItem::Text { text: "Some text with ".to_string() },
+            SentenceItem::Link { l: Link { text: "a link".to_string(), href: "https://example.com".to_string() } },
+            SentenceItem::Text { text: ".".to_string() },
+        ]
+    });
 }
 
 impl ParsedArticleAnalyzed {
@@ -102,11 +191,11 @@ impl ParsedArticleAnalyzed {
         let mut c = self.title.chars().collect::<Vec<_>>();
         c.extend(self.date.chars());
         c.extend(self.tags.iter().flat_map(|q| q.chars()));
+        c.extend(self.subtitle.iter().flat_map(|s| s.get_chars()));
         c.extend(self.summary.iter().flat_map(|s| s.get_chars()));
-        c.extend(self.article_abstract.iter().flat_map(|s| s.get_chars()));
         c.extend(self.sections.iter().flat_map(|s| s.title.chars()));
         c.extend(self.sections.iter().flat_map(|s| s.pars.iter().flat_map(|r| r.get_chars())));
-        c.extend(self.footnotes.iter().flat_map(|s| s.chars()));
+        c.extend(self.footnotes.iter().flat_map(|s| s.get_chars()));
         c
     }
     pub fn get_date(&self) -> Option<(&str, &str, &str)> {
@@ -153,7 +242,7 @@ impl Paragraph {
                 SentenceItem::Footnote { id } => id.chars().collect::<Vec<_>>(),
             }).collect::<Vec<_>>(),
             Paragraph::Quote { q } => {
-                let mut p = q.quote.iter().flat_map(|p| p.chars()).collect::<Vec<_>>();
+                let mut p = q.quote.iter().flat_map(|p| p.get_chars()).collect::<Vec<_>>();
                 p.extend(q.title.chars());
                 p.extend(q.author.chars());
                 p.extend(q.source.chars());
@@ -169,7 +258,7 @@ struct Sentence {
     items: Vec<SentenceItem>
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(tag = "t", content = "d", rename_all = "lowercase")]
 enum SentenceItem {
     Text {
@@ -183,6 +272,15 @@ enum SentenceItem {
     }
 }
 
+impl SentenceItem {
+    pub fn is_link(&self) -> bool {
+        match self {
+            SentenceItem::Link { l } => true,
+            _ => false,
+        }
+    }
+}
+
 #[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
 enum LinkType {
     Wikipedia,
@@ -193,14 +291,36 @@ enum LinkType {
 #[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
 struct Quote {
     title: String,
-    quote: Vec<String>,
+    quote: Vec<Paragraph>,
     author: String,
     author_link: String,
     source: String,
     source_link: String,
 }
 
-#[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
+impl Quote {
+    pub fn get_links(&self) -> Vec<Link> {
+        let mut v = Vec::new();
+
+        if !self.author.is_empty() && self.author_link.contains("/") {
+            v.push(Link {
+                text: self.author.clone(),
+                href: self.author_link.clone(),
+            });
+        }
+
+        if !self.source.is_empty() && self.source_link.contains("/") {
+            v.push(Link {
+                text: self.author.clone(),
+                href: self.author_link.clone(),
+            });
+        }
+
+        v
+    }
+}
+
+#[derive(Debug, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 struct Link {
     text: String,
     href: String,
@@ -278,13 +398,13 @@ fn sha256(s: &str) -> String {
     base64::prelude::BASE64_URL_SAFE_NO_PAD.encode(result)
 }
 
-fn gather_footnotes(l: &[&str]) -> (Vec<String>, BTreeSet<usize>) {
+fn gather_footnotes(l: &[&str]) -> (Vec<Footnote>, BTreeSet<usize>) {
     let mut to_ignore = BTreeSet::new();
     let mut target = Vec::new();
     for (i, l) in l.iter().enumerate() {
-        if l.trim().starts_with("[^") && l.contains("]:") {
+        if let Some(f) = parse_footnote(&l) {
             to_ignore.insert(i);
-            target.push(l.to_string());
+            target.push(f);
         }
     }
     (target, to_ignore)
@@ -517,6 +637,10 @@ impl Quote {
             } 
         }
 
+        let quote = quote.iter()
+        .map(|q| parse_paragraph(q))
+        .collect::<Vec<_>>();
+
         let q = Quote {
             title,
             quote,
@@ -533,18 +657,36 @@ impl Quote {
 // Given a string, returns the extracted link + number of bytes to be consumed
 fn take_next_link(s: &str) -> Option<(Link, usize)> {
 
-    if !s.trim().starts_with("[") {
+    let s = s.trim();
+    if !s.starts_with("[") {
         return None;
     }
 
+    let mut it_str = Vec::new();
+    let mut it = s.chars().peekable();
+    it.next(); // remove first '['
+    while let Some(s) = it.next() {
+        let peek = it.peek();
+        match (s, peek) {
+            (']', Some('(')) => break,
+            _ => it_str.push(s),
+        }
+    }
+
+    let id = it_str.into_iter().collect::<String>();
+    let s = s.replacen(&("[".to_string() + &id + "]("), "", 1);
     let end = s.char_indices()
     .find_map(|(id, ch)| {
         if ch == ')' { Some(id) } else { None }
     })?;
 
-    let substring = &s[..(end + 1)];
+    let link = &s[..end];
+    let bytes = id.len() + 4 + link.len();
 
-    Link::new(substring).map(|q| (q, end + 1))
+    Some((Link {
+        text: id,
+        href: link.to_string(),
+    }, bytes))
 }
 
 #[test]
@@ -556,9 +698,15 @@ fn test_quote_2() {
     ";
 
     assert_eq!(Quote::new(s), Some(Quote {
-        title: "Heading".to_string(),
+        title: "".to_string(),
         quote: vec![
-            "Wenn ein Mann eine Jungfrau trifft, die nicht verlobt ist".to_string(), 
+            Paragraph::Sentence { 
+                s: vec![
+                    SentenceItem::Text { 
+                        text: "Wenn ein Mann eine Jungfrau trifft, die nicht verlobt ist".to_string() 
+                    }
+                ]
+            },
         ],
         author: "5. Mose 22,28-29".to_string(),
         author_link: "https://k-bibel.de/ARN/Deuteronomium22#28-29".to_string(),
@@ -585,8 +733,8 @@ fn test_quote() {
     assert_eq!(Quote::new(s), Some(Quote {
         title: "Heading".to_string(),
         quote: vec![
-            "LineA LineB LineC".to_string(), 
-            "LineD LineE".to_string()
+            Paragraph::Sentence {  s: vec![SentenceItem::Text { text: "LineA LineB LineC".to_string() }] },
+            Paragraph::Sentence {  s: vec![SentenceItem::Text { text: "LineD LineE".to_string() }] },
         ],
         author: "Test".to_string(),
         author_link: "https://wikipedia.org/Test".to_string(),
@@ -784,7 +932,7 @@ fn get_similar_articles(
     s: &VectorizedArticle, 
     id: &str, 
     map: &BTreeMap<String, VectorizedArticle>
-) -> Vec<String> {
+) -> Vec<SectionLink> {
     
     let (article_src, article_type) = (&s.words, s.atype);
 
@@ -816,7 +964,14 @@ fn get_similar_articles(
 
     target.sort_by(|a, b| ((a.0) as usize).cmp(&((b.0) as usize)));
     
-    target.into_iter().take(10).map(|s| s.1.clone()).collect()
+    target
+    .into_iter()
+    .filter_map(|s| Some(SectionLink {
+        slug: s.1.clone(),
+        title: map.get(s.1)?.parsed.title.clone(),
+    }))
+    .take(10)
+    .collect()
 }
 
 #[cfg(feature = "external")]
@@ -1045,6 +1200,14 @@ fn si2text(si: &[SentenceItem]) -> String {
     }).collect::<Vec<_>>().join("")
 }
 
+fn si2html(si: &[SentenceItem]) -> String {
+    si.iter().map(|s| match s {
+        SentenceItem::Footnote { id } => format!("<a href='#fn-{id}' class='footnote-ref spawns-popup' id='fnref-{id}' role='doc-noteref'><sup>&nobreak;{id}&nobreak;</sup></a>"),
+        SentenceItem::Link { l } => format!("<a href='{}'>{}</a>", l.href, l.text),
+        SentenceItem::Text { text } => format!("{text}"),
+    }).collect::<Vec<_>>().join("")
+}
+
 fn par2text(p: &Paragraph) -> String {
     match p {
         Paragraph::Sentence { s } => return si2text(s),
@@ -1052,17 +1215,24 @@ fn par2text(p: &Paragraph) -> String {
     }
 }
 
+fn par2html(p: &Paragraph) -> String {
+    match p {
+        Paragraph::Sentence { s } => return si2html(s),
+        _ => String::new(),
+    }
+}
+
 // Returns the description for the <head> tag
 fn get_description(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
-    let try1 = a.summary.get(0).map(|s| par2text(s)).unwrap_or_default();
+    let try1 = a.subtitle.get(0).map(|s| par2html(s)).unwrap_or_default();
     if !try1.trim().is_empty() {
         return Ok(try1.trim().to_string());
     }
-    let try1 = a.article_abstract.get(0).map(par2text).unwrap_or_default();
+    let try1 = a.summary.get(0).map(par2html).unwrap_or_default();
     if !try1.trim().is_empty() {
         return Ok(try1.trim().to_string());
     }
-    let sec1 = a.sections.get(0).and_then(|s| s.pars.get(0)).map(par2text).unwrap_or_default();
+    let sec1 = a.sections.get(0).and_then(|s| s.pars.get(0)).map(par2html).unwrap_or_default();
     if !sec1.trim().is_empty() {
         return Ok(sec1.trim().to_string());
     }
@@ -1076,7 +1246,7 @@ fn generate_dropcap_css(a: &ParsedArticleAnalyzed) -> String {
         return String::new();
     }
 
-    let try1 = a.article_abstract.get(0).map(par2text).unwrap_or_default();
+    let try1 = a.summary.get(0).map(par2text).unwrap_or_default();
     let sec1 = a.sections.get(0).and_then(|s| s.pars.get(0)).map(par2text).unwrap_or_default();
     let mut c = None;
     if !try1.trim().is_empty() {
@@ -1335,7 +1505,7 @@ fn table_of_contents(
         cur_level = level;
         target += "<li>";
         target += &format!(
-            "<a href='#{section_id}' id='toc-{section_id}' class='decorate-not has-content spawns-popup'>{header}</a>"
+            "<a href='#{section_id}' id='toc-{section_id}' class='link-self decorate-not has-content spawns-popup'>{header}</a>"
         );
         target += "</li>";
     }
@@ -1542,12 +1712,8 @@ fn render_paragraph(
                 target += "</strong>";
             }
 
-            for p in q.quote.iter() {
-                target += "<p class='first-block first-graf'>";
-                target += p;
-                target += "</p>";
-            }
-            
+            target += &q.quote.iter().map(|p| format!("<p class='first-block first-graf'>{}</p>", par2html(&p))).collect::<Vec<_>>().join("");
+
             if !(q.author.is_empty() && q.source.is_empty()) {
                 target += "<em style='padding-left:10px;'>";
                 if !q.author.is_empty() {
@@ -1688,6 +1854,10 @@ fn article2html(
         _ => { },
     }
 
+    if a.tags.is_empty() {
+        println!("article {lang}/{slug} has no tags");
+    }
+
     for t in a.tags.iter() {
         articles_by_tag.entry(lang.to_string())
         .or_insert_with(|| BTreeMap::new())
@@ -1725,7 +1895,7 @@ fn article2html(
     let html = html.replace("<!-- TOC -->", &table_of_contents(lang, &a, meta)?);
     let html = html.replace("<!-- PAGE_DESCRIPTION -->", &page_desciption(lang, &a, meta)?);
     let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a, meta)?);
-    let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(lang, slug, &a.article_abstract));
+    let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(lang, slug, &a.summary));
     let html = html.replace("<!-- BODY_CONTENT -->", &body_content(lang, &slug, &a.sections, meta)?);
     let html = html.replace("<!-- BODY_NOSCRIPT -->", &body_noscript());
 
