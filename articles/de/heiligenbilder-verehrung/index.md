@@ -42,7 +42,7 @@ Synagogen zur Schau stellten, welche verschiedenste Szenen darstellten[^1].
 
 [^1]: ["Ancient Jewish Icons" von theorthodoxlife](https://archive.is/7xyln)
 
-Ebenso werden Engel und andere irdische Objekte in [1. Könige 6](https://k-bibel.de/ARN/1K%C3%B6nige6) 
+Ebenso werden Engel und andere irdische Objekte in [1. Könige 6](https://k-bibel.de/ARN/1K%C3%B6nige6 Arndt, Allioli (1914): 1. Könige 6) 
 in die Wände des salomonischen Tempels eingemeißelt.
 
 ## Anbetung von heiligen Bildern in der Bibel
@@ -317,6 +317,7 @@ Sohn verehrt, so auch die Heiligen, welche seine Spiegelbilder sind.
 ```
 {
     "date": "2025-01-04",
-    "authors": ["discord:296693580016386048"]
+    "authors": ["discord:296693580016386048"],
+    "tags": ["evangelisch"]
 }
 ```

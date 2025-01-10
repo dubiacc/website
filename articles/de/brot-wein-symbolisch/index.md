@@ -1,10 +1,17 @@
-# Ist das Abendmahl nur ein Symbol?
+Bei der Eucharistie werden das Brot und der Wein umgewandelt in Körper, Seele, 
+Person und Gottheit Jesu Christi und gelten nicht, wie im evangelischen Verständis,
+als Symbole der Erinnerung.
 
-Ist das letzte Abendmahl ein symbolischer Akt zum Erinnern an Christi Opfer,
-oder, wie Katholiken lehren, ist es ein Opferakt, in dem Christus in 
-Fleisch und Blut vorhanden ist?
+# Sind Brot und Wein nur Symbole?
 
-## Biblische Grundlagen
+Ist die katholische Eucharistie (oder "letztes Abendmahl" im evangelischen Jargon) 
+nur ein symbolischer Akt zum Erinnern an Christi Opfer, oder geschieht hier mehr?
+Nach Anschuldigungen, dass Katholiken einen Keks anbeten würden, will dieser
+Artikel erklären, was die katholische Sicht auf die Eucharistie und das letzte Abendmahl ist.
+
+## Bibelverse
+
+Die Grundlage für den Streit bildet das Kapitel [Johannes 6](https://k-bibel.de/ARN/Johannes6):
 
 > Ich bin das lebendige Brot, das vom Himmel herabgekommen ist. Wer von diesem
 > Brot isst, wird in Ewigkeit leben. Das Brot, das ich geben werde, ist mein
@@ -13,7 +20,7 @@ Fleisch und Blut vorhanden ist?
 > 
 > -- [Johannes 6:51-58](https://k-bibel.de/ARN/Johannes6#51-58)
 
-Nach dieser Stelle sehen wir, dass selbst die Juden sich streiten, ob dies 
+Nach diesen Worten streiten sich selbst die Juden, ob dies 
 symbolisch oder wortwörtlich gemeint war:
 
 > Da stritten die Juden untereinander, und sprachen: Wie kann dieser uns 
@@ -22,14 +29,23 @@ symbolisch oder wortwörtlich gemeint war:
 > -- [Johannes 6,53](https://k-bibel.de/ARN/Johannes6#53)
 
 Wenn Jesus den Satz nur symbolisch gemeint hätte, wäre seine Lehre ja nicht 
-schwer zu glauben gewesen: "Nehmt dieses Brot und gedenkt meiner." - warum würden
-sich Jünger deswegen von ihm abwenden? Es wäre genauso unkontrovers wie eine 
-Gedenkensfeier bei einem Firmentreffen.
+schwer zu glauben gewesen: "Nehmt dieses Brot und gedenkt meines Opfers" - warum 
+würden sich Jünger deswegen von ihm abwenden? Es wäre genauso unkontrovers 
+wie eine Gedenkensfeier bei einem Firmentreffen.
 
 > Von der Zeit an traten viele von seinen Jüngern zurück, und 
 > wandelten nicht mehr mit ihm.
 >
 > -- [Johannes 6, 67](https://k-bibel.de/ARN/Johannes6#67)
+
+Das katholische Verständnis des Verses ist folgendes: Christus ist das Opferlamm,
+die Erfüllung des alttestamentlichen Opfers. Die katholische Messe ist nichts
+anderes als die Fortführung des alttestamentlichen Opferritus, die Kirche ist das 
+neue Volk Israel. Gott benötigt Opfer, um unsere Sünden zu vergeben, im AT opfern wir
+Tiere und Gaben, im NT opfern wir das perfekte Opfer: Christus selber.
+
+"Ja", sagen Protestanten, "aber er ist doch nur einmal am Kreuz gestorben, da brauchen
+wir ihn doch nicht wieder und wieder zu opfern?" Jesus spricht:
 
 > Jesus aber sprach zu ihnen: Wahrlich, wahrlich, ich sage euch: Wenn ihr das 
 > Fleisch des Menschensohnes nicht essen und sein Blut nicht trinken werdet, 
@@ -37,29 +53,39 @@ Gedenkensfeier bei einem Firmentreffen.
 >
 > -- [Johannes 6,54](https://k-bibel.de/ARN/Johannes6#54)
 
-Zusätzlich sehen wir auch, dass Jesus ausdrücklich betont, dass niemand in den 
-Himmel kommt, ohne sein Fleisch zu essen. Wäre - wie die evangelische Kirche lehrt - 
-die Kommunion nicht notwendig, sondern nur Glaube und vielleicht noch die Taufe (in einigen 
-Freikirchen wird nichtmal das mehr als notwendig gesehen), dann machen diese Worte 
-Jesu überhaupt keinen Sinn.
+Wenn es notwendig ist, Christi Fleisch zu essen, kann man dann heute an der Wursttheke 
+also "eine Scheibe Jesus Christus" bestellen? Nein. Christus ist hier drei Personen in 
+einem: der Hohepriester, das Opfer und der Gott, dem geopfert wird. So wie im Alten 
+Testament vom Opfer gegessen wurde, so essen auch wir von seinem Fleisch.  
+
+Christus wird hierbei nicht "neu" geopfert, sondern, da er außerhalb der Zeit steht, 
+reisen wir praktisch in der Zeit: Die Messe ist gleichzeitig das letzte Abendmahl 
+sowie Christus, der am Kreuz hängt. In der bildlichen Darstellung wird hierbei oft der 
+Moment verwendent, in der das Blut Christi aus seiner Seite strömt:
+
+Um dieses Opfer fortzuführen, hat Christus uns Bischöfe und Priester gegeben. 
+Nicht jeder Christ hat die Macht, Fleisch und Brot zu wandeln (siehe auch: 
+[Gegen Luthers "Priestertum des Volkes"](/de/priestertum-des-volkes)), sondern nur ein 
+gültig geweihter Priester in der [apostolischen Sukzession](/de/apostolische-sukzession), 
+in der jeder katholische Priester seine geistige Abstammung auf die Apostel 
+zurückführen kann.
 
 > Ist der Kelch des Segens, über den wir den Segen sprechen, nicht Teilhabe am
 > Blut Christi? Ist das Brot, das wir brechen, nicht Teilhabe am Leib Christi?
 > 
 > -- [1 Korinther 10:16-17](https://k-bibel.de/ARN/1Korinther10#16-17)
 
-Protestanten versuchen, zu erklären, dass hiermit der "mystische Leib Christi"
-gemeint ist, also Teilhabe an der Gemeinschaft, nicht aber am physischen Leib.
-Allerdings ist diese Erklärung unlogisch, denn jeder Katholik ist automatisch
-Teil des mystischen Leibes, somit ist eine speziellere Teilhabe am mystischen 
-Leib nicht möglich. Es muss also der physische Leib gemeint sein.
+Protestanten versuchen, zu erklären, dass hiermit der mystische Leib Christi
+gemeint ist, also Teilhabe an der Kirche / Gemeinschaft, nicht aber am physischen 
+Leib. Allerdings ist diese Erklärung unlogisch, denn jeder Christ ist automatisch
+Teil des mystischen Leibes, wenn Paulus hier das Trinken / Essen als Akt der 
+Teilhabe meint, kann damit nicht der mystische Leib gemeint sein.
 
 ## Kirchenväter
 
 Es gibt zwei Wege, zu widerlegen, dass hiermit wirklich der physische Leib Christi 
 gemeint ist: der erste ist es, in die Tradition zu schauen und zu sehen, ob diese 
 neue Lehre von der Symbolik und dem "mystischen Leib" schon immer geglaubt wurde.
-Wir finden das Gegenteil:
 
 > Lasst uns Gott gehorchen, und ihm nicht widersprechen; wenn auch das, was gesagt 
 > wird, entweder unsern Gedanken, oder unsern Augen zu widersprechen scheint; denn 
@@ -87,17 +113,17 @@ Wir finden das Gegenteil:
 Die Kirchenväter betonen die Realität der eucharistischen Verwandlung, nicht
 eine bloße symbolische Bedeutung.
 
-## Katechismus von Trient (1551)
+## Katechismus von Trient
 
 > Nachdem der Apostel erwähnt hat, dass das Brod und 
 > der Wein vom Herrn verwondelt (consecrirt), und die heiligen 
 > Geheimnisse den Aposteln zu verwalten übergeben worden seyen, fügt
 > er bei: 
 > 
-> "Es prüfe aber der Mensch sich selbst, und dann esse er von 
-> diesem Brode, und trinke von dem Kelche. Denn wer unwürdig isst und 
-> trinkt, isst und trinkt sich das Gericht, weil er den Leib des 
-> Herrn nicht unterscheidet." - [1. Korinther 11, 28](https://k-bibel.de/ARN/1Korinther11#28)
+> > Es prüfe aber der Mensch sich selbst, und dann esse er von 
+> > diesem Brode, und trinke von dem Kelche. Denn wer unwürdig isst und 
+> > trinkt, isst und trinkt sich das Gericht, weil er den Leib des 
+> > Herrn nicht unterscheidet." - [1. Korinther 11, 28](https://k-bibel.de/ARN/1Korinther11#28)
 >
 > Wäre aber, wie die Ketzer faseln, im Sakramente nichts Anderes 
 > zu verehren, als ein Gedächtniss und Zeichen des Leidens Christi, 
@@ -106,26 +132,10 @@ eine bloße symbolische Bedeutung.
 >
 > -- [Katechismus von Trient (1551), S. 242](https://archive.org/details/bub_gb_NOw_AAAAcAAJ/page/242/mode/2up)
 
-## Theologische Argumente gegen die Symbolik
-
-1. **Verbindung von Leib und Seele**  Die Eucharistie ist keine bloße
-symbolische Handlung. Sie ist Nahrung für die Seele und führt uns mystisch mit
-Gott in Einheit. Es handelt sich um eine geistliche Realität, die unsere Natur
-erhebt und uns Anteil an der göttlichen Natur schenkt (Theosis).
-
-2. **Die Eucharistie als Opfer und Hingabe**  Das eucharistische Opfer ist eine
-Fortführung der alttestamentlichen Opfer, jedoch in vollkommenem Sinne. Es ist
-nicht nur ein Zeichen, sondern enthält die wahre Gegenwart Christi, wie es
-bereits die Kirchenväter lehrten. [Mehr dazu - (Uni Freiburg)](https://bkv.unifr.ch/de/works/sth/versions/summe-der-theologie/divisions/3549)
-
-3. **Antwort auf Kannibalismusvorwürfe**  Die Eucharistie kann nicht als
-Kannibalismus betrachtet werden. Der Leib Christi ist verklärt und göttlich.
-Seine Substanz wird weder verringert noch physisch konsumiert. Dies
-unterscheidet sich grundlegend von weltlichen Begriffen des Kannibalismus.
-[Mehr dazu (catholic.com)](https://www.catholic.com/qa/is-receiving-the-eucharist-cannibalism)
-
 ```
 {
-    "date": "1680-01-01"
+    "date": "1680-01-01",
+    "tags": ["evangelisch"],
+    "authors": ["github:fschutt"]
 }
 ```

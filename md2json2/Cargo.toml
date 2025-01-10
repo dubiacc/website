@@ -18,6 +18,7 @@ regex = "1.11.1"
 minify-js = "0.6.0"
 better-minify-js = "0.7.0"
 html5minify = "0.3.3"
+short-uuid = "0.1.4"
 
 [features]
 default = ["external"]

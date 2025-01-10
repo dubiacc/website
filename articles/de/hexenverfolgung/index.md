@@ -1,6 +1,7 @@
-Als Hexenverfolgung bezeichnet man die Hexenverdächtigung, Festnahme, Folter 
-und insbesondere Hinrichtung von Personen, von denen geglaubt wird, sie 
-praktizierten als Hexe Zauberei bzw. stünden mit dem Teufel im Bunde.  
+Die Hexenjagd war hauptsächlich ein Relikt des Heidentums,
+98% der Hexen wurden von weltlichen Gerichten verurteilt und
+entgegen der heutigen Propaganda rettete die Inquisition 
+sogar Unschuldige vor dem Tod.
 
 # Hat die Kirche Hexen verbrannt?
 
@@ -9,36 +10,53 @@ verantwortlich?
 
 ## Geschichte
 
-Noch vor der eigentlichen Hexenverfolgung gab es seitens der Katholische 
-Kirche die klare Verurteilung des Aberglaubens von Hexen:
+Die Ideen von nächtlichen Hexenritten stammen aus Erzählungen über die
+römischen "Göttin" Diana, die unter dem Einfluss des römischen Reiches
+ihren Weg nach Deutschland gefunden hatte. Noch im sechsten Jahrhundert 
+zerstörte der Einsiedler Wulfilaich ein Standbild von ihr bei Trier, 
+das von dem heidnischen Landvolke eifrig verehrt wurde 
+([Historiae VIII, 15.](https://archive.org/details/historyoffranks00greguoft/page/194/mode/2up))
 
-> **Konzil von Paderborn 785**
+Edictum Rothari, das Gesetzbuch der gerade christianisierten Langobarden, 
+bestätigt ebenso, dass "ein Christ nicht glauben dürfe, daß es Hexen gäbe".
+
+> Niemand soll es wagen, eine Aldia oder eine Sklavin der anderen zu töten, 
+> als wäre sie eine Hexe, die sie masca (Hexe) nennen, denn für christliche 
+> Gemüter ist es weder glaubhaft noch möglich, dass eine Frau einen lebenden 
+> Mann von innen verschlingen kann.
 >
-> Wer, vom Teufel verblendet, nach Weise der Heiden glaubt, 
-> es sei jemand eine Hexe und fresse Menschen, und diese 
-> Person deshalb verbrennt oder ihr Fleisch durch andere 
-> essen läßt, der soll mit dem Tode bestraft werden“
+> -- [Edictum Rothari (643)](https://archive.is/a1bBu)
+
+Das Verbot wurde bestätigt unter dem fränkischen König Karl dem Großen (748 - 814):
+
+> Wer, vom Teufel verblendet, nach Weise der Heiden glaubt, es sei jemand 
+> eine Hexe und fresse Menschen, und diese Person deshalb verbrennt oder 
+> ihr Fleisch durch andere essen läßt, der soll mit dem Tode bestraft werden.
 >
-> -- [Quelle](https://paderborn.org)
+> -- [Karl der Große](https://de.wikipedia.org/wiki/Karl_der_Gro%C3%9Fe): [Synode von Paderborn 785](https://www.projekt-gutenberg.org/soldan/hexnpro1/chap010.html)
 
-Unter dem katholischen König [Karl der Große (748 - 814)](https://de.wikipedia.org/wiki/Karl_der_Gro%C3%9Fe)
-wurde in den Gesetzbüchern (Capitulatio) verboten, zu glauben 
-"nach Art der Heiden, daß ein Mann oder eine Frau eine Hexe sei". 
+Unter dem katholischen König wurden zwar Wahrsager und Zauberer verfolgt 
+("der Kirche als Sklaven zu übergeben"), allerdings nur, wenn sie 
+behaupteten, sie seien Wahrsager und Zauberer und somit den Rückfall 
+in das Heidentum förderten.
 
-Edictus Rothari, das Gesetzbuch der gerade christianisierten Langobarden 
-aus dem 7. Jahrhundert bestätigt, dass "ein Christ nicht glauben dürfe, 
-daß es Hexen gäbe". Demnach sind frühe Hexenverfolgungen eher ein 
-Nachhall des Heidentums.
+Im 10. Jahrhundert lesen wir im [Canon episcopi](https://www.juraforum.de/lexikon/canon-episcopi):
 
-Im Canon episcopi lesen wir über eine Bischofssynode aus 
-dem 9. Jahrhundert:
-
-> ... von den betreffenden Weibern selbst 
-> verbreiteten Wahn aufzutreten, daß Weiber nächtlicherweise, 
-> auf gewissen Tieren reitend, zum Dienste 
-> der heidnischen Göttin aufgeboten wurde.
+> Es soll auch nicht verschwiegen werden, dass einige ungezügelte Frauen, 
+> vom Satan verdorben, von Illusionen und Phantasmen der Dämonen verführt, 
+> glauben und offen bekennen, dass sie in der Nacht mit der heidnischen 
+> Göttin Diana, mit einer zahllosen Schar von Frauen, auf bestimmten Tieren 
+> reiten und in der Stille der toten Nacht über weite Landstriche fliegen 
+> und ihren Befehlen als Herrin gehorchen und in anderen Nächten in ihren 
+> Dienst gerufen werden. [...] Denn eine zahllose Menge, die durch diese 
+> falsche Meinung getäuscht wird, hält dies für wahr und kommt so vom rechten 
+> Glauben ab und fällt in heidnische Irrtümer zurück, wenn sie meint, es 
+> gäbe irgendeine Gottheit oder Macht außer dem einen Gott. 
 >
-> -- [Canon episcopi](src)
+> -- [Canon episcopi - Quelltext](https://archive.is/r5zZ)
+
+Der Grund für die Verfolgung der Hexen ist somit keineswegs der christliche 
+Glaube, sondern der heidnische Aberglaube.
 
 Im Jahre 1080 schrieb Papst Gregor VII. (1073-1085) an König 
 Harald von Dänemark:
@@ -46,25 +64,142 @@ Harald von Dänemark:
 > Glaubt nicht, Ihr dürftet Euch gegen Frauen versündigen, 
 > denen man die Schuld an Unwettern, Stürmen und manchen Krankheiten 
 > gäbe und die mit Unmenschlichkeit nach einem barbarischen Brauch 
-> abgeurteilt werden.
+> abgeurteilt werden [^1] .
 >
-> -- [Papst Gregor VII.](https://de.wikipedia.org/wiki/Gregor_VII.): [quelle](src)
+> -- [Papst Gregor VII.](https://de.wikipedia.org/wiki/Gregor_VII.): [Monumenta Gregoriana, Jaffé, S. 413](https://books.google.de/books?id=bSJKAAAAcAAJ&hl=de&pg=PA413#v=onepage&q&f=false)
 
+[^1]: "Preterea in mulieres, ob eandem causam simili immanitate barbari ritus damnatas, quicquam impietatis faciendi vobis fas esse, nolite putare."
 
-Ebenso ist es falsch, die Inquisition mit der Hexenverfolgung 
-in Verbindung zu bringen, da diese sich hauptsächlich auf die Ausrottung von 
-Häresien und Irrlehren, aber nicht auf die Verurteilung von Kräuterfrauen 
-und Fabelwesen konzentrierten.
+![Alexander IV. (1245-1261) :: align-right(300)](image-1.avif)
 
-![Alexander IV. (1245-1261)](image-1.avif)
-
-So schreibt Papst Alexander IV. im 13. Jahrhundert:
+So schreibt Papst Alexander IV. im Jahr 1258:
 
 > Die Inquisitoren, die beauftragt sind, Häresien zu untersuchen, 
 > dürfen sich nicht in Untersuchungen von Zukunftsdeutungen oder Hexerei einmischen, 
 > sofern ihnen nicht bekannt ist, daß sie mit offensichtlicher Häresie verbunden sind.
 >
 > -- [Alexander IV. (1245-1261)](src)
+
+## Super Illius Specula (1326)
+
+Im Jahr 1320 erstellte Papst Johannes XXII. Kommissionen zur Untersuchung,
+ob magische Praktiken, die bis dahin nur im Zusammenhang mit Häresie verfolgt wurden,
+selber Häresie seien, d.h. ob die Beschwörung von Dämonen als häretisch einzustufen sei.
+
+> Mit Schmerz stellen wir fest, dass es viele Christen nur dem Namen nach gibt, die [...]
+> einen Bund mit dem Tod und einen Pakt mit der Hölle eingehen. Denn sie opfern den Dämonen 
+> und beten sie an, sie machen oder lassen Bilder, Ringe, Spiegel, Phiolen oder irgendetwas 
+> anderes anfertigen, in das Dämonen durch Magie verstrickt werden können. Von ihnen suchen 
+> und erhalten sie Antworten und bitten um Hilfe bei der Erfüllung ihrer verderbten Wünsche. 
+> Für einen höchst verderblichen Zweck zeigen sie eine verderbliche Unterwürfigkeit.
+>
+> -- [Super Illuis Specula (1326)](https://www.cambridge.org/core/books/abs/inquisition-in-the-fourteenth-century/super-illius-specula-1326/0D637CA86F4C96E4BD2465126C1B3F94)
+
+Die Bulle ist sehr kurz gehalten und verurteilt eher eine Form des Satanismus (welche 
+Praktiken auch heute noch von der Kirche in jedem Beichtspiegel verdammt sind). 
+Allerdings begünstigte die Bulle die vorschnelle Verurteilung von Proto-Satanisten. 
+Dass diese Verurteilungen nicht unbedingt immer falsch waren, zeigt die Beichte eines 
+Satansjüngers aus dem Jahr vor der Inquisition in Autun, Frankreich:
+
+> Zuerst, an einem Sonntag, bevor das Weihwasser geweiht wird, muss der zukünftige 
+> Jünger mit seinen mit seinen Meistern in die Kirche gehen und dort in ihrer Gegenwart 
+> Christus und seinem Glauben, der Taufe und der Weltkirche abschwören.
+> 
+> Dann muss er dem magisterulus, d.h. dem kleinen Meister (denn so und nicht anders 
+> nennen sie den Teufel) huldigen. Danach trinkt er trinkt er aus dem besagten Fläschchen; 
+> und wenn er das getan hat, fühlt er sofort, dass er ein Bild ist von unserer Kunst und den
+> Hauptbräuche dieser Sekte. 
+>
+> -- [Johannes Nider, Formicarius, 1437](https://web.archive.org/web/20080509061007/http://www.aren.org/prison/documents/wicca/12/12.pdf)
+
+Die Verfolgung geschah also nicht aus Aberglauben, sondern aus tatsächlicher 
+Praxis des Satanismus und Glaubensverleugnung. Der Satansjünger wurde für seine Taten
+hingerichtet, starb aber reuig und mit Absolution seiner Sünden.
+
+## Summis desiderantes (1484)
+
+Die einzige Bestätigung von katholisch approbierter Verfolgung von Hexen stammt aus der Bulle 
+[Summis desiderantes](https://en.wikisource.org/wiki/Summis_desiderantes), welche die schlechten 
+Effekte von satanische Beschwörungen zugibt.
+
+> Es ist uns kürzlich zu Ohren gekommen, [...] dass in einigen Teilen Oberdeutschlands [...] viele 
+> Personen beiderlei Geschlechts, ohne Rücksicht auf ihr eigenes Heil und den katholischen Glauben 
+> verlassend, sich den männlichen und weiblichen Teufeln hingeben und durch ihre Beschwörungen, 
+> Zaubersprüche und Beschwörungen, und durch anderen abscheulichen Aberglauben, Vergehen, Verbrechen 
+> und Missetaten die Nachkommenschaft der Frauen, ... verderben und zugrunde gehen lassen; [...],
+> dass sie außerdem mit frevelhaften Lippen den Glauben verleugnen, den sie in der 
+> heiligen Taufe empfangen haben; und dass sie sich nicht scheuen, auf Veranlassung 
+> des Feindes der Menschheit viele andere abscheuliche Vergehen und Verbrechen zu 
+> begehen und zu verüben, [...].
+>
+> -- [Summis desiderantes](https://en.wikisource.org/wiki/Summis_desiderantes)
+
+Die Bulle wurde nicht von Papst Innozenz VIII. selber geschrieben, sondern vom späteren 
+Autor des Buches "Malleus maleficarum", [Heinrich Kramer / Henricus Institoris](https://de.wikipedia.org/wiki/Heinrich_Kramer),
+Inquisitor in der Verfolgung und Ausrottung der Hussiten, einer fränkischen Sekte:
+
+> Anfang des fünfzehnten Jahrhunderts verlagerten die Hussiten ihren Schwerpunkt 
+> auf eine "ausdrückliche Verurteilung einer unwiderruflich korrupten Kirche". 
+> 
+> Daraus folgt, dass Innozenz darauf hinwirkte Hussiten daran zu hindern, in Böhmen, 
+> einem großen und einflussreichen Königreich innerhalb des Heiligen Römischen Reiches, 
+> Gottesdienst zu feiern.
+> 
+> Heinrich Kramer, der Autor des "Malleus maleficarum", machte selbst Jagd auf
+> Hussiten. Zu Beginn seiner Karriere als Inquisitor erhielt er 1467 die päpstliche 
+> Vollmacht zur Bekämpfung der Hussiten im Heiligen Römischen Reich, darunter auch 
+> im Königreich Böhmen.
+>
+> -- [Pope Innocent VIII and the Summis desiderantes affectibus, Deyrmenjian 2020](https://pdxscholar.library.pdx.edu/cgi/viewcontent.cgi?article=1001&context=mmft_malleus)
+
+Der Papst unterschrieb die Bulle, wahrscheinlich im Glauben sie würde den Inquisitioren 
+in der Bekämpfung der Hussiten helfen.
+
+> Die Bulle verlieh ihm zwar die Vollmacht zur Zurechtweisung, Inhaftierung und 
+> Bestrafung verdächtiger Personen, jedoch nicht zur Hexenverbrennung. Als 
+> Institoris in Innsbruck  eine Hexenverfolgung ins Werk setzen wollte, hatte er 
+> auch mit der Bulle keinen Erfolg; der Bischof von Brixen, Georg Golser, 
+> verwies ihn der Diözese. 
+> 
+> Daraufhin verfasste Institoris den "Hexenhammer" ("Malleus maleficarum", Hammer der Hexen), 
+> dem er die päpstliche Bulle sowie ein Gutachten der theologischen Fakultät der Universität 
+> zu Köln (das schlichtweg als Fälschung zu betrachten war) voranstellte, so dass 
+> aufgrund geschickten Taktierens des Verfassers es sich der Öffentlichkeit so darstellte, 
+> als genösse der Hexenhammer die Unterstützung des Papsttums, des Kaisers sowie der 
+> angesehenen Theologischen Fakultät der Universität Köln
+>
+> -- [Wikipedia: Summis desiderantes affectibus](https://de.wikipedia.org/wiki/Summis_desiderantes_affectibus#Zweck_und_Inhalt)
+
+Obwohl Kramer die Zustimmung des Papstes hatte, hatte er erstaunlich wenig Erfolg und 
+wurde zunächst der Diözese, später des Landes verwiesen. Die Spanische Inquisition verurteilte
+die Rechtfertigung Kramers und des "Hexenhammers" später stark, aufgrund dem Hang
+zum leichtfertigen Aberglauben.
+
+> Die Spanische Inquisition beispielsweise erklärte den Hexenhammer nach eingehender 
+> Prüfung als ungeeignet. Die Suprema, der oberste Rat der spanischen Inquisition, 
+> urteilte: Denn der Autor nimmt für sich in Anspruch, genau die Wahrheit ermittelt zu haben, 
+> in Dingen, die so beschaffen sind, daß er so leicht wie alle anderen getäuscht werden kann.
+>
+> -- [Wikipedia: Hexenhammer](https://de.wikipedia.org/wiki/Hexenhammer#Rechtfertigung_und_Gegnerschaft)
+
+Dass die Effekte von Satanisten durchaus reale Macht erzeugen könnten, wird von 
+der Kirche bis heute geglaubt, allerdings nicht auf eine billige abergläubische Art.
+
+## Spätes Mittelalter
+
+> Hier ordnete der Papst „die Freilassung der ‚Hexen‘ an, die von den Besessenen 
+> verleumdet worden waren. Ihr guter Ruf sollte wiederhergestellt werden. Im Gegenzug 
+> wurden der Bischof und seine Berater bestraft, weil sie wesentliche Rechtsgrundsätze 
+> missachtet hatten: Folter ohne hinreichende Beweise, Vorenthaltung einer hinreichenden 
+> Verteidigung oder Berufung auf eine höhere Instanz, zum Beispiel auf Rom.
+> 
+> Ein juristisches Nachspiel hatten auch die Frauen, die ihre Mitbürgerinnen als Hexen 
+> denunziert hatten. Gegen vier Frauen wurden Anklagen wegen Meineids, Aberglaubens 
+> und in diesem Zusammenhang auch wegen Verleumdung und übler Nachrede wurden gegen vier Frauen erhoben.
+> 
+> -- [Decker 2013, S. 89–92]()
+
+## Todeszahlen
 
 ## Todeszahlen
 
@@ -81,7 +216,28 @@ von "nur" 2% und die restlichen 98% sind dem weltlichen Gericht durch Kaiser
 und Königreiche zu verdanken. Aus den Zahlen ist ersichtlich dass die Hexenverfolgung, 
 viel eher eine Praktik der weltlichen Macht als der der Kirche war.
 
-## Kirche gegen Aberglauben
+> In der Vergangenheit wurden gerne Zahlen in Millionenhöhe genannt,
+> Diese Zahlen haben sich jedoch inzwischen als unrealistisch erwiesen, 
+> und es wird derzeit schätzungsweise 28.000 bis 40.000 Hinrichtungen 
+> im Heiligen Römischen Reich Deutscher Nationen vollzogen wurden. 
+> Allerdings wurden nicht alle, die der Hexerei angeklagt waren, 
+> zum Tode verurteilt. 
+> 
+> Seit dem Aufkommen quantitativer Methoden in der Hexereiforschung ist 
+> deutlich geworden, dass nicht alle Prozesse mit dem Tod endeten und dass
+> nicht alle Prozesse mit dem Tod endeten und dass alle gegenteiligen Annahmen
+> in das Reich der Mythen verwiesen werden müssen. 
+>
+> -- [Schulte, R. (2009). Male Witches on Trial: An Empirical Approach](https://link.springer.com/chapter/10.1057/9780230240742_3)
+
+In einer groben Hochrechnung kam Behringer in der Zeit von 1586 bis 1730 auf 
+etwa 4000 Hexenprozesse. Dabei wurden etwa 1000 bis 1500 Hinrichtungen durchgeführt,
+
+
+So the death penalty applied also
+to ‘penitent witches’ and to “those who use a consecrated host in sorcery.” But
+“increasing caution” led to the fact that in Rome—with a high number of secular
+executions—the last witch was burned in 1572.
 
 ![Porträt von Papst Clemens V (1305-1314)](image-3.avif)
 
@@ -154,7 +310,7 @@ Heiligen Offiziums, ein umfangreicheres Inquisitoren-Handbuch zum Thema Hexen:
 So prangerte die Römische Inquisition selbst an, daß kaum jemals ein Prozeß 
 richtig und rechtmäßig ablief:
 
-> Zahlreiche (weltliche) Richter (sind) [...] zu tadeln wegen ungebührlicher 
+> Zahlreiche [weltliche] Richter [sind ...] zu tadeln wegen ungebührlicher 
 > Quälereien, Nachforschungen und Verhaftungen sowie verschiedener schlechter 
 > und unerträglicher Methoden bei der Anlage der Prozesse, der Befragung der 
 > Angeklagten, exzessiven Folterungen, sodaß bisweilen ungerechte und 

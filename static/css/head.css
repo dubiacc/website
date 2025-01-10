@@ -1471,6 +1471,13 @@ ol.list-type-upper-roman > li::before {
     code blocks, blockquotes, etc.
  */
 
+@media all and (max-width: 650px) {
+    div.float,
+    figure.float {
+        max-width: none !important;
+    }
+}
+
 @media all and (min-width: 650px) {
     .markdownBody {
         --float-side-margin: 2em;

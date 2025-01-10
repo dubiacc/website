@@ -72,7 +72,10 @@
             "special-about-title": "Impressum",
             "special-about-path": "impressum.html",
             "special-about-id": "de-impressum",
-            "special-about-desc": "Impressum"
+            "special-about-desc": "Impressum",
+            "donate-1": "Dieser Artikel wurde von $$AUTHORS$$ geschrieben.",
+            "donate-2": "Wenn Sie möchten, können Sie den Autor direkt mit einer Spende durch $$DONATION_METHODS$$ unterstützen. Danke.",
+            "go-to-top": "⬆ Anfang"
         },
         "en": {
             "index-title": "Discover the true Catholic Faith - dubia.cc",
@@ -146,7 +149,10 @@
             "special-about-title": "About",
             "special-about-path": "about.html",
             "special-about-id": "en-about",
-            "special-about-desc": "About"
+            "special-about-desc": "About",
+            "donate-1": "This article was written by $$AUTHORS$$.",
+            "donate-2": "If you like, you can support the author directly with a donation using $$DONATION_METHODS$$. Thanks.",
+            "go-to-top": "⬆ Top"
         },
         "fr": {
             "index-title": "Découvre la véritable foi catholique - dubia.cc",
@@ -220,7 +226,10 @@
             "special-about-title": "Impression",
             "special-about-path": "impression.html",
             "special-about-id": "fr-impression",
-            "special-about-desc": "Impression"
+            "special-about-desc": "Impression",
+            "donate-1" : "Cet article a été écrit par $$AUTHORS$$",
+            "donate-2": "Si vous le souhaitez, vous pouvez soutenir directement l'auteur en faisant un don par $$DONATION_METHODS$$. Merci.",
+            "go-to-top": "⬆ Début"
         },
         "pl": {
             "index-title": "Odkryj prawdziwą wiarę katolicką – dubia.cc",
@@ -294,7 +303,10 @@
             "special-about-title": "Informacje prawne",
             "special-about-path": "informacje.html",
             "special-about-id": "pl-informacje",
-            "special-about-desc": "Informacje prawne"
+            "special-about-desc": "Informacje prawne",
+            "donate-1": "Ten artykuł został napisany przez $$AUTHORS$$.",
+            "donate-2": "Jeśli chcesz, możesz wesprzeć autora bezpośrednio darowizną za pośrednictwem $$DONATION_METHODS$$. Dziękujemy bardzo.",
+            "go-to-top": "⬆ Górę"
         },
         "br": {
             "index-title": "Descubra a verdadeira fé católica - dubia.cc",
@@ -368,7 +380,10 @@
             "special-about-title": "Informações legais",
             "special-about-path": "impressao.html",
             "special-about-id": "br-impressao",
-            "special-about-desc": "Informações legais"
+            "special-about-desc": "Informações legais",
+            "donate-1": "Este artigo foi escrito por $$AUTHORS$$.",
+            "donate-2": "Se desejar, você pode apoiar o autor diretamente com uma doação usando $$DONATION_METHODS$$. Obrigado.",
+            "go-to-top": "⬆ Topo"
         },
         "es": {
             "index-title": "Descubre la verdadera fe católica - dubia.cc",
@@ -442,7 +457,10 @@
             "special-about-title": "Aviso legal",
             "special-about-path": "aviso-legal.html",
             "special-about-id": "es-aviso-legal",
-            "special-about-desc": "Aviso legal"
+            "special-about-desc": "Aviso legal",
+            "donate-1": "Este artículo ha sido escrito por $$AUTHORS$$",
+            "donate-2": "Si lo desea, puede apoyar al autor directamente con una donación utilizando $$DONATION_METHODS$$. Gracias.",
+            "go-to-top": "⬆ Arriba"
         }
     },
     "authors": {
@@ -614,20 +632,12 @@
             },
             "ressources": [
                 { 
-                    "id": "gebete",
-                    "title": "Gebete",
+                    "id": "messe",
+                    "title": "Lateinischen Messen",
                     "links": [
-                        {"slug": "rosenkranz", "title": "Rosenkranz"},
-                        {"slug": "angelus", "title": "Angelus"},
-                        {"slug": "morgengruss", "title": "Morgengruß zum Herzen Jesu"},
-                        {"slug": "abendgruss", "title": "Abendgruß zum Herzen Jesu"},
-                        {"slug": "weihe-menschengeschlecht", "title": "Weihe des Menschengeschlechtes"},
-                        {"slug": "arbeitergebet", "title": "Arbeitergebet zum Hl. Josef"},
-                        {"slug": "mutter-der-hilfe", "title": "Zur Mutter der immerwährenden Hilfe"},
-                        {"slug": "hl-josef-schutzherr", "title": "Heiliger Joseph, Schutzherr der Kirche"},
-                        {"slug": "salve-regina", "title": "Salve Regina"},
-                        {"slug": "gebet-fuer-papst", "title": "Gebet für den Papst"},
-                        {"slug": "gebet-birgitta-schweden", "title": "Gebet der Hl. Birgitta von Schweden"}
+                        {"slug": "https://www.latinmass.com/find-latin-mass", "title": "latinmass.com/find-latin-mass"},
+                        {"slug": "https://latinmassdir.org", "title": "LatinMassDir.org"},
+                        {"slug": "https://sspx.org/en/mass-centers", "title": "Interaktive Karte von Messorten der FSSPX"}
                     ]
                 },
                 {
@@ -645,12 +655,20 @@
                     ]
                 },
                 { 
-                    "id": "messe",
-                    "title": "Lateinischen Messen",
+                    "id": "gebete",
+                    "title": "Gebete",
                     "links": [
-                        {"slug": "https://www.latinmass.com/find-latin-mass", "title": "latinmass.com/find-latin-mass"},
-                        {"slug": "https://latinmassdir.org", "title": "LatinMassDir.org"},
-                        {"slug": "https://sspx.org/en/mass-centers", "title": "Interaktive Karte von Messorten der FSSPX"}
+                        {"slug": "rosenkranz", "title": "Rosenkranz"},
+                        {"slug": "angelus", "title": "Angelus"},
+                        {"slug": "morgengruss", "title": "Morgengruß zum Herzen Jesu"},
+                        {"slug": "abendgruss", "title": "Abendgruß zum Herzen Jesu"},
+                        {"slug": "weihe-menschengeschlecht", "title": "Weihe des Menschengeschlechtes"},
+                        {"slug": "arbeitergebet", "title": "Arbeitergebet zum Hl. Josef"},
+                        {"slug": "mutter-der-hilfe", "title": "Zur Mutter der immerwährenden Hilfe"},
+                        {"slug": "hl-josef-schutzherr", "title": "Heiliger Joseph, Schutzherr der Kirche"},
+                        {"slug": "salve-regina", "title": "Salve Regina"},
+                        {"slug": "gebet-fuer-papst", "title": "Gebet für den Papst"},
+                        {"slug": "gebet-birgitta-schweden", "title": "Gebet der Hl. Birgitta von Schweden"}
                     ]
                 }
             ],
@@ -848,10 +866,12 @@
             },
             "ressources": [
                 { 
-                    "id": "prayers",
-                    "title": "Prayers",
+                    "id": "mass",
+                    "title": "Latin Mass Locations",
                     "links": [
-                        {"slug": "rosary", "title": "Rosary"}
+                        {"slug": "https://www.latinmass.com/find-latin-mass", "title": "latinmass.com/find-latin-mass"},
+                        {"slug": "https://latinmassdir.org", "title": "LatinMassDir.org"},
+                        {"slug": "https://sspx.org/en/mass-centers", "title": "SSPX Mass Centers"}
                     ]
                 },
                 {
@@ -869,12 +889,10 @@
                     ]
                 },
                 { 
-                    "id": "messe",
-                    "title": "Latin Mass Locations",
+                    "id": "prayers",
+                    "title": "Prayers",
                     "links": [
-                        {"slug": "https://www.latinmass.com/find-latin-mass", "title": "latinmass.com/find-latin-mass"},
-                        {"slug": "https://latinmassdir.org", "title": "LatinMassDir.org"},
-                        {"slug": "https://sspx.org/en/mass-centers", "title": "SSPX Mass Centers"}
+                        {"slug": "rosary", "title": "Rosary"}
                     ]
                 }
             ],

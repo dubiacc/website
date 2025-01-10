@@ -1,0 +1,41 @@
+<style>
+    #donate-container {
+        border: 3px solid #e50000;
+        display: flex;
+        padding: 10px;
+        margin: 40px 0px;
+    }
+    #donate-img {
+        display: flex;
+        padding: 0px 40px;
+        justify-content: center;
+        align-items: center;
+    }
+    #donate-img img {
+        max-width: 100px;
+    }
+    #donate {
+        hyphens: auto;
+        text-align: justify;
+    }
+    #donate a {
+        color:#ff4e4e;
+    }
+    @media screen and (max-width: 400px) {
+        #donate-container {
+            flex-direction: column;
+        }
+        #donate-img {
+            padding: 20px;
+            justify-content: center;
+        }
+    }
+</style>
+<div id="donate-container">
+    <div id="donate-img">
+        <!-- DONATE_SVG -->
+    </div>
+    <div id="donate-text">
+    $$DONATE_TEXT$$
+    </div>
+</div>

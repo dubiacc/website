@@ -11757,7 +11757,7 @@ Content = {
                 //	Prevent layout weirdness for footnote links.
                 contentDocument.querySelectorAll("a[href*='#cite_note-']").forEach(citationLink => {
                     citationLink.classList.add("icon-not");
-                    citationLink.innerHTML = "&NoBreak;" + citationLink.textContent.trim();
+                    citationLink.innerHTML = "" + citationLink.textContent.replace("&nobreak;", "");
                 });
 
                 //	Rectify back-to-citation links in “References” sections.

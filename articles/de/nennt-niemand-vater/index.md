@@ -1,7 +1,7 @@
 Paulus nennt an verschiedenen Stellen seine Nachfolger
 "Kinder" - wie ist dieses Verbot zu verstehen?
 
-# Darf man Priester Pater / Vater nennen?
+# Darf man Priester Vater nennen?
 
 Das folgende Zitat wird oft benutzt, um zu bestreiten, 
 dass katholische Priester "Pater", "Father", oder 
