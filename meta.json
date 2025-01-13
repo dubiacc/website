@@ -637,7 +637,8 @@
                     "links": [
                         {"slug": "https://www.latinmass.com/find-latin-mass", "title": "latinmass.com/find-latin-mass"},
                         {"slug": "https://latinmassdir.org", "title": "LatinMassDir.org"},
-                        {"slug": "https://sspx.org/en/mass-centers", "title": "Interaktive Karte von Messorten der FSSPX"}
+                        {"slug": "https://sspx.org/en/mass-centers", "title": "Interaktive Karte von Messorten der FSSPX"},
+                        {"slug": "https://www.cathinfo.com/sspx-resistance-chapels/", "title": "SSPX Resistance Messorte"}
                     ]
                 },
                 {
@@ -871,7 +872,8 @@
                     "links": [
                         {"slug": "https://www.latinmass.com/find-latin-mass", "title": "latinmass.com/find-latin-mass"},
                         {"slug": "https://latinmassdir.org", "title": "LatinMassDir.org"},
-                        {"slug": "https://sspx.org/en/mass-centers", "title": "SSPX Mass Centers"}
+                        {"slug": "https://sspx.org/en/mass-centers", "title": "SSPX Mass Centers"},
+                        {"slug": "https://www.cathinfo.com/sspx-resistance-chapels/", "title": "SSPX Resistance Mass Centers"}
                     ]
                 },
                 {

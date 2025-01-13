@@ -19,6 +19,8 @@ minify-js = "0.6.0"
 better-minify-js = "0.7.0"
 html5minify = "0.3.3"
 short-uuid = "0.1.4"
+uuid = "1.11.1"
+sha1 = "0.10.6"
 
 [features]
 default = ["external"]

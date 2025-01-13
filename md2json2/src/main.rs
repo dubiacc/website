@@ -66,13 +66,19 @@ impl ParsedArticle {
                 Paragraph::Quote { q } => {
                     let mut links = q.get_links();
                     for l in q.quote.iter() {
-                        if let Paragraph::Sentence { s } = l {
-                            for t in s.iter() {
-                                if let SentenceItem::Link { l } = t {
-                                    // TODO: add titles to link!
-                                    links.push(l.clone());
+                        match l {
+                            Paragraph::Sentence { s } => {
+                                for t in s.iter() {
+                                    if let SentenceItem::Link { l } = t {
+                                        // TODO: add titles to link!
+                                        links.push(l.clone());
+                                    }
                                 }
-                            }
+                            },
+                            Paragraph::Quote { q } => {
+                                links.extend(q.get_links().into_iter());
+                            },
+                            _ => { },
                         }
                     }
                     links
@@ -209,11 +215,17 @@ fn test_parse_footnote() {
     });
 
     let s = "[^ref]: Some text with [a link](https://example.com).";
-    assert_eq!(parse_footnote(s).unwrap(), Footnote {
+    let p = parse_footnote(s).unwrap();
+    assert_eq!(p, Footnote {
         id: "ref".to_string(), 
         text: vec![
             SentenceItem::Text { text: "Some text with ".to_string() },
-            SentenceItem::Link { l: Link { text: "a link".to_string(), href: "https://example.com".to_string() } },
+            SentenceItem::Link { l: Link { 
+                text: "a link".to_string(), 
+                href: "https://example.com".to_string(),
+                title: "a link".to_string(),
+                id: uuid("https://example.com"),
+            } },
             SentenceItem::Text { text: ".".to_string() },
         ]
     });
@@ -270,6 +282,15 @@ enum Paragraph {
 }
 
 impl Paragraph {
+
+    pub fn as_sentence(&self) -> Option<&[SentenceItem]> {
+        if let Paragraph::Sentence { s } = self {
+            Some(s)
+        } else {
+            None
+        }
+    }
+
     pub fn word_count(&self) -> usize {
         match self {
             Paragraph::Sentence { s } => s.iter().map(|z| match z {
@@ -323,6 +344,15 @@ enum SentenceItem {
 }
 
 impl SentenceItem {
+
+    pub fn text(&self) -> Option<&String> {
+        if let SentenceItem::Text { text } = self {
+            Some(text)
+        } else {
+            None
+        }
+    }
+
     pub fn is_link(&self) -> bool {
         match self {
             SentenceItem::Link { l } => true,
@@ -598,6 +628,40 @@ impl ArticleType {
     }
 }
 
+#[test]
+fn test_parse_quote() {
+    
+    let s = "
+        > Test
+        >
+        > > Indent
+        > > IndentLine2
+        >
+        > Continued
+    ".lines().map(|s| s.trim())
+    .collect::<Vec<_>>().join("\r\n");
+
+    let q = Quote::new(&s).unwrap();
+
+    assert_eq!(q, Quote {
+        title: String::new(),
+        quote: vec![
+            Paragraph::Sentence { s: vec![SentenceItem::Text { text: "Test".to_string() }] },
+            Paragraph::Quote { q: Quote { 
+                title: String::new(), 
+                quote: vec![
+                    Paragraph::Sentence { s: vec![SentenceItem::Text { text: "Indent IndentLine2".to_string() }] },
+                ],
+                author: None, 
+                source: None,
+            }},
+            Paragraph::Sentence { s: vec![SentenceItem::Text { text: "Continued".to_string() }] },
+        ],
+        author: None,
+        source: None,
+    });
+}
+
 impl Quote {
     fn new(s: &str) -> Option<Self> {
 
@@ -664,11 +728,12 @@ impl Quote {
 
         let mut quote = lines
             .split(|s| s.trim().is_empty())
-            .map(|q| q.join(" "))
-            .filter(|s| !s.trim().is_empty())
-            .collect::<Vec<String>>();
+            .map(|q| q.to_vec())
+            .filter(|s| !s.iter().all(|q| q.is_empty()))
+            .collect::<Vec<Vec<String>>>();
 
-        if let Some(fl) = quote.first_mut() {
+
+        if let Some(fl) = quote.first_mut().and_then(|s| s.first_mut()) {
             if fl.trim().starts_with("\"") {
                 *fl = fl.replacen("\"", "", 1);
             } else if fl.trim().starts_with("'") {
@@ -678,7 +743,7 @@ impl Quote {
             } 
         }
 
-        if let Some(fl) = quote.last_mut() {
+        if let Some(fl) = quote.last_mut().and_then(|s: &mut Vec<String>| s.last_mut()) {
             if fl.trim().ends_with("\"") {
                 *fl = fl.replacen("\"", "", 1);
             } else if fl.trim().ends_with("'") {
@@ -689,7 +754,7 @@ impl Quote {
         }
 
         let quote = quote.iter()
-        .map(|q| parse_paragraph(q))
+        .map(|q| parse_paragraph(&q.join("\r\n")))
         .collect::<Vec<_>>();
 
         let q = Quote {
@@ -762,11 +827,21 @@ fn take_next_link(s: &str) -> Option<(Link, usize)> {
     
     let l = Link {
         text,
-        href,
+        href: href.clone(),
         title,
-        id: short_uuid::short!().to_string(),
+        id: uuid(&href),
     };
     Some((l, bytes))
+}
+
+fn uuid(seed: &str) -> String {
+    use sha1::{Sha1, Digest};
+    let mut hasher = Sha1::new();
+    hasher.update(seed.as_bytes());
+    let f = hasher.finalize();
+    let b = [f[0], f[1], f[2], f[3], f[4], f[5], f[6], f[7], f[8], f[9], f[10], f[11], f[12], f[13], f[14], f[15]];
+    let uuid = uuid::Builder::from_sha1_bytes(b).into_uuid();
+    short_uuid::ShortUuid::from_uuid(&uuid).to_string()
 }
 
 #[test]
@@ -788,10 +863,13 @@ fn test_quote_2() {
                 ]
             },
         ],
-        author: "5. Mose 22,28-29".to_string(),
-        author_link: "https://k-bibel.de/ARN/Deuteronomium22#28-29".to_string(),
-        source: "".to_string(),
-        source_link: "".to_string(),
+        author: Some(Link { 
+            text: "5. Mose 22,28-29".to_string(), 
+            href: "https://k-bibel.de/ARN/Deuteronomium22#28-29".to_string(),
+            title: "5. Mose 22,28-29".to_string(),
+            id: uuid("https://k-bibel.de/ARN/Deuteronomium22#28-29"),
+        }),
+        source: None,
     }))
 }
 #[test]
@@ -810,17 +888,26 @@ fn test_quote() {
         > -- [Test](https://wikipedia.org/Test): [de juiribus](test.pdf)
     ";
 
-    assert_eq!(Quote::new(s), Some(Quote {
+    let q = Quote::new(s).unwrap();
+    assert_eq!(q, Quote {
         title: "Heading".to_string(),
         quote: vec![
             Paragraph::Sentence {  s: vec![SentenceItem::Text { text: "LineA LineB LineC".to_string() }] },
             Paragraph::Sentence {  s: vec![SentenceItem::Text { text: "LineD LineE".to_string() }] },
         ],
-        author: "Test".to_string(),
-        author_link: "https://wikipedia.org/Test".to_string(),
-        source: "de juiribus".to_string(),
-        source_link: "test.pdf".to_string(),
-    }))
+        author: Some(Link { 
+            text: "Test".to_string(),
+            href: "https://wikipedia.org/Test".to_string(), 
+            title: "Test".to_string(), 
+            id: q.author.clone().unwrap().id,
+        }),
+        source: Some(Link { 
+            text: "de juiribus".to_string(),
+            href: "test.pdf".to_string(), 
+            title: "de juiribus".to_string(), 
+            id: q.source.clone().unwrap().id,
+        }),
+    })
 }
 
 // parses the footnote from a "[^note]" text
@@ -908,7 +995,12 @@ fn test_sentence() {
             SentenceItem::Text { text: "This is a sentence with a footnote".to_string() },
             SentenceItem::Footnote { id: "15".to_string() },
             SentenceItem::Text { text: " and a ".to_string() },
-            SentenceItem::Link { l: Link { text: "link".to_string(), href: "url".to_string() } },
+            SentenceItem::Link { l: Link { 
+                text: "link".to_string(), 
+                href: "url".to_string(),
+                title: "link".to_string(),
+                id: uuid("url"),
+            } },
             SentenceItem::Text { text: ".".to_string() },
         ]
     })
@@ -1285,12 +1377,23 @@ fn si2text(si: &[SentenceItem]) -> String {
     }).collect::<Vec<_>>().join("")
 }
 
+fn rv() -> (String, String) {
+    let s = "display:inline;color:red;width: 25px;height: 25px;position: relative;top: 7px;margin-right: 10px;";
+    let r = format!("<div style='{s}'>{}</div>", include_str!("../../templates/response.svg"));
+    let v = format!("<div style='{s}'>{}</div>", include_str!("../../templates/versicle.svg"));
+    (r, v)
+}
+
 fn si2html(si: &[SentenceItem]) -> String {
+
+    let (r, v) = rv();
+
     let s = si.iter().map(|s| match s {
         SentenceItem::Footnote { id } => format!("<a href='#fn-{id}' class='footnote-ref spawns-popup' id='fnref-{id}' role='doc-noteref'><sup>{id}</sup></a>"),
         SentenceItem::Link { l } => format!("<a href='{}'>{}</a>", l.href, l.text),
-        SentenceItem::Text { text } => text.clone(),
+        SentenceItem::Text { text } => text.replace("[R]: ", &r).replace("[V]: ", &v),
     }).collect::<Vec<_>>().join("");
+    
     format!("<p class='first-graf'>{s}</p>")
 }
 
@@ -1618,10 +1721,22 @@ fn table_of_contents(
 
     let s = "class='link-self decorate-not has-content spawns-popup'";
 
-    target += &format!("<li><a {s} id='toc-backlinks' href='#{backlinks_id}'>{backlinks_title}</a></li>");
-    target += &format!("<li><a {s} id='toc-footnotes' href='#{footnotes_id}'>{footnotes_title}</a></li>");
-    target += &format!("<li><a {s} id='toc-similar' href='#{similar_id}'>{similar_title}</a></li>");
-    target += &format!("<li><a {s} id='toc-bibliography' href='#{bibliography_id}'>{bibliography_title}</a></li>");
+    if !a.footnotes.is_empty() {
+        target += &format!("<li><a {s} id='toc-footnotes' href='#{footnotes_id}'>{footnotes_title}</a></li>");
+    }
+
+    if !a.bibliography.is_empty() {
+        target += &format!("<li><a {s} id='toc-bibliography' href='#{bibliography_id}'>{bibliography_title}</a></li>");
+    }
+
+    if !a.backlinks.is_empty() {
+        target += &format!("<li><a {s} id='toc-backlinks' href='#{backlinks_id}'>{backlinks_title}</a></li>");
+    }
+
+    if !a.similar.is_empty() {
+        target += &format!("<li><a {s} id='toc-similar' href='#{similar_id}'>{similar_title}</a></li>");
+    }
+
     target += &format!("</ul>");
     target += &format!("<button class='toc-collapse-toggle-button' title='{collapse_button_title}' tabindex='-1'><span></span></button>");
     target += &format!("</div>");
@@ -1766,7 +1881,7 @@ fn page_metadata(
         page_meta = page_meta.replace("<!-- SIMILAR_DOTTED -->", &bl);
     }
 
-    if !a.similar.is_empty() {
+    if !a.bibliography.is_empty() {
         let mut bl = include_str!("../../templates/page-metadata.bibliography.html").to_string();
         bl = bl.replace("$$BIBLIOGRAPHY_DESC$$", &bibliography_desc);
         bl = bl.replace("$$BIBLIOGRAPHY_TITLE$$", &bibliography_title);
@@ -1782,9 +1897,11 @@ fn render_paragraph(
     lang: &str,
     par: &Paragraph, 
     dropcap: bool, 
-    is_abstract: bool, 
+    is_abstract: bool,
     article_id: &str
 ) -> String {
+
+    let (r, v) = rv();
     let mut target = String::new();
     match par {
         Paragraph::Sentence { s } => {
@@ -1796,12 +1913,10 @@ fn render_paragraph(
                 match item {
                     SentenceItem::Text { text } => {
                         if dropcap && i == 0 {
-                            let drc = text.chars().next().map(|s| s.to_string()).unwrap_or_default();
-                            target += &format!("<span class='dropcap'>{drc}</span>");
                             let rest = text.chars().skip(1).collect::<String>();
                             target += &rest;
                         } else {
-                            target += &text;
+                            target += &text.replace("[R]: ", &r).replace("[V]: ", &v);
                         }
                     }
                     SentenceItem::Link { l } => {
@@ -1815,7 +1930,7 @@ fn render_paragraph(
             target += "</p>";
         },
         Paragraph::Quote { q } => {
-            let lv = if is_abstract { "2" } else { "1" };
+            let lv = if is_abstract { 2 } else { 1 };
             target += &format!("<blockquote class='blockquote-level-{lv}' style='margin-top:10px;margin-bottom: 10px;'>");
             if !q.title.is_empty() {
                 target += "<strong>";
@@ -1823,7 +1938,20 @@ fn render_paragraph(
                 target += "</strong>";
             }
 
-            target += &q.quote.iter().map(|p| format!("<p class='first-block first-graf'>{}</p>", par2html(&p))).collect::<Vec<_>>().join("");
+            target += &q.quote.iter().map(|p| match p {
+                Paragraph::Quote { q } => {
+                    let content = q.quote.iter()
+                    .map(|p| format!("<p class='first-block first-graf'>{}</p>", par2html(&p))).collect::<Vec<_>>()
+                    .join("\r\n");
+                    format!("<blockquote class='blockquote-level-{}' style='margin-top:10px;margin-bottom: 10px;'>{content}</blockquote>", lv + 1)
+                },
+                Paragraph::Sentence { .. } => {
+                    format!("<p class='first-block first-graf'>{}</p>", par2html(&p))
+                },
+                Paragraph::Image { .. } => {
+                    String::new()
+                },
+            }).collect::<Vec<_>>().join("");
 
             if  q.author.is_some() || q.source.is_some() {
                 target += "<em style='padding-left:10px;'>";
@@ -1886,25 +2014,36 @@ fn render_image(i: &Image) -> String {
 fn body_abstract(
     lang: &str,
     article_id: &str,
+    is_prayer: bool,
     summary: &[Paragraph],
 ) -> String {
     
+    let mut target = String::new();
+
     if summary.is_empty() {
-        return String::new();
+        return target;
     }
 
-    let mut target = "<blockquote class='blockquote-level-1 block'>".to_string();
-    target += "<p class='first-block first-graf intro-graf dropcap-kanzlei' style='--bsm: 0;display:block;min-height:7em;'>";
-    target += &render_paragraph(lang, &summary[0], true, true, article_id); 
-    target += "</p>";
+    // body_abstract
+    if !is_prayer {
+        target += "<blockquote class='blockquote-level-1 block'>";
+        if let Some(drc) = summary.get(0).and_then(|q| q.as_sentence()?.get(0)?.text()?.chars().next()) {
+            target += "<p class='first-block first-graf intro-graf dropcap-kanzlei' style='--bsm: 0;display:inline;min-height:7em;'>";
+            target += &format!("<span class='dropcap' style='position: relative;bottom: -10px;margin-bottom: -10px;'>{drc}</span>");
+            target += "</p>";
+        }    
+    }
 
-    for par in summary.iter().skip(1) {
+    for (i, par) in summary.iter().enumerate() {
         target += "<p class='first-graf' style='--bsm: 0;'>";
-        target += &render_paragraph(lang, par, false, true, article_id);
+        target += &render_paragraph(lang, par, !is_prayer && i == 0, true, article_id);
         target += "</p>";
     }
 
-    target += "</blockquote>";
+    if !is_prayer {
+        target += "</blockquote>";
+    }
+
     target
 }
 
@@ -1991,7 +2130,7 @@ fn donate(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<Stri
         "fr" => include_str!("../../static/img/donate/fr.svg").to_string(),
         "es" => include_str!("../../static/img/donate/es.svg").to_string(),
         _ => String::new(),
-    };
+    }.replace("<svg ", "<svg style='max-height:50px;' ");
     let mut donate = include_str!("../../templates/donate.html").to_string();
     donate = donate.replace("$$DONATE_SVG$$", &format!("/static/img/donate/{lang}.svg"));
     donate = donate.replace("$$DONATE_TEXT$$", &(donate_1 + "&nbsp;" + &donate_2));
@@ -2131,7 +2270,7 @@ fn article2html(
     let html = html.replace("<!-- TOC -->", &table_of_contents(lang, &a, meta)?);
     let html = html.replace("<!-- PAGE_DESCRIPTION -->", &page_desciption(lang, &a, meta)?);
     let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a, meta)?);
-    let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(lang, slug, &a.summary));
+    let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(lang, slug, a.is_prayer(), &a.summary));
     let html = html.replace("<!-- BODY_CONTENT -->", &body_content(lang, &slug, &a.sections, meta)?);
     let html = html.replace("<!-- DONATE -->", &donate(lang, &a, meta)?);
     let html = html.replace("<!-- BODY_NOSCRIPT -->", &body_noscript());
