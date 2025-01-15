@@ -1,0 +1,243 @@
+
+
+a.footnote-ref {
+    vertical-align: super;
+    line-height: 0.3;
+    position: relative;
+    top: 0.05em;
+    padding: 0 0.05em;
+    font-variant-numeric: lining-nums;
+    font-weight: 600;
+    z-index: 1;
+    transition:
+        box-shadow 0.15s ease 0.05s;
+}
+
+a.footnote-ref sup {
+    font-size: 0.75em;
+    vertical-align: baseline;
+}
+
+
+a.footnote-ref::after {
+    content: "";
+    position: absolute;
+    left: -40%;
+    top: 5%;
+    width: 180%;
+    height: 120%;
+}
+a.footnote-ref.highlighted,
+a.footnote-ref:hover,
+a.footnote-ref.targeted {
+    
+    --o-v-o: 4px;
+    --o-p:   4px;
+    --o-h-s: 2px;
+
+    box-shadow:
+                  var(--o-h-s)  var(--o-v-o) 0      var(--o-p)        var(--background-color),
+        calc(-1 * var(--o-h-s)) var(--o-v-o) 0      var(--o-p)        var(--background-color),
+                  var(--o-h-s)  var(--o-v-o) 0 calc(var(--o-p) + 1px) var(--GW-highlighted-link-outline-color),
+        calc(-1 * var(--o-h-s)) var(--o-v-o) 0 calc(var(--o-p) + 1px) var(--GW-highlighted-link-outline-color),
+                  var(--o-h-s)  var(--o-v-o) 0 calc(var(--o-p) + 2px) var(--background-color),
+        calc(-1 * var(--o-h-s)) var(--o-v-o) 0 calc(var(--o-p) + 2px) var(--background-color),
+                  var(--o-h-s)  var(--o-v-o) 0 calc(var(--o-p) + 3px) var(--GW-highlighted-link-outline-color),
+        calc(-1 * var(--o-h-s)) var(--o-v-o) 0 calc(var(--o-p) + 3px) var(--GW-highlighted-link-outline-color)
+}
+
+
+
+section.footnotes {
+    position: relative;
+}
+
+
+
+
+section.footnotes > hr:first-child {
+    position: relative;
+    display: flex;
+    margin: -0.5em 0;
+}
+section.footnotes > hr:first-child::after {
+    content: "";
+    border: 1px solid var(--GW-footnotes-section-top-rule-color);
+    width: 2em;
+    height: 2em;
+    background-color: var(--background-color);
+    background-image: none;
+    z-index: 1;
+    box-shadow:
+        0 0 0 calc(0.5em - 1px) var(--background-color) inset,
+        0 0 0 0.5em var(--GW-footnotes-section-top-rule-color) inset;
+    filter: none;
+    opacity: 1.0;
+}
+section.footnotes > hr:first-child::before {
+    content: "";
+    position: absolute;
+    height: 1px;
+    background-color: var(--GW-footnotes-section-top-rule-color);
+    width: 100%;
+    top: 50%;
+}
+
+section.footnotes:target > hr:first-child::after,
+section.footnotes > hr:first-child.highlighted::after {
+    border-color: var(--GW-footnote-highlighted-border-color);
+    box-shadow:
+        0 0 0 1px var(--background-color) inset,
+        0 0 0 2px var(--GW-footnote-highlighted-border-color) inset,
+        0 0 0 calc(0.5em - 1px) var(--background-color) inset,
+        0 0 0 0.5em var(--GW-footnote-highlighted-border-color) inset,
+        0 0 0 calc(0.5em + 1px) var(--background-color) inset,
+        0 0 0 calc(0.5em + 2px) var(--GW-footnote-highlighted-border-color) inset;
+}
+section.footnotes:target > hr:first-child::before,
+section.footnotes > hr:first-child.highlighted::before {
+    background-color: var(--background-color);
+    box-shadow:
+        0 1px 0 0 var(--GW-footnote-highlighted-border-color) inset,
+        0 -1px 0 0 var(--GW-footnote-highlighted-border-color) inset;
+    height: 3px;
+}
+
+
+section.footnotes .section-self-link {
+    position: absolute;
+    width: 2em;
+    height: 2em;
+    top: -1px;
+    border: 1px solid transparent;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 1;
+    opacity: 0;
+}
+
+
+
+
+
+section.footnotes > ol {
+    padding-left: 2.625em;
+}
+section.footnotes > ol > li {
+    counter-increment: footnotes;
+    min-height: calc(1.75em + 1px);
+    padding: 6px 0 0.25em 0;
+}
+
+
+section.footnotes > ol > li::before {
+    content: counter(footnotes);
+    position: absolute;
+    left: unset;
+    right: calc(100% + 0.75em);
+    top: calc(-0.125em + 5px);
+    width: 1.75em;
+    height: 1.75em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dotted var(--GW-footnote-border-color);
+    border-right-color: transparent;
+    line-height: 1;
+    font-variant-numeric: lining-nums;
+    z-index: 1;
+}
+
+
+section.footnotes > ol > li::after {
+    content: "";
+    position: absolute;
+    border-right: 1px dotted var(--GW-footnote-border-color);
+    height: calc(100% + 0.125em - 4px);
+    top: calc(-0.125em + 5px);
+    left: calc(-0.75em - 1px);
+}
+
+
+section.footnotes > ol > li.targeted::before,
+section.footnotes > ol > li.targeted::after,
+section.footnotes > ol > li.highlighted::before,
+section.footnotes > ol > li.highlighted::after {
+    border-style: solid;
+    border-color: var(--GW-footnote-highlighted-border-color);
+    box-shadow:
+        0 0 0 1px var(--background-color) inset,
+        0 0 0 2px var(--GW-footnote-highlighted-border-color) inset;
+}
+section.footnotes > ol > li.targeted::after,
+section.footnotes > ol > li.highlighted::after {
+    border-width: 0 3px 0 0;
+    border-style: double;
+    left: calc(-0.75em - 3px);
+}
+
+
+section.footnotes .footnote-self-link {
+    display: initial;
+    position: absolute;
+    top: 2px;
+    right: calc(100% + 0.75em);
+    width: 1.75em;
+    height: 1.75em;
+    border: 1px solid transparent;
+    z-index: 1;
+    opacity: 0;
+}
+
+.footnote-self-link {
+    display: none;
+}
+
+
+
+
+
+.footnotes a.footnote-back {
+    display: initial;
+    margin: 0 0 0 0.5em;
+    position: relative;
+    display: inline-block;
+    font-size: 1em;
+    line-height: 0.5;
+    border: 1px dotted var(--GW-footnote-backlink-border-color);
+    top: 0.15em;
+    padding: 0.1em 0.25em 0.15em 0.25em;
+    width: 1em;
+    z-index: 1;
+}
+
+a.footnote-back {
+    display: none;
+}
+
+.markdownBody .footnotes a.footnote-back {
+    background-image: none;
+}
+.markdownBody .footnotes a.footnote-back:hover {
+    border-color: var(--GW-footnote-backlink-border-hover-color);
+    border-style: solid;
+    box-shadow:
+        0 0 0 1px var(--background-color) inset,
+        0 0 0 2px var(--GW-footnote-backlink-border-hover-color) inset;
+}
+
+.markdownBody .footnotes .footnote-back-block {
+    text-align: right;
+}
+
+
+
+.sidenote-layout-cell {
+    position: absolute;
+    width: 100%;
+    pointer-events: none;
+}
+.sidenote-layout-cell > * {
+    pointer-events: auto;
+}

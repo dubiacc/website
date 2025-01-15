@@ -1,0 +1,487 @@
+
+
+#page-toolbar .widgets:empty ~ * {
+    display: none;
+}
+
+
+
+#page-toolbar > button {
+    color: var(--GW-page-toolbar-control-button-color);
+}
+#page-toolbar > button.toggle-button:active {
+    color: var(--GW-page-toolbar-control-button-active-color);
+}
+#page-toolbar > button svg {
+    display: block;
+
+    
+    width: intrinsic;
+    height: intrinsic;
+}
+
+
+#page-toolbar.desktop > button.collapse-button {
+    display: none;
+}
+
+
+#page-toolbar.mobile > button.collapse-button {
+    order: 1;
+    padding: 0 12px;
+    outline: 1px dotted currentColor;
+    background-color: var(--background-color);
+}
+
+
+#page-toolbar > button.main-toggle-button {
+    order: -1;
+    opacity: 0.4;
+}
+#page-toolbar > button.main-toggle-button:active {
+    transform: scale(0.95);
+}
+@media all and (hover: hover) {
+    #page-toolbar > button.main-toggle-button:hover {
+        opacity: 1.0;
+        transition:
+            opacity 0.15s ease;
+    }
+    #page-toolbar:not(.collapsed):not(.expanded-temp) > button.main-toggle-button {
+        opacity: 1.0;
+    }
+}
+
+
+#page-toolbar.vertical > button.main-toggle-button {
+    padding: 3px;
+}
+
+
+
+#page-toolbar {
+    position: fixed;
+    display: flex;
+    align-items: stretch;
+    opacity: 1;
+}
+
+#page-toolbar .widgets {
+    display: flex;
+    align-items: stretch;
+    max-height: 100vh;
+    max-width: 100vw;
+    transition:
+        transform 0.25s ease-out;
+}
+
+#page-toolbar .widget {
+    display: flex;
+    align-items: stretch;
+    background-color: var(--background-color);
+}
+
+#page-toolbar .widget a {
+    font-family: var(--GW-sans-serif-font-stack);
+}
+
+#page-toolbar .widget button .label,
+#page-toolbar .widget a .label {
+    color: var(--GW-page-toolbar-button-text-color);
+}
+#page-toolbar .widget button:disabled .label {
+    color: var(--GW-page-toolbar-button-disabled-text-color);
+}
+
+#page-toolbar .widget button .icon {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    color: var(--GW-page-toolbar-button-icon-color);
+    transition:
+        color 0.1s ease;
+}
+#page-toolbar .widget button.selectable .icon {
+    color: var(--GW-page-toolbar-button-selectable-icon-color);
+}
+#page-toolbar .widget button.selected .icon {
+    color: var(--GW-page-toolbar-button-selected-icon-color);
+}
+@media all and (hover: hover) {
+    #page-toolbar .widget button:hover .icon {
+        color: var(--GW-page-toolbar-button-selected-icon-color);
+    }
+}
+#page-toolbar .widget button:not(:disabled):active .icon {
+    transform: scale(0.95);
+}
+
+
+#page-toolbar.button-labels-not .widget button .label,
+#page-toolbar.button-labels-not .widget a .label {
+    display: none;
+}
+
+
+#page-toolbar.vertical {
+    --toolbar-button-size: 4vmin;
+
+    flex-flow: column;
+    width: var(--toolbar-button-size);
+    top: 5px;
+    right: 4px;
+}
+
+#page-toolbar.vertical .widgets {
+    flex-flow: column;
+    transform-origin: top;
+}
+
+#page-toolbar.vertical .widget {
+    --widget-box-shadow-double-outline:
+            0 0 0 1px var(--GW-page-toolbar-border-color),
+            0 0 0 2px var(--background-color),
+            0 0 0 3px var(--GW-page-toolbar-border-color);
+
+    flex-flow: column;
+    outline: 1px dotted var(--GW-page-toolbar-border-color);
+    margin-top: 8px;
+    transition:
+        box-shadow 0.1s ease;
+}
+@media all and (hover: hover) {
+    #page-toolbar.vertical .widget:hover {
+        box-shadow: var(--widget-box-shadow-double-outline);
+    }
+}
+#page-toolbar.vertical .widget.flashing {
+    box-shadow: var(--widget-box-shadow-double-outline);
+    transition:
+        box-shadow var(--GW-page-toolbar-widget-flash-rise-duration) ease-out;
+}
+#page-toolbar.vertical .widget.flashing-fade {
+    transition:
+        box-shadow var(--GW-page-toolbar-widget-flash-fall-duration) ease-in;
+}
+
+#page-toolbar.vertical .widget button,
+#page-toolbar.vertical .widget a {
+    position: relative;
+    height: var(--toolbar-button-size);
+}
+#page-toolbar.vertical .widget button .icon,
+#page-toolbar.vertical .widget a .icon {
+    padding: 4px;
+}
+#page-toolbar.vertical .widget button .label,
+#page-toolbar.vertical .widget a .label {
+    position: absolute;
+    right: calc(100% + 5px);
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    padding: 0 10px;
+    font-variant-caps: small-caps;
+    background-color: var(--background-color);
+    box-shadow:
+        0 0 0 2px var(--background-color),
+        0 0 0 3px var(--GW-page-toolbar-border-color);
+    opacity: 0;
+    transition:
+        opacity 0.1s ease;
+    pointer-events: none;
+}
+@media all and (hover: hover) {
+    #page-toolbar.vertical .widget:not(.flashing) button:hover .label,
+    #page-toolbar.vertical .widget.show-selected-button-label button.selected .label,
+    #page-toolbar.vertical .widget:not(.flashing) a:hover .label,
+    #page-toolbar.vertical .widget.show-selected-button-label a .label {
+        opacity: 1;
+    }
+    #page-toolbar.vertical .widget.highlight-selected-button-label button.selected .label {
+        color: var(--GW-page-toolbar-button-highlighted-text-color);
+    }
+    #page-toolbar.vertical .widget.highlight-selected-button-label button.selected .label::after {
+        content: "!";
+    }
+}
+
+
+#page-toolbar.mobile {
+    --toolbar-button-size: 46px;
+
+    flex-flow: column-reverse;
+    width: var(--toolbar-button-size);
+    bottom: 0.5em;
+    right: 0.5em;
+}
+
+#page-toolbar.mobile .widgets {
+    flex-flow: column;
+    margin: 0 0 0.75em 0;
+    transform-origin: bottom;
+}
+
+#page-toolbar.mobile .widget {
+    --widget-box-shadow-double-outline:
+            0 0 0 1px var(--GW-page-toolbar-border-color),
+            0 0 0 2px var(--background-color),
+            0 0 0 3px var(--GW-page-toolbar-border-color);
+
+    flex-flow: column;
+    outline: 1px dotted var(--GW-page-toolbar-border-color);
+    margin-top: 0.5em;
+    transition:
+        box-shadow 0.15s ease;
+}
+#page-toolbar.mobile .widget.flashing {
+    box-shadow: var(--widget-box-shadow-double-outline);
+    transition:
+        box-shadow var(--GW-page-toolbar-widget-flash-rise-duration) ease-out;
+}
+#page-toolbar.mobile .widget.flashing-fade {
+    transition:
+        box-shadow var(--GW-page-toolbar-widget-flash-fall-duration) ease-in;
+}
+
+#page-toolbar.mobile .widget button {
+    height: var(--toolbar-button-size);
+}
+#page-toolbar.mobile .widget button .icon {
+    padding: 7px;
+}
+
+
+
+#page-toolbar.collapsed {
+    transition:
+        opacity 2s ease-out;
+}
+#page-toolbar.collapsed.faded {
+    opacity: 0;
+}
+#page-toolbar.collapsed:hover {
+    transition:
+        opacity 0.15s ease;
+}
+
+
+
+#page-toolbar.animating > button.main-toggle-button {
+    transition:
+        opacity var(--GW-page-toolbar-collapse-duration) ease-out,
+        transform var(--GW-page-toolbar-collapse-duration) ease-out;
+}
+
+
+#page-toolbar.vertical.collapsed > button.main-toggle-button {
+    transform: rotateZ(0.5turn);
+}
+#page-toolbar.vertical.collapsed > button.main-toggle-button:active {
+    transform: rotateZ(0.5turn) scale(0.95);
+}
+
+#page-toolbar.vertical.collapsed .widgets {
+    transform: rotateX(-0.25turn);
+    max-height: 0;
+    transition:
+        transform var(--GW-page-toolbar-collapse-duration) ease-out,
+        max-height 0s ease-out var(--GW-page-toolbar-collapse-duration);
+}
+
+
+#page-toolbar.mobile > button.main-toggle-button {
+    opacity: 1.0;
+}
+#page-toolbar.mobile.collapsed > button.main-toggle-button {
+    opacity: 0.65;
+    transform: rotateZ(-0.5turn);
+}
+#page-toolbar.mobile.collapsed > button.main-toggle-button:active {
+    transform: rotateZ(-0.5turn) scale(0.95);
+}
+#page-toolbar.mobile > button.collapse-button {
+    transition:
+        opacity var(--GW-page-toolbar-fade-after-collapse-duration) ease-out var(--GW-page-toolbar-collapse-duration);
+}
+#page-toolbar.mobile.collapsed > button.collapse-button {
+    opacity: 0;
+    transition:
+        opacity var(--GW-page-toolbar-collapse-duration) ease-out;
+}
+
+#page-toolbar.mobile.collapsed .widgets {
+    transform: rotateX(0.25turn);
+    max-height: 0;
+    transition:
+        transform var(--GW-page-toolbar-collapse-duration) ease-out,
+        max-height 0s ease-out var(--GW-page-toolbar-collapse-duration);
+}
+
+
+#page-toolbar.collapsed.collapsed-slowly > button.main-toggle-button {
+    transition:
+        opacity var(--GW-page-toolbar-slow-collapse-duration) ease-out,
+        transform var(--GW-page-toolbar-slow-collapse-duration) linear;
+}
+
+#page-toolbar.collapsed.collapsed-slowly .widgets {
+    transition:
+        transform var(--GW-page-toolbar-slow-collapse-duration) ease-out;
+}
+
+
+#page-toolbar.vertical.collapsed.collapsed-slowly .widgets {
+    transition:
+        transform var(--GW-page-toolbar-slow-collapse-duration) ease-out,
+        max-height 0s ease-out var(--GW-page-toolbar-slow-collapse-duration);
+}
+
+
+#page-toolbar.mobile.collapsed.collapsed-slowly .widgets {
+    transition:
+        transform var(--GW-page-toolbar-slow-collapse-duration) ease-out,
+        max-height 0s ease-out var(--GW-page-toolbar-slow-collapse-duration);
+}
+
+
+
+.mode-selector button:disabled {
+    cursor: default;
+}
+
+
+
+
+#page-toolbar .dark-mode-selector {
+    order: 1;
+}
+#page-toolbar .reader-mode-selector {
+    order: 2;
+}
+#page-toolbar .extracts-mode-selector {
+    order: 3;
+}
+#page-toolbar #gcse-search {
+    order: 4;
+}
+
+#page-toolbar .mode-selector button .label {
+    text-underline-position: from-font;
+    text-underline-offset: -1px;
+    text-decoration: none;
+}
+#page-toolbar .mode-selector button.selected .label {
+    text-decoration: underline from-font;
+}
+#page-toolbar .mode-selector button.active .label {
+    text-decoration: dotted underline from-font;
+}
+
+
+#page-toolbar.vertical .mode-selector {
+    padding: 2px 0;
+}
+#page-toolbar.vertical .mode-selector button + button {
+    margin-top: 3px;
+}
+
+
+#page-toolbar.mobile .mode-selector {
+    padding: 2px 0;
+}
+
+
+#page-toolbar.vertical .extracts-mode-selector button.select-mode-on .icon {
+    padding: 5px;
+}
+#page-toolbar.vertical .extracts-mode-selector button.select-mode-off .icon {
+    padding: 2px;
+}
+#page-toolbar.mobile .extracts-mode-selector button.select-mode-on .icon {
+    padding: 7px;
+}
+#page-toolbar.mobile .extracts-mode-selector button.select-mode-off .icon {
+    padding: 4px;
+}
+
+
+
+.mode-selector-inline {
+    display: inline-flex;
+    position: relative;
+    padding: 0.25em 0.5em;
+    bottom: -0.15em;
+}
+
+.mode-selector-inline button .icon {
+    width: 1.125em;
+    display: flex;
+    opacity: 0.4;
+}
+@media all and (hover: hover) {
+    .mode-selector-inline button .icon {
+        transition:
+            opacity 0.1s ease;
+    }
+    .mode-selector-inline button:hover .icon {
+        opacity: 1.0;
+    }
+}
+.mode-selector-inline button .label {
+    font-size: 0.75em;
+    margin-left: 0.25em;
+    position: relative;
+}
+.mode-selector-inline button + button {
+    margin-left: 0.625em;
+}
+
+.mode-selector-inline button:hover .label::after,
+.mode-selector-inline button.selected .label::after,
+.mode-selector-inline button.active:not(:hover) .label::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+.mode-selector-inline button:hover .label::after,
+.mode-selector-inline button.selected .label::after {
+    border-bottom: 1px solid currentColor;
+}
+.mode-selector-inline button.active:not(:hover) .label::after {
+    border-bottom: 1px dotted currentColor;
+}
+.mode-selector-inline button:not(:disabled):active .label {
+    transform: translateY(2px);
+}
+.mode-selector-inline button:not(:disabled):active .label::after {
+    transform: translateY(-2px);
+}
+
+
+
+
+
+
+#page-toolbar #gcse-search a {
+    display: block;
+    color: var(--GW-page-toolbar-button-selected-icon-color);
+}
+#page-toolbar #gcse-search a .icon {
+	padding: 5px;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	box-sizing: border-box;
+}
+#page-toolbar #gcse-search a svg {
+    display: block;
+}
+
+

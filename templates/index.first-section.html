@@ -1,12 +1,10 @@
 <section id="main" class="level1 block" style="--bsm: 7;grid-column:span 2;min-height: 250px;">
   <style>
     #select-faith {
+      user-select: none;
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
-      background: url(/static/img/icon/icons.svg#arrow-down) 96% / 15% no-repeat #EEE;
-      background-size: 20px;
-      background-position: 5px;
       border: 2px solid var(--GW-body-link-color);
       font-family: var(--GW-serif-font-stack);
       font-weight: bold;
@@ -21,41 +19,138 @@
       max-width:300px;
       font-size:1rem;
     }
+    #select-faith::before {
+      width: 20px;
+      height: 20px;
+      content: url(/static/img/icon/icons.svg#arrow-down);
+      background-size: 20px;
+      background-position: 5px;
+      background-color: var(--GW-body-color);
+      color: var(--GW-text-color);
+    }
     @media (max-width: 649px) { 
       #select-faith-wrapper { flex-direction: column; } 
       #select-faith { max-width: none; }
     }
   </style>
+
   <div id="select-faith-wrapper" style="display:flex;flex-grow:1;justify-content: space-between;">
     <h2 class="heading" style="font-size:1.75rem;border:none !important;font-variant-caps: small-caps;min-width:150px;">$$I_BELIEVE_IN$$</h2>
-    <select id="select-faith" aria-label="$$SELECT_FAITH$$">
+    <div style="position:relative;display: flex;">
+      <!-- SELECT_SVG -->
+      <select id="select-faith" aria-label="$$SELECT_FAITH$$">
         <!-- OPTIONS -->
     </select>
+    </div>
   </div>
 
   <p class="empty-graf block" style="--bsm: 4;"></p>
   
-  <!-- SECTIONS -->
+  <div id="first-section">
+    <!-- INITIAL_FIRST_SECTION -->
+  </div>
+
+  <div id="other-sections">
+    <!-- INITIAL_OTHER_SECTIONS -->
+  </div>
 
   <script defer>
+
+    // [{ title, option, tag, featured }]
+    window.ARTICLES = JSON.parse(atob("$$ARTICLES$$"));
+
+    window.TEMPLATE = `
+      <section id="$$SECTION_ID$$" class="level1 block" style="--bsm: 7;min-height: 200px;">
+        <h2 class="heading" style="font-size:1.75rem;"><a href="$$PAGE_HREF$$#$$SECTION_ID$$"
+            title="$$SECTION_NAME_TITLE$$">$$SECTION_NAME$$</a><button type="button"
+            class="copy-section-link-button" title="Copy section link to clipboard"><svg
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                <path
+                d="M0 256C0 167.6 71.63 96 160 96H256C273.7 96 288 110.3 288 128C288 145.7 273.7 160 256 160H160C106.1 160 64 202.1 64 256C64 309 106.1 352 160 352H256C273.7 352 288 366.3 288 384C288 401.7 273.7 416 256 416H160C71.63 416 0 344.4 0 256zM480 416H384C366.3 416 352 401.7 352 384C352 366.3 366.3 352 384 352H480C533 352 576 309 576 256C576 202.1 533 160 480 160H384C366.3 160 352 145.7 352 128C352 110.3 366.3 96 384 96H480C568.4 96 640 167.6 640 256C640 344.4 568.4 416 480 416zM416 224C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H224C206.3 288 192 273.7 192 256C192 238.3 206.3 224 224 224H416z">
+                </path>
+            </svg></button></h2>
+        <p class="empty-graf block" style="--bsm: 4;"></p>
+        <ul class="list list-level-1">
+            <!-- SECTION_ITEMS -->
+        </ul>
+      </section>
+    `;
+
+    window.LINK = `
+        <li class='block link-modified-recently-list-item dark-mode-invert' style='--bsm:$$BSM$$;'>
+            <p class='in-list first-graf block' style='--bsm: 0;'><a href='$$LINK$$' 
+                class='link-annotated link-page link-modified-recently in-list spawns-popup'
+                data-attribute-title='$$SECTION_TITLE$$'>$$SECTION_TITLE$$</a></p>
+        </li>
+    `;
+
+    function renderSelectionItem(link, title, first) {
+        let bsm = first ? "4" : "0";
+        return LINK
+            .replaceAll("$$BSM$$", bsm)
+            .replaceAll("$$SECTION_TITLE$$", title)
+            .replaceAll("$$LINK$$", link)
+            .replaceAll("$$ID$$", id);
+    }
+
+    window.renderSelectionItem = renderSelectionItem;
+
+    function renderSectionItems(links) {
+        let res = "";
+        for (let i = 0; i < links.length; i++) {
+            const e = links[i];
+            res += renderSelectionItem(e.slug, e.title, i == 0);
+        }
+        return res;
+    }
+    window.renderSectionItems = renderSectionItems;
+
+    function renderSection(id, title, links) {
+        let section_items = renderSectionItems(links);
+        let section_html = TEMPLATE
+            .replaceAll("$$SECTION_ID$$", id)
+            .replaceAll("$$SECTION_NAME$$", title)
+            .replaceAll("$$SECTION_NAME_TITLE$$", title)
+            .replaceAll("<!-- SECTION_ITEMS -->", section_items);
+        return section_html;
+    }
+    window.renderSection = renderSection;
+
+    function rerenderIndexSelection(s) {
+        var faith = null;
+        for (let i = 0; i < window.ARTICLES.length; i++) {
+          const e = window.ARTICLES[i];
+          if (e.tag == s) {
+            faith = e;
+          }
+        }
+        if (faith == null) {
+          console.log("section " + s + " not found");
+          return;
+        }
+        var s = renderSection(faith.tag, faith.title, faith.featured);
+        document.getElementById('first-section').innerHTML = s;
+    }
+
+    window.rerenderIndexSelection = rerenderIndexSelection;
+
+    function rerenderIndexOtherArticles(s) {
+        var target = "";
+        for (let i = 0; i < window.ARTICLES.length; i++) {
+          const e = window.ARTICLES[i];
+          if (e.tag == s) {
+            continue;
+          }
+          target += renderSection(e.tag, e.title, e.featured);
+        }
+        document.getElementById('other-sections').innerHTML = target;
+    }
+
     function replaceIBelieveInSection(event) {
         let newval = event.target.options[event.target.selectedIndex].value;
-        let items = document.getElementsByClassName("index-first-section");
-        for (let e of items) {
-            e.style.display = "none";
-        }
-        document.getElementById("index-section-" + newval).style.display = "block";
-        let inverted = document.getElementsByClassName("invert");
-        for (let e of inverted) {
-          e.style.display = "none";
-        }
-        let shown = document.getElementsByClassName("invert-of-" + newval);
-        for (let q of shown) {
-          q.style.display = "block";
-        }
+        rerenderIndexSelection(newval);
+        rerenderIndexOtherArticles(newval);
     }
     document.getElementById("select-faith").onchange = replaceIBelieveInSection;
   </script>
 </section>
-
-<!-- OTHER_SECTIONS -->

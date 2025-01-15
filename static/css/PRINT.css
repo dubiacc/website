@@ -1,0 +1,95 @@
+
+
+@media print {
+    :root {
+        --GW-TOC-background-color: transparent;
+        --GW-abstract-background-color: transparent;
+        --GW-code-element-background-color: transparent;
+        --GW-math-block-background-color: transparent;
+    }
+
+    blockquote {
+        --GW-blockquote-background-color: transparent !important;
+    }
+
+    
+    figure {
+        position: relative;
+        top: 2px;
+    }
+    .figure-inner-wrapper {
+        margin: -2px auto 2px auto;
+    }
+
+    #skip-to-content-link,
+    #ui-elements-container,
+    #sidebar,
+    #page-metadata .page-metadata-fields .backlinks,
+    #page-metadata .page-metadata-fields .similar,
+    #page-metadata .page-metadata-fields .bibliography,
+    #navigation,
+    #noscript-warning-header,
+    #TOC .toc-collapse-toggle-button,
+    #footer,
+    #footer-decoration-container,
+    .reader-mode-note {
+        display: none;
+    }
+    #bibliography,
+    .bibliography-append {
+        display: none;
+    }
+    .TOC li:has(#toc-bibliography) {
+        display: none;
+    }
+    .similar-list li:has(.similar-links-search) {
+        display: none;
+    }
+
+    
+    .markdownBody a:link .indicator-hook,
+    .markdownBody a:link .link-icon-hook {
+        display: none;
+    }
+    .markdownBody a:link.has-indicator-hook {
+        padding: 0;
+        margin: 0;
+    }
+    .markdownBody a:link,
+    .markdownBody a:link * {
+        text-shadow: none;
+    }
+    .markdownBody a:link,
+    .markdownBody a:link.has-annotation {
+        background-image: none;
+    }
+    .markdownBody a:link,
+    .markdownBody a:visited {
+        color: inherit;
+    }
+    .markdownBody p a:link {
+        text-decoration: underline;
+        text-decoration-thickness: from-font;
+        text-underline-position: from-font;
+        text-underline-offset: -0.05em;
+    }
+    .markdownBody p a:link.link-dropcap {
+        text-decoration: none;
+    }
+
+    
+    #page-metadata .link-tags p::before {
+        content: "tags: ";
+        font-style: normal;
+    }
+    body {
+        margin: 0;
+    }
+    main {
+        margin: 1em;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        margin-left: 0;
+    }
+}
+

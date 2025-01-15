@@ -1,0 +1,176 @@
+
+
+@media all and (max-width: 650px) {
+    div.float,
+    figure.float {
+        max-width: none !important;
+    }
+}
+
+@media all and (min-width: 650px) {
+    .markdownBody {
+        --float-side-margin: 2em;
+    }
+    .markdownBody blockquote {
+        --float-side-margin: 1.5em;
+    }
+
+    div.float,
+    figure.float {
+        max-width: calc(50% - var(--float-side-margin));
+        margin-bottom: calc(var(--float-side-margin) * 0.5);
+        position: relative;
+        z-index: 1;
+    }
+    div.float-right,
+    figure.float-right {
+        float: right;
+        margin-right: 0;
+        margin-left: var(--float-side-margin);
+    }
+    div.float-left,
+    figure.float-left {
+        float: left;
+        margin-left: 0;
+        margin-right: var(--float-side-margin);
+    }
+}
+
+
+
+
+
+
+figure {
+    display: flow-root;
+    margin: 0 auto;
+}
+@media all and (min-width: 650px) {
+    figure {
+        max-width: calc(100% - 5em);
+    }
+}
+
+@media all and (min-width: 650px) {
+    
+    img.float-right,
+    img.float-left {
+        max-width: calc(50% - var(--float-side-margin));
+    }
+}
+
+
+
+
+.figure-inner-wrapper {
+    display: flex;
+    flex-flow: column;
+    margin: auto;
+    width: fit-content;
+    max-width: 100%;
+}
+
+figure img,
+figure video,
+figure svg {
+    display: block;
+    max-height: calc(100vh - 8rem);
+    max-width: 100%;
+    height: auto;
+    width: auto;
+    margin: 0 auto;
+
+    
+    overflow: hidden;
+}
+
+figure img {
+    background-color: var(--background-color);
+}
+
+figure img,
+figure video {
+    outline: 1px solid var(--GW-figure-outline-color);
+}
+
+figure.outline-not img,
+figure.outline-not video {
+    outline: none;
+}
+
+figure audio {
+    display: block;
+    margin: 0 auto;
+    height: 54px;
+    border-radius: 27px;
+    position: relative;
+    z-index: 1;
+    top: 1px;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+}
+
+@supports (-moz-appearance: none) {
+    figure audio {
+        height: 42px;
+        border-radius: 21px;
+    }
+}
+figure audio:hover {
+    border-color: var(--GW-figure-outline-color);
+    box-shadow:
+        0 0 4px 0 var(--GW-figure-outline-color) inset,
+        0 0 4px 0 var(--GW-figure-outline-color);
+}
+
+
+
+
+figcaption {
+    font-size: 0.9em;
+    line-height: 1.50;
+    margin: auto;
+    padding: 0.5em 0.875em calc(0.5em + 1px) 0.875em;
+    width: fit-content;
+    background-color: var(--background-color);
+}
+@media all and (max-width: 649px) {
+    figcaption {
+        font-size: 0.875em;
+    }
+}
+
+.markdownBody figcaption {
+    --text-alignment: left;
+}
+
+figcaption p:first-of-type {
+    font-weight: bold;
+}
+
+figcaption strong {
+    font-weight: inherit;
+    font-variant-caps: small-caps;
+}
+
+.caption-wrapper {
+    display: block;
+    outline: 1px solid var(--GW-figure-caption-outline-color);
+    margin: 1px auto 0 auto;
+    width: 100%;
+}
+
+figure.outline-not .caption-wrapper {
+    outline: none;
+}
+
+
+
+figure.width-full {
+    position: relative;
+    max-width: unset;
+    clear: both;
+}
+
+
+

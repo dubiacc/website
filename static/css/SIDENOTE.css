@@ -1,0 +1,230 @@
+
+
+#markdownBody .sidenote {
+    --sidenote-padding: 10px;
+    --sidenote-border-width: 3px;
+    --text-indent: 1.75em;
+
+    position: absolute;
+    left: 0;
+    width: 100%;
+    opacity: 0.85;
+    padding: 2em 0 0 0;
+    font-size: 0.85em;
+    line-height: calc(1.3 / 0.85);
+    transition:
+        opacity 0.25s ease-in,
+        transform 0.25s ease-in;
+}
+#markdownBody .sidenote.displaced {
+    transition:
+        opacity 0.25s ease-out,
+        transform 0.25s ease-out;
+}
+#markdownBody .sidenote.hidden {
+    display: none;
+}
+#markdownBody .sidenote:hover,
+#markdownBody .sidenote.targeted,
+#markdownBody .sidenote.displaced,
+#markdownBody .sidenote.highlighted {
+    background-color: var(--background-color);
+    opacity: 1.0;
+    box-shadow: 0 0 0 16px var(--background-color);
+}
+#markdownBody .sidenote.targeted {
+    z-index: 1;
+}
+#markdownBody .sidenote.displaced {
+    z-index: 2;
+}
+#markdownBody .sidenote.highlighted,
+#markdownBody .sidenote:hover {
+    z-index: 3;
+}
+
+
+#markdownBody .sidenote::after {
+    content: "";
+    position: absolute;
+    width: calc(100% + 2 * var(--sidenote-padding));
+    height: calc(100% + 2 * var(--sidenote-padding));
+    top: calc(-1 * (var(--sidenote-padding) + var(--sidenote-border-width)));
+    left: calc(-1 * (var(--sidenote-padding) + var(--sidenote-border-width)));
+}
+#markdownBody .sidenote:hover::after,
+#markdownBody .sidenote.targeted::after,
+#markdownBody .sidenote.displaced::after,
+#markdownBody .sidenote.highlighted::after {
+    border: 3px double var(--GW-sidenote-highlight-box-shadow-color);
+}
+
+#markdownBody .sidenote.cut-off::before {
+    content: "…";
+    position: absolute;
+    border: 1px dotted var(--GW-sidenote-border-color);
+    top: calc(100% - 1px);
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: fit-content;
+    z-index: 2;
+    background-color: var(--background-color);
+    padding: 0.125em 0.5em 0.5em 0.5em;
+    font-size: 1.25em;
+    font-weight: 600;
+    line-height: 0.5;
+    pointer-events: none;
+}
+#markdownBody .sidenote.cut-off:hover::before {
+    visibility: hidden;
+}
+#markdownBody .sidenote.cut-off.hide-more-indicator::before {
+    visibility: hidden;
+}
+
+
+
+
+
+
+.sidenote-outer-wrapper {
+    max-height: 600px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    border-style: dotted;
+    border-color: var(--GW-sidenote-border-color);
+    border-width: 1px 0;
+}
+#markdownBody .sidenote:hover .sidenote-outer-wrapper,
+#markdownBody .sidenote.displaced .sidenote-outer-wrapper,
+#markdownBody .sidenote.highlighted .sidenote-outer-wrapper {
+    
+    max-height: calc(100vh - (2em + 2 * (var(--sidenote-padding) + var(--sidenote-border-width) + 1px + 1px)));
+}
+#markdownBody .sidenote.cut-off .sidenote-outer-wrapper {
+    overflow-y: scroll;
+    overscroll-behavior: none;
+    width: 100%;
+    padding: 0 0.5em 0 0;
+}
+
+
+#markdownBody .sidenote.cut-off .sidenote-outer-wrapper::-webkit-scrollbar {
+    width: 12px;
+}
+#markdownBody .sidenote.cut-off .sidenote-outer-wrapper::-webkit-scrollbar-thumb {
+    background-image: var(--GW-checkerboard-scrollbar-background-image);
+    background-size: 2px;
+    box-shadow:
+        0 0 0 2px var(--background-color) inset;
+}
+#markdownBody .sidenote.cut-off .sidenote-outer-wrapper::-webkit-scrollbar-thumb:hover {
+    background-image: var(--GW-checkerboard-scrollbar-hover-background-image);
+}
+
+
+#markdownBody .sidenote.cut-off .sidenote-outer-wrapper {
+    scrollbar-color: var(--GW-sidenote-scrollbar-thumb-color) var(--background-color);
+}
+#markdownBody .sidenote.cut-off .sidenote-outer-wrapper:hover {
+    scrollbar-color: var(--GW-sidenote-scrollbar-thumb-hover-color) var(--background-color);
+}
+
+
+.sidenote-inner-wrapper {
+    position: relative;
+    margin: 0.5em 0;
+}
+
+
+.sidenote-inner-wrapper > * {
+    position: relative;
+    z-index: 1;
+}
+
+
+
+
+
+#markdownBody .sidenote {
+    --base-block-spacing: 0.2em;
+}
+
+#markdownBody .sidenote .list {
+    --list-left-padding: 1.75em;
+}
+
+#markdownBody .sidenote li p {
+    text-align: left;
+}
+
+#markdownBody .sidenote .footnote-back {
+    vertical-align: text-top;
+}
+
+#markdownBody .sidenote blockquote > * {
+    line-height: calc(1.25 / (var(--blockquote-font-size-scaling-factor) * 0.85))
+}
+
+
+
+
+
+#markdownBody .sidenote > .sidenote-self-link {
+    font-weight: 600;
+    position: absolute;
+    top: -1px;
+    background-image: none;
+    border-style: dotted;
+    border-color: var(--GW-sidenote-self-link-border-color);
+    border-width: 1px 1px 0px 1px;
+    width: 2em;
+    height: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+#markdownBody #sidenote-column-left .sidenote > .sidenote-self-link {
+    right: 0;
+}
+#markdownBody #sidenote-column-right .sidenote > .sidenote-self-link {
+    left: 0;
+}
+
+#markdownBody .sidenote.targeted > .sidenote-self-link,
+#markdownBody .sidenote > .sidenote-self-link:hover {
+    border-width: 3px;
+    border-style: double;
+    top: -3px;
+}
+#markdownBody #sidenote-column-left .sidenote.targeted > .sidenote-self-link,
+#markdownBody #sidenote-column-left .sidenote > .sidenote-self-link:hover {
+    right: -2px;
+}
+#markdownBody #sidenote-column-right .sidenote.targeted > .sidenote-self-link,
+#markdownBody #sidenote-column-right .sidenote > .sidenote-self-link:hover {
+    left: -2px;
+}
+
+#markdownBody .sidenote.targeted > .sidenote-self-link::before,
+#markdownBody .sidenote > .sidenote-self-link:hover::before {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: -3px;
+    width: calc(50vw - (var(--GW-body-max-width) / 2 + 96px) + 10px);
+    max-width: var(--GW-sidenotes-max-width);
+    border-bottom: 3px double var(--GW-sidenote-self-link-border-color);
+}
+#markdownBody #sidenote-column-left .sidenote.targeted > .sidenote-self-link::before,
+#markdownBody #sidenote-column-left .sidenote > .sidenote-self-link:hover::before {
+    right: -1px;
+}
+#markdownBody #sidenote-column-right .sidenote.targeted > .sidenote-self-link::before,
+#markdownBody #sidenote-column-right .sidenote > .sidenote-self-link:hover::before {
+    left: -1px;
+}
+

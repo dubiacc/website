@@ -1,0 +1,893 @@
+
+
+
+
+
+.markdownBody a.has-icon {
+	margin-right: 0.1em;
+}
+
+a[data-link-icon][data-link-icon-color]:hover {
+    --link-underline-gradient-line-color: var(--link-icon-color-hover);
+}
+
+
+
+a[data-link-icon-type='svg'] {
+    --link-icon-size: 0.55em;
+    --link-icon-offset-x: 0.20em;
+    --link-icon-offset-y: 0.15em;
+    --link-icon-opacity: 0.55;
+}
+a[data-link-icon-type='svg'] .link-icon-hook::after {
+    content: "";
+    position: relative;
+    bottom: var(--link-icon-offset-y);
+    padding: 0 var(--link-icon-size) 0 0;
+    margin: 0 0 0 var(--link-icon-offset-x);
+    background-image: var(--link-icon-url);
+    background-size: var(--link-icon-size);
+    background-position-x: center;
+    background-position-y: 1ex;
+    background-repeat: no-repeat;
+    opacity: var(--link-icon-opacity);
+}
+a[data-link-icon-type='svg']:hover .link-icon-hook::after {
+    opacity: calc(var(--link-icon-opacity) * 0.55);
+}
+a[data-link-icon-type='svg'][data-link-icon-color]:hover .link-icon-hook::after {
+    background-image: var(--link-icon-url-hover, var(--link-icon-url));
+    opacity: 1.0;
+}
+
+
+.markdownBody .colors-invert a[data-link-icon-type='svg'] .link-icon-hook::after {
+    filter: invert(1);
+}
+
+
+
+a[data-link-icon-type*='text'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.12em;
+    --link-icon-offset-y: 0.25em;
+    --link-icon-font: Noto Emoji, var(--GW-serif-font-stack);
+    --link-icon-font-weight: 600;
+    --link-icon-font-style: normal;
+    --link-icon-text-decoration: none;
+    --link-icon-opacity: 0.83;
+}
+a[data-link-icon-type*='text'] .link-icon-hook::after {
+    content: var(--link-icon);
+    font-size: var(--link-icon-size);
+    font-weight: var(--link-icon-font-weight);
+    font-style: var(--link-icon-font-style);
+    font-family: var(--link-icon-font);
+    text-decoration: var(--link-icon-text-decoration);
+    margin: 0 0 0 var(--link-icon-offset-x);
+    vertical-align: baseline;
+    position: relative;
+    bottom: var(--link-icon-offset-y);
+    opacity: var(--link-icon-opacity);
+    padding: 0;
+    background-image: none;
+    background-size: unset;
+    line-height: 1;
+    overflow-wrap: normal;
+}
+
+a[data-link-icon-type*='sans'] {
+    --link-icon-font: Noto Emoji, var(--GW-sans-serif-font-stack);
+}
+
+a[data-link-icon-type*='mono'] {
+    --link-icon-opacity: 0.7;
+    --link-icon-font: Noto Emoji, var(--GW-monospaced-font-stack);
+}
+
+a[data-link-icon-type*='bold'] {
+    --link-icon-font-weight: 700;
+}
+
+a[data-link-icon-type*='italic'] {
+    --link-icon-size: 0.80em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-font-style: italic;
+}
+
+a[data-link-icon-type*='overline'] {
+    --link-icon-offset-y: 0.20em;
+    --link-icon-text-decoration: overline;
+}
+
+
+a[data-link-icon-type*='text'][data-link-icon-color]:hover .link-icon-hook::after {
+    color: var(--link-icon-color-hover, currentColor);
+    opacity: 1.0;
+}
+
+
+
+
+
+
+
+
+
+a[data-link-icon='¶'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.25em;
+    --link-icon-offset-y: 0.35em;
+    --link-icon-font-weight: 400;
+    --link-icon-opacity: 0.7;
+}
+
+a[data-link-icon='arrow-up'],
+a[data-link-icon='arrow-down'] {
+    --link-icon-size: 0.65em;
+    --link-icon-offset-x: 0.20em;
+    --link-icon-offset-y: 0.30em;
+    --link-icon-opacity: 0.75;
+}
+
+
+
+
+
+a[data-link-icon='𝔊'] {
+    --link-icon-size: 0.90em;
+    --link-icon-offset-x: 0.12em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.75;
+}
+
+
+
+
+
+a[data-link-icon='arrow-up-left'],
+a[data-link-icon='arrow-down-right'],
+a[data-link-icon='arrow-right'] {
+    --link-icon-size: 0.65em;
+    --link-icon-offset-x: 0.20em;
+    --link-icon-offset-y: 0.15em;
+    --link-icon-opacity: 0.8;
+}
+
+
+
+
+
+
+
+
+a[data-link-icon='𝛘'] { 
+    --link-icon-size: 0.70em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.60em;
+    --link-icon-opacity: 0.7;
+}
+
+a[data-link-icon='❐'] { 
+    --link-icon-size: 0.80em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.15em;
+}
+
+a[data-link-icon='⧖'] { 
+    --link-icon-size: 0.90em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-offset-y: 0.10em;
+    --link-icon-opacity: 0.70;
+}
+
+a[data-link-icon='♡'] { 
+    --link-icon-offset-x: 0.05em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-opacity: 1.0;
+}
+a[data-link-icon='♡'] .link-icon-hook::after {
+    text-shadow: 0 0 0 currentcolor;
+}
+
+a[data-link-icon='MS'] {
+    --link-icon-size: 0.65em;
+    --link-icon-offset-y: 0.35em;
+}
+
+a[data-link-icon='n'] { 
+    --link-icon-size: 0.90em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-offset-y: 0.30em;
+    --link-icon-opacity: 0.85;
+}
+
+a[data-link-icon='s'] {
+    --link-icon-size: 1.00em;
+}
+
+a[data-link-icon='Ss'] {
+    --link-icon-offset-x: 0.15em;
+}
+
+a[data-link-icon='Vox'] {
+    --link-icon-size: 0.80em;
+    --link-icon-offset-x: 0.10em;
+}
+
+a[data-link-icon='ψ'] {
+    --link-icon-offset-y: 0.40em;
+    --link-icon-opacity: 0.75;
+}
+
+a[data-link-icon='ℵ'] { 
+    --link-icon-size: 0.85em;
+}
+
+a[data-link-icon='▅▇▃'] {
+    --link-icon-size: 0.50em;
+    --link-icon-offset-x: 0.25em;
+    --link-icon-opacity: 0.7;
+}
+a[data-link-icon='▅▇▃'] .link-icon-hook::after {
+    margin-right: 0.15em;
+}
+
+a[data-link-icon='▲'] { 
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.75;
+}
+
+a[data-link-icon='▽'] { 
+    --link-icon-size: 0.90em;
+	--link-icon-offset-x: 0.10em;
+	--link-icon-offset-y: 0.15em;
+}
+
+a[data-link-icon='∇'] { 
+    --link-icon-size: 0.85em;
+    --link-icon-opacity: 0.7;
+}
+
+a[data-link-icon='✉'] { 
+    --link-icon-size: 1.10em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.05em;
+    --link-icon-opacity: 0.75;
+    --link-icon-font-weight: 700;
+}
+
+a[data-link-icon='M𝐑'] {
+    --link-icon-opacity: 0.75;
+}
+
+a[data-link-icon='𝐁'] {
+    --link-icon-opacity: 0.77;
+}
+
+a[data-link-icon='𝐌'] {
+    --link-icon-opacity: 0.7;
+}
+
+a[data-link-icon='𝛌'] {
+    --link-icon-size: 1.00em;
+    --link-icon-opacity: 0.6;
+}
+
+a[data-link-icon='𝛘'] {
+    --link-icon-offset-y: 0.40em;
+    --link-icon-opacity: 0.75;
+}
+
+a[data-link-icon='෴'] { 
+    --link-icon-offset-y: 0.50em;
+}
+
+a[data-link-icon='🤖'] { 
+    --link-icon-size: 0.80em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.30em;
+    --link-icon-opacity: 0.75;
+}
+
+a[data-link-icon='GPP'] { 
+    --link-icon-size: 0.60em;
+    --link-icon-offset-y: 0.60em;
+}
+
+a[data-link-icon='⛨'] { 
+    --link-icon-size: 1.00em;
+    --link-icon-offset-x: 0.10em; 
+    --link-icon-offset-y: 0.05em;
+    --link-icon-font-weight: 400;
+}
+
+a[data-link-icon='𝒩𝒴'] { 
+    --link-icon-opacity: 0.7;
+}
+
+a[data-link-icon='𝕳'] { 
+    --link-icon-offset-y: 0.40em;
+    --link-icon-opacity: 0.7;
+}
+
+a[data-link-icon='𝔐'] { 
+    --link-icon-size: 0.75em;
+}
+
+a[data-link-icon='𝛌'] { 
+    --link-icon-size: 0.85em;
+	--link-icon-offset-x: 0.15em;
+	--link-icon-offset-y: 0.20em;
+}
+
+a[data-link-icon='𝓝'] { 
+    --link-icon-size: 0.85em;
+    --link-icon-opacity: 0.9;
+}
+
+a[data-link-icon='𝓥'] { 
+    --link-icon-size: 0.85em;
+    --link-icon-opacity: 0.9;
+}
+
+a[data-link-icon='ρ'] { 
+    --link-icon-size: 0.80em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-offset-y: 0.50em;
+    --link-icon-opacity: 0.75;
+}
+
+a[data-link-icon='ℰ'] { 
+    --link-icon-size: 0.8em;
+    --link-icon-opacity: 0.9;
+}
+
+a[data-link-icon='𝓡 𝐒'] { 
+    --link-icon-size: 0.65em;
+    --link-icon-opacity: 0.75;
+}
+
+a[data-link-icon='≈'] { 
+    --link-icon-size: 0.95em;
+    --link-icon-offset-y: 0;
+    --link-icon-opacity: 0.85;
+}
+
+a[data-link-icon='♔'] { 
+    --link-icon-size: 1em;
+    --link-icon-opacity: 0.75;
+    --link-icon-offset-y: 0.20em;
+}
+
+a[data-link-icon='☀'] { 
+    --link-icon-size: 0.90em;
+    --link-icon-offset-y: 0.15em;
+    --link-icon-opacity: 0.75;
+}
+
+a[data-link-icon='🖋'] { 
+	--link-icon-size: 0.65em;
+	--link-icon-offset-x: 0.20em;
+	--link-icon-offset-y: 0.35em;
+}
+
+a[data-link-icon='𝕆'] { 
+	--link-icon-size: 0.85em;
+	--link-icon-offset-x: 0.15em;
+	--link-icon-offset-y: 0.15em;
+}
+
+a[data-link-icon='☯'] { 
+	--link-icon-size: 0.85em;
+	--link-icon-offset-x: 0.15em;
+	--link-icon-offset-y: 0.20em;
+}
+
+
+
+a[data-link-icon-type*='tri'] {
+    --link-icon-size: 0.65em;
+    --link-icon-offset-x: 0.20em;
+    --link-icon-offset-y: 0.40em;
+    --link-icon-opacity: 0.90;
+}
+
+
+
+a[data-link-icon-type*='quad'] .link-icon-hook::after {
+    text-indent: 0;
+    overflow-wrap: break-word;
+    display: inline-block;
+    text-align: center;
+    left: 0;
+    bottom: 0.3em;
+    font-size: 0.52em;
+    font-weight: bold;
+    line-height: 0.8;
+    width: 1.5em;
+    opacity: 0.83;
+}
+
+
+a[data-link-icon-type*='quad'][data-link-icon-type*='sans'] .link-icon-hook::after {
+    margin: 0;
+}
+
+
+a[data-link-icon-type*='quad'][data-link-icon-type*='mono'] .link-icon-hook::after {
+    letter-spacing: 0.05em;
+    line-height: 0.85;
+}
+
+a[data-link-icon='VICE'] {
+    --link-icon-offset-x: 0.10em;
+}
+
+a[data-link-icon='PNAS'] .link-icon-hook::after {
+    width: 1.4em;
+}
+
+a[data-link-icon='MDPI'] .link-icon-hook::after,
+a[data-link-icon='EPUB'] .link-icon-hook::after,
+a[data-link-icon='TPDR'] .link-icon-hook::after,
+a[data-link-icon='NBER'] .link-icon-hook::after {
+    width: 1.6em;
+}
+
+a[data-link-icon-type*='quad'][data-link-icon-type*='mono'][data-link-icon='sgfp'] .link-icon-hook::after {
+    line-height: 0.95; 
+}
+
+
+
+
+
+a[data-link-icon='alcor'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.25em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='alphabet'] {
+    --link-icon-size: 0.60em;
+    --link-icon-opacity: 0.6;
+}
+
+a[data-link-icon='amazon'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='anthropic'] {
+    --link-icon-size: 0.80em;
+    --link-icon-offset-x: 0.10em;
+}
+
+a[data-link-icon='apple'] {
+    --link-icon-size: 0.60em;
+    --link-icon-offset-y: 0.25em;
+    --link-icon-opacity: 0.5;
+}
+
+a[data-link-icon='arrows-pointing-inwards-to-dot'] { 
+    --link-icon-size: 0.85em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='atlas-obscura'] {
+    --link-icon-size: 0.80em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.85;
+}
+
+a[data-link-icon='audio-waveform-lines'] { 
+    --link-icon-size: 0.60em;
+    --link-icon-offset-y: 0.30em;
+}
+
+a[data-link-icon='bibliography'] { 
+    --link-icon-size: 0.60em;
+    --link-icon-offset-y: 0.15em;
+}
+
+a[data-link-icon='bitcoin'] {
+    --link-icon-size: 0.55em;
+    --link-icon-offset-x: 0.20em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='cbs'] {
+	--link-icon-size: 0.70em;
+	--link-icon-offset-x: 0.10em;
+	--link-icon-offset-y: 0.20em;
+	--link-icon-opacity: 0.5;
+}
+
+a[data-link-icon='chi-dna'] {
+    --link-icon-size: 0.58em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-opacity: 0.85;
+}
+
+a[data-link-icon='chicago-tribune'] { 
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='cochrane-collaboration'] {
+    --link-icon-size: 0.75em;
+    --link-icon-opacity: 0.7;
+}
+
+a[data-link-icon='connected-papers'] {
+    --link-icon-size: 0.60em;
+    --link-icon-offset-x: 0.20em;
+    --link-icon-offset-y: 0.30em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='creative-commons'] {
+    --link-icon-size: 0.80em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.8;
+}
+
+a[data-link-icon='deepmind'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.7;
+}
+
+a[data-link-icon='distillpub'] {
+    --link-icon-size: 0.45em;
+    --link-icon-offset-x: 0.20em;
+    --link-icon-offset-y: 0.25em;
+    --link-icon-opacity: 0.5;
+}
+
+a[data-link-icon='dropbox'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.55;
+}
+
+a[data-link-icon='econlib'] { 
+    --link-icon-size: 0.80em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.30em;
+    --link-icon-opacity: 0.75;
+}
+
+a[data-link-icon='eleutherai'] {
+    --link-icon-size: 0.85em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-offset-y: 0.15em;
+    --link-icon-opacity: 0.85;
+}
+
+a[data-link-icon='emacs'] {
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='erowid'] {
+    --link-icon-size: 0.95em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-offset-y: 0.25em;
+    --link-icon-opacity: 0.9;
+}
+
+a[data-link-icon='facebook'] {
+    --link-icon-size: 0.50em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.25em;
+    --link-icon-opacity: 0.5;
+}
+
+a[data-link-icon='github'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='google-scholar'] {
+    --link-icon-size: 0.80em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-opacity: 0.60;
+}
+
+a[data-link-icon='hacker-news'] { 
+    --link-icon-size: 0.70em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.60;
+}
+
+a[data-link-icon='hoover-institution'] {
+    --link-icon-size: 0.50em;
+    --link-icon-offset-x: 0.20em;
+    --link-icon-offset-y: 0.45em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='internet-archive'] {
+    --link-icon-size: 0.55em;
+    --link-icon-opacity: 0.6;
+}
+
+a[data-link-icon='laion'] {
+    --link-icon-size: 0.70em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='maggie-appleton'] {
+	--link-icon-size: 0.70em;
+	--link-icon-offset-x: 0.15em;
+	--link-icon-offset-y: 0.20em;
+	--link-icon-opacity: 0.5;
+}
+
+a[data-link-icon='magnifying-glass'] { 
+	--link-icon-size: 0.75em;
+	--link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='mega'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.50;
+}
+
+a[data-link-icon='metaculus'] {
+    --link-icon-size: 0.55em;
+    --link-icon-offset-x: 0.20em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='midjourney'] {
+    --link-icon-size: 0.90em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-offset-y: 0.25em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='miri'] {
+    --link-icon-size: 1.05em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='nasa'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-y: 0.30em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='nautilus'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.75;
+}
+
+a[data-link-icon='new-york-times'] {
+    --link-icon-size: 0.65em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-offset-y: 0.15em;
+    --link-icon-opacity: 0.6;
+}
+
+a[data-link-icon='nlm-ncbi'] {
+    --link-icon-size: 0.60em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.9;
+}
+
+a[data-link-icon='openai'] {
+    --link-icon-size: 0.70em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-opacity: 0.7;
+}
+
+a[data-link-icon='open-philanthropy'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.95;
+}
+
+a[data-link-icon='patreon'] {
+    --link-icon-size: 0.70em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-offset-y: 0.15em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='plos'] {
+    --link-icon-size: 0.80em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.10em;
+    --link-icon-opacity: 0.80;
+}
+
+a[data-link-icon='quanta'] {
+    --link-icon-size: 0.90em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.9;
+}
+
+a[data-link-icon='raven'] { 
+    --link-icon-size: 0.70em;
+    --link-icon-offset-x: 0.10em;
+}
+
+a[data-link-icon='reddit'] {
+    --link-icon-size: 0.80em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.25em;
+    --link-icon-opacity: 0.5;
+}
+
+a[data-link-icon='scholarpedia'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.20em;
+}
+
+a[data-link-icon='springerlink'] {
+    --link-icon-size: 0.90em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.25em;
+    --link-icon-opacity: 0.75;
+}
+
+a[data-link-icon='stack-exchange'] {
+    --link-icon-size: 0.60em;
+    --link-icon-offset-x: 0.20em;
+    --link-icon-offset-y: 0.25em;
+    --link-icon-opacity: 0.55;
+}
+
+a[data-link-icon='stat-news'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.30em;
+    --link-icon-opacity: 1.0;
+}
+
+a[data-link-icon='substack'] {
+    --link-icon-size: 0.55em;
+    --link-icon-offset-x: 0.20em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.55;
+}
+
+a[data-link-icon='tensorflow'] {
+    --link-icon-size: 0.70em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.6;
+}
+
+a[data-link-icon='tex'] { 
+    --link-icon-size: 1.10em;
+    --link-icon-offset-x: 0.05em;
+    --link-icon-opacity: 0.85;
+}
+
+a[data-link-icon='tiktok'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-offset-y: 0.15em;
+}
+
+a[data-link-icon='the-guardian'] {
+    --link-icon-size: 0.80em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.25em;
+    --link-icon-opacity: 0.55;
+}
+
+a[data-link-icon='the-new-yorker'] {
+    --link-icon-size: 0.65em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.25em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='the-pirate-bay'] {
+    --link-icon-size: 0.90em;
+    --link-icon-offset-x: 0.20em;
+    --link-icon-opacity: 0.75;
+}
+
+a[data-link-icon='the-telegraph'] {
+    --link-icon-size: 0.60em;
+    --link-icon-offset-x: 0.10em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.75;
+}
+
+a[data-link-icon='tumblr'] {
+    --link-icon-size: 0.47em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.45;
+}
+
+a[data-link-icon='twitter'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.20em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.5;
+}
+
+a[data-link-icon='upton-tea'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.05em;
+    --link-icon-opacity: 0.55;
+}
+
+a[data-link-icon='video'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.40em;
+    --link-icon-opacity: 0.55;
+}
+
+a[data-link-icon='wandb'] {
+    --link-icon-size: 0.70em;
+    --link-icon-offset-y: 0.25em;
+    --link-icon-opacity: 0.65;
+}
+
+a[data-link-icon='washington-post'] {
+    --link-icon-size: 0.85em;
+    --link-icon-offset-x: 0.20em;
+    --link-icon-offset-y: 0.25em;
+    --link-icon-opacity: 0.85;
+}
+
+a[data-link-icon='wired'] {
+    --link-icon-size: 0.75em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-offset-y: 0.20em;
+    --link-icon-opacity: 0.55;
+}
+
+a[data-link-icon='youtube'] {
+    --link-icon-size: 0.88em;
+    --link-icon-offset-x: 0.15em;
+    --link-icon-opacity: 0.5;
+}
+
+a[data-link-icon='yud'] {
+    --link-icon-offset-y: 0.25em;
+}
+
+
+
+
+
+a[data-link-icon='wikipedia'] {
+    --link-icon-size: 0.60em;
+    --link-icon-offset-x: 0.12em;
+    --link-icon-offset-y: -0.05em;
+    --link-icon-opacity: 0.65;
+}

@@ -676,13 +676,13 @@
             "shop": [
                 {
                     "id": "mode-fuer-sie",
-                    "title": "Katholische Mode für Sie",
+                    "title": "Mode für Sie",
                     "img": "/static/img/shop/womansfashion.avif",
                     "link": {"slug": "https://etsy.com", "title": "Frauenmode auf etsy.de" }
                 },
                 { 
                     "id": "mode-fuer-ihn",
-                    "title": "Katholische Mode für Ihn",
+                    "title": "Mode für Ihn",
                     "img": "/static/img/shop/mensfashion.avif", 
                     "link": {"slug": "https://etsy.com", "title": "Herrenmode auf etsy.de" }
                 },
@@ -901,13 +901,13 @@
             "shop": [
                 { 
                     "id": "fashion-f",
-                    "title": "Catholic Fashion for Her",
+                    "title": "Fashion for Her",
                     "img": "/static/img/shop/womansfashion.avif", 
                     "link": {"slug": "https://etsy.com", "title": "Shop on etsy.com"  }
                 },
                 { 
                     "id": "fashion-m",
-                    "title": "Catholic Fashion for Him",
+                    "title": "Fashion for Him",
                     "img": "/static/img/shop/mensfashion.avif", 
                     "link": {"slug": "https://etsy.com", "title": "Shop on etsy.com" }
                 },

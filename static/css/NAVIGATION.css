@@ -1,0 +1,117 @@
+
+
+#navigation {
+    display: flex;
+    align-items: center;
+    opacity: 0.8;
+    color: var(--GW-nav-header-link-color);
+}
+#navigation a {
+    line-height: 1;
+    display: flex;
+    color: var(--GW-nav-header-link-color);
+}
+#navigation a:hover {
+    color: var(--GW-body-link-color);
+}
+#navigation svg {
+    margin: 0;
+    height: 1.65em;
+}
+
+@media all and (min-width: 650px) {
+    #navigation {
+        margin: 2.5em 0 0 0;
+        justify-content: space-between;
+    }
+    #navigation #navigation-right,
+    #navigation #navigation-left {
+        flex-grow: 1;
+    }
+    #navigation #navigation-right {
+        transform: scale(-1, 1);
+    }
+    #navigation #navigation-center {
+        width: 15%;
+    }
+}
+@media all and (max-width: 649px) {
+    #navigation {
+        margin: 3em 0 0 0;
+        justify-content: center;
+    }
+    #navigation #navigation-right,
+    #navigation #navigation-left {
+        display: none;
+    }
+    #navigation #navigation-center {
+        width: 25%;
+    }
+}
+
+
+
+
+#back-to-top {
+    position: absolute;
+    bottom: 0.75rem;
+    opacity: 1.0;
+    visibility: visible;
+    transition:
+        opacity 2s ease;
+}
+#back-to-top.hidden {
+    opacity: 0;
+}
+#back-to-top a {
+    --background-color: var(--GW-body-background-color);
+
+    display: block;
+    width: 2.25em;
+    height: 2.25em;
+    padding: 0.25em 0.25em;
+    box-sizing: border-box;
+    color: var(--GW-back-to-top-link-color);
+    filter:
+        drop-shadow(0 0 1px var(--background-color))
+        drop-shadow(0 0 1px var(--background-color))
+        drop-shadow(0 0 1px var(--background-color));
+}
+#back-to-top a:hover {
+    color: var(--GW-back-to-top-link-hover-color);
+}
+#back-to-top svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+@media all and (min-width: 1080px) {
+    #back-to-top {
+        right: calc(((100% - (var(--GW-body-max-width) + 2 * var(--GW-body-side-padding))) / 2) - 35px);
+    }
+    #back-to-top a {
+        border: 3px double transparent;
+    }
+    #back-to-top a:hover {
+        border-color: currentColor;
+    }
+}
+@media all and (max-width: 1079px) {
+    #back-to-top {
+        right: 1rem;
+        bottom: 1rem;
+    }
+    #back-to-top a {
+        border: 1px solid currentColor;
+    }
+    #back-to-top {
+        background-color: var(--background-color);
+        background-image: linear-gradient(var(--GW-back-to-top-link-color),
+                                          var(--GW-back-to-top-link-color));
+        background-position: 0 0;
+        background-repeat: no-repeat;
+        background-size: 0 0;
+    }
+}
+

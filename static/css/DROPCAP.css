@@ -1,0 +1,137 @@
+
+
+@media all and (min-width: 650px) {
+    p[class*='dropcap-'].overlap-not {
+        min-height: 6em;
+    }
+    p[class*='dropcap-'].graphical-dropcap.overlap-not {
+        min-height: 8em;
+    }
+
+    p[class*='dropcap-'] a.link-dropcap,
+    p[class*='dropcap-'] a.link-dropcap * {
+        text-shadow: none;
+    }
+    p[class*='dropcap-'] span.dropcap {
+        font-style: normal;
+        font-weight: normal;
+        float: left;
+    }
+
+    .initial-preceding-punctuation {
+        float: left;
+        margin-left: -1ch;
+        font-size: 1.5em;
+    }
+
+    
+    p.dropcap-goudy span.dropcap {
+        font-family: Goudy Initialen;
+        font-size: 7em;
+        line-height: 1;
+        margin: 0.025em 0.02em -0.25em 0;
+        color: var(--GW-dropcaps-goudy-color);
+    }
+    p.dropcap-yinit span.dropcap {
+        font-family: Yinit;
+        font-size: 5.625em;
+        line-height: 1.35;
+        margin: 0.07em 0.08em -0.5em 0;
+        text-shadow: 0 0 0 var(--GW-dropcaps-yinit-text-shadow-color);
+        color: var(--GW-dropcaps-yinit-color);
+    }
+    p.dropcap-de-zs span.dropcap {
+        font-family: Deutsche Zierschrift;
+        font-size: 6.625em;
+        line-height: 1.1;
+        margin: 0.01em 0.05em -0.25em 0;
+        color: var(--GW-dropcaps-de-zs-color);
+    }
+    p.dropcap-cheshire span.dropcap {
+        font-family: Cheshire Initials;
+        font-size: 6.75em;
+        line-height: 1;
+        margin: 0.045em 0.06em -0.25em 0;
+        color: var(--GW-dropcaps-cheshire-color);
+    }
+    p.dropcap-kanzlei span.dropcap {
+        font-family: Kanzlei Initialen;
+        font-size: 7em;
+        line-height: 1;
+        margin: 0.025em 0.025em -0.25em -0.02em;
+        color: var(--GW-dropcaps-kanzlei-color);
+    }
+
+    
+    @media all and (max-width: 1199px) {
+        p.dropcap-goudy span.dropcap {
+            font-size: 6.875em;
+        }
+        p.dropcap-yinit span.dropcap {
+            font-size: 5.375em;
+        }
+        p.dropcap-de-zs span.dropcap {
+            font-size: 6.5em;
+        }
+        p.dropcap-cheshire span.dropcap {
+            font-size: 6.625em;
+        }
+        p.dropcap-kanzlei span.dropcap {
+            font-size: 6.875em;
+        }
+    }
+    @media all and (max-width: 999px) {
+        p.dropcap-goudy span.dropcap {
+            font-size: 6.625em;
+        }
+        p.dropcap-yinit span.dropcap {
+            font-size: 5.25em;
+        }
+        p.dropcap-de-zs span.dropcap {
+            font-size: 6.25em;
+        }
+        p.dropcap-cheshire span.dropcap {
+            font-size: 6.3125em;
+        }
+        p.dropcap-kanzlei span.dropcap {
+            font-size: 6.6875em;
+        }
+    }
+
+    
+    
+
+    p.graphical-dropcap img.dropcap {
+        float: left;
+        display: block;
+        height: 9.4em;
+        margin: -0.5em -0.10em -0.95em -0.75em;
+        filter: none;
+    }
+    @media all and (max-width: 1199px) {
+        p.graphical-dropcap img.dropcap {
+            margin-top: -0.25em;
+        }
+    }
+
+    p.graphical-dropcap img.dropcap.svg {
+        height: 8em;
+        margin: 0 0.25em 0 0;
+    }
+    p.graphical-dropcap img.dropcap.svg.invert {
+        filter: invert(1);
+    }
+
+    p.graphical-dropcap.disable-dropcap img.dropcap {
+        display: none;
+    }
+
+    p.graphical-dropcap:not(.disable-dropcap) .hidden-initial-letter {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+    }
+}
+
+
