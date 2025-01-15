@@ -1526,8 +1526,9 @@ fn strip_comments(s: &str) -> String {
 }
 
 fn minify_css(s: &str) -> String {
+    
     let s = strip_comments(s);
-    /*
+    /*/
     use minifier::css;
     let s = match css::minify(&s) {
         Ok(o) => o.to_string(),
@@ -1556,12 +1557,15 @@ fn head(
 ) -> Result<String, String> {
 
     let darklight = include_str!("../../templates/darklight.html");
-    let head_css = include_str!("../../static/css/head.css");
-    let style_css = include_str!("../../static/css/style.css");
+    let head_css = include_str!("../../static/css/head2.css").to_string();
+    let toc = include_str!("../../static/css/TOC.css");
+    let page_toolbar = include_str!("../../static/css/PAGE_TOOLBAR.css");
+    let img_css = include_str!("../../static/css/FIGURE.css");
+    let floating_header = include_str!("../../static/css/FLOATING_HEADER.css");
     let noscript_style = include_str!("../../static/css/noscript.css");
 
-    let critical_css = minify_css(&(head_css.to_string() + "\r\n" + &style_css));
-    let critical_css_2 = "<style id='critical-css'>\r\n".to_string() + &critical_css + "    </style>";
+    let critical_css = minify_css(&(head_css + page_toolbar + toc + img_css + floating_header));
+    let critical_css_2 = "<style id='critical-css'>".to_string() + &critical_css + "    </style>";
     
     let title = get_title(lang, a, meta)?;
     let description = get_description(lang, a, meta)?.replace("\"", "'");
@@ -1603,7 +1607,7 @@ fn header_navigation(
         let homepage_link = get_root_href().to_string() + "/" + lang;
         let hpd = get_string(meta, lang, "nav-homepage-desc")?;
         let logo1 = format!("<a class='logo has-content' rel='home me contents' href='{homepage_link}' data-attribute-title='{hpd}'>");
-        let logo2 = format!("<svg class='logo-image' viewBox='0 0 64 75'>{homepage_logo}</svg>");
+        let logo2 = format!("<svg class='logo-image' viewBox='0 0 40 75'>{homepage_logo}</svg>");
         vec![logo1, logo2, "</a>".to_string()].join("")
     } else {
         String::new()
@@ -1896,7 +1900,6 @@ fn page_metadata(
 fn render_paragraph(
     lang: &str,
     par: &Paragraph, 
-    dropcap: bool, 
     is_abstract: bool,
     article_id: &str
 ) -> String {
@@ -1912,12 +1915,7 @@ fn render_paragraph(
             for (i, item) in s.iter().enumerate() {
                 match item {
                     SentenceItem::Text { text } => {
-                        if dropcap && i == 0 {
-                            let rest = text.chars().skip(1).collect::<String>();
-                            target += &rest;
-                        } else {
-                            target += &text.replace("[R]: ", &r).replace("[V]: ", &v);
-                        }
+                        target += &text.replace("[R]: ", &r).replace("[V]: ", &v);
                     }
                     SentenceItem::Link { l } => {
                         target += &format!("<a class='link-annotated link-page spawns-popup' id='{}' href='{}' title='{}'>{}</a>", l.id, l.href, l.title, l.text);
@@ -2026,18 +2024,19 @@ fn body_abstract(
 
     // body_abstract
     if !is_prayer {
-        target += "<blockquote class='blockquote-level-1 block'>";
-        if let Some(drc) = summary.get(0).and_then(|q| q.as_sentence()?.get(0)?.text()?.chars().next()) {
-            target += "<p class='first-block first-graf intro-graf dropcap-kanzlei' style='--bsm: 0;display:inline;min-height:7em;'>";
-            target += &format!("<span class='dropcap' style='position: relative;bottom: -10px;margin-bottom: -10px;'>{drc}</span>");
+        target += "<blockquote class='blockquote-level-1 block' style='display:flex;flex-direction:column;'>";
+        if let Some(first) = summary.get(0).and_then(|q| q.as_sentence()?.get(0)?.text()) {
+            let drc = first.chars().next().unwrap_or(' ');
+            let rest = first.chars().skip(1).collect::<String>();
+            target += "<p class='first-block first-graf intro-graf dropcap-kanzlei' style='--bsm: 0;display:inline;float:left;min-height:7em;'>";
+            target += &format!("<span class='dropcap'>{drc}</span>");
+            target += &rest;
             target += "</p>";
-        }    
+        }
     }
 
-    for (i, par) in summary.iter().enumerate() {
-        target += "<p class='first-graf' style='--bsm: 0;'>";
-        target += &render_paragraph(lang, par, !is_prayer && i == 0, true, article_id);
-        target += "</p>";
+    for par in summary.iter().skip(if is_prayer { 0 } else { 1 }) {
+        target += &render_paragraph(lang, par, true, article_id);
     }
 
     if !is_prayer {
@@ -2056,8 +2055,8 @@ fn render_section(
     
     let mut section = include_str!("../../templates/section.html").to_string();
 
-    let first_par = a.pars.get(0).map(|p| render_paragraph(lang, p, false, false, slug)).unwrap_or_default();
-    let other_pars = a.pars.iter().skip(1).map(|p| render_paragraph(lang, p, false, false, slug)).collect::<Vec<_>>().join("\r\n");
+    let first_par = a.pars.get(0).map(|p| render_paragraph(lang, p, false, slug)).unwrap_or_default();
+    let other_pars = a.pars.iter().skip(1).map(|p| render_paragraph(lang, p, false, slug)).collect::<Vec<_>>().join("\r\n");
 
     let header = &a.title;
     let level = a.indent;
@@ -2669,11 +2668,20 @@ fn render_index_first_section(
 ) -> Result<String, String> {
 
     let mut first_section = include_str!("../../templates/index.first-section.html").to_string();
-    let mut other_sections = "<style>.section-hidden { display: none; }</style>".to_string();
-    let mut sections = String::new();
+
+    let dropdown_svg = r#"
+    <svg style='pointer-events: none;position: absolute;top: 15px;left: 10px;'version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="4319.7 0 448 512" preserveAspectRatio="xMinYMin" >
+        <g transform="translate(4319.7, 0)"><path d="M441.9 250.1l-19.8-19.8c-4.7-4.7-12.3-4.7-17 0L250 385.4V44c0-6.6-5.4-12-12-12h-28c-6.6 0-12 5.4-12 12v341.4L42.9 230.3c-4.7-4.7-12.3-4.7-17 0L6.1 250.1c-4.7 4.7-4.7 12.3 0 17l209.4 209.4c4.7 4.7 12.3 4.7 17 0l209.4-209.4c4.7-4.7 4.7-12.3 0-17z"></path></g>
+    </svg>
+    "#;
+
     let mut options = String::new();
+    let mut fs = String::new();
+    let mut os = String::new();
 
     for (i, t) in tags.ibelievein.iter().enumerate() {
+        
+        options += &format!("<option value='{}'>{}</option>", t.tag, t.option);
 
         let featured = t.featured.iter().filter_map(|id| {
             Some(SectionLink {
@@ -2683,47 +2691,26 @@ fn render_index_first_section(
             })
         }).collect::<Vec<_>>();
         
-        let items = render_section_items(lang, &featured);
-        let first = i == 0;
-        let display_hidden = match first {
-            true => "",
-            false => "display:none;",
-        };
-        let classes = "index-first-section list list-level-1";
-        let tag = &t.tag;
-        let option = &t.option;
-        sections += &format!("<ul id='index-section-{tag}' class='{classes}' style='margin-top:20px;{display_hidden}'>{items}</ul>");
-        options += &format!("<option value='{tag}'>{option}</option>");
-        /*
-        let other_sections_html = tags.ibelievein.iter()
-            .filter(|q| q.tag != t.tag)
-            .map(|q| {
+        let classes = "list list-level-1";
+        let s = render_index_section(lang, &t.tag,  &classes, &t.title, &featured);
 
-                let hidden_class = match first {
-                    true => "",
-                    false => "section-hidden",
-                };
-
-                let classes = format!("{hidden_class} invert invert-of-{tag}");
-                let other_featured = q.featured.iter().filter_map(|id| {
-                    Some(SectionLink {
-                        title: articles.map.get(lang)?.get(id)?.title.clone(),
-                        slug: id.to_string(),
-                    })
-                }).collect::<Vec<_>>();
-                
-                render_index_section(lang, &q.tag,  &classes, &q.title, &other_featured)
-            }).collect::<Vec<_>>().join("");
-        other_sections += &other_sections_html;
-        */
+        if i == 0 {
+            fs = s;
+        } else {
+            os += &s;
+        }
     }
 
     let text_ibelieve = get_string(meta, lang, "i-believe-in")?;
 
+    let base = &base64::encode(serde_json::to_string(&tags.ibelievein).unwrap_or_default());
+
     first_section = first_section.replace("$$I_BELIEVE_IN$$", &text_ibelieve);
-    first_section = first_section.replace("<!-- SECTIONS -->", &sections);
-    first_section = first_section.replace("<!-- OTHER_SECTIONS -->", &other_sections);
+    first_section = first_section.replace("$$ARTICLES$$", &base);
+    first_section = first_section.replace("<!-- INITIAL_FIRST_SECTION -->", &fs);
+    first_section = first_section.replace("<!-- INITIAL_OTHER_SECTIONS -->", &os);
     first_section = first_section.replace("<!-- OPTIONS -->", &options);
+    first_section = first_section.replace("<!-- SELECT_SVG -->", &dropdown_svg);
 
     Ok(first_section)
 }
@@ -2793,9 +2780,46 @@ fn render_index_html(
         get_string(meta, lang, "index-help-6")?,
         get_string(meta, lang, "index-help-7")?,
     ].join("");
-    
-    let page_help = include_str!("../../templates/navigation-help.html")
+
+    let ims = r#"
+    <svg style='position: relative;top: 4px;margin-left:1px;' version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="37778.048 -16 544 544" preserveAspectRatio="xMinYMin" >
+        <g fill-rule="evenodd" style="paint-order:normal" transform="translate(37794.048, 0)"><path d="M283.211 512c78.962 0 151.079-35.925 198.857-94.792 7.068-8.708-.639-21.43-11.562-19.35-124.203 23.654-238.262-71.576-238.262-196.954 0-72.222 38.662-138.635 101.498-174.394 9.686-5.512 7.25-20.197-3.756-22.23A258.156 258.156 0 0 0 283.211 0c-141.309 0-256 114.511-256 256 0 141.309 114.511 256 256 256z"></path></g>
+    </svg>"#.trim().to_string();
+
+    let ibos = r#"
+    <svg style='position: relative;top: 5px;margin-left:1px;' version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="15096.95 0 576 448" preserveAspectRatio="xMinYMin" >
+        <g fill-rule="evenodd" style="paint-order:normal" transform="translate(15096.95, 0)"><path d="M 542.22,0.05 C 487.42,3.16 378.5,14.48 311.26,55.64 c -4.64,2.84 -7.27,7.89 -7.27,13.17 V 432.68431 c 0,11.55 12.63,18.85 23.28,13.49 69.18,-34.82 169.23,-44.32 218.7,-46.92 16.89,-0.89 30.02,-14.43 30.02,-30.66 V 30.75 C 576,13.04 560.64,-0.99 542.22,0.05 Z M 264.73,55.64 C 197.5,14.48 88.58,3.17 33.78,0.05 15.36,-0.99 0,13.04 0,30.75 V 368.6 c 0,16.24 13.13,29.78 30.02,30.66 49.49,2.6 149.59,12.11 218.77,46.95 10.62,5.35 23.21,-1.94 23.21,-13.46 V 68.63 c 0,-5.29 -2.62,-10.14 -7.27,-12.99 z"></path></g>
+    </svg>"#.trim().to_string();
+
+    let imss = r#"
+    <svg style='position: relative;top: 5px;margin-left:1px;' version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="35743.5089 0 640 512" preserveAspectRatio="xMinYMin" >
+        <g fill-rule="evenodd" style="paint-order:normal" transform="translate(35743.5089, 0)"><path d="M63.1 351.1c0 35.25 28.75 63.1 63.1 63.1h95.1v83.99c0 9.749 11.25 15.45 19.12 9.7l124.9-93.69l39.37-.0117L63.1 146.9L63.1 351.1zM630.8 469.1l-82.76-64.87c16.77-11.47 27.95-30.46 27.95-52.27V63.1c0-35.25-28.75-63.1-63.1-63.1H127.1c-23.51 0-43.97 12.88-55.07 31.86L38.81 5.128C34.41 1.691 29.19 .0332 24.03 .0332c-7.125 0-14.2 3.137-18.92 9.168c-8.187 10.44-6.365 25.53 4.073 33.7l591.1 463.1c10.5 8.202 25.57 6.333 33.7-4.073C643.1 492.4 641.2 477.3 630.8 469.1z"></path></g>
+    </svg>"#.trim().to_string();
+
+    let imag = r#"
+    <svg style='position: relative;top: 5px;margin-left:1px;' version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="34696.5839 2.875 17.75 17.75" preserveAspectRatio="xMinYMin" >
+        <g fill-rule="evenodd" style="paint-order:normal" transform="translate(34693.7089, 0)"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></g>
+    </svg>"#.trim().to_string();
+
+    let igear = r#"
+    <svg style='position: relative;top: 5px;' version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="29013.3239 0 512 512" preserveAspectRatio="xMinYMin" >
+        <g fill-rule="evenodd" style="paint-order:normal" transform="translate(29013.3239, 0)"><path d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"></path></g>
+    </svg>"#.trim().to_string();
+
+    let icons = &[
+        ("<span class='icon-moon-solid'></span>", ims),
+        ("<span class='icon-book-open-solid'></span>", ibos),
+        ("<span class='icon-message-slash-solid'></span>", imss),
+        ("<span class='icon-magnifying-glass'></span>", imag),
+        ("<span class='icon-gear-solid'></span>", igear),
+    ];
+
+    let mut page_help = include_str!("../../templates/navigation-help.html")
     .replace("$$PAGE_HELP$$", &page_help_content);
+
+    for (k, v) in icons {
+        page_help = page_help.replace(k, v);
+    }
 
     let page_descr = get_string(meta, lang, "index-subtitle")?;
     let page_description = include_str!("../../templates/page-description.html")
@@ -2827,7 +2851,7 @@ fn render_index_html(
     index_html = index_html.replace("$$PAGE_HREF$$", &(get_root_href().to_string() + "/" + lang));
     index_html = index_html.replace("<link rel=\"preload\" href=\"/static/img/logo/logo-smooth.svg\" as=\"image\">", "");
     index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/ssfp/ssp/SourceSansPro-BASIC-Regular.subset.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>", "");
-    
+
     Ok(index_html)
 }
 
