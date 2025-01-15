@@ -6,7 +6,7 @@
 	<a id="skip-to-content-link" href="$$PAGE_HREF$$#markdownBody">
 		$$SKIP_TO_MAIN_CONTENT$$
 	</a>
-	<img src="/static/img/watercolor.avif" alt="Watercolor decoration" id="watercolor" decoding="async" height="512" width="1024" />
+	<img crossorigin="anonymous" src="/static/img/watercolor.avif" alt="Watercolor decoration" id="watercolor" decoding="async" height="512" width="1024" naturalHeight="512" naturalWidth="1024" decoding="async" />
 	<main>
 		<nav id="sidebar">
 			<!-- HEADER_NAVIGATION -->
@@ -188,37 +188,7 @@
 	<div id="popup-container" class="popup-container" style="z-index: 10000;"></div>
 	<span id="scratchpad"></span>
 
-	<script async defer>
-
-		function injectHeadCss() {
-			var resource = document.createElement('link');
-			resource.rel = "stylesheet";
-			resource.href = "/static/css/head.css";
-			var script = document.getElementById('scratchpad');
-			script.parentNode.insertBefore(resource, script);
-		}
-		setTimeout(injectHeadCss, 300);
-
-		function injectMainCss() {
-			var resource = document.createElement('link');
-			resource.rel = "stylesheet";
-			resource.href = "/static/css/style.css";
-			resource.media = "all";
-			resource.onload = "this.media = `all`";
-			var script = document.getElementById('scratchpad');
-			script.parentNode.insertBefore(resource, script);
-		}
-		setTimeout(injectMainCss, 300);
-
-		function injectHeadScript() {
-			var resource = document.createElement('script');
-			resource.async = "true";
-			resource.src = "/static/js/head2.js";
-			var script = document.getElementById('scratchpad');
-			script.parentNode.insertBefore(resource, script);
-		}
-		setTimeout(injectHeadScript, 1300);
-	</script>
+	<script defer="" crossorigin="anonymous" type="text/javascript" src="/static/js/head2.js"></script>
     
 	<!-- Basic IP-based analytics, only tracks statistics about country + article -->
     <script defer="" type="text/javascript">

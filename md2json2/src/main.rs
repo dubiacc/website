@@ -1240,7 +1240,6 @@ fn gen_sw_paths(cwd: &Path, articles: &AnalyzedArticles, meta: &MetaJson) -> Str
         a.push(format!("    {{ url: '/{l}.html', revision: '{site_revision}' }}"));
         a.push(format!("    {{ url: '/{l}/search.js', revision: '{site_revision}' }}"));
         a.push(format!("    {{ url: '/{l}/search.html', revision: '{site_revision}' }}"));
-        a.push(format!("    {{ url: '/{l}/head.js', revision: '{site_revision}' }}"));
         a.push(format!("    {{ url: '/{l}/index.json', revision: '{site_revision}' }}"));
     }
 
@@ -1283,6 +1282,8 @@ fn gen_sw_paths(cwd: &Path, articles: &AnalyzedArticles, meta: &MetaJson) -> Str
 
     // /index.html
     a.push(format!("    {{ url: '/index.html', revision: '{}' }}", sha256(include_str!("../../index.html"))));
+
+    a.push(format!("    {{ url: '/static/js/head2.js', revision: '{}' }}", sha256(include_str!("../../static/js/head2.js"))));
 
     // author pages
     // special pages
@@ -2946,7 +2947,6 @@ fn main() -> Result<(), String> {
         let _ = std::fs::write(cwd.join(lang).join("search.html"), &minify(&search_html));
         let index_html = render_index_html(lang, &analyzed, &meta_map, &si)?;
         let _ = std::fs::write(cwd.join(&format!("{lang}.html")), &minify(&index_html));
-        let _ = std::fs::write(cwd.join(lang).join("head.js"), &strip_comments(include_str!("../../static/js/head.js")));
     }
 
     // Write gitignore
