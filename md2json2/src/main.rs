@@ -2858,7 +2858,7 @@ fn render_index_html(
 
 fn minify(input: &str) -> Vec<u8> {
     let s = include_str!("../../templates/sw-inject.js");
-    let input = input.replace("<!-- INJECT_SW -->", &format!("<script>{s}</script>"));
+    // let input = input.replace("<!-- INJECT_SW -->", &format!("<script>{s}</script>"));
     let mut minified = vec![];
     html5minify::Minifier::new(&mut minified)
         .minify(&mut input.as_bytes())

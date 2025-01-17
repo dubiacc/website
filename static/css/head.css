@@ -2646,15 +2646,6 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 }
 
 @font-face {
-	font-family: 'Source Serif Pro';
-	font-weight: 700;
-	font-style: normal;
-	src: url('/static/font/ssfp/SourceSerifPro-BASIC-Bold.woff2') format('woff2');
-	font-display: swap;
-	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
-}
-
-@font-face {
 	font-family: 'Source Sans Pro';
 	font-weight: 400;
 	font-style: normal;
@@ -2671,14 +2662,6 @@ body.page-index[class*='special-christmas'] #sidebar a.logo {
 	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
 }
 
-@font-face {
-	font-family: 'Source Sans Pro';
-	font-weight: 700;
-	font-style: normal;
-	src: url('/static/font/ssp/SourceSansPro-BASIC-Bold.woff2') format('woff2');
-	font-display: swap;
-	unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
-}
 /*	Elements to be deleted completely.
  */
 body.reader-mode-active #sidebar .sidebar-links,
