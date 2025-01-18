@@ -1390,7 +1390,7 @@ fn si2html(si: &[SentenceItem]) -> String {
     let (r, v) = rv();
 
     let s = si.iter().map(|s| match s {
-        SentenceItem::Footnote { id } => format!("<a href='#fn-{id}' class='footnote-ref spawns-popup' id='fnref-{id}' role='doc-noteref'><sup>{id}</sup></a>"),
+        SentenceItem::Footnote { id } => format!("<a href='#fn{id}' class='footnote-ref spawns-popup' id='fnref{id}' role='doc-noteref'><sup>{id}</sup></a>"),
         SentenceItem::Link { l } => format!("<a href='{}'>{}</a>", l.href, l.text),
         SentenceItem::Text { text } => text.replace("[R]: ", &r).replace("[V]: ", &v),
     }).collect::<Vec<_>>().join("");
@@ -1564,8 +1564,14 @@ fn head(
     let img_css = include_str!("../../static/css/FIGURE.css");
     let floating_header = include_str!("../../static/css/FLOATING_HEADER.css");
     let noscript_style = include_str!("../../static/css/noscript.css");
+    let footnotes = if a.footnotes.is_empty() {
+        String::new()
+    } else {
+        include_str!("../../static/css/FOOTNOTE.css").to_string()
+    };
 
-    let critical_css = minify_css(&(head_css + page_toolbar + toc + img_css + floating_header));
+    let final_css = head_css + page_toolbar + toc + img_css + floating_header + &footnotes;
+    let critical_css = minify_css(&final_css);
     let critical_css_2 = "<style id='critical-css'>".to_string() + &critical_css + "    </style>";
     
     let title = get_title(lang, a, meta)?;
@@ -1922,7 +1928,7 @@ fn render_paragraph(
                         target += &format!("<a class='link-annotated link-page spawns-popup' id='{}' href='{}' title='{}'>{}</a>", l.id, l.href, l.title, l.text);
                     }
                     SentenceItem::Footnote { id } => {
-                        target += &format!("<a href='$$PAGE_HREF$$#fn-{id}' class='footnote-ref spawns-popup' id='fnref-{id}' role='doc-noteref'><sup>{id}</sup></a>")
+                        target += &format!("<a href='$$PAGE_HREF$$#fn{id}' class='footnote-ref spawns-popup' id='fnref{id}' role='doc-noteref'><sup>{id}</sup></a>")
                     }
                 }
             }
@@ -2146,9 +2152,9 @@ fn footnotes(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<S
     let q = get_string(meta, lang, "footnotes-title")?;
     let content = a.footnotes.iter().map(|q| {
         include_str!("../../templates/footnote.html")
-        .replace("$$FOOTNOTE_HTML_BACKLINK$$", &format!("fnref-{}", q.id))
+        .replace("$$FOOTNOTE_HTML_BACKLINK$$", &format!("fnref{}", q.id))
         .replace("$$FOOTNOTE_TITLE$$", &q.id)
-        .replace("$$FOOTNOTE_HTML_ID$$", &format!("fn-{}", q.id))
+        .replace("$$FOOTNOTE_HTML_ID$$", &format!("fn{}", q.id))
         .replace("$$FOOTNOTE_CONTENT$$", &&si2html(&q.text))
     }).collect::<Vec<_>>().join("\r\n");
 

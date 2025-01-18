@@ -58,7 +58,7 @@
 			
 			<div class="widgets" id="page-toolbar-widgets">
 				<div id="extracts-mode-selector" class="extracts-mode-selector mode-selector widget"><button
-						type="button" class="select-mode-on selected" disabled="" tabindex="-1" data-name="on"
+						type="button" id="enable-link-popups" class="select-mode-on selected" tabindex="-1" data-name="on"
 						title="Enable link popups. [This option is currently selected.]"><span class="icon"><svg
 								xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
 								<path
@@ -67,15 +67,15 @@
 							</svg></span><span class="label" data-selected-label="Popups Enabled"
 							data-unselected-label="Enable Popups">Popups Enabled</span></button><button type="button"
 						class="select-mode-off selectable" tabindex="-1" data-name="off"
-						title="Disable link popups."><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+						title="Disable link popups." id="disable-link-popups" ><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
 								viewBox="0 0 640 512">
 								<path
 									d="M63.1 351.1c0 35.25 28.75 63.1 63.1 63.1h95.1v83.99c0 9.749 11.25 15.45 19.12 9.7l124.9-93.69l39.37-.0117L63.1 146.9L63.1 351.1zM630.8 469.1l-82.76-64.87c16.77-11.47 27.95-30.46 27.95-52.27V63.1c0-35.25-28.75-63.1-63.1-63.1H127.1c-23.51 0-43.97 12.88-55.07 31.86L38.81 5.128C34.41 1.691 29.19 .0332 24.03 .0332c-7.125 0-14.2 3.137-18.92 9.168c-8.187 10.44-6.365 25.53 4.073 33.7l591.1 463.1c10.5 8.202 25.57 6.333 33.7-4.073C643.1 492.4 641.2 477.3 630.8 469.1z">
 								</path>
 							</svg></span><span class="label" data-selected-label="Popups Disabled"
 							data-unselected-label="Disable Popups">Disable Popups</span></button></div>
-					<div id="reader-mode-selector" class="reader-mode-selector mode-selector widget"><button type="button"
-						class="select-mode-auto selected" disabled="" tabindex="-1" data-name="auto"
+				<div id="reader-mode-selector" class="reader-mode-selector mode-selector widget"><button type="button"
+						class="select-mode-auto selected" id="enable-reader-mode" tabindex="-1" data-name="auto"
 						title="Reader mode enabled automatically on certain pages. (When enabled, hold Alt key to show links in text.) [This option is currently selected.]"><span
 							class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 32 640 539">
 								<path
@@ -95,7 +95,7 @@
 							</svg></span><span class="label" data-selected-label="Reader Mode Enabled"
 							data-unselected-label="Enable Reader Mode">Enable Reader Mode</span></button><button
 						type="button" class="select-mode-off selectable active" tabindex="-1" data-name="off"
-						title="Disable reader mode on all pages."><span class="icon"><svg
+						title="Disable reader mode on all pages." id="disable-reader-mode" ><span class="icon"><svg
 								xmlns="http://www.w3.org/2000/svg" viewBox="0 -48 640 512">
 								<path
 									d="M 561.91,-48 C 549.44,-48 406.51,-41.51 320,8.89 233.49,-41.51 90.56,-48 78.09,-48 35.03,-48 0,-13.66 0,28.55 v 313.72 c 0,40.73 32.47,74.3 73.92,76.41 36.78,1.91 128.81,9.5 187.73,38.69 8.19,4.05 17.25,6.29 26.34,6.58 V 464 h 64.02 v -0.05 c 9.09,-0.29 18.15,-2.53 26.34,-6.58 C 437.27,428.18 529.3,420.59 566.08,418.68 607.53,416.57 640,383 640,342.27 V 28.55 C 640,-13.66 604.97,-48 561.91,-48 Z M 296,390.15 c 0,11.09 -10.96,18.91 -21.33,14.96 C 210.14,380.57 120.71,373.04 76.36,370.73 60.46,369.93 48,357.43 48,342.27 V 28.55 C 48,12.81 61.5,0 78.06,0 c 19.93,0.1 126.55,7.81 198.53,40.49 11.63,5.28 19.27,16.66 19.28,29.44 L 296,176 Z m 296,-47.88 c 0,15.16 -12.46,27.66 -28.36,28.47 -44.35,2.3 -133.78,9.83 -198.31,34.38 C 354.96,409.06 344,401.25 344,390.16 V 176 L 344.14,69.92 C 344.16,57.14 351.79,45.77 363.42,40.48 435.4,7.81 542.02,0.1 561.94,0 578.5,0 592,12.81 592,28.55 Z">
@@ -104,9 +104,9 @@
 							data-unselected-label="Disable Reader Mode">Disable Reader Mode</span></button></div>
 				<div id="search-widget" class="link-widget widget"><a
 						class="search no-footer-bar has-content spawns-popup"
-						href="$$ROOT_HREF$$/$$LANG$$/search.html" aria-label="Search site with Google Search"
+						href="/$$LANG$$/search.html" aria-label="Search site"
 						data-link-content-type="local-document"><span class="icon"><svg
-								xmlns="http://www.w3.org/2000/svg" viewBox="2.875 2.875 17.75 17.75">
+								xmlns="http://www.w3.org/2000/svg" style="width: 75%;height: 75%;margin-top: 3px;fill: #808080;" viewBox="2.875 2.875 17.75 17.75">
 								<path
 									d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z">
 								</path>
@@ -114,7 +114,7 @@
 				<div id="dark-mode-selector" class="dark-mode-selector mode-selector widget"><button type="button"
 						class="select-mode-auto selected" tabindex="-1" data-name="auto"
 						title="Set light or dark mode automatically, according to system-wide setting (Win: Start → Personalization → Colors; Mac: Apple → System-Preferences → Appearance; iOS: Settings → Display-and-Brightness; Android: Settings → Display) [This option is currently selected.]"
-						disabled=""><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+						id="select-css-mode-auto"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
 								viewBox="-32 -32 576 576">
 								<path
 									d="M8 256c0 136.966 111.033 248 248 248s248-111.034 248-248S392.966 8 256 8 8 119.033 8 256zm248 184V72c101.705 0 184 82.311 184 184 0 101.705-82.311 184-184 184z">
@@ -122,7 +122,7 @@
 							</svg></span><span class="label" data-selected-label="Auto Light/Dark"
 							data-unselected-label="Auto Light/Dark">Auto Light/Dark</span></button><button type="button"
 						class="select-mode-light selectable active" tabindex="-1" data-name="light"
-						title="Light mode at all times (black-on-white)"><span class="icon"><svg
+						title="Light mode at all times (black-on-white)" id="select-css-mode-light"><span class="icon"><svg
 								xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
 								<path
 									d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z">
@@ -130,7 +130,7 @@
 							</svg></span><span class="label" data-selected-label="Light Mode"
 							data-unselected-label="Light Mode">Light Mode</span></button><button type="button"
 						class="select-mode-dark selectable" tabindex="-1" data-name="dark"
-						title="Dark mode at all times (inverted: white-on-black)"><span class="icon"><svg
+						title="Dark mode at all times (inverted: white-on-black)" id="select-css-mode-dark"><span class="icon"><svg
 								xmlns="http://www.w3.org/2000/svg" viewBox="-16 -16 544 544">
 								<path
 									d="M283.211 512c78.962 0 151.079-35.925 198.857-94.792 7.068-8.708-.639-21.43-11.562-19.35-124.203 23.654-238.262-71.576-238.262-196.954 0-72.222 38.662-138.635 101.498-174.394 9.686-5.512 7.25-20.197-3.756-22.23A258.156 258.156 0 0 0 283.211 0c-141.309 0-256 114.511-256 256 0 141.309 114.511 256 256 256z">
