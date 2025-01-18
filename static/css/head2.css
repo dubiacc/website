@@ -1560,3 +1560,50 @@ p#page-help {
         justify-content: center;
     }
 }
+
+#select-faith {
+    user-select: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 2px solid var(--GW-body-link-color);
+    font-family: var(--GW-serif-font-stack);
+    font-weight: bold;
+    padding:5px 10px;
+    padding-right:35px;
+    margin-top: 5px; 
+    text-align:right;
+    background-color: var(--GW-body-color);
+    color:var(--GW-text-color);
+    flex-grow:1;
+    cursor:pointer;
+    max-width:300px;
+    font-size:1rem;
+  }
+  @media (max-width: 649px) { 
+    #select-faith-wrapper { flex-direction: column; } 
+    #select-faith { max-width: none; }
+  }
+
+
+#special-contents > section,
+#other-sections > section, 
+#i-want-to-learn-about > section { 
+    overflow: hidden;
+}
+
+#special-contents, #other-sections, #i-want-to-learn-about, .index-section-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0px 20px;
+} 
+
+@media screen and (max-width: 750px) {
+    #special-contents, #other-sections, #i-want-to-learn-about, .index-section-grid-container {
+        display: block;
+    }
+
+    .index-section-grid-container li {
+        margin-top: 0px !important;
+    }
+}

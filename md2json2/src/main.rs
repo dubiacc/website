@@ -2169,7 +2169,7 @@ fn backlinks(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<S
         return Ok(String::new());
     }
     let s = get_string(meta, lang, "backlinks-title")?;
-    Ok(render_index_section(lang, "backlinks", "", &s, &a.backlinks))
+    Ok(render_index_section(lang, "backlinks", "", &s, &a.backlinks, false))
 }
 
 fn similars(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
@@ -2177,7 +2177,7 @@ fn similars(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<St
         return Ok(String::new());
     }
     let s = get_string(meta, lang, "similar-title")?;
-    Ok(render_index_section(lang, "similar", "", &s, &a.similar))
+    Ok(render_index_section(lang, "similar", "", &s, &a.similar, true))
 }
 
 fn bibliography(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
@@ -2200,7 +2200,7 @@ fn bibliography(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Resul
 
     let s = get_string(meta, lang, "bibliography-title")?;
 
-    Ok(render_index_section(lang, "bibliography", "", &s, &bib))
+    Ok(render_index_section(lang, "bibliography", "", &s, &bib, true))
 }
 
 fn body_footer(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
@@ -2608,13 +2608,29 @@ fn render_section_items(lang: &str, links: &[SectionLink]) -> String {
     }).collect::<Vec<_>>().join("\r\n")
 }
 
-fn render_index_section(lang: &str, id: &str, classes: &str, title: &str, links: &[SectionLink]) -> String {
+fn render_index_section(lang: &str, id: &str, classes: &str, title: &str, links: &[SectionLink], two_column: bool) -> String {
     let mut section_html = include_str!("../../templates/index.section.html").to_string();
     section_html = section_html.replace("$$SECTION_ID$$", id);
     section_html = section_html.replace("$$SECTION_CLASSES$$", classes);
     section_html = section_html.replace("$$SECTION_NAME$$", title);
     section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title);
-    section_html = section_html.replace("<!-- SECTION_ITEMS -->", &render_section_items(lang, links));
+
+    let section_items = if two_column {
+        let col1 = links.iter().enumerate()
+        .filter_map(|(i, l)| if i % 2 == 0 { Some(l.clone()) } else { None })
+        .collect::<Vec<_>>();
+        let col1 = render_section_items(lang, &col1);
+        let col2 = links.iter().enumerate()
+        .filter_map(|(i, l)| if i % 2 != 0 { Some(l.clone()) } else { None })
+        .collect::<Vec<_>>();
+        let col2 = render_section_items(lang, &col2);
+        let cont = format!("<div class='col'>{col1}</div><div class='col'>{col2}</div>");
+        format!("<div class='index-section-grid-container'>{cont}</div>")
+    } else {
+        render_section_items(lang, links)
+    };
+
+    section_html = section_html.replace("<!-- SECTION_ITEMS -->", &section_items);
     section_html
 }
 
@@ -2643,7 +2659,7 @@ fn render_index_section_img(lang: &str, id: &str, title: &str, link: &str, img: 
 
 fn render_index_sections(lang: &str, s: Vec<((String, String), Vec<SectionLink>)>) -> String {
     s.iter().map(|((id, title), links)| {
-        render_index_section(lang, id, "", title, links)
+        render_index_section(lang, id, "", title, links, false)
     }).collect::<Vec<_>>().join("\r\n")
 }
 
@@ -2651,7 +2667,7 @@ fn render_resources_sections(lang: &str, s: &Vec<TagSection1>) -> String {
     s.iter().map(|s| {
         let section_id = &s.id;
         let section_title = &s.title;
-        render_index_section(lang, section_id, "", section_title, &s.links)
+        render_index_section(lang, section_id, "", section_title, &s.links, false)
     }).collect::<Vec<_>>().join("\r\n")
 }
 
@@ -2699,7 +2715,7 @@ fn render_index_first_section(
         }).collect::<Vec<_>>();
         
         let classes = "list list-level-1";
-        let s = render_index_section(lang, &t.tag,  &classes, &t.title, &featured);
+        let s = render_index_section(lang, &t.tag,  &classes, &t.title, &featured, true);
 
         if i == 0 {
             fs = s;
@@ -2731,7 +2747,7 @@ fn render_other_index_sections(
     let articles = articles.map.get(lang)
     .ok_or_else(|| format!("render_other_index_sections: unknown language {lang}"))?;
 
-    Ok(tags.iwanttolearn.iter().map(|(id, v)| {
+    let s = tags.iwanttolearn.iter().map(|(id, v)| {
 
         let featured = v.featured.iter().filter_map(|f_id| {
             let featured_title = articles.get(f_id)?.title.clone();
@@ -2742,8 +2758,10 @@ fn render_other_index_sections(
             })
         }).collect::<Vec<_>>();
 
-        render_index_section(lang, id, "", &v.title, &featured)
-    }).collect::<Vec<_>>().join(""))
+        render_index_section(lang, id, "", &v.title, &featured, false)
+    }).collect::<Vec<_>>().join("");
+
+    Ok(format!("<div id='i-want-to-learn-about'>{s}</div>"))
 }
 
 fn render_index_html(
@@ -2871,6 +2889,7 @@ fn minify(input: &str) -> Vec<u8> {
         .expect("Failed to minify HTML");
     minified
 }
+
 fn main() -> Result<(), String> {
 
     // Setup 
