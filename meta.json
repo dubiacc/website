@@ -1,4 +1,5 @@
 {
+    "owner": "github:fschutt",
     "strings": {
         "de": {
             "index-title": "Entdecke den wahren katholischen Glauben - dubia.cc",
@@ -75,6 +76,7 @@
             "special-about-desc": "Impressum",
             "donate-1": "Dieser Artikel wurde von $$AUTHORS$$ geschrieben.",
             "donate-2": "Wenn Sie möchten, können Sie den Autor direkt mit einer Spende durch $$DONATION_METHODS$$ unterstützen. Danke.",
+            "donate-3": "Diese Seite wurde von $$AUTHORS$$ programmiert.",
             "go-to-top": "⬆ Anfang"
         },
         "en": {
@@ -152,6 +154,7 @@
             "special-about-desc": "About",
             "donate-1": "This article was written by $$AUTHORS$$.",
             "donate-2": "If you like, you can support the author directly with a donation using $$DONATION_METHODS$$. Thanks.",
+            "donate-3": "This site was designed by $$AUTHORS$$.",
             "go-to-top": "⬆ Top"
         },
         "fr": {
@@ -229,6 +232,7 @@
             "special-about-desc": "Impression",
             "donate-1" : "Cet article a été écrit par $$AUTHORS$$",
             "donate-2": "Si vous le souhaitez, vous pouvez soutenir directement l'auteur en faisant un don par $$DONATION_METHODS$$. Merci.",
+            "donate-3": "Ce site a été conçu par $$AUTHORS$$.",
             "go-to-top": "⬆ Début"
         },
         "pl": {
@@ -306,6 +310,7 @@
             "special-about-desc": "Informacje prawne",
             "donate-1": "Ten artykuł został napisany przez $$AUTHORS$$.",
             "donate-2": "Jeśli chcesz, możesz wesprzeć autora bezpośrednio darowizną za pośrednictwem $$DONATION_METHODS$$. Dziękujemy bardzo.",
+            "donate-3": "Ta strona została zaprojektowana przez $$AUTHORS$$.",
             "go-to-top": "⬆ Górę"
         },
         "br": {
@@ -383,6 +388,7 @@
             "special-about-desc": "Informações legais",
             "donate-1": "Este artigo foi escrito por $$AUTHORS$$.",
             "donate-2": "Se desejar, você pode apoiar o autor diretamente com uma doação usando $$DONATION_METHODS$$. Obrigado.",
+            "donate-3": "Este site foi criado por $$AUTHORS$$.",
             "go-to-top": "⬆ Topo"
         },
         "es": {
@@ -460,6 +466,7 @@
             "special-about-desc": "Aviso legal",
             "donate-1": "Este artículo ha sido escrito por $$AUTHORS$$",
             "donate-2": "Si lo desea, puede apoyar al autor directamente con una donación utilizando $$DONATION_METHODS$$. Gracias.",
+            "donate-3": "Este sitio ha sido diseñado por $$AUTHORS$$.",
             "go-to-top": "⬆ Arriba"
         }
     },

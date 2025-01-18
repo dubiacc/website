@@ -1816,6 +1816,7 @@ struct TagSection3 {
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct MetaJson {
     // translation strings
+    owner: Option<String>,
     #[serde(default)]
     strings: BTreeMap<Lang, BTreeMap<String, String>>,
     #[serde(default)]
@@ -2109,12 +2110,20 @@ fn donate(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<Stri
     }
 
     let (_, donatable_author) = donatable_author.unwrap();
+
     let all_authors = auth.iter().map(|(id, a)| {
         format!("<a href='/{lang}/author/{}'>{}</a>", id.replace(":", "-"), a.displayname)
     }).collect::<Vec<_>>().join(", ");
     
     let donate_1 = get_string(meta, lang, "donate-1")?
         .replace("$$AUTHORS$$", &all_authors);
+    
+    render_donate_section_internal(lang, &donate_1, &donatable_author, meta)
+}
+fn render_donate_section_internal(
+    lang: &str, donate_1: &str, 
+    donatable_author: &Author, meta: &MetaJson
+) -> Result<String, String> {
     
     let dn_methods = donatable_author.donate.iter().map(|(id, link)| {
         let id = match id.as_str() {
@@ -2139,9 +2148,29 @@ fn donate(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<Stri
     }.replace("<svg ", "<svg style='max-height:50px;' ");
     let mut donate = include_str!("../../templates/donate.html").to_string();
     donate = donate.replace("$$DONATE_SVG$$", &format!("/static/img/donate/{lang}.svg"));
-    donate = donate.replace("$$DONATE_TEXT$$", &(donate_1 + "&nbsp;" + &donate_2));
+    donate = donate.replace("$$DONATE_TEXT$$", &(donate_1.to_string() + "&nbsp;" + &donate_2));
     donate = donate.replace("<!-- DONATE_SVG -->", &donate_svg);
     Ok(donate)
+}
+
+fn site_author_donation(lang: &str, meta: &MetaJson) -> Result<String, String> {
+    
+    let author_id = meta.owner.as_deref()
+    .ok_or_else(|| { format!("missing site owner in meta.json")})?;
+
+    let dn_author = meta.authors.get(author_id)
+    .ok_or_else(|| { format!("missing site author {author_id}")})?;
+
+    let all_authors = format!(
+        "<a href='/{lang}/author/{}'>{}</a>", 
+        author_id.replace(":", "-"), 
+        dn_author.displayname
+    );
+    
+    let donate_1 = get_string(meta, lang, "donate-3")?
+    .replace("$$AUTHORS$$", &all_authors);
+
+    render_donate_section_internal(lang, &donate_1, dn_author, meta)
 }
 
 fn footnotes(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
@@ -2435,6 +2464,7 @@ struct SpecialPage {
     title: String,
     description: String,
     content: String,
+    special_content: String,
 }
 
 fn get_special_pages(
@@ -2503,6 +2533,7 @@ fn get_special_pages(
             id: topics_id,
             description: topics_desc,
             content: topics_content,
+            special_content: String::new(),
         },
         SpecialPage {
             title: newest_title,
@@ -2510,6 +2541,7 @@ fn get_special_pages(
             id: newest_id,
             description: newest_desc,
             content: newest_content,
+            special_content: String::new(),
         },
         SpecialPage {
             title: tools_title,
@@ -2517,6 +2549,7 @@ fn get_special_pages(
             id: tools_id,
             description: tools_desc,
             content: render_resources_sections(lang, &tags.ressources),
+            special_content: String::new(),
         },
         SpecialPage {
             title: shop_title,
@@ -2524,6 +2557,7 @@ fn get_special_pages(
             id: shop_id,
             description: shop_desc,
             content: render_shop_sections(lang, &tags.shop, meta),
+            special_content: site_author_donation(lang, meta).unwrap_or_default(),
         },
         SpecialPage {
             title: about_title,
@@ -2531,6 +2565,7 @@ fn get_special_pages(
             id: about_id,
             description: about_desc,
             content: render_about_sections(&tags.about),
+            special_content: String::new(),
         },
     ])
 }
@@ -2543,6 +2578,7 @@ fn special2html(lang: &str, page: &SpecialPage, meta: &MetaJson) -> Result<(Stri
         .. Default::default()
     };
     special = special.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(&a, lang, &page.id, meta)?);
+    special = special.replace("<!-- BODY_NOSCRIPT -->", &page.special_content);
     special = special.replace("<!-- BODY_ABSTRACT -->", &page.content);
     special = special.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true, meta)?);
     special = special.replace("$$TITLE$$", &page.title);
@@ -2673,7 +2709,12 @@ fn render_resources_sections(lang: &str, s: &Vec<TagSection1>) -> String {
 
 fn render_shop_sections(lang: &str, s: &Vec<TagSection2>, meta: &MetaJson) -> String {
     s.iter().map(|s| {
-        render_index_section_img(lang, &s.id, &s.title, &s.link.slug, &s.img, &s.link.title, meta)
+        render_index_section_img(
+            lang, &s.id, 
+            &s.title, &s.link.slug, 
+            &s.img, &s.link.title, 
+            meta
+        )
     }).collect::<Vec<_>>().join("\r\n")
 }
 
