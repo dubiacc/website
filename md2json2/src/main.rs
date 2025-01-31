@@ -1,7 +1,10 @@
 use std::path::Path;
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
+use rosary::RosaryTemplates;
 use serde_derive::{Serialize, Deserialize};
+
+mod rosary;
 
 #[derive(Debug, Default)]
 struct LoadedArticles {
@@ -2245,6 +2248,34 @@ fn body_footer(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result
     Ok(footer.to_string())
 }
 
+fn rosary_template(lang: &str) -> rosary::RosaryTemplates {
+    match lang {
+        "de" => rosary::RosaryTemplates {
+            main_html: include_str!("../../templates/tools.rosary.de.html").to_string(),
+            outro_html: include_str!("../../templates/tools.rosary.outro.de.html").to_string(),
+            ourfather_html: include_str!("../../templates/tools.rosary.ourfather.de.html").to_string(),
+            glorybe_html: include_str!("../../templates/tools.rosary.glorybe.de.html").to_string(),
+            fatima_html: include_str!("../../templates/tools.rosary.fatima.de.html").to_string(),
+            nav_html: include_str!("../../templates/tools.rosary.nav.de.html").to_string(),
+            mystery_section_html: include_str!("../../templates/tools.rosary.mystery.html").to_string(),
+        },
+        "en" => rosary::RosaryTemplates {
+            main_html: include_str!("../../templates/tools.rosary.en.html").to_string(),
+            outro_html: include_str!("../../templates/tools.rosary.outro.en.html").to_string(),
+            ourfather_html: include_str!("../../templates/tools.rosary.ourfather.en.html").to_string(),
+            glorybe_html: include_str!("../../templates/tools.rosary.glorybe.en.html").to_string(),
+            fatima_html: include_str!("../../templates/tools.rosary.fatima.en.html").to_string(),
+            nav_html: include_str!("../../templates/tools.rosary.nav.en.html").to_string(),
+            mystery_section_html: include_str!("../../templates/tools.rosary.mystery.html").to_string(),
+        },
+        _ => RosaryTemplates::default(),
+    }
+}
+
+fn rosary_mysteries() -> rosary::RosaryMysteries {
+    serde_json::from_str(include_str!("../../mysteries.json")).unwrap_or_default()
+}
+
 fn article2html(
     lang: &str, 
     slug: &str, 
@@ -2255,12 +2286,6 @@ fn article2html(
 ) -> Result<String, String> {
     
     static HTML: &str = include_str!("../../templates/lorem.html");
-
-    match (lang, slug) {
-        ("de", "rosenkranz") |
-        ("en", "rosary") => return Err(String::new()), // TODO
-        _ => { },
-    }
 
     if a.tags.is_empty() {
         println!("article {lang}/{slug} has no tags");
@@ -2306,7 +2331,14 @@ fn article2html(
     let html = html.replace("<!-- PAGE_DESCRIPTION -->", &page_desciption(lang, &a, meta)?);
     let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a, meta)?);
     let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(lang, slug, a.is_prayer(), &a.summary));
-    let html = html.replace("<!-- BODY_CONTENT -->", &body_content(lang, &slug, &a.sections, meta)?);
+
+    let content = match (lang, slug) {
+        ("de", "rosenkranz") => rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries()),
+        ("en", "rosary") => rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries()),
+        _ => body_content(lang, &slug, &a.sections, meta)?,
+    };
+
+    let html = html.replace("<!-- BODY_CONTENT -->", &content);
     let html = html.replace("<!-- DONATE -->", &donate(lang, &a, meta)?);
     let html = html.replace("<!-- BODY_NOSCRIPT -->", &body_noscript());
     let html = html.replace("<!-- FOOTNOTES -->", &footnotes(lang, a, meta)?);

@@ -1,0 +1,1263 @@
+{
+    "mysteries": {
+        "1": {
+            "decade": {
+                "en": "Annunciation",
+                "de": "Verkündigung",
+                "latin": "Annuntiatio"
+            },
+            "spiritual-fruit": {
+                "en": "Humility",
+                "de": "Demut",
+                "latin": "Humilitas"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Der Engel Gabriel wurde von Gott.... zu einer Jungfrau gesandt, die mit einem Mann namens Joseph aus dem Hause David verlobt war.  Der Name der Jungfrau war Maria.",
+                    "en": "The angel Gabriel was sent by God to a virgin betrothed to a man named Joseph of the house of David. The virgin's name was Mary.",
+                    "latin": "Angelus Gabriel missus est a Deo ad virginem desponsatam viro nomine Joseph de domo David. Nomen virginis erat Maria.",
+                    "source": "Luke 1:26-27",
+                    "image": "01_01"
+                },
+                "2": {
+                    "de": "Der Engel sagte zu ihr: \"Freue dich, du hochverehrte Tochter! Der Herr ist mit dir.  Gesegnet bist du unter den Frauen.\"",
+                    "en": "The angel said to her: 'Rejoice, highly favored one! The Lord is with you. Blessed are you among women.'",
+                    "latin": "Angelus dixit ad eam: 'Ave, gratia plena! Dominus tecum. Benedicta tu in mulieribus.'",
+                    "source": "Luke 1:28",
+                    "image": "01_02"
+                },
+                "3": {
+                    "de": "Sie war tief beunruhigt über seine Worte und fragte sich, was sein Gruß zu bedeuten hatte.",
+                    "en": "She was greatly troubled at his words and wondered what kind of greeting this might be.",
+                    "latin": "Illa autem turbata est in sermone eius, et cogitabat qualis esset ista salutatio.",
+                    "source": "Luke 1:29",
+                    "image": "01_03"
+                },
+                "4": {
+                    "de": "Der Engel sagte zu ihr: \"Fürchte dich nicht, Maria.  Du hast Gunst bei Gott gefunden.\"",
+                    "en": "The angel said to her, 'Do not be afraid, Mary, for you have found favor with God.'",
+                    "latin": "Angelus dixit ad eam: 'Ne timeas, Maria; invenisti enim gratiam apud Deum.'",
+                    "source": "Luke 1:30",
+                    "image": "01_04"
+                },
+                "5": {
+                    "de": "\"Du wirst schwanger werden und einen Sohn gebären und ihm den Namen Jesus geben.\"",
+                    "en": "'You will conceive and give birth to a son, and you are to call him Jesus.'",
+                    "latin": "'Ecce concipies et paries filium, et vocabis nomen eius Jesum.'",
+                    "source": "Luke 1:31",
+                    "image": "01_05"
+                },
+                "6": {
+                    "de": "\"Groß wird seine Würde sein, und man wird ihn Sohn des Höchsten nennen.  Und seine Herrschaft wird ohne Ende sein.\"",
+                    "en": "'He will be great and will be called the Son of the Most High. His kingdom will never end.'",
+                    "latin": "'Hic erit magnus et Filius Altissimi vocabitur. Regnum eius non erit finis.'",
+                    "source": "Luke 1:32-33",
+                    "image": "01_06"
+                },
+                "7": {
+                    "de": "Maria sagte zu dem Engel: \"Wie kann das sein, da ich den Menschen nicht kenne?\"",
+                    "en": "Mary said to the angel, 'How will this be, since I am a virgin?'",
+                    "latin": "Dixit autem Maria ad angelum: 'Quomodo fiet istud, quoniam virum non cognosco?'",
+                    "source": "Luke 1:34",
+                    "image": "01_07"
+                },
+                "8": {
+                    "de": "Der Engel antwortete ihr: \"Der Heilige Geist wird über dich kommen, und die Kraft des Höchsten wird dich überschatten.\"",
+                    "en": "The angel answered her, 'The Holy Spirit will come upon you, and the power of the Most High will overshadow you.'",
+                    "latin": "Respondit angelus: 'Spiritus Sanctus superveniet in te, et virtus Altissimi obumbrabit tibi.'",
+                    "source": "Luke 1:35",
+                    "image": "01_08"
+                },
+                "9": {
+                    "de": "\"Der heilige Spross, der geboren werden soll, wird Sohn Gottes genannt werden.\"",
+                    "en": "'The holy one to be born will be called the Son of God.'",
+                    "latin": "'Quod nascetur Sanctum, vocabitur Filius Dei.'",
+                    "source": "Luke 1:35",
+                    "image": "01_09"
+                },
+                "10": {
+                    "de": "Maria sagte:  \"Ich bin die Dienerin des Herrn.  Mir geschehe, wie du es sagst.\"  Daraufhin verließ der Engel sie.",
+                    "en": "Mary said, 'I am the Lord's servant. May it be done to me according to your word.' Then the angel left her.",
+                    "latin": "Dixit autem Maria: 'Ecce ancilla Domini. Fiat mihi secundum verbum tuum.' Et discessit ab ea angelus.",
+                    "source": "Luke 1:38",
+                    "image": "01_10"
+                }
+            }
+        },
+        "2": {
+            "decade": {
+                "en": "Visitation",
+                "de": "Heimsuchung",
+                "latin": "Visitatio"
+            },
+            "spiritual-fruit": {
+                "en": "Charity",
+                "de": "Nächstenliebe",
+                "latin": "Caritas"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Maria machte sich auf den Weg und ging eilig in das Bergland zu einer Stadt in Juda, wo sie in das Haus des Zacharias eintrat und Elisabeth begrüßte.",
+                    "en": "Mary set out and traveled to the hill country in haste to a town of Judah, where she entered the house of Zechariah and greeted Elizabeth.",
+                    "latin": "Exsurgens autem Maria abiit in montana cum festinatione in civitatem Judae, et intravit in domum Zachariae et salutavit Elisabeth.",
+                    "source": "Luke 1:39-40",
+                    "image": "02_01"
+                },
+                "2": {
+                    "de": "Als Elisabeth den Gruß Marias hörte, hüpfchte das Kind in ihrem Schoß.",
+                    "en": "When Elizabeth heard Mary’s greeting, the infant leaped in her womb.",
+                    "latin": "Et factum est, ut audivit salutationem Mariae Elisabeth, exsultavit infans in utero eius.",
+                    "source": "Luke 1:41",
+                    "image": "02_02"
+                },
+                "3": {
+                    "de": "Elisabeth wurde mit dem Heiligen Geist erfüllt.",
+                    "en": "Elizabeth was filled with the Holy Spirit.",
+                    "latin": "Et repleta est Spiritu Sancto Elisabeth.",
+                    "source": "Luke 1:41",
+                    "image": "02_03"
+                },
+                "4": {
+                    "de": "Sie rief mit lauter Stimme: \"Gesegnet bist du unter den Frauen und gesegnet ist die Frucht deines Leibes.\"",
+                    "en": "She cried out in a loud voice: 'Blessed are you among women, and blessed is the fruit of your womb.'",
+                    "latin": "Et exclamavit voce magna et dixit: 'Benedicta tu in mulieribus, et benedictus fructus ventris tui.'",
+                    "source": "Luke 1:42",
+                    "image": "02_04"
+                },
+                "5": {
+                    "de": "Glücklich ist die, die darauf vertraut hat, dass sich die Worte des Herrn an sie erfüllen werden.",
+                    "en": "Blessed is she who believed that the Lord’s word to her would be fulfilled.",
+                    "latin": "Beata quae credidit, quoniam perficientur ea quae dicta sunt ei a Domino.",
+                    "source": "Luke 1:45",
+                    "image": "02_05"
+                },
+                "6": {
+                    "de": "Dann sagte Maria: \"Mein Wesen verkündet die Größe des Herrn, mein Geist freut sich an Gott, meinem Retter.\"",
+                    "en": "Then Mary said: 'My soul proclaims the greatness of the Lord; my spirit rejoices in God my savior.'",
+                    "latin": "Et ait Maria: 'Magnificat anima mea Dominum, et exsultavit spiritus meus in Deo salutari meo.'",
+                    "source": "Luke 1:46-47",
+                    "image": "02_06"
+                },
+                "7": {
+                    "de": "Denn er hat seine Magd in ihrer Niedrigkeit angesehen; alle künftigen Zeiten werden mich selig preisen.",
+                    "en": "For he has looked upon his handmaid’s lowliness; behold, from now on all ages will call me blessed.",
+                    "latin": "Quia respexit humilitatem ancillae suae; ecce enim ex hoc beatam me dicent omnes generationes.",
+                    "source": "Luke 1:48",
+                    "image": "02_07"
+                },
+                "8": {
+                    "de": "Gott, der mächtig ist, hat Großes an mir getan; heilig ist sein Name.",
+                    "en": "The Mighty One has done great things for me, and holy is his name.",
+                    "latin": "Fecit mihi magna qui potens est, et sanctum nomen eius.",
+                    "source": "Luke 1:49",
+                    "image": "02_08"
+                },
+                "9": {
+                    "de": "Seine Barmherzigkeit währt von Ewigkeit zu Ewigkeit über die, die ihn fürchten.",
+                    "en": "His mercy is from age to age to those who fear him.",
+                    "latin": "Et misericordia eius in progenies et progenies timentibus eum.",
+                    "source": "Luke 1:50",
+                    "image": "02_09"
+                },
+                "10": {
+                    "de": "Maria blieb etwa drei Monate bei Elisabeth und kehrte dann nach Hause zurück.",
+                    "en": "Mary remained with Elizabeth for about three months and then returned to her home.",
+                    "latin": "Mansit autem Maria cum illa quasi mensibus tribus, et reversa est in domum suam.",
+                    "source": "Luke 1:56",
+                    "image": "02_10"
+                }
+            }
+        },
+        "3": {
+            "decade": {
+                "en": "Nativity",
+                "de": "Geburt",
+                "latin": "Nativitas"
+            },
+            "spiritual-fruit": {
+                "en": "Poverty in Spirit",
+                "de": "Armut im Geiste",
+                "latin": "Paupertas Spiritus"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Plötzlich erschien ihm der Engel des Herrn im Traum und sagte zu ihm: \"Josef, Sohn Davids, fürchte dich nicht... Durch den Heiligen Geist hat sie dieses Kind empfangen.\"",
+                    "en": "An angel of the Lord appeared to him in a dream and said, 'Joseph, son of David, do not be afraid... She has conceived this child through the Holy Spirit.'",
+                    "latin": "Apparuit autem illi angelus Domini in somnio dicens: 'Joseph fili David, noli timere... Per Spiritum Sanctum concepit hoc.'",
+                    "source": "Matthew 1:20",
+                    "image": "03_01"
+                },
+                "2": {
+                    "de": "Sie wird einen Sohn bekommen, und du sollst ihm den Namen Jesus geben, weil er sein Volk von seinen Sünden erlösen wird.",
+                    "en": "She will bear a son, and you are to name him Jesus, because he will save his people from their sins.",
+                    "latin": "Pariet autem filium, et vocabis nomen eius Jesum, ipse enim salvum faciet populum suum a peccatis eorum.",
+                    "source": "Matthew 1:21",
+                    "image": "03_02"
+                },
+                "3": {
+                    "de": "All dies geschah, um zu erfüllen, was der Herr durch den Propheten gesagt hat: Die Jungfrau wird schwanger sein und einen Sohn gebären, und sie werden ihn Emmanuel nennen, ein Name, der bedeutet: \"Gott ist mit uns.\"",
+                    "en": "All this took place to fulfill what the Lord had said through the prophet: 'The virgin will conceive and give birth to a son, and they will call him Emmanuel, which means God is with us.'",
+                    "latin": "Hoc autem totum factum est ut adimpleretur quod dictum est a Domino per prophetam dicentem: 'Ecce, virgo concipiet et pariet filium, et vocabunt nomen eius Emmanuel, quod est interpretatum Nobiscum Deus.'",
+                    "source": "Matthew 1:22-23",
+                    "image": "03_03"
+                },
+                "4": {
+                    "de": "In jenen Tagen gab Cäsar Augustus ein Dekret heraus, das eine Volkszählung auf der ganzen Welt anordnete. Und so ging Josef nach Judäa, in die Davidstadt Bethlehem - denn er stammte aus dem Hause David -, um sich mit Maria, seiner Frau, die schwanger war, zu registrieren.",
+                    "en": "In those days Caesar Augustus issued a decree for a census of the entire Roman world. So Joseph went to Judea, to the city of David called Bethlehem, because he was of the house and lineage of David, to register with Mary, his betrothed, who was with child.",
+                    "latin": "Factum est autem in diebus illis, exiit edictum a Caesare Augusto ut describeretur universus orbis. Ascendit autem et Joseph a Galilaea in civitatem David, quae vocatur Bethlehem, quia erat de domo et familia David, ut profiteretur cum Maria desponsata sibi, praegnante.",
+                    "source": "Luke 2:1,4-5",
+                    "image": "03_04"
+                },
+                "5": {
+                    "de": "Während sie dort waren, waren die Tage ihrer Gefangenschaft zu Ende. Sie gebar ihren erstgeborenen Sohn und wickelte ihn in Windeln und legte ihn in eine Krippe.",
+                    "en": "While they were there, the time came for her to give birth, and she gave birth to her firstborn son. She wrapped him in swaddling clothes and laid him in a manger.",
+                    "latin": "Factum est autem, cum essent ibi, impleti sunt dies ut pareret, et peperit filium suum primogenitum, et pannis eum involvit et reclinavit eum in praesepio.",
+                    "source": "Luke 2:6-7",
+                    "image": "03_05"
+                },
+                "6": {
+                    "de": "In jener Gegend gab es Hirten, die auf den Feldern lebten und nachts über ihre Herden wachten.",
+                    "en": "And there were in the same country shepherds watching, and keeping the night watches over their flock.",
+                    "latin": "Erant autem pastores in regione eadem vigilantes et custodientes vigilias noctis super gregem suum.",
+                    "source": "Luke 2:8",
+                    "image": "03_06"
+                },
+                "7": {
+                    "de": "Der Engel des Herrn erschien ihnen ... und sie fürchteten sich sehr. Der Engel sagte zu ihnen: \"Ihr habt nichts zu befürchten!\"",
+                    "en": "And behold an angel of the Lord stood by them, and the brightness of God shone round about them; and they feared with a great fear. And the angel said to them: Fear not;",
+                    "latin": "Et angelus Domini stetit iuxta eos, et timuerunt timore magno. Dixit autem angelus ad eos: 'Nolite timere.'",
+                    "source": "Luke 2:9-10",
+                    "image": "03_07"
+                },
+                "8": {
+                    "de": "Ich bin gekommen, um euch eine gute Nachricht zu verkünden, eine Nachricht, die große Freude auslöst. Heute ist euch in der Stadt Davids ein Retter geboren worden der Messias und Herr.",
+                    "en": "And the angel said to them: Fear not; for, behold, I bring you good tidings of great joy, that shall be to all the people: For, this day, is born to you a Saviour, who is Christ the Lord, in the city of David.",
+                    "latin": "Ecce enim evangelizo vobis gaudium magnum quod erit omni populo, quia natus est vobis hodie Salvator, qui est Christus Dominus, in civitate David.",
+                    "source": "Luke 2:10-11",
+                    "image": "03_08"
+                },
+                "9": {
+                    "de": "Plötzlich war bei dem Engel eine große Schar der himmlischen Heerscharen, die Gott lobten und sagten: \"Ehre sei Gott in der Höhe, und Friede auf Erden denen, die sein Wohlgefallen haben.\"",
+                    "en": "Suddenly a great company of the heavenly host appeared with the angel, praising God and saying, 'Glory to God in the highest, and on earth peace to those on whom his favor rests.'",
+                    "latin": "Et subito facta est cum angelo multitudo militiae caelestis laudantium Deum et dicentium: 'Gloria in altissimis Deo, et in terra pax hominibus bonae voluntatis.'",
+                    "source": "Luke 2:13-14",
+                    "image": "03_09"
+                },
+                "10": {
+                    "de": "Sie eilten hin und fanden Maria und Josef und das Kind in der Krippe liegen; als sie es sahen, verstanden sie, was ihnen über dieses Kind gesagt worden war.",
+                    "en": "They went in haste and found Mary and Joseph, and the baby lying in the manger. When they saw this, they made known the message that had been told them about this child.",
+                    "latin": "Et venerunt festinantes et invenerunt Mariam et Joseph, et infantem positum in praesepio. Videntes autem cognoverunt de verbo quod dictum erat illis de puero hoc.",
+                    "source": "Luke 2:16-17",
+                    "image": "03_10"
+                }
+            }
+        },
+        "4": {
+            "decade": {
+                "en": "Presentation",
+                "de": "Darstellung",
+                "latin": "Praesentatio"
+            },
+            "spiritual-fruit": {
+                "en": "Obedience",
+                "de": "Gehorsam",
+                "latin": "Oboedientia"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Als der Tag kam, an dem sie nach dem Gesetz des Mose gereinigt werden sollten, brachten sie ihn nach Jerusalem hinauf, um ihn dem Herrn zu opfern.",
+                    "en": "When the time came for their purification according to the Law of Moses, they brought him up to Jerusalem to present him to the Lord.",
+                    "latin": "Et postquam impleti sunt dies purgationis eorum secundum legem Moysi, tulerunt illum in Hierusalem, ut sisterent eum Domino.",
+                    "source": "Luke 2:22",
+                    "image": "04_01"
+                },
+                "2": {
+                    "de": "Zu jener Zeit lebte in Jerusalem ein Mann namens Simeon. Er war gerecht und fromm.... und der Heilige Geist war auf ihm.",
+                    "en": "Now there was a man in Jerusalem whose name was Simeon. This man was righteous and devout... and the Holy Spirit was upon him.",
+                    "latin": "Et ecce homo erat in Hierusalem, cui nomen Simeon, et homo iste iustus et timoratus... et Spiritus Sanctus erat in eo.",
+                    "source": "Luke 2:25",
+                    "image": "04_02"
+                },
+                "3": {
+                    "de": "Ihm wurde durch den Heiligen Geist offenbart, dass er den Tod nicht erleben würde, bis er den Gesalbten des Herrn gesehen hätte.",
+                    "en": "It had been revealed to him by the Holy Spirit that he would not see death before he had seen the Lord’s Christ.",
+                    "latin": "Responsum acceperat a Spiritu Sancto, non visurum se mortem, nisi prius videret Christum Domini.",
+                    "source": "Luke 2:26",
+                    "image": "04_03"
+                },
+                "4": {
+                    "de": "Er kam nun, vom Geist beseelt, in den Tempel, und als die Eltern das Jesuskind hereinbrachten, nahm er es in seine Arme und segnete Gott.",
+                    "en": "Moved by the Spirit, he went into the temple courts, and when the parents brought in the child Jesus, he took him in his arms and praised God.",
+                    "latin": "Et venit in Spiritu in templum. Et cum inducerent puerum Jesum parentes eius, accepit eum in ulnas suas et benedixit Deum.",
+                    "source": "Luke 2:27-28",
+                    "image": "04_04"
+                },
+                "5": {
+                    "de": "Nun, Meister, kannst du deinen Diener in Frieden entlassen; du hast dein Wort erfüllt.",
+                    "en": "Now, Master, you may let your servant go in peace, according to your word.",
+                    "latin": "Nunc dimittis servum tuum, Domine, secundum verbum tuum in pace.",
+                    "source": "Luke 2:29",
+                    "image": "04_05"
+                },
+                "6": {
+                    "de": "Denn meine Augen haben deine Rettungstaten gesehen, die allen Völkern gezeigt wurden, damit sie sie sehen.",
+                    "en": "For my eyes have seen your salvation, which you have prepared in the sight of all nations.",
+                    "latin": "Quia viderunt oculi mei salutare tuum, quod parasti ante faciem omnium populorum.",
+                    "source": "Luke 2:30-31",
+                    "image": "04_06"
+                },
+                "7": {
+                    "de": "Simeon segnete sie und sagte zu Maria, seiner Mutter: Dieses Kind ist dazu bestimmt, der Untergang und der Aufstieg vieler in Israel zu sein, ein Zeichen, das bekämpft werden wird.",
+                    "en": "Simeon blessed them and said to Mary his mother: This child is destined to cause the falling and rising of many in Israel, and to be a sign that will be spoken against.",
+                    "latin": "Et benedixit illis Simeon et dixit ad Mariam matrem eius: Ecce positus est hic in ruinam et resurrectionem multorum in Israel, et in signum cui contradicetur.",
+                    "source": "Luke 2:34",
+                    "image": "04_07"
+                },
+                "8": {
+                    "de": "Und du selbst sollst mit dem Schwert durchbohrt werden, damit die Gedanken vieler Herzen aufgedeckt werden.",
+                    "en": "And a sword will pierce your own soul too, so that the thoughts of many hearts will be revealed.",
+                    "latin": "Et tuam ipsius animam pertransibit gladius, ut revelentur ex multis cordibus cogitationes.",
+                    "source": "Luke 2:35",
+                    "image": "04_08"
+                },
+                "9": {
+                    "de": "Als die beiden alle Vorschriften des Gesetzes des Herrn erfüllt hatten, kehrten sie nach Galiläa und in ihre Heimatstadt Nazareth zurück.",
+                    "en": "When Joseph and Mary had done everything required by the Law of the Lord, they returned to Galilee to their own town of Nazareth.",
+                    "latin": "Et ut perfecerunt omnia secundum legem Domini, reversi sunt in Galilaeam, in civitatem suam Nazareth.",
+                    "source": "Luke 2:39",
+                    "image": "04_09"
+                },
+                "10": {
+                    "de": "Das Kind wuchs an Größe und Kraft und war voller Weisheit, und die Gnade Gottes war auf ihm.",
+                    "en": "And the child grew and became strong; he was filled with wisdom, and the grace of God was on him.",
+                    "latin": "Puer autem crescebat et confortabatur plenus sapientia, et gratia Dei erat in illo.",
+                    "source": "Luke 2:40",
+                    "image": "04_10"
+                }
+            }
+        },
+        "5": {
+            "decade": {
+                "en": "Jesus in the Temple",
+                "de": "Jesus im Tempel",
+                "latin": "Iesu in Templo"
+            },
+            "spiritual-fruit": {
+                "en": "Joy in Finding Jesus",
+                "de": "Freude, Jesus zu finden",
+                "latin": "Gaudium in Inventione Iesu"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Und als er zwölf Jahre alt war, gingen sie hinauf, um das Fest zu feiern, wie es Brauch war.",
+                    "en": "When he was twelve years old, they went up to the festival, according to the custom.",
+                    "latin": "Et cum factus esset annorum duodecim, ascenderunt illi secundum consuetudinem die festo.",
+                    "source": "Luke 2:42",
+                    "image": "05_01"
+                },
+                "2": {
+                    "de": "Als sie am Ende des Festes zurückkehrten, blieb das Jesuskind ohne Wissen seiner Eltern zurück.",
+                    "en": "After the festival was over, while his parents were returning home, the boy Jesus stayed behind in Jerusalem, but they were unaware of it.",
+                    "latin": "Consumptis autem diebus, cum redirent, remansit puer Iesus in Hierusalem, et non cognoverunt parentes eius.",
+                    "source": "Luke 2:43",
+                    "image": "05_02"
+                },
+                "3": {
+                    "de": "In der Annahme, er sei in der Gruppe, setzten sie ihre Reise einen Tag lang fort und suchten ihn bei ihren Verwandten und Bekannten.",
+                    "en": "Thinking he was in their company, they traveled on for a day. Then they began looking for him among their relatives and friends.",
+                    "latin": "Existimantes autem illum esse in comitatu, venerunt iter diei et requirebant eum inter cognatos et notos.",
+                    "source": "Luke 2:44",
+                    "image": "05_03"
+                },
+                "4": {
+                    "de": "Als sie ihn nicht fanden, kehrten sie nach Jerusalem zurück, um ihn zu suchen.",
+                    "en": "When they did not find him, they went back to Jerusalem to look for him.",
+                    "latin": "Et non invenientes regressi sunt in Hierusalem requirentes eum.",
+                    "source": "Luke 2:45",
+                    "image": "05_04"
+                },
+                "5": {
+                    "de": "Am dritten Tag trafen sie ihn im Tempel an, als er mitten unter den Lehrern saß.... Alle, die ihn hörten, waren erstaunt über seine Klugheit und seine Antworten.",
+                    "en": "After three days they found him in the temple courts, sitting among the teachers, listening to them and asking them questions. Everyone who heard him was amazed at his understanding and his answers.",
+                    "latin": "Et factum est, post triduum invenerunt illum in templo sedentem in medio doctorum, audientem illos et interrogantem eos. Stupebant autem omnes qui eum audiebant super prudentia et responsis eius.",
+                    "source": "Luke 2:46-47",
+                    "image": "05_05"
+                },
+                "6": {
+                    "de": "Und seine Mutter sagte zu ihm: \"Sohn, warum hast du uns das angetan? Du siehst doch, dass dein Vater und ich dich mit großer Sorge gesucht haben.\"",
+                    "en": "His mother said to him, 'Son, why have you treated us like this? Your father and I have been anxiously searching for you.'",
+                    "latin": "Et dixit ad illum mater eius: 'Fili, quid fecisti nobis sic? Ecce pater tuus et ego dolentes quaerebamus te.'",
+                    "source": "Luke 2:48",
+                    "image": "05_06"
+                },
+                "7": {
+                    "de": "Er sagte zu ihnen: \"Warum habt ihr mich gesucht? Wusstet ihr nicht, dass ich im Haus meines Vaters sein musste?\"",
+                    "en": "He said to them, 'Why were you searching for me? Did you not know I had to be in my Father’s house?'",
+                    "latin": "Et ait ad illos: 'Quid est quod me quaerebatis? Nesciebatis quia in his quae Patris mei sunt oportet me esse?'",
+                    "source": "Luke 2:49",
+                    "image": "05_07"
+                },
+                "8": {
+                    "de": "Aber sie begriffen nicht, was er zu ihnen sagte.",
+                    "en": "But they did not understand what he was saying to them.",
+                    "latin": "Et ipsi non intellexerunt verbum quod locutus est ad eos.",
+                    "source": "Luke 2:50",
+                    "image": "05_08"
+                },
+                "9": {
+                    "de": "Da ging er mit ihnen hinab und kam nach Nazareth und war ihnen gehorsam.",
+                    "en": "Then he went down to Nazareth with them and was obedient to them.",
+                    "latin": "Et descendit cum eis et venit Nazareth et erat subditus illis.",
+                    "source": "Luke 2:51",
+                    "image": "05_09"
+                },
+                "10": {
+                    "de": "Seine Mutter aber behielt all diese Dinge im Gedächtnis. Jesus seinerseits machte stetig Fortschritte in Weisheit und Alter und Gnade vor Gott und den Menschen.",
+                    "en": "But his mother treasured all these things in her heart. And Jesus grew in wisdom and stature, and in favor with God and man.",
+                    "latin": "Et mater eius conservabat omnia verba haec in corde suo. Et Iesus proficiebat sapientia et aetate et gratia apud Deum et homines.",
+                    "source": "Luke 2:51-52",
+                    "image": "05_10"
+                }
+            }
+        },
+        "6": {
+            "decade": {
+                "en": "Agony in the Garden",
+                "de": "Jesus in Gethsemane",
+                "latin": "Agonia in Horto"
+            },
+            "spiritual-fruit": {
+                "en": "Sorrow for Sin",
+                "de": "Reue über die Sünde",
+                "latin": "Dolor pro Peccato"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Dann ging Jesus mit ihnen zu einem Ort, der Gethsemane heißt... und er begann, Kummer und Sorgen zu haben.",
+                    "en": "Then Jesus went with his disciples to a place called Gethsemane... and he began to be sorrowful and troubled.",
+                    "latin": "Tunc venit Iesus cum discipulis suis in locum qui dicitur Gethsemani... et coepit contristari et maestus esse.",
+                    "source": "Matthew 26:36-37",
+                    "image": "06_01"
+                },
+                "2": {
+                    "de": "Dann sagte er zu ihnen: \"Mein Herz ist fast zerbrochen vor Kummer. Bleibt hier und wacht mit mir.\"",
+                    "en": "Then he said to them, 'My soul is overwhelmed with sorrow to the point of death. Stay here and keep watch with me.'",
+                    "latin": "Et ait illis: 'Tristis est anima mea usque ad mortem; manete hic et vigilate mecum.'",
+                    "source": "Matthew 26:38",
+                    "image": "06_02"
+                },
+                "3": {
+                    "de": "Er zog sich von ihnen zurück und kniete nieder, um zu beten.",
+                    "en": "Going a little farther, he fell with his face to the ground and prayed.",
+                    "latin": "Et progressus pusillum procidit in faciem suam, orans.",
+                    "source": "Matthew 26:39",
+                    "image": "06_03"
+                },
+                "4": {
+                    "de": "Vater, wenn es möglich ist, lass diesen Kelch an mir vorübergehen. Doch es geschehe, wie du es willst, nicht wie ich es will.",
+                    "en": "My Father, if it is possible, may this cup be taken from me. Yet not as I will, but as you will.",
+                    "latin": "Pater mi, si possibile est, transeat a me calix iste; verumtamen non sicut ego volo, sed sicut tu vis.",
+                    "source": "Matthew 26:39",
+                    "image": "06_04"
+                },
+                "5": {
+                    "de": "Als er zu seinen Jüngern zurückkehrte, fand er sie schlafend vor.",
+                    "en": "Then he returned to his disciples and found them sleeping.",
+                    "latin": "Et venit ad discipulos suos et invenit eos dormientes.",
+                    "source": "Matthew 26:40",
+                    "image": "06_05"
+                },
+                "6": {
+                    "de": "Er sagte zu Petrus: \"Ihr konntet also nicht einmal eine Stunde mit mir wach bleiben?\"",
+                    "en": "He said to Peter, 'Couldn’t you men keep watch with me for one hour?'",
+                    "latin": "Et ait Petro: 'Sic non potuistis una hora vigilare mecum?'",
+                    "source": "Matthew 26:40",
+                    "image": "06_06"
+                },
+                "7": {
+                    "de": "In seiner Verzweiflung betete er noch intensiver. Ein Engel erschien ihm und kam vom Himmel, um ihm Kraft zu geben.",
+                    "en": "And being in anguish, he prayed more earnestly. An angel from heaven appeared to him and strengthened him.",
+                    "latin": "Factus in agonia prolixius orabat. Apparuit autem illi angelus de caelo confortans eum.",
+                    "source": "Luke 22:43-44",
+                    "image": "06_07"
+                },
+                "8": {
+                    "de": "Die Stunde ist gekommen, in der der Menschensohn der Macht der Bösen überantwortet werden soll.",
+                    "en": "The hour has come, and the Son of Man is delivered into the hands of sinners.",
+                    "latin": "Venit hora, et Filius hominis traditur in manus peccatorum.",
+                    "source": "Matthew 26:45",
+                    "image": "06_08"
+                },
+                "9": {
+                    "de": "Während er noch sprach, kam Judas, einer der Zwölf, in Begleitung einer großen Menschenmenge mit Schwertern und Keulen.",
+                    "en": "While he was still speaking, Judas, one of the Twelve, arrived with a large crowd armed with swords and clubs.",
+                    "latin": "Adhuc eo loquente, ecce Judas, unus de duodecim, venit et cum eo turba magna cum gladiis et fustibus.",
+                    "source": "Matthew 26:47",
+                    "image": "06_09"
+                },
+                "10": {
+                    "de": "Sofort ging er zu Jesus hinüber, sagte zu ihm: \"Friede, Rabbi\", und umarmte ihn.",
+                    "en": "Going at once to Jesus, Judas said, 'Greetings, Rabbi!' and kissed him.",
+                    "latin": "Et confestim accedens ad Iesum dixit: 'Ave, Rabbi!' et osculatus est eum.",
+                    "source": "Matthew 26:49",
+                    "image": "06_10"
+                }
+            }
+        },
+        "7": {
+            "decade": {
+                "en": "Scourging",
+                "de": "Geißelung",
+                "latin": "Flagellatio"
+            },
+            "spiritual-fruit": {
+                "en": "Mortification of the Senses",
+                "de": "Kasteiung der Sinne",
+                "latin": "Mortificatio Sensus"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Sobald der Tag anbrach, fassten die Hohenpriester zusammen mit den Ältesten und Schriftgelehrten einen Beschluss. Sie banden Jesus, führten ihn ab und übergaben ihn an Pilatus.",
+                    "en": "At daybreak, the chief priests, with the elders and the teachers of the law, made their plans. They bound Jesus, led him away, and handed him over to Pilate.",
+                    "latin": "Et confestim mane consilium facientes summi sacerdotes cum senioribus et scribis ligaverunt Iesum et tradiderunt Pilato.",
+                    "source": "Mark 15:1",
+                    "image": "07_01"
+                },
+                "2": {
+                    "de": "Pilatus verhörte ihn: \"Bist du der König der Juden?\" Jesus antwortete: \"Du sagst es.\"",
+                    "en": "Pilate asked him, 'Are you the king of the Jews?' Jesus replied, 'You have said so.'",
+                    "latin": "Et interrogavit eum Pilatus: 'Tu es rex Iudaeorum?' At ille respondens ait illi: 'Tu dicis.'",
+                    "source": "Mark 15:2",
+                    "image": "07_02"
+                },
+                "3": {
+                    "de": "Pilatus nahm Jesus fest und ließ ihn geißeln.",
+                    "en": "Then Pilate took Jesus and had him flogged.",
+                    "latin": "Tunc ergo apprehendit Pilatus Iesum et flagellavit.",
+                    "source": "John 19:1",
+                    "image": "07_03"
+                },
+                "4": {
+                    "de": "Von den Menschen verachtet und verworfen, ein Mann der Schmerzen.",
+                    "en": "He was despised and rejected by mankind, a man of suffering.",
+                    "latin": "Despectum et novissimum virorum, virum dolorum.",
+                    "source": "Isaiah 53:3",
+                    "image": "07_04"
+                },
+                "5": {
+                    "de": "Und doch waren die Leiden, die er trug, die unseren.",
+                    "en": "Surely he took up our pain and bore our suffering.",
+                    "latin": "Vere languores nostros ipse tulit et dolores nostros ipse portavit.",
+                    "source": "Isaiah 53:4",
+                    "image": "07_05"
+                },
+                "6": {
+                    "de": "Er wurde für unsere Fehler durchbohrt, für unsere Sünden zermalmt.",
+                    "en": "He was pierced for our transgressions, he was crushed for our iniquities.",
+                    "latin": "Ipse autem vulneratus est propter iniquitates nostras, attritus est propter scelera nostra.",
+                    "source": "Isaiah 53:5",
+                    "image": "07_06"
+                },
+                "7": {
+                    "de": "Sie verbanden ihm zuerst die Augen, schlugen ihn und verhöhnten ihn dann.",
+                    "en": "They blindfolded him, struck him with their fists, and mocked him.",
+                    "latin": "Et velaverunt eum et percutiebant faciem eius et interrogabant eum dicentes: 'Prophetiza, quis est qui te percussit?'",                  "source": "Luke 22:64",
+                    "image": "07_07"
+                },
+                "8": {
+                    "de": "Nachdem er Jesus gegeißelt hatte, übergab ihn Pilatus, um ihn zu kreuzigen.",
+                    "en": "Having scourged Jesus, Pilate handed him over to be crucified.",
+                    "latin": "Et postquam flagellaverunt eum, tradidit eum ut crucifigeretur.",
+                    "source": "Mark 15:15",
+                    "image": "07_08"
+                },
+                "9": {
+                    "de": "Die Strafe, die uns Frieden brachte, lag auf ihm, und durch seine Wunden sind wir geheilt.",
+                    "en": "The punishment that brought us peace was on him, and by his wounds we are healed.",
+                    "latin": "Disciplinam pacis nostrae super eum et livore eius sanati sumus.",
+                    "source": "Isaiah 53:5",
+                    "image": "07_09"
+                },
+                "10": {
+                    "de": "Er hat sein Leben als Sühneopfer gegeben, doch wird er Nachkommen sehen und lange leben.",
+                    "en": "He poured out his life unto death and was numbered with the transgressors.",
+                    "latin": "Animam suam posuit in morte et cum sceleratis reputatus est.",
+                    "source": "Isaiah 53:10-12",
+                    "image": "07_10"
+                }
+            }
+        },
+        "8": {
+            "decade": {
+                "en": "Crowning with Thorns",
+                "de": "Dornenkrönung",
+                "latin": "Coronatio Spinea"
+            },
+            "spiritual-fruit": {
+                "en": "Courage",
+                "de": "Mut",
+                "latin": "Fortitudo"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Die Soldaten führten Jesus nun in den Saal, der Prätorium genannt wurde, und versammelten die ganze Kohorte.",
+                    "en": "The soldiers led Jesus into the hall called Praetorium and called together the whole company of soldiers.",
+                    "latin": "Milites autem duxerunt eum intro in atrium praetorii et convocant totam cohortem.",
+                    "source": "Mark 15:16",
+                    "image": "08_01"
+                },
+                "2": {
+                    "de": "Sie kleideten ihn in königlichen Purpur, flochten eine Dornenkrone und setzten sie ihm auf.",
+                    "en": "They dressed him in a purple robe, twisted together a crown of thorns, and put it on him.",
+                    "latin": "Et induunt eum purpura, et imponunt ei plectentes spineam coronam.",
+                    "source": "Mark 15:17",
+                    "image": "08_02"
+                },
+                "3": {
+                    "de": "Sie fingen an, ihn zu grüßen: Gegrüßt seist du! König der Juden!",
+                    "en": "And they began to salute him: Hail, King of the Jews!",
+                    "latin": "Et coeperunt salutare eum: Ave, rex Iudaeorum.",
+                    "source": "Mark 15:18",
+                    "image": "08_03"
+                },
+                "4": {
+                    "de": "Sie schlugen Jesus immer wieder mit einem Rohr auf den Kopf und bespuckten ihn, beugten sich vor ihm nieder und taten so, als würden sie ihm huldigen.",
+                    "en": "They struck his head with a reed and spat on him; and bowing their knees, they worshiped him.",
+                    "latin": "Et percutiebant caput eius harundine, et conspuebant eum, et ponentes genua adorabant eum.",
+                    "source": "Mark 15:19",
+                    "image": "08_04"
+                },
+                "5": {
+                    "de": "Pilatus sagte zu der Menge: \"Seht zu, was ich tue. Ich werde ihn zu euch hinausführen, damit ihr erkennt, dass ich keinen Fall gegen ihn finde.\"",
+                    "en": "Pilate said to the crowd: 'Look, I am bringing him out to you to let you know that I find no basis for a charge against him.'",
+                    "latin": "Exiit iterum Pilatus foras et dicit eis: 'Ecce adduco eum foras, ut cognoscatis quia nullam causam invenio in eo.'",
+                    "source": "John 19:4",
+                    "image": "08_05"
+                },
+                "6": {
+                    "de": "Als Jesus herauskam und die Dornenkrone und den Purpurmantel trug, sagte Pilatus zu ihnen: \"Seht euch den Mann!\"",
+                    "en": "When Jesus came out wearing the crown of thorns and the purple robe, Pilate said to them, 'Behold the man!'",
+                    "latin": "Exiit ergo Iesus portans spineam coronam et purpureum vestimentum. Et dicit eis Pilatus: 'Ecce homo.'",
+                    "source": "John 19:5",
+                    "image": "08_06"
+                },
+                "7": {
+                    "de": "Als die Hohenpriester und die Tempelwächter ihn sahen, schrien sie: \"Kreuzige ihn! Kreuzige ihn!\"",
+                    "en": "When the chief priests and the temple guards saw him, they shouted, 'Crucify him! Crucify him!'",
+                    "latin": "Cum ergo vidissent eum pontifices et ministri, clamabant dicentes: 'Crucifige, crucifige eum!'",
+                    "source": "John 19:6",
+                    "image": "08_07"
+                },
+                "8": {
+                    "de": "\"Welches Verbrechen hat er denn begangen?\", fragte Pilatus. Da schrien sie nur noch lauter: \"Kreuzige ihn!\"",
+                    "en": "\"What crime has he committed?\", asked Pilate. But they shouted all the louder, \"Crucify him!\"",
+                    "latin": "Quid enim mali fecit? At illi magis clamabant: \"Crucifige eum!\"",
+                    "source": "Mark 15:14",
+                    "image": "08_08"
+                },
+                "9": {
+                    "de": "Pilatus sagte zu den Juden: \"Seht euch euren König an!\"",
+                    "en": "Pilate said to the Jews: \"Here is your king!\"",
+                    "latin": "Dicit eis Pilatus: \"Ecce rex vester!\"",
+                    "source": "John 19:14",
+                    "image": "08_09"
+                },
+                "10": {
+                    "de": "Schließlich übergab Pilatus Jesus, damit er gekreuzigt werden konnte.",
+                    "en": "Finally Pilate handed Jesus over to them to be crucified.",
+                    "latin": "Tunc ergo tradidit eis illum ut crucifigeretur.",
+                    "source": "John 19:16",
+                    "image": "08_10"
+                }
+            }
+        },
+        "9": {
+            "decade": {
+                "en": "Carrying of the Cross",
+                "de": "Kreuzweg",
+                "latin": "Portatio Crucis"
+            },
+            "spiritual-fruit": {
+                "en": "Patience in Adversity",
+                "de": "Geduld in der Drangsal",
+                "latin": "Patientia in Adversis"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Als sie damit fertig waren, ihn zum Narren zu halten, zogen sie Jesus den Mantel aus, kleideten ihn in seine eigenen und führten ihn zur Kreuzigung ab.",
+                    "en": "After mocking him, they stripped him of the robe, put his own clothes on him, and led him away to crucify him.",
+                    "latin": "Et postquam illuserunt ei, exuerunt eum clamydem et induerunt eum vestimentis suis, et duxerunt eum ut crucifigerent.",
+                    "source": "Matthew 27:31",
+                    "image": "09_01"
+                },
+                "2": {
+                    "de": "Auf dem Weg nach draußen trafen sie einen Zyrenäer namens Simon. Diesen drängten sie zum Dienst, um das Kreuz zu tragen.",
+                    "en": "As they were going out, they met a man from Cyrene, named Simon, and they forced him to carry the cross.",
+                    "latin": "Exeuntes autem invenerunt hominem Cyreneum nomine Simonem; hunc angariaverunt ut tolleret crucem eius.",
+                    "source": "Matthew 27:32",
+                    "image": "09_02"
+                },
+                "3": {
+                    "de": "Eine große Menschenmenge folgte ihm, darunter auch Frauen, die sich an die Brust schlugen und über ihn klagten.",
+                    "en": "A large number of people followed him, including women who mourned and wailed for him.",
+                    "latin": "Sequebatur autem illum multa turba populi et mulieres, quae plangebant et lamentabantur eum.",
+                    "source": "Luke 23:27",
+                    "image": "09_03"
+                },
+                "4": {
+                    "de": "Jesus wandte sich an sie und sagte: 'Ihr Töchter Jerusalems, weint nicht um mich. Weint um euch selbst und um eure Kinder.'",
+                    "en": "Jesus turned to them and said, 'Daughters of Jerusalem, do not weep for me; weep for yourselves and for your children.'",
+                    "latin": "Conversus ad illas Iesus dixit: 'Filiae Ierusalem, nolite flere super me, sed super vos ipsas flete et super filios vestros.'",
+                    "source": "Luke 23:28",
+                    "image": "09_04"
+                },
+                "5": {
+                    "de": "Zwei andere Verbrecher wurden zusammen mit ihm zur Kreuzigung geführt.",
+                    "en": "Two other men, both criminals, were also led out with him to be executed.",
+                    "latin": "Ducebantur autem et alii duo nequam cum eo, ut interficerentur.",
+                    "source": "Luke 23:32",
+                    "image": "09_05"
+                },
+                "6": {
+                    "de": "Als sie an dem Ort ankamen, der Golgatha genannt wird, gaben sie ihm einen Trank aus Wein, der mit Galle gewürzt war; er kostete davon, weigerte sich aber zu trinken.",
+                    "en": "When they came to a place called Golgotha, they offered him wine to drink, mixed with gall; but after tasting it, he refused to drink it.",
+                    "latin": "Et venerunt in locum qui dicitur Golgotha, dederunt ei vinum bibere cum felle mixtum; et cum gustasset noluit bibere.",
+                    "source": "Matthew 27:33-34",
+                    "image": "09_06"
+                },
+                "7": {
+                    "de": "Als sie ihn gekreuzigt hatten, teilten sie seine Kleider durch das Los unter sich auf; dann setzten sie sich dort nieder und wachten über ihn.",
+                    "en": "When they had crucified him, they divided up his clothes by casting lots. And sitting down, they kept watch over him there.",
+                    "latin": "Postquam autem crucifixerunt eum, diviserunt vestimenta eius sortem mittentes; et sedentes servabant eum ibi.",
+                    "source": "Matthew 27:35-36",
+                    "image": "09_07"
+                },
+                "8": {
+                    "de": "Wer mein Nachfolger sein will, muss sich selbst verleugnen.",
+                    "en": "Whoever wants to be my disciple must deny themselves.",
+                    "latin": "Si quis vult post me venire, abneget semetipsum.",
+                    "source": "Luke 9:23",
+                    "image": "09_08"
+                },
+                "9": {
+                    "de": "Er muss jeden Tag sein Kreuz auf sich nehmen und meinen Spuren folgen.",
+                    "en": "They must take up their cross daily and follow me.",
+                    "latin": "Tollat crucem suam cotidie et sequatur me.",
+                    "source": "Luke 9:23",
+                    "image": "09_09"
+                },
+                "10": {
+                    "de": "Wer sein Leben retten will, wird es verlieren; wer sein Leben um meinetwillen verliert, wird es retten.",
+                    "en": "Whoever wants to save their life will lose it, but whoever loses their life for me will save it.",
+                    "latin": "Qui enim voluerit animam suam salvam facere, perdet illam; qui autem perdiderit animam suam propter me, salvam faciet illam.",
+                    "source": "Luke 9:24",
+                    "image": "09_10"
+                }
+            }
+        },
+        "10": {
+            "decade": {
+                "en": "Crucifixion",
+                "de": "Kreuzigung",
+                "latin": "Crucifixio"
+            },
+            "spiritual-fruit": {
+                "en": "Perseverance",
+                "de": "Beharrlichkeit",
+                "latin": "Perseverantia"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Jesus sagte: 'Vater, vergib ihnen, denn sie wissen nicht, was sie tun.'",
+                    "en": "Jesus said, 'Father, forgive them, for they do not know what they are doing.'",
+                    "latin": "Dixit autem Iesus: 'Pater, dimitte illis, non enim sciunt quid faciunt.'",
+                    "source": "Luke 23:34",
+                    "image": "10_01"
+                },
+                "2": {
+                    "de": "Einer der Verbrecher sagte: 'Jesus, denk an mich, wenn du deine Herrschaft antrittst.' Und Jesus antwortete: 'Ich versichere dir, dass du heute mit mir im Paradies sein wirst.'",
+                    "en": "One of the criminals said, 'Jesus, remember me when you come into your kingdom.' Jesus answered, 'Truly I tell you, today you will be with me in paradise.'",
+                    "latin": "Et dixit ad Iesum: 'Memento mei, cum veneris in regnum tuum.' Et dixit illi Iesus: 'Amen dico tibi: hodie mecum eris in paradiso.'",
+                    "source": "Luke 23:42-43",
+                    "image": "10_02"
+                },
+                "3": {
+                    "de": "Als Jesus seine Mutter mit dem Jünger, den er liebte, dort sah, sagte er zu seiner Mutter: 'Frau, da ist dein Sohn.'",
+                    "en": "When Jesus saw his mother there, and the disciple whom he loved standing nearby, he said to her, 'Woman, here is your son.'",
+                    "latin": "Cum vidisset ergo Iesus matrem et discipulum stantem quem diligebat, dicit matri suae: 'Mulier, ecce filius tuus.'",
+                    "source": "John 19:26",
+                    "image": "10_03"
+                },
+                "4": {
+                    "de": "Er sagte seinerseits zu dem Jünger: 'Da ist deine Mutter.' Von dieser Stunde an nahm der Jünger sie in seine Sorge.",
+                    "en": "To the disciple, he said, 'Here is your mother.' From that time on, this disciple took her into his home.",
+                    "latin": "Deinde dicit discipulo: 'Ecce mater tua.' Et ex illa hora accepit eam discipulus in sua.",
+                    "source": "John 19:27",
+                    "image": "10_04"
+                },
+                "5": {
+                    "de": "Dann, gegen Mittag, rief Jesus laut: 'Mein Gott, mein Gott, warum hast du mich verlassen?'",
+                    "en": "At about noon, Jesus cried out in a loud voice, 'My God, my God, why have you forsaken me?'",
+                    "latin": "Et circa horam nonam clamavit Iesus voce magna dicens: 'Deus meus, Deus meus, ut quid dereliquisti me?'",
+                    "source": "Matthew 27:46",
+                    "image": "10_05"
+                },
+                "6": {
+                    "de": "Als Jesus erkannte, dass nun alles zu Ende war, sagte er, um die Schrift zu erfüllen: 'Mich dürstet.'",
+                    "en": "Knowing that everything had now been finished, and so that Scripture would be fulfilled, Jesus said, 'I am thirsty.'",
+                    "latin": "Postea sciens Iesus quia iam omnia consummata sunt, ut consummaretur Scriptura, dicit: 'Sitio.'",
+                    "source": "John 19:28",
+                    "image": "10_06"
+                },
+                "7": {
+                    "de": "Als Jesus den Wein nahm, sagte er: 'Nun ist es vollbracht.'",
+                    "en": "When he had received the drink, Jesus said, 'It is finished.'",
+                    "latin": "Cum ergo accepisset Iesus acetum, dixit: 'Consummatum est.'",
+                    "source": "John 19:30",
+                    "image": "10_07"
+                },
+                "8": {
+                    "de": "Jesus stieß einen lauten Schrei aus und sagte: 'Vater, in deine Hände befehle ich meinen Geist.' Nachdem er dies gesagt hatte, verschied er.",
+                    "en": "Jesus called out with a loud voice, 'Father, into your hands I commit my spirit.' When he had said this, he breathed his last.",
+                    "latin": "Et clamans voce magna Iesus ait: 'Pater, in manus tuas commendo spiritum meum.' Et haec dicens expiravit.",
+                    "source": "Luke 23:46",
+                    "image": "10_08"
+                },
+                "9": {
+                    "de": "Finsternis kam über das ganze Land bis zum Nachmittag mit einer Verfinsterung der Sonne. Der Vorhang im Heiligtum wurde in zwei Teile zerrissen.",
+                    "en": "Darkness came over the whole land until mid-afternoon, for the sun stopped shining. And the curtain of the temple was torn in two.",
+                    "latin": "Erat autem fere hora sexta, et tenebrae factae sunt super universam terram usque in horam nonam, et velum templi scissum est medium.",
+                    "source": "Luke 23:44-45",
+                    "image": "10_09"
+                },
+                "10": {
+                    "de": "Sie nahmen den Leichnam Jesu und wickelten ihn nach jüdischem Brauch in ein Tuch.",
+                    "en": "Taking Jesus' body, they wrapped it in linen cloths according to Jewish burial customs.",
+                    "latin": "Accepit autem corpus Iesu et involvit illud sindone secundum consuetudinem sepeliendi Iudaeorum.",
+                    "source": "John 19:40",
+                    "image": "10_10"
+                }
+            }
+        },
+        "11": {
+            "decade": {
+                "en": "Resurrection",
+                "de": "Auferstehung",
+                "latin": "Resurrectio"
+            },
+            "spiritual-fruit": {
+                "en": "Faith",
+                "de": "Glaube",
+                "latin": "Fides"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Nach dem Sabbat, als der erste Tag der Woche anbrach, kam Maria Magdalena mit den anderen Maria, um das Grab zu besichtigen.",
+                    "en": "After the Sabbath, at dawn on the first day of the week, Mary Magdalene and the other Mary went to look at the tomb.",
+                    "latin": "Vespere autem sabbati, quae lucescit in prima sabbati, venit Maria Magdalene et altera Maria videre sepulchrum.",
+                    "source": "Matthew 28:1",
+                    "image": "11_01"
+                },
+                "2": {
+                    "de": "Der Engel kam zu dem Stein, rollte ihn zur Seite und setzte sich darauf.",
+                    "en": "An angel of the Lord came down from heaven, rolled back the stone, and sat on it.",
+                    "latin": "Angelus autem Domini descendit de caelo, et accedens revolvit lapidem et sedebat super eum.",
+                    "source": "Matthew 28:2",
+                    "image": "11_02"
+                },
+                "3": {
+                    "de": "Dann sprach der Engel zu den Frauen: 'Habt keine Angst. Ich weiß, dass ihr Jesus, den Gekreuzigten, sucht. Er ist nicht hier. Er ist auferstanden, wie er gesagt hat.'",
+                    "en": "The angel said to the women, 'Do not be afraid, for I know that you are looking for Jesus, who was crucified. He is not here; he has risen, just as he said.'",
+                    "latin": "Respondens autem angelus dixit mulieribus: 'Nolite timere vos; scio enim quod Iesum, qui crucifixus est, quaeritis. Non est hic; surrexit enim sicut dixit.'",
+                    "source": "Matthew 28:5-6",
+                    "image": "11_03"
+                },
+                "4": {
+                    "de": "'Er ist von den Toten auferstanden und geht euch voraus nach Galiläa; dort werdet ihr ihn sehen.'",
+                    "en": "'He has risen from the dead and is going ahead of you into Galilee. There you will see him.'",
+                    "latin": "'Surrexit a mortuis et ecce praecedit vos in Galilaeam; ibi eum videbitis.'",
+                    "source": "Matthew 28:7",
+                    "image": "11_04"
+                },
+                "5": {
+                    "de": "Am Abend des ersten Tages der Woche, obwohl die Jünger die Türen des Ortes, an dem sie sich aufhielten, verschlossen hatten, kam Jesus und trat vor sie hin. 'Friede sei mit euch.'",
+                    "en": "On the evening of that first day of the week, when the disciples were together with the doors locked, Jesus came and stood among them and said, 'Peace be with you.'",
+                    "latin": "Cum esset ergo sero die illa una sabbatorum et fores essent clausae ubi erant discipuli, venit Iesus et stetit in medio et dixit eis: 'Pax vobis.'",
+                    "source": "John 20:19",
+                    "image": "11_05"
+                },
+                "6": {
+                    "de": "In ihrer Panik und Angst dachten sie, sie sähen ein Gespenst.",
+                    "en": "They were startled and frightened, thinking they saw a ghost.",
+                    "latin": "Conturbati vero et conterriti existimabant spiritum videre.",
+                    "source": "Luke 24:37",
+                    "image": "11_06"
+                },
+                "7": {
+                    "de": "Er sagte zu ihnen: 'Warum seid ihr so erschrocken? Seht meine Hände und meine Füße an, ich bin es wirklich.'",
+                    "en": "He said to them, 'Why are you troubled, and why do doubts rise in your minds? Look at my hands and my feet. It is I myself.'",
+                    "latin": "Et dixit eis: 'Quid turbati estis, et cogitationes ascendunt in corda vestra? Videte manus meas et pedes meos quia ego ipse sum.'",
+                    "source": "Luke 24:38-39",
+                    "image": "11_07"
+                },
+                "8": {
+                    "de": "Als die Jünger den Herrn sahen, freuten sie sich.",
+                    "en": "The disciples were overjoyed when they saw the Lord.",
+                    "latin": "Gavisi sunt ergo discipuli viso Domino.",
+                    "source": "John 20:20",
+                    "image": "11_08"
+                },
+                "9": {
+                    "de": "'Friede sei mit euch.' Jesus sagte wieder. 'Wie mich der Vater gesandt hat, so sende ich euch.'",
+                    "en": "'Peace be with you!' Jesus said again. 'As the Father has sent me, I am sending you.'",
+                    "latin": "Dixit ergo eis iterum: 'Pax vobis! Sicut misit me Pater, et ego mitto vos.'",
+                    "source": "John 20:21",
+                    "image": "11_09"
+                },
+                "10": {
+                    "de": "'Ich bin die Auferstehung und das Leben; wer an mich glaubt, der wird leben, auch wenn er stirbt.'",
+                    "en": "'I am the resurrection and the life. The one who believes in me will live, even though they die.'",
+                    "latin": "'Ego sum resurrectio et vita. Qui credit in me, etiam si mortuus fuerit, vivet.'",
+                    "source": "John 11:25",
+                    "image": "11_10"
+                }
+            }
+        },
+        "12": {
+            "decade": {
+                "en": "Ascension",
+                "de": "Himmelfahrt",
+                "latin": "Ascensio"
+            },
+            "spiritual-fruit": {
+                "en": "Hope",
+                "de": "Hoffnung",
+                "latin": "Spes"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Jesus führte seine Jünger hinaus in die Nähe von Bethanien und segnete sie mit erhobener Hand.",
+                    "en": "Jesus led his disciples out to the vicinity of Bethany, and with raised hands, he blessed them.",
+                    "latin": "Eduxit autem eos foras usque in Bethaniam et elevatis manibus suis benedixit eis.",
+                    "source": "Luke 24:50",
+                    "image": "12_01"
+                },
+                "2": {
+                    "de": "Jesus wandte sich mit diesen Worten an sie: 'Mir ist alle Macht gegeben im Himmel und auf Erden.'",
+                    "en": "Jesus said to them: 'All authority in heaven and on earth has been given to me.'",
+                    "latin": "Et accedens Iesus locutus est eis dicens: 'Data est mihi omnis potestas in caelo et in terra.'",
+                    "source": "Matthew 28:18",
+                    "image": "12_02"
+                },
+                "3": {
+                    "de": "'Darum geht hin und macht alle Völker zu Jüngern. Tauft sie auf den Namen des Vaters und des Sohnes und des Heiligen Geistes.'",
+                    "en": "'Therefore go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit.'",
+                    "latin": "'Euntes ergo docete omnes gentes, baptizantes eos in nomine Patris et Filii et Spiritus Sancti.'",
+                    "source": "Matthew 28:19",
+                    "image": "12_03"
+                },
+                "4": {
+                    "de": "'Und wisst, dass ich bei euch bin alle Tage bis zum Ende der Welt.'",
+                    "en": "'And surely I am with you always, to the very end of the age.'",
+                    "latin": "'Ecce ego vobiscum sum omnibus diebus usque ad consummationem saeculi.'",
+                    "source": "Matthew 28:20",
+                    "image": "12_04"
+                },
+                "5": {
+                    "de": "'Wer an die gute Nachricht glaubt und die Taufe annimmt, wird gerettet; wer sich weigert, daran zu glauben, wird verdammt.'",
+                    "en": "'Whoever believes and is baptized will be saved, but whoever does not believe will be condemned.'",
+                    "latin": "'Qui crediderit et baptizatus fuerit, salvus erit; qui vero non crediderit, condemnabitur.'",
+                    "source": "Mark 16:16",
+                    "image": "12_05"
+                },
+                "6": {
+                    "de": "Als Jesus sie segnete, verließ er sie und wurde in den Himmel aufgenommen.",
+                    "en": "While he was blessing them, he left them and was taken up into heaven.",
+                    "latin": "Et factum est, dum benediceret illis, recessit ab eis et ferebatur in caelum.",
+                    "source": "Luke 24:51",
+                    "image": "12_06"
+                },
+                "7": {
+                    "de": "Er wurde vor ihren Augen in einer Wolke emporgehoben, die ihn ihren Blicken entzog.",
+                    "en": "He was taken up before their very eyes, and a cloud hid him from their sight.",
+                    "latin": "Et cum haec dixisset, videntibus illis elevatus est, et nubes suscepit eum ab oculis eorum.",
+                    "source": "Acts 1:9",
+                    "image": "12_07"
+                },
+                "8": {
+                    "de": "'Dieser Jesus, der von euch genommen wurde, wird wiederkommen, so wie ihr ihn in den Himmel habt auffahren sehen.'",
+                    "en": "'This same Jesus, who has been taken from you into heaven, will come back in the same way you have seen him go into heaven.'",
+                    "latin": "'Hic Iesus, qui assumptus est a vobis in caelum, sic veniet quemadmodum vidistis eum euntem in caelum.'",
+                    "source": "Acts 1:11",
+                    "image": "12_08"
+                },
+                "9": {
+                    "de": "Sie fielen nieder, um ihn zu ehren, und kehrten dann voller Freude nach Jerusalem zurück.",
+                    "en": "Then they worshiped him and returned to Jerusalem with great joy.",
+                    "latin": "Et ipsi adorantes regressi sunt in Hierusalem cum gaudio magno.",
+                    "source": "Luke 24:52",
+                    "image": "12_09"
+                },
+                "10": {
+                    "de": "Jesus nahm seinen Platz zur Rechten Gottes ein.",
+                    "en": "Jesus took his place at the right hand of God.",
+                    "latin": "Et Dominus Iesus assumptus est in caelum et sedit a dextris Dei.",
+                    "source": "Mark 16:19",
+                    "image": "12_10"
+                }
+            }
+        },
+        "13": {
+            "decade": {
+                "en": "Pentecost",
+                "de": "Pfingsten",
+                "latin": "Pentecoste"
+            },
+            "spiritual-fruit": {
+                "en": "Love of God",
+                "de": "Liebe zu Gott",
+                "latin": "Amor Dei"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Jesus sagte: 'Ich werde den Vater bitten, und er wird euch einen anderen Beistand geben, der immer bei euch sein wird.'",
+                    "en": "Jesus said, 'I will ask the Father, and he will give you another advocate to help you and be with you forever.'",
+                    "latin": "Dixit Iesus: 'Ego rogabo Patrem, et alium Paraclitum dabit vobis, ut maneat vobiscum in aeternum.'",
+                    "source": "John 14:16",
+                    "image": "13_01"
+                },
+                "2": {
+                    "de": "'Der Beistand, der Heilige Geist, den der Vater in meinem Namen senden wird, wird euch in allem unterweisen und euch an alles erinnern, was ich euch gesagt habe.'",
+                    "en": "'The Advocate, the Holy Spirit, whom the Father will send in my name, will teach you all things and will remind you of everything I have said to you.'",
+                    "latin": "'Paraclitus autem Spiritus Sanctus, quem mittet Pater in nomine meo, ille vos docebit omnia et suggeret vobis omnia quaecumque dixero vobis.'",
+                    "source": "John 14:26",
+                    "image": "13_02"
+                },
+                "3": {
+                    "de": "'In wenigen Tagen werdet ihr mit dem Heiligen Geist getauft werden.'",
+                    "en": "'In a few days you will be baptized with the Holy Spirit.'",
+                    "latin": "'Non post multos hos dies baptizabimini Spiritu Sancto.'",
+                    "source": "Acts 1:5",
+                    "image": "13_03"
+                },
+                "4": {
+                    "de": "'Ihr werdet Kraft empfangen, wenn der Heilige Geist auf euch herabkommt; dann sollt ihr meine Zeugen sein in Jerusalem, in ganz Judäa.... und bis an das Ende der Erde.'",
+                    "en": "'You will receive power when the Holy Spirit comes on you; and you will be my witnesses in Jerusalem, and in all Judea... and to the ends of the earth.'",
+                    "latin": "'Sed accipietis virtutem superveniente Spiritu Sancto in vos, et eritis mihi testes in Ierusalem et in omni Iudaea... et usque ad ultimum terrae.'",
+                    "source": "Acts 1:8",
+                    "image": "13_04"
+                },
+                "5": {
+                    "de": "Als der Pfingsttag kam, fanden sie sich an einem Ort versammelt. Plötzlich ertönte vom Himmel herab ein Brausen wie von einem starken Wind, das man im ganzen Haus hörte.",
+                    "en": "When the day of Pentecost came, they were all together in one place. Suddenly a sound like the blowing of a violent wind came from heaven and filled the whole house where they were sitting.",
+                    "latin": "Et cum complerentur dies Pentecostes, erant omnes pariter in eodem loco. Et factus est subito de caelo sonus tamquam advenientis spiritus vehementis, et replevit totam domum ubi erant sedentes.",
+                    "source": "Acts 2:1-2",
+                    "image": "13_05"
+                },
+                "6": {
+                    "de": "Es erschienen Zungen wie von Feuer, die sich teilten und auf jeden von ihnen niedergingen. Alle wurden mit dem Heiligen Geist erfüllt.",
+                    "en": "They saw what seemed to be tongues of fire that separated and came to rest on each of them. All of them were filled with the Holy Spirit.",
+                    "latin": "Et apparuerunt illis dispertitae linguae tamquam ignis, seditque supra singulos eorum, et repleti sunt omnes Spiritu Sancto.",
+                    "source": "Acts 2:3",
+                    "image": "13_06"
+                },
+                "7": {
+                    "de": "Sie begannen, sich in fremden Sprachen auszudrücken und kühn zu verkünden, wie es der Geist ihnen eingab.",
+                    "en": "They began to speak in other tongues as the Spirit enabled them.",
+                    "latin": "Et coeperunt loqui variis linguis prout Spiritus dabat eloqui illis.",
+                    "source": "Acts 2:4",
+                    "image": "13_07"
+                },
+                "8": {
+                    "de": "Zu dieser Zeit hielten sich in Jerusalem fromme Männer aus allen Nationen auf. Diese hörten das Geräusch und versammelten sich in einer großen Menschenmenge. Sie waren verwirrt, denn jeder hörte die Jünger in seiner eigenen Sprache reden.",
+                    "en": "Now there were staying in Jerusalem God-fearing Jews from every nation under heaven. When they heard this sound, a crowd came together in bewilderment, because each one heard their own language being spoken.",
+                    "latin": "Erant autem in Ierusalem commorantes Iudaei, viri religiosi ex omni natione quae sub caelo est. Facta autem hac voce convenit multitudo et confusa est, quoniam audiebat unusquisque linguam suam illos loquentes.",
+                    "source": "Acts 2:5-6",
+                    "image": "13_08"
+                },
+                "9": {
+                    "de": "Petrus stand mit den Elf auf und sprach zu ihnen: 'Ihr müsst euch bekehren und taufen lassen, ein jeder von euch auf den Namen Jesu Christi, damit euch die Sünden vergeben werden; dann werdet ihr den Heiligen Geist empfangen.'",
+                    "en": "Peter stood up with the Eleven, raised his voice and addressed the crowd: 'Repent and be baptized, every one of you, in the name of Jesus Christ for the forgiveness of your sins. And you will receive the gift of the Holy Spirit.'",
+                    "latin": "Stans autem Petrus cum undecim, levavit vocem suam et locutus est eis: 'Paenitentiam agite, et baptizetur unusquisque vestrum in nomine Iesu Christi in remissionem peccatorum vestrorum, et accipietis donum Spiritus Sancti.'",
+                    "source": "Acts 2:38",
+                    "image": "13_09"
+                },
+                "10": {
+                    "de": "Diejenigen, die seine Botschaft annahmen, ließen sich taufen; etwa dreitausend kamen an diesem Tag hinzu.",
+                    "en": "Those who accepted his message were baptized, and about three thousand were added to their number that day.",
+                    "latin": "Qui ergo receperunt sermonem eius baptizati sunt, et appositae sunt in illa die animae circiter tria milia.",
+                    "source": "Acts 2:41",
+                    "image": "13_10"
+                }
+            }
+        },
+        "14": {
+            "decade": {
+                "en": "Assumption of Mary",
+                "de": "Mariä Himmelfahrt",
+                "latin": "Assumptio Mariae"
+            },
+            "spiritual-fruit": {
+                "en": "Grace of a Happy Death",
+                "de": "Gnade eines glücklichen Todes",
+                "latin": "Gratia Mortis Felicis"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Gott, der Herr, sprach zu der Schlange: 'Ich will Feindschaft setzen zwischen dir und der Frau und zwischen deinen Nachkommen und ihren Nachkommen.'",
+                    "en": "God the Lord said to the serpent, 'I will put enmity between you and the woman, and between your offspring and hers.'",
+                    "latin": "Dixit Dominus Deus ad serpentem: 'Inimicitias ponam inter te et mulierem, et semen tuum et semen illius.'",
+                    "source": "Genesis 3:15",
+                    "image": "14_01"
+                },
+                "2": {
+                    "de": "'Er wird dir den Kopf zertreten, während du ihm in die Ferse beißt.'",
+                    "en": "'He will crush your head, and you will strike his heel.'",
+                    "latin": "'Ipsa conteret caput tuum, et tu insidiaberis calcaneo eius.'",
+                    "source": "Genesis 3:15",
+                    "image": "14_02"
+                },
+                "3": {
+                    "de": "Ein großes Zeichen erschien am Himmel: eine Frau, bekleidet mit der Sonne und dem Mond unter ihren Füßen, und auf ihrem Haupt eine Krone mit zwölf Sternen.",
+                    "en": "A great sign appeared in heaven: a woman clothed with the sun, with the moon under her feet and a crown of twelve stars on her head.",
+                    "latin": "Et signum magnum apparuit in caelo: mulier amicta sole et luna sub pedibus eius, et in capite eius corona stellarum duodecim.",
+                    "source": "Revelation 12:1",
+                    "image": "14_03"
+                },
+                "4": {
+                    "de": "'Vater, alle, die du mir gegeben hast, will ich bei mir haben, wo ich bin.'",
+                    "en": "'Father, I want those you have given me to be with me where I am.'",
+                    "latin": "'Pater, volo ut ubi sum ego, et illi sint mecum quos dedisti mihi.'",
+                    "source": "John 17:24",
+                    "image": "14_04"
+                },
+                "5": {
+                    "de": "Darum ist sie unsere Mutter in der Ordnung der Gnade.",
+                    "en": "Therefore she is our mother in the order of grace.",
+                    "latin": "Ideo ipsa est mater nostra in ordine gratiae.",
+                    "source": "Lumen Gentium 61",
+                    "image": "14_05"
+                },
+                "6": {
+                    "de": "In den Himmel aufgenommen, hat sie diese Heilspflicht nicht abgelegt, sondern fährt fort, uns durch ihre Fürbitte die Gaben des ewigen Heils zu bringen.",
+                    "en": "Taken up into heaven, she did not lay aside this saving duty, but continues to bring us the gifts of eternal salvation through her intercession.",
+                    "latin": "Assumpta in caelum, munus hoc salutiferum non deposuit, sed per intercessionem suam dona salutis aeternae nobis conciliat.",
+                    "source": "Lumen Gentium 62",
+                    "image": "14_06"
+                },
+                "7": {
+                    "de": "'Denn er hat seine Dienerin in ihrer Niedrigkeit angesehen.'",
+                    "en": "'For he has been mindful of the humble state of his servant.'",
+                    "latin": "'Quia respexit humilitatem ancillae suae.'",
+                    "source": "Luke 1:48",
+                    "image": "14_07"
+                },
+                "8": {
+                    "de": "'Alle künftigen Zeiten werden mich selig preisen.'",
+                    "en": "'From now on all generations will call me blessed.'",
+                    "latin": "'Ecce enim ex hoc beatam me dicent omnes generationes.'",
+                    "source": "Luke 1:48",
+                    "image": "14_08"
+                },
+                "9": {
+                    "de": "'Wer mich liebt, den liebe ich auch, und wer mich sucht, der findet mich.'",
+                    "en": "'I love those who love me, and those who seek me find me.'",
+                    "latin": "'Ego diligentes me diligo, et qui mane vigilant ad me, invenient me.'",
+                    "source": "Proverbs 8:17",
+                    "image": "14_09"
+                },
+                "10": {
+                    "de": "Komm, meine Liebe. Meine Liebste, komm.",
+                    "en": "Come, my beloved, my darling, come.",
+                    "latin": "Veni, dilecta mea, veni formosa mea.",
+                    "source": "Song of Songs 2:10",
+                    "image": "14_10"
+                }
+            }
+        },
+        "15": {
+            "decade": {
+                "en": "Coronation of Mary",
+                "de": "Krönung Mariens",
+                "latin": "Coronatio Mariae"
+            },
+            "spiritual-fruit": {
+                "en": "Trust in Mary’s Intercession",
+                "de": "Vertrauen auf Mariens Fürsprache",
+                "latin": "Fiducia in Intercessione Mariae"
+            },
+            "prayers": {
+                "1": {
+                    "de": "Gott, der mächtig ist, hat große Dinge an mir getan.",
+                    "en": "The Almighty has done great things for me.",
+                    "latin": "Fecit mihi magna qui potens est.",
+                    "source": "Luke 1:49",
+                    "image": "15_01"
+                },
+                "2": {
+                    "de": "Mein Herz quillt über von einem guten Thema, während ich dem König meine Ode singe.",
+                    "en": "My heart is stirred by a noble theme as I recite my verses for the king.",
+                    "latin": "Eructavit cor meum verbum bonum; dico ego opera mea regi.",
+                    "source": "Psalm 45:1",
+                    "image": "15_02"
+                },
+                "3": {
+                    "de": "Schöner bist du als die Menschenkinder; Gnade ist über deine Lippen ausgegossen; so hat Gott dich für immer gesegnet.",
+                    "en": "You are the most handsome of the sons of men; grace is poured upon your lips; therefore God has blessed you forever.",
+                    "latin": "Speciosus forma prae filiis hominum, diffusa est gratia in labiis tuis; propterea benedixit te Deus in aeternum.",
+                    "source": "Psalm 45:2",
+                    "image": "15_03"
+                },
+                "4": {
+                    "de": "O liebende Königin, du hast mir deine Güte gezeigt; du hast die Bitte meiner Unwürdigkeit nicht verachtet. Ich habe Herrlichkeit gesehen, die Sünder nicht sehen. Gelobt sei Gott, der durch dich die Reue der Sünder empfängt.",
+                    "en": "O loving Queen, you have shown me your kindness; you have not despised the plea of my unworthiness. I have seen glory that sinners do not see. Blessed be God, who receives the repentance of sinners through you.",
+                    "latin": "O Regina amabilis, tuam mihi benignitatem ostendisti; meae indignitatis preces non despexisti. Vidi gloriam quam peccatores non vident. Benedictus Deus, qui per te peccatorum poenitentiam suscipit.",
+                    "source": "St. John Damascene, 8th century",
+                    "image": "15_04"
+                },
+                "5": {
+                    "de": "Ich bin die Rose von Sharon, ich bin die Lilie der Täler.",
+                    "en": "I am the rose of Sharon, the lily of the valleys.",
+                    "latin": "Ego flos campi et lilium convallium.",
+                    "source": "Song of Songs 2:1",
+                    "image": "15_05"
+                },
+                "6": {
+                    "de": "So hört nun, ihr Kinder, auf mich; Lehre und Weisheit verwerft nicht.",
+                    "en": "Now then, my children, listen to me; do not turn aside from my instruction.",
+                    "latin": "Nunc ergo, filii, audite me; disciplinam ne abiciatis.",
+                    "source": "Proverbs 8:32",
+                    "image": "15_06"
+                },
+                "7": {
+                    "de": "Der Herr hat sie erwählt. Er hat sie erwählt, bevor sie geboren wurde.",
+                    "en": "The Lord has chosen her. He chose her before she was born.",
+                    "latin": "Dominus elegit eam; elegit eam antequam nasceretur.",
+                    "source": "Divinum Officium",
+                    "image": "15_07"
+                },
+                "8": {
+                    "de": "Ganz und gar heilig und frei von jedem Makel der Sünde.",
+                    "en": "Entirely holy and free from every stain of sin.",
+                    "latin": "Omnino sancta et ab omni labe peccati immunis.",
+                    "source": "Lumen Gentium 56",
+                    "image": "15_08"
+                },
+                "9": {
+                    "de": "Höre, Tochter, und sieh, höre, vergiss dein Volk und deines Vaters Haus, und der König wird dir Schönheit geben; er ist dein Herr, wende dich zu ihm.",
+                    "en": "Listen, daughter, and pay careful attention: Forget your people and your father’s house. Let the king be enthralled by your beauty; honor him, for he is your lord.",
+                    "latin": "Audi, filia, et vide, et inclina aurem tuam; obliviscere populum tuum et domum patris tui. Et concupiscet rex decorem tuum; quoniam ipse est Dominus tuus, et adorabunt eum.",
+                    "source": "Psalm 45:10-11",
+                    "image": "15_09"
+                },
+                "10": {
+                    "de": "Gesegnet bist du, Tochter, von Gott, dem Allerhöchsten, vor allen Frauen auf Erden.",
+                    "en": "Blessed are you, daughter, by God Most High, above all women on earth.",
+                    "latin": "Benedicta es tu, filia, a Domino Deo excelso prae omnibus mulieribus super terram.",
+                    "source": "Judith 13:18",
+                    "image": "15_10"
+                }
+            }
+        }
+    }
+}
