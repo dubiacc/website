@@ -2,6 +2,8 @@
     "owner": "github:fschutt",
     "strings": {
         "de": {
+            "grammar-test-submit": "Test überprüfen",
+            "grammar-test-reload": "Nächster Test",
             "index-title": "Entdecke den wahren katholischen Glauben - dubia.cc",
             "index-desc": "dubia ist eine Sammlung von Artikeln über den traditionellen katholischen Glauben. Hat die Kirche wirklich...? Antworten auf Irrtümer, Gebete, uvm.",
             "index-subtitle": "<strong>dubia.cc</strong> ist die eine deutsche<br/>Sammlung an Artikeln über den<br/>traditionellen katholischen Glauben",
@@ -80,6 +82,8 @@
             "go-to-top": "⬆ Anfang"
         },
         "en": {
+            "grammar-test-submit": "Check answers",
+            "grammar-test-reload": "Next Test",
             "index-title": "Discover the true Catholic Faith - dubia.cc",
             "index-desc": "dubia is a collection of articles about the traditional Catholic faith. Did the Church really teach...? Answers to errors and questions, prayers, and more!",
             "index-subtitle": "<strong>dubia.cc</strong> is a collection<br/>of articles explaining the<br/>traditional Catholic faith",
@@ -158,6 +162,8 @@
             "go-to-top": "⬆ Top"
         },
         "fr": {
+            "grammar-test-submit": "Vérifier les réponses",
+            "grammar-test-reload": "Prochain test",
             "index-title": "Découvre la véritable foi catholique - dubia.cc",
             "index-desc": "dubia est une collection d'articles sur la foi catholique traditionnelle. L'Église a-t-elle vraiment...? Réponses aux erreurs, prières, etc.",
             "index-subtitle": "<strong>dubia.cc</strong> est la collection<br/>française d'articles sur la<br/>foi catholique traditionnelle",
@@ -236,6 +242,8 @@
             "go-to-top": "⬆ Début"
         },
         "pl": {
+            "grammar-test-submit": "Sprawdź wyniki",
+            "grammar-test-reload": "Następny test",
             "index-title": "Odkryj prawdziwą wiarę katolicką – dubia.cc",
             "index-desc": "dubia to zbiór artykułów o tradycyjnej wierze katolickiej. Czy Kościół rzeczywiście…? Odpowiedzi na błędy, modlitwy i wiele więcej.",
             "index-subtitle": "<strong>dubia.cc</strong> to polski<br/>zbiór artykułów o<br/>tradycyjnej wierze katolickiej",
@@ -314,6 +322,8 @@
             "go-to-top": "⬆ Górę"
         },
         "br": {
+            "grammar-test-submit": "Verificar resultados",
+            "grammar-test-reload": "Próximo teste",
             "index-title": "Descubra a verdadeira fé católica - dubia.cc",
             "index-desc": "dubia é uma coleção de artigos sobre a fé católica tradicional. Será que a Igreja realmente...? Respostas a erros, orações e muito mais.",
             "index-subtitle": "<strong>dubia.cc</strong> é a coleção brasileira<br/>de artigos sobre a<br/>fé católica tradicional",
@@ -392,6 +402,8 @@
             "go-to-top": "⬆ Topo"
         },
         "es": {
+            "grammar-test-submit": "Comprobar resultados",
+            "grammar-test-reload": "Siguiente prueba",
             "index-title": "Descubre la verdadera fe católica - dubia.cc",
             "index-desc": "dubia es una colección de artículos sobre la fe católica tradicional. ¿Realmente la Iglesia...? Respuestas a errores, oraciones y mucho más.",
             "index-subtitle": "<strong>dubia.cc</strong> es la colección en español<br/>de artículos sobre la<br/>fe católica tradicional",

@@ -5,6 +5,7 @@ use rosary::RosaryTemplates;
 use serde_derive::{Serialize, Deserialize};
 
 mod rosary;
+mod langtrain;
 
 #[derive(Debug, Default)]
 struct LoadedArticles {
@@ -2324,6 +2325,24 @@ fn article2html(
     let logo_svg = include_str!("../../static/img/logo/full.svg")
     .replace("<svg ", "<svg style='max-height:50px;' ");
 
+    let mut a = a.clone();
+
+    let content = match (lang, slug) {
+        ("de", "rosenkranz") => rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries()),
+        ("en", "rosary") => rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries()),
+        ("en", "learn-latin") => {
+            let l = langtrain::TrainLang::Latin;
+            let grammar_lessons = l.get_grammar_lessons(lang);
+            a.sections.push(ArticleSection { title: format!("V01: 1000 words"), indent: 2, pars: Vec::new() });
+            for gl in grammar_lessons.sections.iter() {
+                a.sections.push(ArticleSection { title: gl.title.clone(), indent: 2, pars: Vec::new() });
+            }
+            langtrain::generate_langtrain_content(lang, l, &meta)?
+        },
+        _ => body_content(lang, &slug, &a.sections, meta)?,
+    };
+
+    let a = &a;
     let html = HTML.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(a, lang, title_id.as_str(), meta)?);
     let html = html.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true, meta)?);
     let html = html.replace("<!-- LINK_TAGS -->", &link_tags(lang, &a.tags, meta)?);
@@ -2331,13 +2350,6 @@ fn article2html(
     let html = html.replace("<!-- PAGE_DESCRIPTION -->", &page_desciption(lang, &a, meta)?);
     let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a, meta)?);
     let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(lang, slug, a.is_prayer(), &a.summary));
-
-    let content = match (lang, slug) {
-        ("de", "rosenkranz") => rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries()),
-        ("en", "rosary") => rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries()),
-        _ => body_content(lang, &slug, &a.sections, meta)?,
-    };
-
     let html = html.replace("<!-- BODY_CONTENT -->", &content);
     let html = html.replace("<!-- DONATE -->", &donate(lang, &a, meta)?);
     let html = html.replace("<!-- BODY_NOSCRIPT -->", &body_noscript());

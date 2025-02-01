@@ -1220,10 +1220,6 @@ p.empty-graf {
     text-align: var(--text-alignment);
 }
 
-.markdownBody p:not(.first-graf) {
-    text-indent: var(--text-indent);
-}
-
 /*  Prevent inheritance of indentation property.
  */
 .markdownBody p * {

@@ -684,11 +684,6 @@ p.empty-graf {
     text-align: var(--text-alignment);
 }
 
-.markdownBody p:not(.first-graf) {
-    text-indent: var(--text-indent);
-}
-
-
 .markdownBody p * {
     text-indent: 0em;
 }
