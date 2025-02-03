@@ -14,7 +14,7 @@ to form your own sentences.
 In the beginner lessons (G01 - G05), you will learn fundamental noun cases and declensions, 
 verb conjugations in present, imperfect, and future tenses, and basic sentence structures. 
 
-In the intermediate lessons (G02 - Gß6), you will master perfect and pluperfect tenses, active 
+In the intermediate lessons (G02 - G06), you will master perfect and pluperfect tenses, active 
 and passive voice, participles, ablative absolutes, and subjunctive clauses. At this point, you 
 can already read excerpts from Cicero and basic Church texts.
 

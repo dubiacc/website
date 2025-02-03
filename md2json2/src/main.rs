@@ -2342,7 +2342,7 @@ fn article2html(
         _ => body_content(lang, &slug, &a.sections, meta)?,
     };
 
-    let a = &a;
+    let a = &a; 
     let html = HTML.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(a, lang, title_id.as_str(), meta)?);
     let html = html.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true, meta)?);
     let html = html.replace("<!-- LINK_TAGS -->", &link_tags(lang, &a.tags, meta)?);
