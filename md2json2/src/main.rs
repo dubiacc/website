@@ -1,6 +1,7 @@
 use std::path::Path;
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
+use rosary::RosaryMysteries;
 use rosary::RosaryTemplates;
 use serde_derive::{Serialize, Deserialize};
 
@@ -2274,7 +2275,13 @@ fn rosary_template(lang: &str) -> rosary::RosaryTemplates {
 }
 
 fn rosary_mysteries() -> rosary::RosaryMysteries {
-    serde_json::from_str(include_str!("../../mysteries.json")).unwrap_or_default()
+    match serde_json::from_str(include_str!("../../mysteries.json")) {
+        Ok(o) => o,
+        Err(e) => {
+            println!("ERROR parsing mysteries.json: {}", e);
+            RosaryMysteries::default()
+        }
+    }
 }
 
 fn article2html(
@@ -2328,8 +2335,8 @@ fn article2html(
     let mut a = a.clone();
 
     let content = match (lang, slug) {
-        ("de", "rosenkranz") => rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries()),
-        ("en", "rosary") => rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries()),
+        ("de", "rosenkranz") => rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries(), &meta),
+        ("en", "rosary") => rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries(), &meta),
         ("en", "learn-latin") => {
             let l = langtrain::TrainLang::Latin;
             let grammar_lessons = l.get_grammar_lessons(lang);

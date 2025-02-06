@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use serde::Deserialize;
 
+use crate::{get_string, MetaJson};
+
 /// Holds all the relevant template snippets for rendering the Rosary.
 #[derive(Debug, Default, Clone)]
 pub struct RosaryTemplates {
@@ -75,7 +77,13 @@ pub struct Mystery {
 pub struct RosaryPrayer {
     pub en: String,
     pub de: String,
-    pub source: String,
+    pub la: String,
+    pub source_de: String,
+    pub source_en: String,
+    pub source_la: String,
+    pub source_link_de: String,
+    pub source_link_en: String,
+    pub source_link_la: String,
     pub image: String,
 }
 
@@ -153,29 +161,52 @@ fn render_nav(template: &str, section_id: &str) -> String {
 /// - `hma`: the short addition like “whom you, O Virgin, received from the Holy Spirit.” 
 ///          (for the end of "...the fruit of thy womb, Jesus, {ADDITION} Holy Mary, ...")
 fn render_rosary_section(
+    lang: &str,
     template: &str,
     decade_label: &str,
     index: usize,
-    text_top: &str,
-    source: &str,
+    prayer: &RosaryPrayer,
     section_id: &str,
     prev_id: &str,
     next_id: &str,
-    hm_start: &str,
-    hm_end: &str,
     hma: &str,
+    meta: &MetaJson,
 ) -> String {
+
+    let text_top = match lang {
+        "de" => &prayer.de,
+        "en" => &prayer.en,
+        "la" => &prayer.la,
+        _ => "",
+    };
+
+    let text_top_source = match lang {
+        "de" => &prayer.source_de,
+        "en" => &prayer.source_en,
+        "la" => &prayer.source_la,
+        _ => "",
+    };
+
+    let text_top_link = match lang {
+        "de" => &prayer.source_link_de,
+        "en" => &prayer.source_link_en,
+        "la" => &prayer.source_link_la,
+        _ => "",
+    };
+
+    let hm = get_string(meta, lang, "hailmary").unwrap_or_default()
+    .replace("$$SPECIAL$$", &format!("<strong><em>{hma}</em></strong>"));
+
     replace_all(template.to_string(), &[
         ("$$SECTION_ID$$", section_id),
         ("$$DECADE$$", decade_label),
         ("$$INDEX$$", &index.to_string()),
-        ("$$TEXT_TOP$$", text_top),
-        ("$$SOURCE$$", source),
+        ("$$TEXT_TOP$$", &text_top),
+        ("$$SOURCE$$", &text_top_source),
+        ("$$SOURCE_LINK$$", &text_top_link),
         ("$$PREV_SECTION_ID$$", prev_id),
         ("$$NEXT_SECTION_ID$$", next_id),
-        ("$$HAIL_MARY_START$$", hm_start),
-        ("$$DECADE_ADDITION$$", hma),
-        ("$$HAIL_MARY_END$$", hm_end),
+        ("$$HAIL_MARY$$", &hm),
     ])
 }
 
@@ -190,51 +221,8 @@ fn render_rosary_section(
 ///   ...
 /// ]
 /// ```
-fn get_hail_mary_addition(lang: &str, index_of_mystery: usize) -> &'static str {
-    // For the sake of example, we only show 15 additions.
-    // You can expand or modify as needed.
-    static DE: [&str; 15] = [
-        "den du, o Jungfrau, vom Heiligen Geist empfangen hast.",
-        "den du, o Jungfrau, zu Elisabeth getragen hast.",
-        "den du, o Jungfrau, in Bethlehem geboren hast.",
-        "den du, o Jungfrau, im Tempel aufgeopfert hast.",
-        "den du, o Jungfrau, im Tempel wiedergefunden hast.",
-        "der für uns Blut geschwitzt hat.",
-        "der für uns gegeißelt worden ist.",
-        "der für uns mit Dornen gekrönt worden ist.",
-        "der für uns das schwere Kreuz getragen hat.",
-        "der für uns am Kreuz gestorben ist.",
-        "der von den Toten auferstanden ist.",
-        "der in den Himmel aufgefahren ist.",
-        "der uns den Heiligen Geist gesandt hat.",
-        "der dich, o Jungfrau, in den Himmel aufgenommen hat.",
-        "der dich, o Jungfrau, im Himmel gekrönt hat.",
-    ];
-
-    static EN: [&str; 15] = [
-        "whom you, O Virgin, received from the Holy Spirit.",
-        "whom you, O Virgin, carried to Elizabeth.",
-        "to whom, O Virgin, you gave birth in Bethlehem.",
-        "whom you, O Virgin, offered up in the temple.",
-        "whom you, O Virgin, found again in the temple.",
-        "who sweated blood for us.",
-        "who was scourged for us.",
-        "who was crowned with thorns for us.",
-        "who bore the heavy cross for us.",
-        "who died for us on the cross.",
-        "who rose from the dead.",
-        "who ascended into heaven.",
-        "who sent us the Holy Spirit.",
-        "who took you, O Virgin, up into heaven.",
-        "who crowned you, O Virgin, in heaven.",
-    ];
-
-    // index_of_mystery is 1..=15 in the code:
-    let idx = (index_of_mystery - 1).min(14);
-    match lang {
-        "de" => DE[idx],
-        _     => EN[idx],
-    }
+fn get_hail_mary_addition(meta: &MetaJson, lang: &str, index_of_mystery: usize) -> String {
+    get_string(meta, lang, &format!("hm-decade-{index_of_mystery}")).unwrap_or_default()
 }
 
 /// This function reproduces the logic of the Python code's `render_rosary_body(...)`.
@@ -245,27 +233,11 @@ pub fn generate_rosary(
     lang: &str,
     templates: &RosaryTemplates,
     mysteries_json: &RosaryMysteries,
+    meta: &MetaJson,
 ) -> String {
-    // Language-specific lines for the Hail Mary:
-    let (hm_start, hm_end) = match lang {
-        "de" => (
-            "Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. \
-             Du bist gebenedeit unter den Weibern und gebenedeit ist die Frucht \
-             deines Leibes Jesus, ",
-            " Heilige Maria, Mutter Gottes, bitte für uns Sünder, \
-             jetzt und in der Stunde unseres Todes.",
-        ),
-        _ => (
-            "Hail, Mary, full of grace, the Lord is with thee. \
-             Blessed art thou amongst women and blessed is the fruit \
-             of thy womb, Jesus, ",
-            " Holy Mary, Mother of God, pray for us sinners, \
-             now and at the hour of our death.",
-        ),
-    };
-
+    
     // The label for the "intro" or "start" in each language:
-    let start_decade_label = if lang == "de" { "Anfang" } else { "Start" };
+    let start_decade_label = get_string(meta, lang, "decade-start").unwrap_or_default();
 
     // 1) Begin with the main template for the Rosary layout:
     let mut rosary_html = templates.main_html.clone();
@@ -274,7 +246,7 @@ pub fn generate_rosary(
     //    (Our Father, Glory Be, Fatima, and two nav placeholders).
     let intro_ourfather = render_rosary_ourfather(
         &templates.ourfather_html, 
-        start_decade_label, 
+        &start_decade_label, 
         "intro-05", 
         "intro-04", 
         "intro-06"
@@ -283,7 +255,7 @@ pub fn generate_rosary(
 
     let intro_glorybe = render_rosary_glorybe(
         &templates.glorybe_html, 
-        start_decade_label, 
+        &start_decade_label, 
         "intro-09", 
         "intro-08", 
         "intro-10"
@@ -292,7 +264,7 @@ pub fn generate_rosary(
 
     let intro_fatima = render_rosary_fatima(
         &templates.fatima_html, 
-        start_decade_label, 
+        &start_decade_label, 
         "intro-10", 
         "intro-09", 
         "decade-1-ourfather"
@@ -323,7 +295,7 @@ pub fn generate_rosary(
                 .to_owned();
 
             // The additional phrase appended to "Jesus," for each Hail Mary:
-            let hma = get_hail_mary_addition(lang, i);
+            let hma = get_hail_mary_addition(meta, lang, i);
 
             // 4a) Our Father snippet for each decade:
             let ourfather_id = format!("decade-{}-ourfather", i);
@@ -361,12 +333,6 @@ pub fn generate_rosary(
             for q in 1..=10 {
                 let q_str = q.to_string();
                 if let Some(prayer) = mystery.prayers.get(&q_str) {
-                    // Choose the correct text based on `lang`:
-                    let hail_mary_reflection = if lang == "de" {
-                        &prayer.de
-                    } else {
-                        &prayer.en
-                    };
 
                     // anchor IDs for previous and next
                     let section_id = &prayer.image;
@@ -383,6 +349,7 @@ pub fn generate_rosary(
                             ourfather_id.clone()
                         }
                     };
+
                     let next_section_id = if q == 10 {
                         // after the 10th Hail Mary: glorybe
                         format!("decade-{}-glorybe", i)
@@ -398,17 +365,16 @@ pub fn generate_rosary(
                     };
 
                     let hail_mary_html = render_rosary_section(
+                        lang,
                         &templates.mystery_section_html,
                         &decade_label,
                         q,
-                        hail_mary_reflection,
-                        &prayer.source,
+                        prayer,
                         section_id,
                         &prev_section_id,
                         &next_section_id,
-                        hm_start,
-                        hm_end,
-                        hma,
+                        &hma,
+                        meta,
                     );
                     mysteries_accum.push_str(&hail_mary_html);
                 }
