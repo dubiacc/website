@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catholic Resistance Globe</title>
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/three@0.137.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three-globe@2.24.4/dist/three-globe.min.js"></script>
+  <script src="https://unpkg.com/three@0.137.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://unpkg.com/papaparse@5.3.0/papaparse.min.js"></script>
+  <style>
+    :root {
+      --background-color: #f5f5f5;
+      --text-color: #333;
+      --panel-bg: rgba(255, 255, 255, 0.85);
+      --panel-text: #333;
+      --atmospheric-color: #ccc;
+      --search-bg: white;
+      --search-text: #333;
+      --search-placeholder: #999;
+      --search-results-bg: white;
+      --search-results-hover: #f0f0f0;
+      --link-color: #8b0000;
+      --focus-col: rgb(61, 99, 170);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background-color: #121212;
+        --text-color: #f5f5f5;
+        --panel-bg: rgba(33, 33, 33, 0.85);
+        --panel-text: #f5f5f5;
+        --atmospheric-color: #3a228a;
+        --search-bg: #333;
+        --search-text: #f5f5f5;
+        --search-placeholder: #777;
+        --search-results-bg: #333;
+        --search-results-hover: #444;
+        --link-color: #ff6b6b;
+      }
+    }
+    
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    html {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: var(--background-color);
+      font-family: Arial, sans-serif;
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+    
+    #globeContainer {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+    
+    .title {
+        mix-blend-mode: difference;
+        width: 100%;
+        text-align: center;
+        font-family: 'UnifrakturMaguntia', serif;
+        font-size: 5rem;
+        color: #ffffff;
+        z-index: 10;
+        margin: 2rem 0px;
+    }
+    
+    .search-container {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        pointer-events: none;
+        z-index: 10;
+        flex-grow: 1;
+        max-width: 500px;
+        width: 100%;
+    }
+
+    #priestInfo {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .search-input {
+        font-family: 'UnifrakturMaguntia';
+        font-weight: bold;
+        padding: 10px;
+        font-style: italic;
+        border: none;
+        background: var(--search-bg);
+        color: var(--search-text);
+        font-size: 1.5rem;
+        outline: none;
+        border: 3px solid var(--search-bg);
+        pointer-events: all;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    
+    .search-input:focus {
+        border: 3px solid var(--focus-col);
+    }
+
+    .search-input::placeholder {
+      color: var(--search-placeholder);
+    }
+    
+    .search-results {
+        font-family: 'UnifrakturMaguntia';
+        font-weight: bold;
+        font-style: italic;
+        overflow-y: scroll;
+        background: var(--search-results-bg);
+        border-radius: 0 0 5px 5px;
+        z-index: 11;
+        display: none;
+        pointer-events: all;
+        margin-left: 10px;
+        margin-right: 10px;
+        max-height: 200px;
+        overflow-y: scroll;
+    }
+    
+    .search-result-item {
+      padding: 10px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      border: 3px solid transparent;
+      font-size: 1.5rem;
+    }
+    
+    .search-result-item:focus {
+        border: 3px solid var(--focus-col);
+        background-color: var(--search-results-hover);
+    }
+
+    .info-panel {
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        box-shadow: 2.5px 2.5px 5px black;
+        pointer-events: all;
+        position: relative;
+        background: white;
+        padding: 20px;
+        max-height: 70vh;
+        overflow-y: auto;
+        z-index: 10;
+        display: none;
+        color: var(--panel-text);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        font-family: 'Times';
+        font-style: italic;
+    }
+    
+    .info-panel h2 {
+        margin-top: 0;
+        margin-bottom: 21px;
+        font-size: 2rem;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+    
+    .info-row {
+        margin-bottom: 4px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: white;
+        background: #cc0000;
+        font-size: 2rem;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    
+    .info-link {
+        background: #700000;
+        color: white;
+        padding: 10px;
+        font-weight: bold;
+        font-style: normal;
+        font-family: sans-serif;
+        margin-top: 1rem;
+        text-decoration: none;
+    }
+    
+    .info-link:hover {
+      text-decoration: underline;
+    }
+    
+    @media (max-width: 600px) {
+      .title {
+        font-size: 3.5rem;
+      }
+      
+      .info-panel {
+        max-height: 60vh;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="title">Catholic Resistance</h1>
+
+  <div class="search-container">
+    <div style="display: flex; flex-direction: column;">
+        <input autofocus="true" type="text" class="search-input" placeholder="Search by name or location..." id="searchInput">
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <div class="info-panel" id="infoPanel">
+        <button class="close-btn" id="closeBtn">×</button>
+        <h2 id="priestName"></h2>
+        <div id="priestInfo"></div>
+      </div>
+  </div>
+  
+  <div id="globeContainer"></div>
+
+  <script>
+    // Configuration - Change these values to configure the application
+    const CONFIG = {
+      currentZoomLevel: 200.0,
+      dataUrl: null, // Set to CSV URL or null to use the default data
+      fieldOrder: [
+        'Type', 'Born Year', 'Associates With', 'Beliefs', 'Location/Area',
+        'Contact/Website', 'Ordained in Rite', 'Ordained By', 'Consecrated in Rite',
+        'Consecrated By', 'Bishop Line', 'Notes'
+      ],
+      markerColor: '#ff0000',
+      markerPulseColor: 'rgba(255, 0, 0, 0.4)',
+      markerSize: 1.0,
+      markerRingSize: 1.8,
+      labelAltitude: 0.001,
+      autoRotate: false,
+      autoRotateSpeed: 0.1,
+      theme: 'light', // 'light', 'dark', or null for system preference
+      focusAnimationDuration: 2000, // ms to animate to a point
+      focusDistanceFactor: 0.4 // distance factor when focusing on a point (lower = closer)
+    };
+
+    // Global variables
+    let renderer, scene, camera, controls, globe;
+    let priests = [];
+    let selectedPoint = null;
+    let isGlobeReady = false;
+    let raycaster, mouse;
+    let dayNightMaterial;
+    let currentTheme = getTheme();
+    let pulseMeshes = [];
+    let searchResults = [];
+    let selectedSearchIndex = -1;
+    
+    // Initialize the application
+    init();
+    
+    // Add a blue marker for user location
+    function addUserLocationMarker(lat, lng) {
+        if (!globe) return;
+        
+        // Create blue marker geometry
+        const markerGeometry = new THREE.SphereGeometry(CONFIG.markerSize, 16, 16);
+        const markerMaterial = new THREE.MeshBasicMaterial({ color: '#0066ff' });
+        const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+        
+        // Set marker position
+        const position = globe.getCoords(lat, lng, CONFIG.labelAltitude);
+        marker.position.set(position.x, position.y, position.z);
+        marker.name = 'user-location';
+        
+        // Add to globe
+        globe.add(marker);
+    }
+
+    function centerOnTimezone() {
+        // Get local timezone offset in minutes
+        const timezoneOffsetMinutes = new Date().getTimezoneOffset();
+        
+        // Convert to hours (negative because getTimezoneOffset() returns difference from UTC)
+        const timezoneOffsetHours = -timezoneOffsetMinutes / 60;
+        
+        // Calculate approximate longitude (15 degrees per hour)
+        const approximateLongitude = timezoneOffsetHours * 15;
+        
+        console.log("approximateLongitude " + approximateLongitude);
+        // Center globe on this longitude at equator (0, approximateLongitude)
+        focusOnPoint(0, approximateLongitude);
+    }
+
+    function showProximitySearchResults(results) {
+        const searchResultsContainer = document.getElementById('searchResults');
+        const searchInput = document.getElementById('searchInput');
+        
+        // Clear previous results
+        searchResultsContainer.innerHTML = '';
+        searchResults = [];
+        selectedSearchIndex = -1;
+        
+        // Add results to global searchResults array
+        searchResults = results.map(result => result.priestData);
+        
+        // Create result items
+        results.forEach((result, i) => {
+            const priest = result.priestData;
+            const resultItem = document.createElement('div');
+            resultItem.className = 'search-result-item';
+            resultItem.tabIndex = i + 200;
+            resultItem.textContent = `${priest.Name} (${priest['Location/Area'] || 'Unknown'})`;
+            
+            resultItem.addEventListener('click', () => {
+            showPriestInfo(priest);
+            focusOnPoint(priest.Latitude, priest.Longitude);
+            highlightSelectedPriest(priest);
+            searchResultsContainer.style.display = 'none';
+            });
+            
+            resultItem.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                resultItem.click();
+            }
+            });
+            
+            searchResultsContainer.appendChild(resultItem);
+        });
+        
+        // Display results
+        searchResultsContainer.style.display = 'block';
+    }
+
+    function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+            // Success callback
+            (position) => {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+                
+                // Add a blue marker for user location
+                addUserLocationMarker(userLat, userLng);
+                
+                // Center globe on user location
+                focusOnPoint(userLat, userLng);
+            },
+            // Error callback
+            (error) => {
+                console.log('Geolocation error:', error);
+                // Center on timezone if location isn't available
+                centerOnTimezone();
+            }
+            );
+        } else {
+            // Geolocation not supported
+            console.log('Geolocation not supported by this browser');
+            centerOnTimezone();
+        }
+    }
+
+    // Main initialization function
+    function init() {
+        // Initialize Three.js scene
+        initScene();
+        
+        // Initialize globe
+        initGlobe();
+        
+        // Initialize raycaster for interactions
+        raycaster = new THREE.Raycaster();
+        mouse = new THREE.Vector2();
+        
+        // Set up event listeners
+        setupEventListeners();
+        
+        getUserLocation();
+
+        // Request user location after globe is ready
+        globe.onGlobeReady = () => {
+            isGlobeReady = true;
+            loadPriestsData();
+        };
+        
+        // Start animation loop
+        animate();
+    }
+    
+    // Get current theme (light/dark)
+    function getTheme() {
+      if (CONFIG.theme) {
+        return CONFIG.theme;
+      }
+      
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+      
+      return 'light';
+    }
+    
+    // Initialize Three.js scene
+    function initScene() {
+      // Initialize renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.getElementById('globeContainer').appendChild(renderer.domElement);
+
+      // Initialize scene
+      scene = new THREE.Scene();
+      
+      // Set background color based on theme
+      const backgroundColor = currentTheme === 'dark' ? 0x121212 : 0xf5f5f5;
+      scene.background = new THREE.Color(backgroundColor);
+      
+      scene.add(new THREE.AmbientLight(0xeeeeee, 0.3));
+      
+      // Initialize camera
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      
+      const dLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      dLight.position.set(-800, 2000, 400);
+      camera.add(dLight);
+      
+      const dLight1 = new THREE.DirectionalLight(0x7982f6, 1);
+      dLight1.position.set(-200, 500, 200);
+      camera.add(dLight1);
+      
+      const dLight2 = new THREE.PointLight(0x8566cc, 0.5);
+      dLight2.position.set(-200, 500, 200);
+      camera.add(dLight2);
+      
+      camera.position.z = CONFIG.currentZoomLevel;
+      camera.position.x = 0;
+      camera.position.y = 0;
+      
+      scene.add(camera);
+      
+      // Add fog for atmospheric effect
+      const fogColor = currentTheme === 'dark' ? 0x333333 : 0xcccccc;
+      scene.fog = new THREE.Fog(fogColor, 400, 2000);
+      
+      // Initialize orbit controls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dynamicDampingFactor = 0.01;
+      controls.enablePan = false;
+      controls.minDistance = 100;
+      controls.maxDistance = 400;
+      controls.rotateSpeed = 0.8;
+      controls.zoomSpeed = 1;
+      controls.autoRotate = CONFIG.autoRotate;
+      controls.autoRotateSpeed = CONFIG.autoRotateSpeed;
+         
+      controls.minPolarAngle = 5 * (Math.PI / 180);  // 5 degrees from north pole
+      controls.maxPolarAngle = 175 * (Math.PI / 180); // 5 degrees from south pole
+    }
+    
+    // Initialize the globe
+    function initGlobe() {
+      // Create globe instance
+      globe = new ThreeGlobe({
+        waitForGlobeReady: true,
+        animateIn: true
+      })
+        .showAtmosphere(true)
+        .atmosphereColor(currentTheme === 'dark' ? "#3a228a" : "#ccc")
+        .atmosphereAltitude(0.25);
+
+      globe.rotateZ(0);
+      globe.rotateY(0);
+
+      // Add globe to scene
+      scene.add(globe);
+      
+      centerOnTimezone();
+      initDayNightCycle();
+    }
+    
+    // Initialize day/night cycle with custom shader
+    function initDayNightCycle() {
+      // Custom shader for day/night cycle
+      const dayNightShader = {
+        vertexShader: `
+          varying vec3 vNormal;
+          varying vec2 vUv;
+          void main() {
+            vNormal = normalize(normalMatrix * normal);
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          #define PI 3.141592653589793
+          uniform sampler2D dayTexture;
+          uniform sampler2D nightTexture;
+          uniform vec2 sunPosition;
+          uniform vec2 globeRotation;
+          varying vec3 vNormal;
+          varying vec2 vUv;
+
+          float toRad(in float a) {
+            return a * PI / 180.0;
+          }
+
+          vec3 Polar2Cartesian(in vec2 c) { // [lng, lat]
+            float theta = toRad(90.0 - c.x);
+            float phi = toRad(90.0 - c.y);
+            return vec3( // x,y,z
+              sin(phi) * cos(theta),
+              cos(phi),
+              sin(phi) * sin(theta)
+            );
+          }
+
+          void main() {
+            float invLon = toRad(globeRotation.x);
+            float invLat = -toRad(globeRotation.y);
+            mat3 rotX = mat3(
+              1, 0, 0,
+              0, cos(invLat), -sin(invLat),
+              0, sin(invLat), cos(invLat)
+            );
+            mat3 rotY = mat3(
+              cos(invLon), 0, sin(invLon),
+              0, 1, 0,
+              -sin(invLon), 0, cos(invLon)
+            );
+            vec3 rotatedSunDirection = rotX * rotY * Polar2Cartesian(sunPosition);
+            float intensity = dot(normalize(vNormal), normalize(rotatedSunDirection));
+            vec4 dayColor = texture2D(dayTexture, vUv);
+            vec4 nightColor = texture2D(nightTexture, vUv);
+            float blendFactor = smoothstep(-0.1, 0.1, intensity);
+            gl_FragColor = mix(nightColor, dayColor, blendFactor);
+          }
+        `
+      };
+
+      // Sun position calculation based on current time
+      const sunPosAt = (dt) => {
+        // Simple approximation: sun moves 15 degrees per hour (360/24)
+        const hour = dt.getUTCHours();
+        const minutes = dt.getUTCMinutes();
+        const totalMinutes = hour * 60 + minutes;
+        const longitude = (totalMinutes / (24 * 60)) * 360 - 180;
+        
+        // Simple approximation for sun declination (latitude)
+        const dayOfYear = Math.floor((dt - new Date(dt.getUTCFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+        const declination = 23.45 * Math.sin((360 / 365) * (dayOfYear - 81) * Math.PI / 180);
+        
+        return [longitude, declination];
+      };
+
+      // Load day and night textures
+      Promise.all([
+        new THREE.TextureLoader().loadAsync('https://unpkg.com/three-globe/example/img/earth-day.jpg'),
+        new THREE.TextureLoader().loadAsync('https://unpkg.com/three-globe/example/img/earth-night.jpg')
+      ]).then(([dayTexture, nightTexture]) => {
+        // Adjust texture based on theme
+        if (currentTheme === 'dark') {
+          // For dark mode, make day texture darker but preserve details
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = dayTexture.image.width;
+          canvas.height = dayTexture.image.height;
+          
+          ctx.drawImage(dayTexture.image, 0, 0);
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+          ctx.globalCompositeOperation = 'multiply';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          
+          const newTexture = new THREE.Texture(canvas);
+          newTexture.needsUpdate = true;
+          dayTexture = newTexture;
+        } else if (currentTheme === 'light') {
+          // For light mode, make day texture a bit lighter
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = dayTexture.image.width;
+          canvas.height = dayTexture.image.height;
+          
+          ctx.drawImage(dayTexture.image, 0, 0);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+          ctx.globalCompositeOperation = 'lighten';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          
+          const newTexture = new THREE.Texture(canvas);
+          newTexture.needsUpdate = true;
+          dayTexture = newTexture;
+
+          // and the night texture a bit lighter
+          const canvas2 = document.createElement('canvas');
+          const ctx2 = canvas2.getContext('2d');
+          canvas2.width = nightTexture.image.width;
+          canvas2.height = nightTexture.image.height;
+          
+          ctx2.drawImage(nightTexture.image, 0, 0);
+          ctx2.fillStyle = 'rgba(255, 255, 255, 0.5)';
+          ctx2.globalCompositeOperation = 'multiply';
+          ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+          
+          const newTexture2 = new THREE.Texture(canvas2);
+          newTexture2.needsUpdate = true;
+          nightTexture = newTexture2;
+        }
+        
+        // Create the shader material
+        dayNightMaterial = new THREE.ShaderMaterial({
+          uniforms: {
+            dayTexture: { value: dayTexture },
+            nightTexture: { value: nightTexture },
+            sunPosition: { value: new THREE.Vector2() },
+            globeRotation: { value: new THREE.Vector2() }
+          },
+          vertexShader: dayNightShader.vertexShader,
+          fragmentShader: dayNightShader.fragmentShader
+        });
+        
+        // Update sun position based on current time
+        const dt = new Date();
+        dayNightMaterial.uniforms.sunPosition.value.set(...sunPosAt(dt));
+        
+        // Apply the material to the globe
+        globe.globeMaterial(dayNightMaterial);
+        
+        // Globe is ready to load data
+        isGlobeReady = true;
+        loadPriestsData();
+      });
+    }
+    
+    function getKeyboardFocusableElements(element = document) {
+        return Array.from(element.querySelectorAll(
+            'a, button, input, textarea, select, details,[tabindex]:not([tabindex="-1"])'
+        ))
+        .filter(el => !el.hasAttribute('disabled'))
+        .sort((a, b) => {
+            // Get explicit tabindex values
+            const aTabIndex = parseInt(a.getAttribute('tabindex') || '0', 10);
+            const bTabIndex = parseInt(b.getAttribute('tabindex') || '0', 10);
+            
+            // Sort by tabindex (elements with tabindex > 0 come first, in numerical order)
+            if (aTabIndex > 0 && bTabIndex > 0) {
+                return aTabIndex - bTabIndex;
+            }
+            
+            // Elements with tabindex > 0 come before elements with tabindex = 0
+            if (aTabIndex > 0) return -1;
+            if (bTabIndex > 0) return 1;
+            
+            // Elements with tabindex = 0 are sorted by their DOM position
+            return 0;
+        });
+    }
+
+    // Set up event listeners
+    function setupEventListeners() {
+      // Window resize event
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+      
+        // Search input events
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        
+        searchInput.addEventListener('input', handleSearch);
+        
+        // Reset selection index when focusing back on the search input
+        searchInput.addEventListener('focus', () => {
+            // Reset the selectedSearchIndex when focus returns to input
+            selectedSearchIndex = -1;
+            
+            if (searchResults.children.length > 0) {
+            searchResults.style.display = 'block';
+            }
+        });
+
+        document.body.addEventListener('keydown', (e) => {
+    const searchResults = document.getElementById('searchResults');
+    
+    // Only handle arrow keys when search results are visible
+    if (searchResults.style.display === 'block' && 
+        (e.key === 'ArrowDown' || e.key === 'ArrowUp' || 
+         e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+        
+        e.preventDefault();
+        
+        // Get all focusable elements
+        const focusableElements = getKeyboardFocusableElements();
+        
+        // Get current element's position in the tab order
+        const currentElement = document.activeElement;
+        const currentIndex = focusableElements.indexOf(currentElement);
+        
+        if (currentIndex !== -1) {
+            // Determine next position based on arrow key
+            let nextIndex;
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                nextIndex = Math.min(currentIndex + 1, focusableElements.length - 1);
+            } else {
+                nextIndex = Math.max(currentIndex - 1, 0);
+            }
+            
+            // Focus the next element
+            if (nextIndex !== currentIndex) {
+                focusableElements[nextIndex].focus();
+                
+                // If it's a search result item, ensure it's visible
+                if (focusableElements[nextIndex].classList.contains('search-result-item')) {
+                    focusableElements[nextIndex].scrollIntoView({ block: 'nearest' });
+                }
+            }
+        }
+    }
+});
+
+        // Simplified searchInput event listener - just for Enter and Escape
+        searchInput.addEventListener('keydown', (e) => {
+            // Handle Enter key regardless of search results visibility
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                selectSearchResult();
+                return;
+            }
+            
+            if (searchResults.style.display === 'block' && e.key === 'Escape') {
+                e.preventDefault();
+                searchResults.style.display = 'none';
+            }
+        });
+            
+        // Close button event - reset highlights when panel closes
+        document.getElementById('closeBtn').addEventListener('click', () => {
+            document.getElementById('infoPanel').style.display = 'none';
+            resetAllMarkers();
+        });
+
+        // Click event for globe interactions
+        renderer.domElement.addEventListener('click', onDocumentMouseClick);
+        
+
+      // Close search results when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+          searchResults.style.display = 'none';
+        }
+      });
+      
+      // Theme change detection
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          if (!CONFIG.theme) {
+            currentTheme = getTheme();
+            updateTheme();
+          }
+        });
+      }
+      
+      // Update camera change events
+      controls.addEventListener('change', onCameraChange);
+    }
+    
+    // Handle camera change for day/night shader
+    function onCameraChange() {
+      if (dayNightMaterial && dayNightMaterial.uniforms.globeRotation) {
+        const { lng, lat } = globe.toGeoCoords(camera.position);
+        dayNightMaterial.uniforms.globeRotation.value.set(lng, lat);
+      }
+    }
+    
+    // Update theme visuals
+    function updateTheme() {
+      // Update background
+      const backgroundColor = currentTheme === 'dark' ? 0x121212 : 0xf5f5f5;
+      scene.background = new THREE.Color(backgroundColor);
+      
+      // Update fog
+      const fogColor = currentTheme === 'dark' ? 0x333333 : 0xcccccc;
+      scene.fog = new THREE.Fog(fogColor, 400, 2000);
+      
+      // Update atmosphere
+      globe.atmosphereColor(currentTheme === 'dark' ? "#3a228a" : "#ccc");
+      
+      // Update day texture (would require reloading textures)
+      // This would be better handled by recreating the globe
+    }
+    
+
+    function resetAllMarkers() {
+        globe.children
+            .filter(obj => obj.name === 'priest-marker')
+            .forEach(marker => marker.material.color.set(CONFIG.markerColor));
+        
+        globe.children
+            .filter(obj => obj.name === 'priest-pulse')
+            .forEach(pulse => {
+            pulse.children
+                .filter(child => child.isMesh)
+                .forEach(mesh => mesh.material.color.set(CONFIG.markerPulseColor));
+            });
+        }
+
+    function highlightSelectedPriest(priest) {
+    resetAllMarkers();
+    
+    globe.children
+        .filter(obj => obj.name === 'priest-marker')
+        .filter(marker => marker.priestData?.Name === priest.Name)
+        .forEach(marker => marker.material.color.set('yellow'));
+    
+    globe.children
+        .filter(obj => obj.name === 'priest-pulse')
+        .filter(pulse => pulse.priestData?.Name === priest.Name)
+        .forEach(pulse => {
+        pulse.children
+            .filter(child => child.isMesh)
+            .forEach(mesh => mesh.material.color.set('rgba(255, 255, 0, 0.4)'));
+        });
+    }
+
+
+    // Select the current search result
+    function selectSearchResult(priest) {
+        const searchResultsContainer = document.getElementById('searchResults');
+        const items = searchResultsContainer.querySelectorAll('.search-result-item');
+        
+        // If no selection but we have results, select the first one
+        if (selectedSearchIndex < 0 && items.length > 0) {
+            selectedSearchIndex = 0;
+        }
+        
+        if (selectedSearchIndex >= 0 && selectedSearchIndex < items.length) {
+            const priest = searchResults[selectedSearchIndex];
+            if (!priest) return;
+            
+            showPriestInfo(priest);
+            focusOnPoint(priest.Latitude, priest.Longitude);
+            highlightSelectedPriest(priest);
+            
+            // Hide search results and clear input
+            searchResultsContainer.style.display = 'none';
+            document.getElementById('searchInput').value = '';
+        }
+    }
+          
+    // Mouse click event handler
+    function onDocumentMouseClick(event) {
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  
+  raycaster.setFromCamera(mouse, camera);
+  
+  const objects = globe.children.filter(obj => 
+      obj.name === 'priest-marker' || obj.name === 'priest-pulse' || obj.name === 'priest-marker-invisible'
+  );
+  
+  const intersects = raycaster.intersectObjects(objects, true);
+  
+  if (intersects.length > 0) {
+    // Get all intersected objects in order of distance
+    const hitPriests = new Map(); // Use a Map to ensure unique priests
+    
+    for (const hit of intersects) {
+      const obj = hit.object;
+      const priestData = obj.name === 'priest-marker' || obj.name === 'priest-marker-invisible'
+        ? obj.priestData 
+        : obj.parent.priestData;
+      
+      if (priestData && !hitPriests.has(priestData.Name)) {
+        hitPriests.set(priestData.Name, {
+          priestData: priestData,
+          distance: hit.distance
+        });
+      }
+    }
+    
+    // Convert to array and sort by distance
+    const hitResults = Array.from(hitPriests.values())
+      .sort((a, b) => a.distance - b.distance);
+    
+    if (hitResults.length === 1) {
+      // Just one priest hit, show directly
+      const priestData = hitResults[0].priestData;
+      showPriestInfo(priestData);
+      highlightSelectedPriest(priestData);
+      focusOnPoint(priestData.Latitude, priestData.Longitude);
+    } else if (hitResults.length > 1) {
+      // Multiple priests hit, show search results
+      showProximitySearchResults(hitResults);
+    }
+  }
+}
+
+// Function to display search results when multiple priests are selected
+function showProximitySearchResults(results) {
+  const searchResultsContainer = document.getElementById('searchResults');
+  
+  // Clear previous results
+  searchResultsContainer.innerHTML = '';
+  searchResults = [];
+  selectedSearchIndex = -1;
+  
+  // Add results to global searchResults array
+  searchResults = results.map(result => result.priestData);
+  
+  // Create result items
+  results.forEach((result, i) => {
+    const priest = result.priestData;
+    const resultItem = document.createElement('div');
+    resultItem.className = 'search-result-item';
+    resultItem.tabIndex = i + 200;
+    resultItem.textContent = `${priest.Name} (${priest['Location/Area'] || 'Unknown'})`;
+    
+    resultItem.addEventListener('click', () => {
+      showPriestInfo(priest);
+      focusOnPoint(priest.Latitude, priest.Longitude);
+      highlightSelectedPriest(priest);
+      searchResultsContainer.style.display = 'none';
+    });
+    
+    resultItem.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        resultItem.click();
+      }
+    });
+    
+    searchResultsContainer.appendChild(resultItem);
+  });
+  
+  // Display results
+  searchResultsContainer.style.display = 'block';
+}
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      // Update the sun position once per minute
+      if (dayNightMaterial && Math.random() < 0.001) { // ~every 16 seconds at 60fps
+        const dt = new Date();
+        updateSunPosition(dt);
+      }
+      
+      // Animate pulse rings
+      animatePulseRings();
+      
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    
+    // Update sun position based on current time
+    function updateSunPosition(dt) {
+      if (!dayNightMaterial || !dayNightMaterial.uniforms) return;
+      
+      // Simple approximation: sun moves 15 degrees per hour (360/24)
+      const hour = dt.getUTCHours();
+      const minutes = dt.getUTCMinutes();
+      const totalMinutes = hour * 60 + minutes;
+      const longitude = (totalMinutes / (24 * 60)) * 360 - 180;
+      
+      // Simple approximation for sun declination (latitude)
+      const dayOfYear = Math.floor((dt - new Date(dt.getUTCFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+      const declination = 23.45 * Math.sin((360 / 365) * (dayOfYear - 81) * Math.PI / 180);
+      
+      dayNightMaterial.uniforms.sunPosition.value.set(longitude, declination);
+    }
+    
+    // Animate pulse rings
+    function animatePulseRings() {
+      const time = Date.now() * 0.001; // time in seconds
+      
+      pulseMeshes.forEach(mesh => {
+        // Pulse scale with sine wave (0.8 to 1.2)
+        const scale = 1 + 0.2 * Math.sin(time * 2 + mesh.pulseOffset);
+        mesh.scale.set(scale, scale, scale);
+        
+        // Pulse opacity (0.4 to 0.8)
+        mesh.material.opacity = 0.4 + 0.2 * Math.abs(Math.sin(time + mesh.pulseOffset));
+      });
+    }
+    
+    // Load priests data
+    function loadPriestsData() {
+      // Default data as fallback
+      const defaultCsvData = `Type,Name,Born Year,Associates With,Beliefs,Location/Area,Contact/Website,Ordained in Rite,Ordained By,Consecrated in Rite,Consecrated By,Bishop Line,Notes
+Bishop,Richard Williamson,,SSPX (originally),Resistance,England,,Old Rite,Archbishop Lefebvre,Old Rite,Archbishop Lefebvre,Lefebvre,Consecrated in 1988 by Archbishop Lefebvre; leads "SSPX Resistance"
+Bishop,Gerardo Zendejas,,Resistance,Non-sede,USA,https://thebluepaper.org/,Old Rite,Archbishop Lefebvre,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated bishop on May 11 2017 by Bp. Williamson
+Bishop,Jean-Michel Faure,1941,Resistance,Non-sede,France,,Old Rite,Archbishop Lefebvre,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated in 2015 by Bp. Williamson in Brazil
+Bishop,Paul Morgan,,Independent? (formerly SSPX),Mixed,Unknown,,Old Rite,Archbishop Lefebvre,,,,Former SSPX District Superior of GB; uncertain present status
+Bishop,Thomas Aquinas (OSB),,Resistance,Non-sede,Brazil,,Old Rite,Archbishop Lefebvre,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated in 2016 by Bp. Williamson (Nova Friburgo)
+Bishop,Giacomo Ballini,,Resistance,Non-sede,Italy/Ireland,,Old Rite,,Old Rite,Bp. R. Williamson,Lefebvre,Works with Fr. Chazal/Hewko
+Bishop,Czeslaw Stobnicki,,Resistance,Non-sede,Poland,,Old Rite,,Old Rite,Bp. R. Williamson,Lefebvre,Little info available; mention as "Bp. Stobnicki (PL)"
+Bishop,Carlo Maria Viganò,1941,Independent? (ex-Nuncio),Unclear (traditional-leaning),Europe,,New Rite (likely),Pope Paul VI or John Paul II,New Rite (likely),,,"Conciliar, sometimes labeled "sede?" by rumor, but no official claim"
+Father,Martin Fuchs,,Resistance,Non-sede,Austria,https://corjesu.info/wordpress/?p=2240,Old Rite,,,,,Mentioned with "SSPX Resistance" in Austria
+Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,German SSPX Resistance priest`;
+      
+      if (CONFIG.dataUrl) {
+        // Fetch data from configured URL
+        fetch(CONFIG.dataUrl)
+          .then(response => response.text())
+          .then(csvData => {
+            parseAndProcessData(csvData);
+          })
+          .catch(error => {
+            console.error('Error loading data:', error);
+            console.log('Falling back to default data');
+            parseAndProcessData(defaultCsvData);
+          });
+      } else {
+        // Use default hardcoded data
+        parseAndProcessData(defaultCsvData);
+      }
+    }
+    
+    // Parse and process CSV data
+    function parseAndProcessData(csvData) {
+      Papa.parse(csvData, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (results) => {
+          // Process data and add missing columns (lat, long, GoogleMaps)
+          priests = addGeoData(results.data);
+          
+          // Once data is loaded, populate the globe
+          window.setTimeout(function() {
+            populateGlobeWithMarkers(priests);
+          }, 400);
+        },
+        error: (error) => {
+          console.error('Error parsing CSV:', error);
+        }
+      });
+    }
+    
+    // Add geographic data to priests
+    function addGeoData(priests) {
+      return priests.map(priest => {
+        // Assign locations to actual coordinates
+        let lat, lng;
+        
+        switch(priest['Location/Area']) {
+          case 'England':
+            lat = 52.3555; lng = -1.1743;
+            break;
+          case 'USA':
+            lat = 37.0902; lng = -95.7129;
+            break;
+          case 'France':
+            lat = 46.2276; lng = 2.2137;
+            break;
+          case 'Brazil':
+            lat = -14.2350; lng = -51.9253;
+            break;
+          case 'Italy/Ireland':
+            lat = 41.8719; lng = 12.5674; // Using Italy
+            break;
+          case 'Poland':
+            lat = 51.9194; lng = 19.1451;
+            break;
+          case 'Europe':
+            lat = 48.8566; lng = 2.3522; // Using Paris as a European center
+            break;
+          case 'Austria':
+            lat = 47.5162; lng = 14.5501;
+            break;
+          case 'Germany':
+            lat = 51.1657; lng = 10.4515;
+            break;
+          default:
+            // Random coordinates for unknown locations
+            lat = parseFloat((Math.random() * 180 - 90).toFixed(4));
+            lng = parseFloat((Math.random() * 360 - 180).toFixed(4));
+        }
+        
+        return {
+          ...priest,
+          Latitude: lat,
+          Longitude: lng,
+          GoogleMaps: `https://maps.google.com/?q=${lat},${lng}`
+        };
+      });
+    }
+    
+    // Populate the globe with markers and pulse rings
+    function populateGlobeWithMarkers(data) {
+
+        if (!globe) return;
+        
+        // Clear any existing markers
+        const existingMarkers = globe.children.filter(obj => 
+            obj.name === 'priest-marker' || obj.name === 'priest-pulse' || obj.name === 'priest-marker-invisible'
+        );
+        existingMarkers.forEach(marker => globe.remove(marker));
+        
+        // Clear pulse meshes array
+        pulseMeshes = [];
+        
+        // Create markers for each priest
+        data.forEach(priest => {
+            // Get coordinates
+            const lat = priest.Latitude;
+            const lng = priest.Longitude;
+            
+            // Add dot marker
+            const markerGeometry = new THREE.SphereGeometry(CONFIG.markerSize, 16, 16);
+            const markerMaterial = new THREE.MeshBasicMaterial({ color: CONFIG.markerColor });
+            const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+            
+            // Set marker position
+            const position = globe.getCoords(lat, lng, CONFIG.labelAltitude);
+            marker.position.set(position.x, position.y, position.z);
+            marker.name = 'priest-marker';
+            marker.priestData = priest; // Store the priest data on the object for click handling
+            
+            // Add marker to globe
+            globe.add(marker);
+            
+            // Add pulsating ring around marker
+            const pulseGeometry = new THREE.RingGeometry(CONFIG.markerSize, CONFIG.markerRingSize, 32);
+            const pulseMaterial = new THREE.MeshBasicMaterial({
+            color: CONFIG.markerPulseColor,
+            transparent: true,
+            opacity: 0.6,
+            side: THREE.DoubleSide
+            });
+            
+            // Create a 3D object for the pulse ring
+            const pulse = new THREE.Group();
+            const pulseMesh = new THREE.Mesh(pulseGeometry, pulseMaterial);
+            
+            // Make the ring face the camera
+            pulseMesh.lookAt(0, 0, 0);
+            pulse.add(pulseMesh);
+            
+            // Position pulse at same coordinates as marker
+            pulse.position.set(position.x, position.y, position.z);
+            pulse.lookAt(0, 0, 0);
+            pulse.name = 'priest-pulse';
+            pulse.priestData = priest;
+            
+            // Add random offset for animation
+            pulseMesh.pulseOffset = Math.random() * Math.PI * 2;
+            
+            // Add to pulse meshes array for animation
+            pulseMeshes.push(pulseMesh);
+            
+            // Add pulse to globe
+            globe.add(pulse);
+            
+            // Add invisible larger detection ring
+            const invisibleRingGeometry = new THREE.CircleGeometry(CONFIG.markerRingSize * 4, 32);
+            const invisibleRingMaterial = new THREE.MeshBasicMaterial({
+            transparent: true,
+            opacity: 0.0, // Completely invisible
+            side: THREE.DoubleSide
+            });
+            
+            const invisibleRing = new THREE.Mesh(invisibleRingGeometry, invisibleRingMaterial);
+            
+            // Make it face the camera
+            invisibleRing.lookAt(0, 0, 0);
+            
+            // Position at same coordinates as marker
+            invisibleRing.position.set(position.x, position.y, position.z);
+            invisibleRing.name = 'priest-marker-invisible';
+            invisibleRing.priestData = priest; // Same priest data
+            
+            // Add to globe
+            globe.add(invisibleRing);
+        });
+    }
+
+    // Show priest info in the panel
+    function showPriestInfo(priest) {
+      const infoPanel = document.getElementById('infoPanel');
+      const priestName = document.getElementById('priestName');
+      const priestInfo = document.getElementById('priestInfo');
+      
+      // Set priest name
+      priestName.textContent = priest.Name;
+      
+      // Clear previous info
+      priestInfo.innerHTML = '';
+      
+      // Add fields in configured order
+      CONFIG.fieldOrder.forEach(field => {
+        if (priest[field]) {
+          const row = document.createElement('div');
+          row.className = 'info-row';
+          
+          if (field === 'Contact/Website' && priest[field].startsWith('http')) {
+            row.innerHTML = `<strong>${field}:</strong> <a href="${priest[field]}" target="_blank" class="info-link">${priest[field]}</a>`;
+          } else {
+            row.innerHTML = `<strong>${field}:</strong> <p>${priest[field]}</p>`;
+          }
+          
+          priestInfo.appendChild(row);
+        }
+      });
+      
+      // Add Google Maps link
+      const mapsRow = document.createElement('div');
+      mapsRow.className = 'info-row';
+      mapsRow.innerHTML = `<a href="${priest.GoogleMaps}" target="_blank" class="info-link">View on Google Maps</a>`;
+      priestInfo.appendChild(mapsRow);
+      
+      // Show the info panel
+      infoPanel.style.display = 'block';
+    }
+    
+    // Handle search input
+    function handleSearch(event) {
+        const searchTerm = event.target.value.toLowerCase();
+        const searchResultsContainer = document.getElementById('searchResults');
+        
+        // Reset search results
+        searchResultsContainer.innerHTML = '';
+        searchResults = [];
+        selectedSearchIndex = -1;
+        
+        if (searchTerm.length < 1) {
+            searchResultsContainer.style.display = 'none';
+            resetAllMarkers();
+            return;
+        }
+        
+        // Filter priests based on search term
+        searchResults = priests.filter(priest => 
+            priest.Name.toLowerCase().includes(searchTerm) || 
+            (priest['Location/Area'] && priest['Location/Area'].toLowerCase().includes(searchTerm))
+        );
+        
+        // Highlight matching markers
+        const markers = globe.children.filter(obj => obj.name === 'priest-marker');
+        markers.forEach(marker => {
+            const priest = marker.priestData;
+            const isMatch = searchResults.some(p => p.Name === priest.Name);
+            
+            marker.material.color.set(isMatch ? 'yellow' : CONFIG.markerColor);
+        });
+        
+        // Populate search results dropdown
+        if (searchResults.length > 0) {
+            searchResults.forEach((priest, i) => {
+            const resultItem = document.createElement('div');
+            resultItem.className = 'search-result-item';
+            // Use consecutive tabindex values starting from 1 higher than the search input
+            resultItem.tabIndex = i + 200; 
+            resultItem.textContent = `${priest.Name} (${priest['Location/Area'] || 'Unknown'})`;
+            
+            // Add click and keydown handlers
+            resultItem.addEventListener('click', () => {
+                showPriestInfo(priest);
+                focusOnPoint(priest.Latitude, priest.Longitude);
+                highlightSelectedPriest(priest);
+                searchResultsContainer.style.display = 'none';
+                document.getElementById('searchInput').value = '';
+            });
+            
+            resultItem.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                resultItem.click();
+                }
+            });
+            
+            searchResultsContainer.appendChild(resultItem);
+            });
+            
+            searchResultsContainer.style.display = 'block';
+        } else {
+            searchResultsContainer.style.display = 'none';
+        }
+    }
+
+    function clearSearchResults(searchResultsContainer) {
+        searchResultsContainer.style.display = 'none';
+        // Clear search input
+        document.getElementById('searchInput').value = '';
+    }
+
+    function clickSearchResult(priest, searchResultsContainer) {
+        // Show info panel
+        showPriestInfo(priest);
+        
+        // Focus on the point
+        focusOnPoint(priest.Latitude, priest.Longitude);
+        
+        // Reset markers color
+        markers.forEach(marker => {
+            marker.material.color.set(CONFIG.markerColor);
+        });
+    }
+
+    // Focus camera on a specific point
+    function focusOnPoint(lat, lng, zoomLevel = 200.0) {
+      if (!globe) return;
+            
+      // Calculate target position with corrected coordinates
+      const targetPosition = globe.getCoords(lat - 5, lng, 2);
+      
+      // Normalized direction vector
+      const direction = new THREE.Vector3();
+      direction.subVectors(targetPosition, new THREE.Vector3(0, 0, 0)).normalize();
+      
+      // Get current distance from camera to center
+      const currentDistance = camera.position.distanceTo(new THREE.Vector3(0, 0, 0));
+      
+      // Calculate target distance - lower zoomLevel means closer (more zoomed in)
+      // zoomLevel of 1.0 means no change in zoom
+      // zoomLevel of 0.5 means zoom in to half the current distance
+      const targetDistance = Math.max(
+        controls.minDistance,
+        Math.min(controls.maxDistance, currentDistance * (zoomLevel / CONFIG.currentZoomLevel))
+      );
+      CONFIG.currentZoomLevel = zoomLevel;
+
+      // Calculate new camera position
+      const newPosition = direction.multiplyScalar(targetDistance);
+      
+      // Animate camera move
+      const startPosition = camera.position.clone();
+      const startTime = Date.now();
+      
+      function animateCamera() {
+        const elapsedTime = Date.now() - startTime;
+        const progress = Math.min(elapsedTime / CONFIG.focusAnimationDuration, 1);
+        
+        // Easing function (ease-out)
+        const easeProgress = 1 - Math.pow(1 - progress, 3);
+        
+        // Interpolate position
+        camera.position.lerpVectors(startPosition, newPosition, easeProgress);
+        
+        // Look at center
+        camera.lookAt(0, 0, 0);
+        
+        // Update controls
+        controls.update();
+        
+        // Continue animation if not complete
+        if (progress < 1) {
+          requestAnimationFrame(animateCamera);
+        } else {
+          // Animation complete - update controls target
+          controls.target.set(0, 0, 0);
+          controls.update();
+        }
+      }
+      
+      // Start animation
+      animateCamera();
+    }
+    </script>
+</body>
+</html>
