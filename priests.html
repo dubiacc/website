@@ -270,7 +270,7 @@
       labelAltitude: 0.001,
       autoRotate: false,
       autoRotateSpeed: 0.1,
-      theme: null, // 'light', 'dark', or null for system preference
+      theme: 'light', // 'light', 'dark', or null for system preference
       focusAnimationDuration: 2000, // ms to animate to a point
       focusDistanceFactor: 0.4 // distance factor when focusing on a point (lower = closer)
     };
@@ -290,6 +290,228 @@
     // Initialize the application
     init();
     
+    // Language mapping and geography functions
+    const languageLatitudeMap = {
+      // Top languages by number of speakers + European languages + CJK + Filipino
+      "zh": 35.0, // Chinese (Mandarin)
+      "es": 40.0, // Spanish - Spain (will adjust based on longitude)
+      "en": 51.0, // English - UK (will adjust based on longitude)
+      "hi": 20.0, // Hindi - Northern India
+      "ar": 25.0, // Arabic - Arabian Peninsula
+      "pt": -10.0, // Portuguese - Brazil (will adjust based on longitude)
+      "bn": 23.0, // Bengali - Bangladesh/East India
+      "ru": 55.0, // Russian
+      "ja": 36.0, // Japanese
+      "pa": 30.0, // Punjabi
+      "de": 51.0, // German
+      "jv": -7.5, // Javanese
+      "ko": 37.5, // Korean
+      "fr": 46.0, // French (will adjust based on longitude)
+      "te": 16.0, // Telugu
+      "mr": 18.0, // Marathi
+      "tr": 39.0, // Turkish
+      "ta": 11.0, // Tamil
+      "vi": 16.0, // Vietnamese
+      "ur": 30.0, // Urdu
+      "it": 42.0, // Italian
+      "th": 15.0, // Thai
+      "gu": 22.0, // Gujarati
+      "pl": 52.0, // Polish
+      "uk": 49.0, // Ukrainian
+      "fa": 32.0, // Persian
+      "ro": 46.0, // Romanian
+      "nl": 52.0, // Dutch
+      "fil": 14.0, // Filipino
+      "sv": 60.0, // Swedish
+      "cs": 50.0, // Czech
+      "hu": 47.0, // Hungarian
+      "el": 38.0, // Greek
+      "da": 56.0, // Danish
+      "fi": 62.0, // Finnish
+      "no": 60.0, // Norwegian
+      "bg": 42.0, // Bulgarian
+      "hr": 45.0, // Croatian
+      "sk": 48.0, // Slovak
+      "sr": 44.0, // Serbian
+      "lt": 55.0, // Lithuanian
+      "lv": 57.0, // Latvian
+      "et": 59.0, // Estonian
+      "sl": 46.0, // Slovenian
+      "is": 65.0, // Icelandic
+      "ca": 41.0, // Catalan
+      "eu": 43.0, // Basque
+      "ga": 53.0, // Irish
+      "gl": 42.0, // Galician
+      "cy": 52.0, // Welsh
+      "gd": 57.0, // Scottish Gaelic
+      "be": 53.0, // Belarusian
+      "mk": 41.5, // Macedonian
+      "sq": 41.0, // Albanian
+      "mt": 35.9, // Maltese
+      "id": -0.8, // Indonesian
+      "ms": 2.5,  // Malay
+      "sw": -6.0, // Swahili
+      "am": 9.0,  // Amharic
+      "yo": 7.5,  // Yoruba
+      "zu": -29.0, // Zulu
+      "xh": -33.0, // Xhosa
+      "he": 31.0, // Hebrew
+      "tl": 14.6  // Tagalog
+    };
+
+    // Define language longitude ranges for geographic consistency check
+    function languageLongitudeRanges() {
+      return {
+      "en": [
+        { min: -170, max: -30, lat: 40.0 },    // North America
+        { min: -30, max: 30, lat: 51.0 },      // UK
+        { min: 30, max: 100, lat: 20.0 },      // South Asia (India)
+        { min: 100, max: 180, lat: -25.0 }     // Australia/NZ
+      ],
+      "es": [
+        { min: -120, max: -30, lat: 15.0 },    // Latin America
+        { min: -30, max: 30, lat: 40.0 }       // Spain
+      ],
+      "pt": [
+        { min: -120, max: -30, lat: -10.0 },   // Brazil
+        { min: -30, max: 30, lat: 39.0 }       // Portugal
+      ],
+      "fr": [
+        { min: -120, max: -30, lat: 45.0 },    // Quebec/Canada
+        { min: -30, max: 30, lat: 46.0 },      // France
+        { min: 0, max: 50, lat: 14.0 }         // Francophone Africa
+      ],
+      "ar": [
+        { min: -30, max: 0, lat: 30.0 },       // North Africa
+        { min: 0, max: 60, lat: 25.0 }         // Middle East
+      ],
+      "zh": [
+        { min: 70, max: 140, lat: 35.0 }       // China
+      ],
+      "hi": [
+        { min: 60, max: 100, lat: 20.0 }       // India
+      ],
+      "ru": [
+        { min: 20, max: 180, lat: 55.0 }       // Russia
+      ],
+      "ja": [
+        { min: 120, max: 150, lat: 36.0 }      // Japan
+      ],
+      "ko": [
+        { min: 120, max: 135, lat: 37.5 }      // Korea
+      ]
+    };
+  }
+    
+    // Language-based latitude estimation with geographical consistency check
+    function estimateLatitude(longitude) {
+      const languages = getBrowserLanguages();
+      let bestLat = null;
+      const llr = languageLongitudeRanges();
+
+      // First try to find a geographically consistent language
+      for (const language of languages) {
+        const langCode = getLanguageCode(language);
+        
+        // Check if this language has specific longitude ranges defined
+        if (llr[langCode]) {
+          for (const range of llr[langCode]) {
+            // Check if the detected longitude falls within this language's expected range
+            if (longitude >= range.min && longitude <= range.max) {
+              console.log(`Found matching language ${langCode} for longitude ${longitude}, using latitude ${range.lat}`);
+              return range.lat;
+            }
+          }
+        }
+      }
+      
+      // If no geographically consistent language found, try the general language map
+      for (const language of languages) {
+        const langCode = getLanguageCode(language);
+        if (languageLatitudeMap[langCode]) {
+          bestLat = languageLatitudeMap[langCode];
+          break;
+        }
+      }
+      
+      // Fall back to hemisphere estimation based on longitude if no language match
+      if (bestLat === null) {
+        // Most populated areas are in Northern hemisphere
+        bestLat = 20.0;
+        
+        // Special case for southern hemisphere longitudes (South America, Australia, etc.)
+        if ((longitude > -120 && longitude < -30) || (longitude > 100 && longitude < 180)) {
+          bestLat = -20.0;
+        }
+      }
+      
+      return bestLat;
+    }
+
+    // Get all browser languages
+    function getBrowserLanguages() {
+      if (navigator.languages && navigator.languages.length) {
+        return Array.from(navigator.languages);
+      }
+      return [navigator.language || navigator.userLanguage || 'en'];
+    }
+
+    // Extract language code from full locale string
+    function getLanguageCode(locale) { 
+      console.log(locale);
+      return locale.split('-')[0].toLowerCase(); 
+    }
+
+    // 7. Improved click detection to prevent clicking through the globe
+    function isPointOnFrontSide(hitPoint, camera) {
+      // Vector from camera to hit point
+      const cameraToHit = new THREE.Vector3().subVectors(hitPoint, camera.position);
+      
+      // Vector from camera to globe center
+      const cameraToCenter = new THREE.Vector3().subVectors(new THREE.Vector3(0, 0, 0), camera.position);
+      
+      // If dot product is positive, the hit is on back side
+      return cameraToHit.dot(cameraToCenter) <= 0;
+    }
+
+    // Calculate solar position with accurate Earth tilt
+    function calculateSolarPosition(dt) {
+      // Day of year (0-365)
+      const start = new Date(dt.getUTCFullYear(), 0, 0);
+      const diff = dt - start;
+      const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+      
+      // Convert to radians for the calculations
+      const dayAngle = 2 * Math.PI * dayOfYear / 365.25;
+      
+      // Axial tilt calculation (more accurate declination angle)
+      // Uses astronomical formula with the obliquity of the ecliptic
+      const declination = 0.4093 * Math.sin(dayAngle - 1.405);
+      
+      // Equation of time (difference between solar time and mean time)
+      const eqTime = 229.18 * (0.000075 + 0.001868 * Math.cos(dayAngle) 
+                - 0.032077 * Math.sin(dayAngle) 
+                - 0.014615 * Math.cos(2 * dayAngle) 
+                - 0.040849 * Math.sin(2 * dayAngle));
+      
+      // Calculate solar hour angle
+      const hour = dt.getUTCHours();
+      const minutes = dt.getUTCMinutes();
+      const seconds = dt.getUTCSeconds();
+      const totalSeconds = hour * 3600 + minutes * 60 + seconds;
+      
+      // Convert to longitude (-180 to 180)
+      const longitude = (totalSeconds / 86400) * 360 - 180;
+      
+      // Adjust for equation of time
+      const adjustedLongitude = longitude + eqTime / 60 * 15;
+      
+      // Convert declination from radians to degrees
+      const declinationDegrees = declination * (180 / Math.PI);
+      
+      return [adjustedLongitude, declinationDegrees];
+    }
+
     // Add a blue marker for user location
     function addUserLocationMarker(lat, lng) {
         if (!globe) return;
@@ -309,18 +531,22 @@
     }
 
     function centerOnTimezone() {
-        // Get local timezone offset in minutes
-        const timezoneOffsetMinutes = new Date().getTimezoneOffset();
-        
-        // Convert to hours (negative because getTimezoneOffset() returns difference from UTC)
-        const timezoneOffsetHours = -timezoneOffsetMinutes / 60;
-        
-        // Calculate approximate longitude (15 degrees per hour)
-        const approximateLongitude = timezoneOffsetHours * 15;
-        
-        console.log("approximateLongitude " + approximateLongitude);
-        // Center globe on this longitude at equator (0, approximateLongitude)
-        focusOnPoint(0, approximateLongitude);
+      // Get local timezone offset in minutes
+      const timezoneOffsetMinutes = new Date().getTimezoneOffset();
+      
+      // Convert to hours (negative because getTimezoneOffset returns difference from UTC)
+      const timezoneOffsetHours = -timezoneOffsetMinutes / 60;
+      
+      // Calculate approximate longitude (15 degrees per hour)
+      const approximateLongitude = timezoneOffsetHours * 15;
+      
+      // Get browser languages and estimate latitude based on geographical consistency
+      const estimatedLatitude = estimateLatitude(approximateLongitude);
+      
+      console.log(`Browser languages: ${getBrowserLanguages().join(', ')}, approximate longitude: ${approximateLongitude}, estimated latitude: ${estimatedLatitude}`);
+      
+      // Center globe on this position
+      focusOnPoint(estimatedLatitude, approximateLongitude);
     }
 
     function showProximitySearchResults(results) {
@@ -390,6 +616,60 @@
             console.log('Geolocation not supported by this browser');
             centerOnTimezone();
         }
+    }
+
+    // Adjust rotation speed based on zoom level - slower when zoomed in
+    function adjustRotationSpeed() {
+      const distance = camera.position.distanceTo(new THREE.Vector3(0, 0, 0));
+      const zoomRange = controls.maxDistance - controls.minDistance;
+      const zoomFactor = (distance - controls.minDistance) / zoomRange;
+      
+      const minSpeed = 0.2; // Min rotation speed when fully zoomed in
+      const maxSpeed = 1.0; // Max rotation speed when zoomed out
+      
+      controls.rotateSpeed = minSpeed + zoomFactor * (maxSpeed - minSpeed);
+    }
+
+    // 4. Enhanced atmosphere glow effect
+    function addAtmosphericGlow(scene, currentTheme) {
+      // Create sphere slightly larger than the globe
+      const glowGeometry = new THREE.SphereGeometry(1.02, 32, 32);
+      
+      // Create shader material for the glow effect
+      const glowMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          "c": { value: 0.1 },
+          "p": { value: 4.0 },
+          glowColor: { value: new THREE.Color(currentTheme === 'dark' ? 0x3a228a : 0x88ccff) }
+        },
+        vertexShader: `
+          varying vec3 vNormal;
+          void main() {
+            vNormal = normalize(normalMatrix * normal);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform vec3 glowColor;
+          uniform float c;
+          uniform float p;
+          varying vec3 vNormal;
+          void main() {
+            float intensity = pow(c - dot(vNormal, vec3(0.0, 0.0, 1.0)), p);
+            gl_FragColor = vec4(glowColor, intensity);
+          }
+        `,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true
+      });
+      
+      // Create and add glow mesh
+      const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial);
+      glowMesh.scale.multiplyScalar(1.15);
+      glowMesh.name = 'atmosphere-glow';
+      
+      scene.add(glowMesh);
     }
 
     // Main initialization function
@@ -481,7 +761,7 @@
       controls.enableDamping = true;
       controls.dynamicDampingFactor = 0.01;
       controls.enablePan = false;
-      controls.minDistance = 100;
+      controls.minDistance = 200;
       controls.maxDistance = 400;
       controls.rotateSpeed = 0.8;
       controls.zoomSpeed = 1;
@@ -509,6 +789,8 @@
       // Add globe to scene
       scene.add(globe);
       
+      addAtmosphericGlow(scene, currentTheme);
+
       centerOnTimezone();
       initDayNightCycle();
     }
@@ -805,6 +1087,9 @@
         const { lng, lat } = globe.toGeoCoords(camera.position);
         dayNightMaterial.uniforms.globeRotation.value.set(lng, lat);
       }
+
+      // Adjust rotation speed based on zoom level
+      adjustRotationSpeed();
     }
     
     // Update theme visuals
@@ -889,17 +1174,37 @@
   
   raycaster.setFromCamera(mouse, camera);
   
+  // First check if we hit the globe itself
+  const globeIntersects = raycaster.intersectObject(globe);
+  
+  // If hit on globe, determine if it's front or back side
+  if (globeIntersects.length > 0) {
+    const hitPoint = globeIntersects[0].point;
+    
+    // Skip if we hit the back side
+    if (!isPointOnFrontSide(hitPoint, camera)) {
+      return;
+    }
+  }
+  
   const objects = globe.children.filter(obj => 
-      obj.name === 'priest-marker' || obj.name === 'priest-pulse' || obj.name === 'priest-marker-invisible'
+    obj.name === 'priest-marker' || obj.name === 'priest-pulse' || obj.name === 'priest-marker-invisible'
   );
   
   const intersects = raycaster.intersectObjects(objects, true);
   
   if (intersects.length > 0) {
-    // Get all intersected objects in order of distance
-    const hitPriests = new Map(); // Use a Map to ensure unique priests
+    // Filter out back-side hits
+    const frontSideHits = intersects.filter(hit => 
+      isPointOnFrontSide(hit.point, camera)
+    );
     
-    for (const hit of intersects) {
+    if (frontSideHits.length === 0) return;
+    
+    // Process hits as before, but only for front-side objects
+    const hitPriests = new Map();
+    
+    for (const hit of frontSideHits) {
       const obj = hit.object;
       const priestData = obj.name === 'priest-marker' || obj.name === 'priest-marker-invisible'
         ? obj.priestData 
@@ -918,13 +1223,13 @@
       .sort((a, b) => a.distance - b.distance);
     
     if (hitResults.length === 1) {
-      // Just one priest hit, show directly
+      // Single priest hit
       const priestData = hitResults[0].priestData;
       showPriestInfo(priestData);
       highlightSelectedPriest(priestData);
       focusOnPoint(priestData.Latitude, priestData.Longitude);
     } else if (hitResults.length > 1) {
-      // Multiple priests hit, show search results
+      // Multiple priests hit
       showProximitySearchResults(hitResults);
     }
   }
@@ -991,16 +1296,9 @@ function showProximitySearchResults(results) {
     // Update sun position based on current time
     function updateSunPosition(dt) {
       if (!dayNightMaterial || !dayNightMaterial.uniforms) return;
-      
-      // Simple approximation: sun moves 15 degrees per hour (360/24)
-      const hour = dt.getUTCHours();
-      const minutes = dt.getUTCMinutes();
-      const totalMinutes = hour * 60 + minutes;
-      const longitude = (totalMinutes / (24 * 60)) * 360 - 180;
-      
-      // Simple approximation for sun declination (latitude)
-      const dayOfYear = Math.floor((dt - new Date(dt.getUTCFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-      const declination = 23.45 * Math.sin((360 / 365) * (dayOfYear - 81) * Math.PI / 180);
+  
+      // Calculate solar position with improved accuracy
+      const [longitude, declination] = calculateSolarPosition(dt);
       
       dayNightMaterial.uniforms.sunPosition.value.set(longitude, declination);
     }
