@@ -256,7 +256,7 @@
   <script>
     // Configuration - Change these values to configure the application
     const CONFIG = {
-      currentZoomLevel: 200.0,
+      currentZoomLevel: 400.0,
       dataUrl: null, // Set to CSV URL or null to use the default data
       fieldOrder: [
         'Type', 'Born Year', 'Associates With', 'Beliefs', 'Location/Area',
@@ -272,7 +272,9 @@
       autoRotateSpeed: 0.1,
       theme: 'light', // 'light', 'dark', or null for system preference
       focusAnimationDuration: 2000, // ms to animate to a point
-      focusDistanceFactor: 0.4 // distance factor when focusing on a point (lower = closer)
+      focusDistanceFactor: 0.4, // distance factor when focusing on a point (lower = closer)
+      cloudOpacity: 0.8, // Add this line for cloud opacity
+      cloudBrightness: 1.2 // Add this line for cloud brightness
     };
 
     // Global variables
@@ -286,9 +288,7 @@
     let pulseMeshes = [];
     let searchResults = [];
     let selectedSearchIndex = -1;
-    
-    // Initialize the application
-    init();
+    let enhancedEarth = null;
     
     // Language mapping and geography functions
     const languageLatitudeMap = {
@@ -514,20 +514,24 @@
 
     // Add a blue marker for user location
     function addUserLocationMarker(lat, lng) {
-        if (!globe) return;
-        
-        // Create blue marker geometry
-        const markerGeometry = new THREE.SphereGeometry(CONFIG.markerSize, 16, 16);
-        const markerMaterial = new THREE.MeshBasicMaterial({ color: '#0066ff' });
-        const marker = new THREE.Mesh(markerGeometry, markerMaterial);
-        
-        // Set marker position
-        const position = globe.getCoords(lat, lng, CONFIG.labelAltitude);
-        marker.position.set(position.x, position.y, position.z);
-        marker.name = 'user-location';
-        
-        // Add to globe
-        globe.add(marker);
+      // Remove any existing user location marker
+      const existingMarker = scene.getObjectByName('user-location');
+      if (existingMarker) {
+        scene.remove(existingMarker);
+      }
+      
+      // Create blue marker geometry
+      const markerGeometry = new THREE.SphereGeometry(CONFIG.markerSize, 16, 16);
+      const markerMaterial = new THREE.MeshBasicMaterial({ color: '#0066ff' });
+      const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+      
+      // Set marker position
+      const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
+      marker.position.set(position.x, position.y, position.z);
+      marker.name = 'user-location';
+      
+      // Add to scene
+      scene.add(marker);
     }
 
     function centerOnTimezone() {
@@ -591,31 +595,31 @@
     }
 
     function getUserLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-            // Success callback
-            (position) => {
-                const userLat = position.coords.latitude;
-                const userLng = position.coords.longitude;
-                
-                // Add a blue marker for user location
-                addUserLocationMarker(userLat, userLng);
-                
-                // Center globe on user location
-                focusOnPoint(userLat, userLng);
-            },
-            // Error callback
-            (error) => {
-                console.log('Geolocation error:', error);
-                // Center on timezone if location isn't available
-                centerOnTimezone();
-            }
-            );
-        } else {
-            // Geolocation not supported
-            console.log('Geolocation not supported by this browser');
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          // Success callback
+          (position) => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            
+            // Add a blue marker for user location
+            addUserLocationMarker(userLat, userLng);
+            
+            // Center globe on user location
+            focusOnPoint(userLat, userLng);
+          },
+          // Error callback
+          (error) => {
+            console.log('Geolocation error:', error);
+            // Center on timezone if location isn't available
             centerOnTimezone();
-        }
+          }
+        );
+      } else {
+        // Geolocation not supported
+        console.log('Geolocation not supported by this browser');
+        centerOnTimezone();
+      }
     }
 
     // Adjust rotation speed based on zoom level - slower when zoomed in
@@ -630,73 +634,62 @@
       controls.rotateSpeed = minSpeed + zoomFactor * (maxSpeed - minSpeed);
     }
 
-    // 4. Enhanced atmosphere glow effect
-    function addAtmosphericGlow(scene, currentTheme) {
-      // Create sphere slightly larger than the globe
-      const glowGeometry = new THREE.SphereGeometry(1.02, 32, 32);
+    async function initEnhancedGlobe() {
+      // Create new Earth object
+      enhancedEarth = new EnhancedEarth(scene, camera);
       
-      // Create shader material for the glow effect
-      const glowMaterial = new THREE.ShaderMaterial({
-        uniforms: {
-          "c": { value: 0.1 },
-          "p": { value: 4.0 },
-          glowColor: { value: new THREE.Color(currentTheme === 'dark' ? 0x3a228a : 0x88ccff) }
-        },
-        vertexShader: `
-          varying vec3 vNormal;
-          void main() {
-            vNormal = normalize(normalMatrix * normal);
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `,
-        fragmentShader: `
-          uniform vec3 glowColor;
-          uniform float c;
-          uniform float p;
-          varying vec3 vNormal;
-          void main() {
-            float intensity = pow(c - dot(vNormal, vec3(0.0, 0.0, 1.0)), p);
-            gl_FragColor = vec4(glowColor, intensity);
-          }
-        `,
-        side: THREE.BackSide,
-        blending: THREE.AdditiveBlending,
-        transparent: true
-      });
+      // Set cloud options from CONFIG
+      enhancedEarth.options.cloudOpacity = CONFIG.cloudOpacity;
+      enhancedEarth.options.cloudBrightness = CONFIG.cloudBrightness;
       
-      // Create and add glow mesh
-      const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial);
-      glowMesh.scale.multiplyScalar(1.15);
-      glowMesh.name = 'atmosphere-glow';
+      await enhancedEarth.init();
       
-      scene.add(glowMesh);
+      // Set the globe reference to the earth mesh for compatibility
+      globe = enhancedEarth.getEarthMesh();
+      isGlobeReady = true;
+      
+      // Load priests data
+      loadPriestsData();
+      
+      // Initial solar position
+      const dt = new Date();
+      const [longitude, declination] = calculateSolarPosition(dt);
+      enhancedEarth.updateSunDirection(longitude, declination);
+      
+      // Center globe based on user location/timezone
+      centerOnTimezone();
+      
+      // Remove this line - no UI control for cloud opacity
+      // addCloudOpacityControl();
+      
+      // Update solar position periodically
+      setInterval(() => {
+        const dt = new Date();
+        const [longitude, declination] = calculateSolarPosition(dt);
+        enhancedEarth.updateSunDirection(longitude, declination);
+      }, 60000); // Update every minute
     }
 
     // Main initialization function
     function init() {
-        // Initialize Three.js scene
-        initScene();
-        
-        // Initialize globe
-        initGlobe();
-        
-        // Initialize raycaster for interactions
-        raycaster = new THREE.Raycaster();
-        mouse = new THREE.Vector2();
-        
-        // Set up event listeners
-        setupEventListeners();
-        
-        getUserLocation();
-
-        // Request user location after globe is ready
-        globe.onGlobeReady = () => {
-            isGlobeReady = true;
-            loadPriestsData();
-        };
-        
-        // Start animation loop
-        animate();
+      // Initialize Three.js scene
+      initScene();
+      
+      // Initialize raycaster for interactions
+      raycaster = new THREE.Raycaster();
+      mouse = new THREE.Vector2();
+      
+      // Initialize enhanced globe
+      initEnhancedGlobe();
+      
+      // Set up event listeners
+      setupEventListeners();
+      
+      // Request user location
+      getUserLocation();
+      
+      // Start animation loop
+      enhancedAnimate();
     }
     
     // Get current theme (light/dark)
@@ -772,181 +765,688 @@
       controls.maxPolarAngle = 175 * (Math.PI / 180); // 5 degrees from south pole
     }
     
-    // Initialize the globe
-    function initGlobe() {
-      // Create globe instance
-      globe = new ThreeGlobe({
-        waitForGlobeReady: true,
-        animateIn: true
-      })
-        .showAtmosphere(true)
-        .atmosphereColor(currentTheme === 'dark' ? "#3a228a" : "#ccc")
-        .atmosphereAltitude(0.25);
+    // Texture cache using IndexedDB
+    const TextureCache = {
+      dbName: 'earth-texture-cache',
+      dbVersion: 1,
+      db: null,
 
-      globe.rotateZ(0);
-      globe.rotateY(0);
+      init() {
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open(this.dbName, this.dbVersion);
+          
+          request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains('textures')) {
+              db.createObjectStore('textures', { keyPath: 'url' });
+            }
+          };
+          
+          request.onsuccess = (event) => {
+            this.db = event.target.result;
+            resolve();
+          };
+          
+          request.onerror = (event) => {
+            console.error('IndexedDB error:', event.target.error);
+            reject(event.target.error);
+          };
+        });
+      },
 
-      // Add globe to scene
-      scene.add(globe);
+      storeTexture(url, blob) {
+        return new Promise((resolve, reject) => {
+          if (!this.db) return reject(new Error('Database not initialized'));
+          
+          const transaction = this.db.transaction(['textures'], 'readwrite');
+          const store = transaction.objectStore('textures');
+          
+          const item = { url, blob, timestamp: Date.now() };
+          const request = store.put(item);
+          
+          request.onsuccess = () => resolve();
+          request.onerror = (event) => reject(event.target.error);
+        });
+      },
+
+      getTexture(url) {
+        return new Promise((resolve, reject) => {
+          if (!this.db) return reject(new Error('Database not initialized'));
+          
+          const transaction = this.db.transaction(['textures'], 'readonly');
+          const store = transaction.objectStore('textures');
+          
+          const request = store.get(url);
+          
+          request.onsuccess = (event) => {
+            resolve(event.target.result ? event.target.result.blob : null);
+          };
+          
+          request.onerror = (event) => reject(event.target.error);
+        });
+      }
+    };
+
+    // Progressive texture loader
+    const TextureManager = {
+      baseUrl: 'https://dubia.cc/',
+      resolutions: {
+        low: '2k_',
+        high: '8k_'
+      },
+      textureTypes: [
+        'earth_daymap',
+        'earth_nightmap',
+        'earth_normal_map',
+        'earth_specular_map',
+        'earth_clouds'
+      ],
+      loadedTextures: {
+        low: {},
+        high: {}
+      },
       
-      addAtmosphericGlow(scene, currentTheme);
-
-      centerOnTimezone();
-      initDayNightCycle();
+      async init() {
+        await TextureCache.init();
+        return this;
+      },
+      
+      getTextureUrl(type, resolution) {
+        const prefix = this.resolutions[resolution];
+        return `${this.baseUrl}${prefix}${type}.avif`;
+      },
+      
+      async loadTexture(type, resolution, retryCount = 0, maxRetries = 3) {
+  const url = this.getTextureUrl(type, resolution);
+  
+  // Return cached texture if already loaded
+  if (this.loadedTextures[resolution][type]) {
+    return this.loadedTextures[resolution][type];
+  }
+  
+  // Try to get from cache
+  try {
+    const cachedBlob = await TextureCache.getTexture(url);
+    if (cachedBlob) {
+      const texture = await this._createTextureFromBlob(cachedBlob);
+      this.loadedTextures[resolution][type] = texture;
+      return texture;
+    }
+  } catch (err) {
+    console.warn('Error loading texture from cache:', err);
+  }
+  
+  // Fetch from network with retry logic
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Failed to load texture: ${url}`);
+    
+    const blob = await response.blob();
+    
+    // Store in cache
+    try {
+      await TextureCache.storeTexture(url, blob);
+    } catch (err) {
+      console.warn('Error storing texture in cache:', err);
     }
     
-    // Initialize day/night cycle with custom shader
-    function initDayNightCycle() {
-      // Custom shader for day/night cycle
-      const dayNightShader = {
-        vertexShader: `
-          varying vec3 vNormal;
-          varying vec2 vUv;
-          void main() {
-            vNormal = normalize(normalMatrix * normal);
-            vUv = uv;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `,
-        fragmentShader: `
-          #define PI 3.141592653589793
-          uniform sampler2D dayTexture;
-          uniform sampler2D nightTexture;
-          uniform vec2 sunPosition;
-          uniform vec2 globeRotation;
-          varying vec3 vNormal;
-          varying vec2 vUv;
+    // Create texture
+    const texture = await this._createTextureFromBlob(blob);
+    this.loadedTextures[resolution][type] = texture;
+    return texture;
+  } catch (err) {
+    // Retry logic
+    if (retryCount < maxRetries) {
+      console.warn(`Retry ${retryCount + 1}/${maxRetries} for texture: ${url}`);
+      // Exponential backoff - wait longer between each retry
+      await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, retryCount)));
+      return this.loadTexture(type, resolution, retryCount + 1, maxRetries);
+    }
+    
+    console.error('Error loading texture after retries:', err);
+    // Return a default fallback texture
+    return this._createFallbackTexture(type);
+  }
+},
 
-          float toRad(in float a) {
-            return a * PI / 180.0;
-          }
-
-          vec3 Polar2Cartesian(in vec2 c) { // [lng, lat]
-            float theta = toRad(90.0 - c.x);
-            float phi = toRad(90.0 - c.y);
-            return vec3( // x,y,z
-              sin(phi) * cos(theta),
-              cos(phi),
-              sin(phi) * sin(theta)
-            );
-          }
-
-          void main() {
-            float invLon = toRad(globeRotation.x);
-            float invLat = -toRad(globeRotation.y);
-            mat3 rotX = mat3(
-              1, 0, 0,
-              0, cos(invLat), -sin(invLat),
-              0, sin(invLat), cos(invLat)
-            );
-            mat3 rotY = mat3(
-              cos(invLon), 0, sin(invLon),
-              0, 1, 0,
-              -sin(invLon), 0, cos(invLon)
-            );
-            vec3 rotatedSunDirection = rotX * rotY * Polar2Cartesian(sunPosition);
-            float intensity = dot(normalize(vNormal), normalize(rotatedSunDirection));
-            vec4 dayColor = texture2D(dayTexture, vUv);
-            vec4 nightColor = texture2D(nightTexture, vUv);
-            float blendFactor = smoothstep(-0.1, 0.1, intensity);
-            gl_FragColor = mix(nightColor, dayColor, blendFactor);
-          }
-        `
-      };
-
-      // Sun position calculation based on current time
-      const sunPosAt = (dt) => {
-        // Simple approximation: sun moves 15 degrees per hour (360/24)
-        const hour = dt.getUTCHours();
-        const minutes = dt.getUTCMinutes();
-        const totalMinutes = hour * 60 + minutes;
-        const longitude = (totalMinutes / (24 * 60)) * 360 - 180;
+      // 2. Add a new method to TextureManager to create fallback textures
+      _createFallbackTexture(type) {
+        console.log(`Creating fallback texture for: ${type}`);
         
-        // Simple approximation for sun declination (latitude)
-        const dayOfYear = Math.floor((dt - new Date(dt.getUTCFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-        const declination = 23.45 * Math.sin((360 / 365) * (dayOfYear - 81) * Math.PI / 180);
+        // Create a canvas with a solid color
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 256;
+        const ctx = canvas.getContext('2d');
         
-        return [longitude, declination];
-      };
-
-      // Load day and night textures
-      Promise.all([
-        new THREE.TextureLoader().loadAsync('https://unpkg.com/three-globe/example/img/earth-day.jpg'),
-        new THREE.TextureLoader().loadAsync('https://unpkg.com/three-globe/example/img/earth-night.jpg')
-      ]).then(([dayTexture, nightTexture]) => {
-        // Adjust texture based on theme
-        if (currentTheme === 'dark') {
-          // For dark mode, make day texture darker but preserve details
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          canvas.width = dayTexture.image.width;
-          canvas.height = dayTexture.image.height;
-          
-          ctx.drawImage(dayTexture.image, 0, 0);
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-          ctx.globalCompositeOperation = 'multiply';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          
-          const newTexture = new THREE.Texture(canvas);
-          newTexture.needsUpdate = true;
-          dayTexture = newTexture;
-        } else if (currentTheme === 'light') {
-          // For light mode, make day texture a bit lighter
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          canvas.width = dayTexture.image.width;
-          canvas.height = dayTexture.image.height;
-          
-          ctx.drawImage(dayTexture.image, 0, 0);
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-          ctx.globalCompositeOperation = 'lighten';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          
-          const newTexture = new THREE.Texture(canvas);
-          newTexture.needsUpdate = true;
-          dayTexture = newTexture;
-
-          // and the night texture a bit lighter
-          const canvas2 = document.createElement('canvas');
-          const ctx2 = canvas2.getContext('2d');
-          canvas2.width = nightTexture.image.width;
-          canvas2.height = nightTexture.image.height;
-          
-          ctx2.drawImage(nightTexture.image, 0, 0);
-          ctx2.fillStyle = 'rgba(255, 255, 255, 0.5)';
-          ctx2.globalCompositeOperation = 'multiply';
-          ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
-          
-          const newTexture2 = new THREE.Texture(canvas2);
-          newTexture2.needsUpdate = true;
-          nightTexture = newTexture2;
+        // Different colors for different texture types
+        let color;
+        switch (type) {
+          case 'earth_daymap':
+            color = '#1a4d7e'; // Dark blue for day
+            break;
+          case 'earth_nightmap':
+            color = '#000020'; // Near black for night
+            break;
+          case 'earth_normal_map':
+            color = '#8080ff'; // Normal map blue
+            break;
+          case 'earth_specular_map':
+            color = '#000000'; // Black for no specular
+            break;
+          case 'earth_clouds':
+            color = '#ffffff'; // White with transparancy
+            ctx.globalAlpha = 0.2;
+            break;
+          default:
+            color = '#000000'; // Default black
         }
         
-        // Create the shader material
-        dayNightMaterial = new THREE.ShaderMaterial({
-          uniforms: {
-            dayTexture: { value: dayTexture },
-            nightTexture: { value: nightTexture },
-            sunPosition: { value: new THREE.Vector2() },
-            globeRotation: { value: new THREE.Vector2() }
-          },
-          vertexShader: dayNightShader.vertexShader,
-          fragmentShader: dayNightShader.fragmentShader
+        // Fill with base color
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Create texture from canvas
+        const texture = new THREE.Texture(canvas);
+        texture.needsUpdate = true;
+        return texture;
+      },
+
+      _createTextureFromBlob(blob) {
+        return new Promise((resolve, reject) => {
+          const url = URL.createObjectURL(blob);
+          const loader = new THREE.TextureLoader();
+          
+          loader.load(
+            url,
+            (texture) => {
+              URL.revokeObjectURL(url);
+              texture.minFilter = THREE.LinearMipmapLinearFilter;
+              texture.magFilter = THREE.LinearFilter;
+              texture.encoding = THREE.sRGBEncoding;
+              resolve(texture);
+            },
+            undefined,
+            (err) => {
+              URL.revokeObjectURL(url);
+              reject(err);
+            }
+          );
+        });
+      },
+      
+      async loadAllTextures(resolution) {
+        const promises = this.textureTypes.map(type => 
+          this.loadTexture(type, resolution)
+        );
+        
+        try {
+          const textures = await Promise.all(promises);
+          const result = {};
+          
+          this.textureTypes.forEach((type, index) => {
+            result[type] = textures[index];
+          });
+          
+          return result;
+        } catch (err) {
+          console.error('Error loading all textures:', err);
+          throw err;
+        }
+      }
+    };
+
+    // Earth PBR shader
+    const EarthPBRShader = {
+      vertexShader: `
+        varying vec3 vNormal;
+        varying vec2 vUv;
+        varying vec3 vViewPosition;
+        varying vec3 vWorldPosition;
+        
+        void main() {
+          vUv = uv;
+          vNormal = normalize(normalMatrix * normal);
+          
+          vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+          vWorldPosition = worldPosition.xyz;
+          
+          vec4 mvPosition = viewMatrix * worldPosition;
+          vViewPosition = -mvPosition.xyz;
+          
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      
+      fragmentShader: `
+        uniform sampler2D dayMap;
+        uniform sampler2D nightMap;
+        uniform sampler2D normalMap;
+        uniform sampler2D specularMap;
+        uniform vec3 sunDirection;
+        // Remove this line - it's causing the error
+        // uniform vec3 cameraPosition; 
+        
+        // Earth properties
+        uniform float normalScale;
+        uniform float specularIntensity;
+        uniform float roughness;
+        uniform float fresnelPower;
+        uniform float atmosphereIntensity;
+        
+        varying vec3 vNormal;
+        varying vec2 vUv;
+        varying vec3 vViewPosition;
+        varying vec3 vWorldPosition;
+        
+        // Physically-based rendering functions
+        vec3 perturbNormal(vec3 normal, vec3 viewPosition, vec2 uv) {
+          // Tangent space normal map calculation
+          vec3 q0 = dFdx(viewPosition);
+          vec3 q1 = dFdy(viewPosition);
+          vec2 st0 = dFdx(uv);
+          vec2 st1 = dFdy(uv);
+          
+          vec3 S = normalize(q0 * st1.t - q1 * st0.t);
+          vec3 T = normalize(-q0 * st1.s + q1 * st0.s);
+          vec3 N = normal;
+          
+          vec3 mapN = texture2D(normalMap, uv).xyz * 2.0 - 1.0;
+          mapN.xy *= normalScale;
+          
+          mat3 tsn = mat3(S, T, N);
+          return normalize(tsn * mapN);
+        }
+        
+        // Schlick's approximation for Fresnel
+        float fresnel(float cosTheta, float F0, float power) {
+          return F0 + (1.0 - F0) * pow(1.0 - cosTheta, power);
+        }
+        
+        void main() {
+          // Normalize vectors
+          vec3 viewDir = normalize(vViewPosition);
+          vec3 normal = normalize(vNormal);
+          
+          // Apply normal mapping
+          if (normalScale > 0.0) {
+            normal = perturbNormal(normal, vViewPosition, vUv);
+          }
+          
+          // Calculate the light intensity based on sun angle with soft transition
+          float NdotL = dot(normal, sunDirection);
+          float lightIntensity = smoothstep(-0.15, 0.15, NdotL);
+          
+          // Sample the day and night textures
+          vec3 dayColor = texture2D(dayMap, vUv).rgb;
+          vec3 nightColor = texture2D(nightMap, vUv).rgb * 0.5; // Dim the night lights
+          
+          // Sample the specular map
+          float specular = texture2D(specularMap, vUv).r;
+          
+          // Base color with day/night transition
+          vec3 color = mix(nightColor, dayColor, lightIntensity);
+          
+          // Add specular highlights when lit by the sun
+          if (NdotL > 0.0) {
+            // Blinn-Phong specular
+            vec3 halfVector = normalize(sunDirection + viewDir);
+            float NdotH = max(0.0, dot(normal, halfVector));
+            float specularFactor = pow(NdotH, (1.0 - roughness) * 100.0) * specular * specularIntensity;
+            
+            color += specularFactor * vec3(1.0);
+          }
+          
+          // Calculate fresnel effect (rim lighting)
+          float NdotV = max(0.001, dot(normal, viewDir));
+          float fresnelFactor = fresnel(NdotV, 0.1, fresnelPower);
+          
+          // Add atmosphere rim
+          vec3 atmosphereColor = vec3(0.3, 0.6, 1.0) * atmosphereIntensity;
+          color = mix(color, atmosphereColor, fresnelFactor * 0.5);
+          
+          // Output final color
+          gl_FragColor = vec4(color, 1.0);
+        }
+      `,
+      
+      uniforms: {
+        dayMap: { value: null },
+        nightMap: { value: null },
+        normalMap: { value: null },
+        specularMap: { value: null },
+        sunDirection: { value: new THREE.Vector3(1, 0, 0) },
+        // Don't reference cameraPosition here as it's automatically included
+        normalScale: { value: 1.0 },
+        specularIntensity: { value: 0.5 },
+        roughness: { value: 0.5 },
+        fresnelPower: { value: 4.0 },
+        atmosphereIntensity: { value: 1.0 }
+      }
+    };
+
+    // Cloud shader
+    const CloudShader = {
+      vertexShader: `
+        varying vec2 vUv;
+        varying vec3 vNormal;
+        
+        void main() {
+          vUv = uv;
+          vNormal = normalize(normalMatrix * normal);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      
+      fragmentShader: `
+        uniform sampler2D cloudMap;
+        uniform vec3 sunDirection;
+        uniform float cloudOpacity;
+        uniform float cloudBrightness;
+        
+        varying vec2 vUv;
+        varying vec3 vNormal;
+        
+        void main() {
+          vec4 cloudTexel = texture2D(cloudMap, vUv);
+          
+          // Make clouds self-shadow based on sun direction
+          float NdotL = dot(vNormal, sunDirection);
+          float lightIntensity = smoothstep(-0.2, 0.4, NdotL);
+          
+          // Brighten clouds in sunlight
+          vec3 cloudColor = cloudTexel.rgb * cloudBrightness * lightIntensity;
+          
+          // Output with adjusted opacity
+          gl_FragColor = vec4(cloudColor, cloudTexel.a * cloudOpacity);
+        }
+      `,
+      
+      uniforms: {
+        cloudMap: { value: null },
+        sunDirection: { value: new THREE.Vector3(1, 0, 0) },
+        cloudOpacity: { value: 0.8 },
+        cloudBrightness: { value: 1.2 }
+      }
+    };
+
+    // Atmospheric glow shader
+    const AtmosphereShader = {
+      vertexShader: `
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        
+        void main() {
+          vNormal = normalize(normalMatrix * normal);
+          vPosition = position;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      
+      fragmentShader: `
+        uniform vec3 glowColor;
+        uniform float power;
+        uniform float atmosphereIntensity;
+        uniform vec3 sunDirection;
+        
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        
+        void main() {
+          // Fresnel-like glow effect
+          float intensity = pow(0.75 - dot(vNormal, vec3(0, 0, 1.0)), power);
+          
+          // Modify intensity based on sun direction for a more realistic effect
+          float sunFactor = max(0.5, dot(vNormal, sunDirection));
+          intensity *= sunFactor;
+          
+          // Apply atmosphere intensity
+          vec3 glow = glowColor * intensity * atmosphereIntensity;
+          
+          gl_FragColor = vec4(glow, intensity);
+        }
+      `,
+      
+      uniforms: {
+        glowColor: { value: new THREE.Color(0x3a88ff) },
+        power: { value: 2.0 },
+        atmosphereIntensity: { value: 1.0 },
+        sunDirection: { value: new THREE.Vector3(1, 0, 0) }
+      }
+    };
+
+    // Earth object with PBR rendering
+    class EnhancedEarth {
+      constructor(scene, camera) {
+        this.scene = scene;
+        this.camera = camera;
+        this.textureManager = null;
+        this.earthMesh = null;
+        this.cloudMesh = null;
+        this.atmosphereMesh = null;
+        this.currentResolution = 'low';
+        this.earthRadius = 1.0;
+        this.cloudRadius = 1.02;
+        this.atmosphereRadius = 1.1;
+        this.zoomThreshold = 250;
+        
+        // Shader materials
+        this.earthMaterial = null;
+        this.cloudMaterial = null;
+        this.atmosphereMaterial = null;
+        
+        // Options
+        this.options = {
+          normalScale: 1.0,
+          specularIntensity: 0.5,
+          roughness: 0.7,
+          fresnelPower: 4.0,
+          atmosphereIntensity: 1.0,
+          cloudOpacity: 0.8,
+          cloudBrightness: 1.2,
+          cloudRotationSpeed: 0.0005
+        };
+      }
+      
+      async init() {
+        // Initialize texture manager
+        this.textureManager = await TextureManager.init();
+        
+        // Create geometries
+        const earthGeometry = new THREE.SphereGeometry(this.earthRadius, 64, 64);
+        const cloudGeometry = new THREE.SphereGeometry(this.cloudRadius, 64, 64);
+        const atmosphereGeometry = new THREE.SphereGeometry(this.atmosphereRadius, 64, 64);
+        
+        // Create materials
+        this.earthMaterial = new THREE.ShaderMaterial({
+          vertexShader: EarthPBRShader.vertexShader,
+          fragmentShader: EarthPBRShader.fragmentShader,
+          uniforms: THREE.UniformsUtils.clone(EarthPBRShader.uniforms)
         });
         
-        // Update sun position based on current time
-        const dt = new Date();
-        dayNightMaterial.uniforms.sunPosition.value.set(...sunPosAt(dt));
+        this.cloudMaterial = new THREE.ShaderMaterial({
+          vertexShader: CloudShader.vertexShader,
+          fragmentShader: CloudShader.fragmentShader,
+          uniforms: THREE.UniformsUtils.clone(CloudShader.uniforms),
+          transparent: true,
+          blending: THREE.CustomBlending,
+          blendSrc: THREE.SrcAlphaFactor,
+          blendDst: THREE.OneMinusSrcAlphaFactor
+        });
         
-        // Apply the material to the globe
-        globe.globeMaterial(dayNightMaterial);
+        this.atmosphereMaterial = new THREE.ShaderMaterial({
+          vertexShader: AtmosphereShader.vertexShader,
+          fragmentShader: AtmosphereShader.fragmentShader,
+          uniforms: THREE.UniformsUtils.clone(AtmosphereShader.uniforms),
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          side: THREE.BackSide
+        });
         
-        // Globe is ready to load data
-        isGlobeReady = true;
-        loadPriestsData();
-      });
+        // Create meshes
+        this.earthMesh = new THREE.Mesh(earthGeometry, this.earthMaterial);
+        this.earthMesh.name = 'earth-mesh';
+        
+        this.cloudMesh = new THREE.Mesh(cloudGeometry, this.cloudMaterial);
+        this.cloudMesh.name = 'cloud-mesh';
+        
+        this.atmosphereMesh = new THREE.Mesh(atmosphereGeometry, this.atmosphereMaterial);
+        this.atmosphereMesh.name = 'atmosphere-mesh';
+        
+        // Add to scene
+        this.scene.add(this.earthMesh);
+        this.scene.add(this.cloudMesh);
+        this.scene.add(this.atmosphereMesh);
+        
+        // Load initial low-resolution textures
+        await this.loadTextures('low');
+        
+        // Set up zoom listener
+        this.setupZoomListener();
+        
+        return this;
+      }
+      
+      async loadTextures(resolution) {
+        try {
+          const textures = await this.textureManager.loadAllTextures(resolution);
+          
+          // Update Earth shader uniforms
+          this.earthMaterial.uniforms.dayMap.value = textures.earth_daymap;
+          this.earthMaterial.uniforms.nightMap.value = textures.earth_nightmap;
+          this.earthMaterial.uniforms.normalMap.value = textures.earth_normal_map;
+          this.earthMaterial.uniforms.specularMap.value = textures.earth_specular_map;
+          
+          // Update Cloud shader uniform
+          this.cloudMaterial.uniforms.cloudMap.value = textures.earth_clouds;
+          
+          this.currentResolution = resolution;
+          console.log(`Loaded ${resolution} resolution textures`);
+          
+          // Update shader properties
+          this.updateShaderProperties();
+          
+          return true;
+        } catch (err) {
+          console.error('Critical error loading textures:', err);
+          
+          // Create a simple fallback Earth if we reached this point
+          this.createFallbackEarth();
+          
+          return false;
+        }
+      }
+
+      createFallbackEarth() {
+        console.warn('Creating fallback Earth due to texture loading failures');
+        
+        // Create a simple material for Earth
+        const fallbackEarthMaterial = new THREE.MeshPhongMaterial({
+          color: 0x2233aa,  // Blue color
+          emissive: 0x112244,
+          specular: 0x333333,
+          shininess: 25
+        });
+        
+        // Apply the fallback material
+        this.earthMesh.material = fallbackEarthMaterial;
+        
+        // Create a simple material for clouds
+        const fallbackCloudMaterial = new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.1
+        });
+        
+        // Apply the fallback cloud material
+        this.cloudMesh.material = fallbackCloudMaterial;
+        
+        // Create a simple material for atmosphere
+        const fallbackAtmosphereMaterial = new THREE.MeshBasicMaterial({
+          color: 0x3366ff,
+          transparent: true,
+          opacity: 0.2,
+          side: THREE.BackSide
+        });
+        
+        // Apply the fallback atmosphere material
+        this.atmosphereMesh.material = fallbackAtmosphereMaterial;
+        
+        // Set flag to prevent further texture loading attempts
+        this.textureLoadingFailed = true;
+      }
+
+      updateShaderProperties() {
+        // Update Earth material uniforms
+        this.earthMaterial.uniforms.normalScale.value = this.options.normalScale;
+        this.earthMaterial.uniforms.specularIntensity.value = this.options.specularIntensity;
+        this.earthMaterial.uniforms.roughness.value = this.options.roughness;
+        this.earthMaterial.uniforms.fresnelPower.value = this.options.fresnelPower;
+        this.earthMaterial.uniforms.atmosphereIntensity.value = this.options.atmosphereIntensity;
+        
+        // Update Cloud material uniforms
+        this.cloudMaterial.uniforms.cloudOpacity.value = this.options.cloudOpacity;
+        this.cloudMaterial.uniforms.cloudBrightness.value = this.options.cloudBrightness;
+        
+        // Update Atmosphere material uniforms
+        this.atmosphereMaterial.uniforms.atmosphereIntensity.value = this.options.atmosphereIntensity;
+      }
+      
+      updateSunDirection(longitude, declination) {
+        // Convert longitude and declination to Cartesian coordinates
+        const phi = (90 - declination) * Math.PI / 180;
+        const theta = longitude * Math.PI / 180;
+        
+        const sunX = Math.sin(phi) * Math.cos(theta);
+        const sunY = Math.cos(phi);
+        const sunZ = Math.sin(phi) * Math.sin(theta);
+        
+        const sunDirection = new THREE.Vector3(sunX, sunY, sunZ);
+        
+        // Update shader uniforms
+        this.earthMaterial.uniforms.sunDirection.value = sunDirection;
+        this.cloudMaterial.uniforms.sunDirection.value = sunDirection;
+        this.atmosphereMaterial.uniforms.sunDirection.value = sunDirection;
+      }
+      
+      setupZoomListener() {
+        // Check zoom level periodically
+        setInterval(() => {
+          // Skip if texture loading previously failed
+          if (this.textureLoadingFailed) return;
+          
+          const distance = this.camera.position.distanceTo(new THREE.Vector3(0, 0, 0));
+          
+          // Switch to high-res textures when zoomed in
+          if (distance < this.zoomThreshold && this.currentResolution === 'low') {
+            this.loadTextures('high');
+          }
+          // Switch back to low-res textures when zoomed out
+          else if (distance >= this.zoomThreshold && this.currentResolution === 'high') {
+            this.loadTextures('low');
+          }
+        }, 1000);
+      }
+      
+      update() {
+        if (this.cloudMesh) {
+          this.cloudMesh.rotation.y += this.options.cloudRotationSpeed;
+        }
+      }
+      
+      setCloudOpacity(opacity) {
+        this.options.cloudOpacity = opacity;
+        if (this.cloudMaterial && this.cloudMaterial.uniforms.cloudOpacity) {
+          this.cloudMaterial.uniforms.cloudOpacity.value = opacity;
+        }
+      }
+      
+      getEarthMesh() {
+        return this.earthMesh;
+      }
     }
-    
+
+
     function getKeyboardFocusableElements(element = document) {
         return Array.from(element.querySelectorAll(
             'a, button, input, textarea, select, details,[tabindex]:not([tabindex="-1"])'
@@ -1083,11 +1583,6 @@
     
     // Handle camera change for day/night shader
     function onCameraChange() {
-      if (dayNightMaterial && dayNightMaterial.uniforms.globeRotation) {
-        const { lng, lat } = globe.toGeoCoords(camera.position);
-        dayNightMaterial.uniforms.globeRotation.value.set(lng, lat);
-      }
-
       // Adjust rotation speed based on zoom level
       adjustRotationSpeed();
     }
@@ -1111,32 +1606,32 @@
     
 
     function resetAllMarkers() {
-        globe.children
-            .filter(obj => obj.name === 'priest-marker')
-            .forEach(marker => marker.material.color.set(CONFIG.markerColor));
-        
-        globe.children
-            .filter(obj => obj.name === 'priest-pulse')
-            .forEach(pulse => {
-            pulse.children
-                .filter(child => child.isMesh)
-                .forEach(mesh => mesh.material.color.set(CONFIG.markerPulseColor));
-            });
-        }
+      scene.children
+        .filter(obj => obj.name === 'priest-marker')
+        .forEach(marker => marker.material.color.set(CONFIG.markerColor));
+      
+      scene.children
+        .filter(obj => obj.name === 'priest-pulse')
+        .forEach(pulse => {
+          pulse.children
+            .filter(child => child.isMesh)
+            .forEach(mesh => mesh.material.color.set(CONFIG.markerPulseColor));
+        });
+    }
 
     function highlightSelectedPriest(priest) {
-    resetAllMarkers();
-    
-    globe.children
+      resetAllMarkers();
+      
+      scene.children
         .filter(obj => obj.name === 'priest-marker')
         .filter(marker => marker.priestData?.Name === priest.Name)
         .forEach(marker => marker.material.color.set('yellow'));
-    
-    globe.children
+      
+      scene.children
         .filter(obj => obj.name === 'priest-pulse')
         .filter(pulse => pulse.priestData?.Name === priest.Name)
         .forEach(pulse => {
-        pulse.children
+          pulse.children
             .filter(child => child.isMesh)
             .forEach(mesh => mesh.material.color.set('rgba(255, 255, 0, 0.4)'));
         });
@@ -1169,138 +1664,128 @@
           
     // Mouse click event handler
     function onDocumentMouseClick(event) {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  
-  raycaster.setFromCamera(mouse, camera);
-  
-  // First check if we hit the globe itself
-  const globeIntersects = raycaster.intersectObject(globe);
-  
-  // If hit on globe, determine if it's front or back side
-  if (globeIntersects.length > 0) {
-    const hitPoint = globeIntersects[0].point;
-    
-    // Skip if we hit the back side
-    if (!isPointOnFrontSide(hitPoint, camera)) {
-      return;
-    }
-  }
-  
-  const objects = globe.children.filter(obj => 
-    obj.name === 'priest-marker' || obj.name === 'priest-pulse' || obj.name === 'priest-marker-invisible'
-  );
-  
-  const intersects = raycaster.intersectObjects(objects, true);
-  
-  if (intersects.length > 0) {
-    // Filter out back-side hits
-    const frontSideHits = intersects.filter(hit => 
-      isPointOnFrontSide(hit.point, camera)
-    );
-    
-    if (frontSideHits.length === 0) return;
-    
-    // Process hits as before, but only for front-side objects
-    const hitPriests = new Map();
-    
-    for (const hit of frontSideHits) {
-      const obj = hit.object;
-      const priestData = obj.name === 'priest-marker' || obj.name === 'priest-marker-invisible'
-        ? obj.priestData 
-        : obj.parent.priestData;
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
       
-      if (priestData && !hitPriests.has(priestData.Name)) {
-        hitPriests.set(priestData.Name, {
-          priestData: priestData,
-          distance: hit.distance
-        });
+      raycaster.setFromCamera(mouse, camera);
+      
+      // First check if we hit the globe itself
+      const globeIntersects = raycaster.intersectObject(globe);
+      
+      // If hit on globe, determine if it's front or back side
+      if (globeIntersects.length > 0) {
+        const hitPoint = globeIntersects[0].point;
+        
+        // Skip if we hit the back side
+        if (!isPointOnFrontSide(hitPoint, camera)) {
+          return;
+        }
+      }
+      
+      // Check for priest marker hits
+      const objects = scene.children.filter(obj => 
+        obj.name === 'priest-marker' || obj.name === 'priest-pulse' || obj.name === 'priest-marker-invisible'
+      );
+      
+      const intersects = raycaster.intersectObjects(objects, true);
+      
+      if (intersects.length > 0) {
+        // Filter out back-side hits
+        const frontSideHits = intersects.filter(hit => 
+          isPointOnFrontSide(hit.point, camera)
+        );
+        
+        if (frontSideHits.length === 0) return;
+        
+        // Process hits as before, but only for front-side objects
+        const hitPriests = new Map();
+        
+        for (const hit of frontSideHits) {
+          const obj = hit.object;
+          const priestData = obj.name === 'priest-marker' || obj.name === 'priest-marker-invisible'
+            ? obj.priestData 
+            : obj.parent.priestData;
+          
+          if (priestData && !hitPriests.has(priestData.Name)) {
+            hitPriests.set(priestData.Name, {
+              priestData: priestData,
+              distance: hit.distance
+            });
+          }
+        }
+        
+        // Convert to array and sort by distance
+        const hitResults = Array.from(hitPriests.values())
+          .sort((a, b) => a.distance - b.distance);
+        
+        if (hitResults.length === 1) {
+          // Single priest hit
+          const priestData = hitResults[0].priestData;
+          showPriestInfo(priestData);
+          highlightSelectedPriest(priestData);
+          focusOnPoint(priestData.Latitude, priestData.Longitude);
+        } else if (hitResults.length > 1) {
+          // Multiple priests hit
+          showProximitySearchResults(hitResults);
+        }
       }
     }
-    
-    // Convert to array and sort by distance
-    const hitResults = Array.from(hitPriests.values())
-      .sort((a, b) => a.distance - b.distance);
-    
-    if (hitResults.length === 1) {
-      // Single priest hit
-      const priestData = hitResults[0].priestData;
-      showPriestInfo(priestData);
-      highlightSelectedPriest(priestData);
-      focusOnPoint(priestData.Latitude, priestData.Longitude);
-    } else if (hitResults.length > 1) {
-      // Multiple priests hit
-      showProximitySearchResults(hitResults);
-    }
-  }
-}
 
-// Function to display search results when multiple priests are selected
-function showProximitySearchResults(results) {
-  const searchResultsContainer = document.getElementById('searchResults');
-  
-  // Clear previous results
-  searchResultsContainer.innerHTML = '';
-  searchResults = [];
-  selectedSearchIndex = -1;
-  
-  // Add results to global searchResults array
-  searchResults = results.map(result => result.priestData);
-  
-  // Create result items
-  results.forEach((result, i) => {
-    const priest = result.priestData;
-    const resultItem = document.createElement('div');
-    resultItem.className = 'search-result-item';
-    resultItem.tabIndex = i + 200;
-    resultItem.textContent = `${priest.Name} (${priest['Location/Area'] || 'Unknown'})`;
-    
-    resultItem.addEventListener('click', () => {
-      showPriestInfo(priest);
-      focusOnPoint(priest.Latitude, priest.Longitude);
-      highlightSelectedPriest(priest);
-      searchResultsContainer.style.display = 'none';
-    });
-    
-    resultItem.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        resultItem.click();
-      }
-    });
-    
-    searchResultsContainer.appendChild(resultItem);
-  });
-  
-  // Display results
-  searchResultsContainer.style.display = 'block';
-}
+    // Function to display search results when multiple priests are selected
+    function showProximitySearchResults(results) {
+      const searchResultsContainer = document.getElementById('searchResults');
+      
+      // Clear previous results
+      searchResultsContainer.innerHTML = '';
+      searchResults = [];
+      selectedSearchIndex = -1;
+      
+      // Add results to global searchResults array
+      searchResults = results.map(result => result.priestData);
+      
+      // Create result items
+      results.forEach((result, i) => {
+        const priest = result.priestData;
+        const resultItem = document.createElement('div');
+        resultItem.className = 'search-result-item';
+        resultItem.tabIndex = i + 200;
+        resultItem.textContent = `${priest.Name} (${priest['Location/Area'] || 'Unknown'})`;
+        
+        resultItem.addEventListener('click', () => {
+          showPriestInfo(priest);
+          focusOnPoint(priest.Latitude, priest.Longitude);
+          highlightSelectedPriest(priest);
+          searchResultsContainer.style.display = 'none';
+        });
+        
+        resultItem.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            resultItem.click();
+          }
+        });
+        
+        searchResultsContainer.appendChild(resultItem);
+      });
+      
+      // Display results
+      searchResultsContainer.style.display = 'block';
+    }
 
     // Animation loop
-    function animate() {
-      requestAnimationFrame(animate);
+    function enhancedAnimate() {
+      requestAnimationFrame(enhancedAnimate);
       
-      // Update the sun position once per minute
-      if (dayNightMaterial && Math.random() < 0.001) { // ~every 16 seconds at 60fps
-        const dt = new Date();
-        updateSunPosition(dt);
+      // Update Earth's cloud rotation if available
+      if (enhancedEarth) {
+        enhancedEarth.update();
       }
       
-      // Animate pulse rings
+      // Animate pulse rings for markers
       animatePulseRings();
       
       controls.update();
       renderer.render(scene, camera);
-    }
-    
-    // Update sun position based on current time
-    function updateSunPosition(dt) {
-      if (!dayNightMaterial || !dayNightMaterial.uniforms) return;
-  
-      // Calculate solar position with improved accuracy
-      const [longitude, declination] = calculateSolarPosition(dt);
-      
-      dayNightMaterial.uniforms.sunPosition.value.set(longitude, declination);
     }
     
     // Animate pulse rings
@@ -1419,93 +1904,107 @@ Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,Ge
       });
     }
     
+    function getPointOnGlobe(lat, lng, altitude = 0) {
+      const phi = (90 - lat) * Math.PI / 180;
+      const theta = (lng + 180) * Math.PI / 180;
+      
+      const radius = 1.0 + altitude; // Earth radius + altitude
+      
+      const x = -radius * Math.sin(phi) * Math.cos(theta);
+      const y = radius * Math.cos(phi);
+      const z = radius * Math.sin(phi) * Math.sin(theta);
+      
+      return new THREE.Vector3(x, y, z);
+    }
+
     // Populate the globe with markers and pulse rings
     function populateGlobeWithMarkers(data) {
-
-        if (!globe) return;
+      if (!globe) return;
+      
+      // Clear any existing markers
+      const existingMarkers = scene.children.filter(obj => 
+        obj.name === 'priest-marker' || obj.name === 'priest-pulse' || obj.name === 'priest-marker-invisible'
+      );
+      existingMarkers.forEach(marker => scene.remove(marker));
+      
+      // Clear pulse meshes array
+      pulseMeshes = [];
+      
+      // Create markers for each priest
+      data.forEach(priest => {
+        // Get coordinates
+        const lat = priest.Latitude;
+        const lng = priest.Longitude;
         
-        // Clear any existing markers
-        const existingMarkers = globe.children.filter(obj => 
-            obj.name === 'priest-marker' || obj.name === 'priest-pulse' || obj.name === 'priest-marker-invisible'
-        );
-        existingMarkers.forEach(marker => globe.remove(marker));
+        // Calculate position on globe surface
+        const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
         
-        // Clear pulse meshes array
-        pulseMeshes = [];
+        // Add dot marker
+        const markerGeometry = new THREE.SphereGeometry(CONFIG.markerSize, 16, 16);
+        const markerMaterial = new THREE.MeshBasicMaterial({ color: CONFIG.markerColor });
+        const marker = new THREE.Mesh(markerGeometry, markerMaterial);
         
-        // Create markers for each priest
-        data.forEach(priest => {
-            // Get coordinates
-            const lat = priest.Latitude;
-            const lng = priest.Longitude;
-            
-            // Add dot marker
-            const markerGeometry = new THREE.SphereGeometry(CONFIG.markerSize, 16, 16);
-            const markerMaterial = new THREE.MeshBasicMaterial({ color: CONFIG.markerColor });
-            const marker = new THREE.Mesh(markerGeometry, markerMaterial);
-            
-            // Set marker position
-            const position = globe.getCoords(lat, lng, CONFIG.labelAltitude);
-            marker.position.set(position.x, position.y, position.z);
-            marker.name = 'priest-marker';
-            marker.priestData = priest; // Store the priest data on the object for click handling
-            
-            // Add marker to globe
-            globe.add(marker);
-            
-            // Add pulsating ring around marker
-            const pulseGeometry = new THREE.RingGeometry(CONFIG.markerSize, CONFIG.markerRingSize, 32);
-            const pulseMaterial = new THREE.MeshBasicMaterial({
-            color: CONFIG.markerPulseColor,
-            transparent: true,
-            opacity: 0.6,
-            side: THREE.DoubleSide
-            });
-            
-            // Create a 3D object for the pulse ring
-            const pulse = new THREE.Group();
-            const pulseMesh = new THREE.Mesh(pulseGeometry, pulseMaterial);
-            
-            // Make the ring face the camera
-            pulseMesh.lookAt(0, 0, 0);
-            pulse.add(pulseMesh);
-            
-            // Position pulse at same coordinates as marker
-            pulse.position.set(position.x, position.y, position.z);
-            pulse.lookAt(0, 0, 0);
-            pulse.name = 'priest-pulse';
-            pulse.priestData = priest;
-            
-            // Add random offset for animation
-            pulseMesh.pulseOffset = Math.random() * Math.PI * 2;
-            
-            // Add to pulse meshes array for animation
-            pulseMeshes.push(pulseMesh);
-            
-            // Add pulse to globe
-            globe.add(pulse);
-            
-            // Add invisible larger detection ring
-            const invisibleRingGeometry = new THREE.CircleGeometry(CONFIG.markerRingSize * 4, 32);
-            const invisibleRingMaterial = new THREE.MeshBasicMaterial({
-            transparent: true,
-            opacity: 0.0, // Completely invisible
-            side: THREE.DoubleSide
-            });
-            
-            const invisibleRing = new THREE.Mesh(invisibleRingGeometry, invisibleRingMaterial);
-            
-            // Make it face the camera
-            invisibleRing.lookAt(0, 0, 0);
-            
-            // Position at same coordinates as marker
-            invisibleRing.position.set(position.x, position.y, position.z);
-            invisibleRing.name = 'priest-marker-invisible';
-            invisibleRing.priestData = priest; // Same priest data
-            
-            // Add to globe
-            globe.add(invisibleRing);
+        // Set marker position
+        marker.position.set(position.x, position.y, position.z);
+        marker.name = 'priest-marker';
+        marker.priestData = priest; // Store the priest data on the object for click handling
+        
+        // Add marker to scene
+        scene.add(marker);
+        
+        // Add pulsating ring around marker
+        const pulseGeometry = new THREE.RingGeometry(CONFIG.markerSize, CONFIG.markerRingSize, 32);
+        const pulseMaterial = new THREE.MeshBasicMaterial({
+          color: CONFIG.markerPulseColor,
+          transparent: true,
+          opacity: 0.6,
+          side: THREE.DoubleSide
         });
+        
+        // Create a 3D object for the pulse ring
+        const pulse = new THREE.Group();
+        const pulseMesh = new THREE.Mesh(pulseGeometry, pulseMaterial);
+        
+        // Make the ring face the camera
+        pulseMesh.lookAt(0, 0, 0);
+        pulse.add(pulseMesh);
+        
+        // Position pulse at same coordinates as marker
+        pulse.position.set(position.x, position.y, position.z);
+        pulse.lookAt(0, 0, 0);
+        pulse.name = 'priest-pulse';
+        pulse.priestData = priest;
+        
+        // Add random offset for animation
+        pulseMesh.pulseOffset = Math.random() * Math.PI * 2;
+        
+        // Add to pulse meshes array for animation
+        pulseMeshes.push(pulseMesh);
+        
+        // Add pulse to scene
+        scene.add(pulse);
+        
+        // Add invisible larger detection ring
+        const invisibleRingGeometry = new THREE.CircleGeometry(CONFIG.markerRingSize * 4, 32);
+        const invisibleRingMaterial = new THREE.MeshBasicMaterial({
+          transparent: true,
+          opacity: 0.0, // Completely invisible
+          side: THREE.DoubleSide
+        });
+        
+        const invisibleRing = new THREE.Mesh(invisibleRingGeometry, invisibleRingMaterial);
+        
+        // Make it face the camera
+        invisibleRing.lookAt(0, 0, 0);
+        
+        // Position at same coordinates as marker
+        invisibleRing.position.set(position.x, position.y, position.z);
+        invisibleRing.name = 'priest-marker-invisible';
+        invisibleRing.priestData = priest; // Same priest data
+        
+        // Add to scene
+        scene.add(invisibleRing);
+      });
     }
 
     // Show priest info in the panel
@@ -1632,10 +2131,8 @@ Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,Ge
 
     // Focus camera on a specific point
     function focusOnPoint(lat, lng, zoomLevel = 200.0) {
-      if (!globe) return;
-            
-      // Calculate target position with corrected coordinates
-      const targetPosition = globe.getCoords(lat - 5, lng, 2);
+      // Calculate target position with Earth radius and adjusted coordinates
+      const targetPosition = getPointOnGlobe(lat - 5, lng, 2);
       
       // Normalized direction vector
       const direction = new THREE.Vector3();
@@ -1644,9 +2141,7 @@ Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,Ge
       // Get current distance from camera to center
       const currentDistance = camera.position.distanceTo(new THREE.Vector3(0, 0, 0));
       
-      // Calculate target distance - lower zoomLevel means closer (more zoomed in)
-      // zoomLevel of 1.0 means no change in zoom
-      // zoomLevel of 0.5 means zoom in to half the current distance
+      // Calculate target distance
       const targetDistance = Math.max(
         controls.minDistance,
         Math.min(controls.maxDistance, currentDistance * (zoomLevel / CONFIG.currentZoomLevel))
@@ -1689,6 +2184,9 @@ Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,Ge
       // Start animation
       animateCamera();
     }
+
+    // Initialize the application
+    init();
     </script>
 </body>
 </html>
