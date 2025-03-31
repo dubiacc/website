@@ -265,20 +265,6 @@
     .info-link.maps:hover {
       text-decoration: underline;
     }
-    
-    @media (max-width: 600px) {
-      .title {
-        display: none;
-      }
-      
-      .search-container {
-        margin-top: 20px;
-      }
-
-      .info-panel {
-        max-height: 60vh;
-      }
-    }
 
   .parishes-section h3 {
     margin-top: 0;
@@ -328,6 +314,15 @@
       padding-left: 5px;
     }
 
+    .links {
+      position: absolute;
+    }
+    
+    .links > div {
+      display: flex;
+      flex-direction: row;
+    }
+
     .outbound-link, .outbound-link:visited, .outbound-link:focus, .outbound-link:hover {
       color: white;
       font-size: 1.5rem;
@@ -335,6 +330,54 @@
       text-shadow: 2px 2px 0px black;
       margin-right: 10px;
       padding: 5px;
+    }
+
+
+    @media (max-width: 800px) {
+      .title {
+        display: none;
+      }
+      
+      .links {
+        width: 100%;
+        display: flex;
+        flex-grow: 1;
+      }
+      .links > div {
+        flex-direction: column;
+        display: flex;
+        flex-grow: 1;
+      }
+      .links > div > a {
+        margin-top: 5px;
+        flex-grow: 1;
+        display: flex;
+      }
+
+      .search-container {
+        margin-top: 20px;
+        
+      }
+
+      .info-panel {
+        max-height: 60vh;
+        font-size: 0.9rem;
+      }
+      #priestName {
+        font-size: 1.4rem;
+      }
+      .search-input {
+        font-size: 1.2rem;
+      }
+      .search-results, .search-result-item {
+        font-size: 1.2rem;
+      }
+      .outbound-link, .outbound-link:visited, .outbound-link:focus, .outbound-link:hover {
+        font-size: 1rem;
+      }
+      #priestInfo {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
@@ -374,7 +417,7 @@
       labelAltitude: 0.05, // Adjusted to work better with large Earth radius
       autoRotate: false,
       autoRotateSpeed: 0.1,
-      theme: null, // 'light', 'dark', or null for system preference
+      theme: 'dark', // 'light', 'dark', or null for system preference
       focusAnimationDuration: 1000, // ms to animate to a point
       focusDistanceFactor: 0.8, // distance factor when focusing on a point (lower = closer)
       cloudOpacity: 0.8, // Add this line for cloud opacity
@@ -2596,7 +2639,7 @@ function getTimezoneCoordinates(timezone) {
 
   function resetSearchResultsContainer() {
     let searchResultsContainer = document.getElementById('searchResults');
-    searchResultsContainer.innerHTML = '<div style="position:absolute;font-size:1.5rem;"><div style="padding-top:10px;padding-left:5px;"><a class="outbound-link"href="https://github.com/fschutt/dubiacc/issues">report error</a><a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">request mass</a><a class="outbound-link" href="https://dubia.cc">back to dubia</a>';
+    searchResultsContainer.innerHTML = '<div class="links"><div style="padding-top:10px;padding-left:5px;margin-right:10px;"><a class="outbound-link"href="https://github.com/fschutt/dubiacc/issues">report error</a><a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">request mass</a><a class="outbound-link" href="https://dubia.cc">back to dubia</a>';
   }
 
     // Function to display search results when multiple priests are selected
