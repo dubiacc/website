@@ -256,7 +256,7 @@
   <script>
     // Configuration - Change these values to configure the application
     const CONFIG = {
-      currentZoomLevel: 400.0,
+      currentZoomLevel: isMobile() ? 400.0 : 300.0,
       dataUrl: null, // Set to CSV URL or null to use the default data
       fieldOrder: [
         'Type', 'Born Year', 'Associates With', 'Beliefs', 'Location/Area',
@@ -290,6 +290,20 @@
     let selectedSearchIndex = -1;
     let enhancedEarth = null;
     
+    function isMobile() {
+      // Check for touch capability
+      if ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+        return true;
+      
+      // Check screen width
+      if (window.innerWidth <= 768)
+        return true;
+      
+      // Check user agent as fallback
+      const ua = navigator.userAgent.toLowerCase();
+      return /android|webos|iphone|ipad|ipod|blackberry|windows phone/i.test(ua);
+    };
+
     // Language mapping and geography functions
     const languageLatitudeMap = {
       // Top languages by number of speakers + European languages + CJK + Filipino
@@ -359,94 +373,152 @@
       "tl": 14.6  // Tagalog
     };
 
-    // Define language longitude ranges for geographic consistency check
     function languageLongitudeRanges() {
-      return {
-      "en": [
-        { min: -170, max: -30, lat: 40.0 },    // North America
-        { min: -30, max: 30, lat: 51.0 },      // UK
-        { min: 30, max: 100, lat: 20.0 },      // South Asia (India)
-        { min: 100, max: 180, lat: -25.0 }     // Australia/NZ
-      ],
-      "es": [
-        { min: -120, max: -30, lat: 15.0 },    // Latin America
-        { min: -30, max: 30, lat: 40.0 }       // Spain
-      ],
-      "pt": [
-        { min: -120, max: -30, lat: -10.0 },   // Brazil
-        { min: -30, max: 30, lat: 39.0 }       // Portugal
-      ],
-      "fr": [
-        { min: -120, max: -30, lat: 45.0 },    // Quebec/Canada
-        { min: -30, max: 30, lat: 46.0 },      // France
-        { min: 0, max: 50, lat: 14.0 }         // Francophone Africa
-      ],
-      "ar": [
-        { min: -30, max: 0, lat: 30.0 },       // North Africa
-        { min: 0, max: 60, lat: 25.0 }         // Middle East
-      ],
-      "zh": [
-        { min: 70, max: 140, lat: 35.0 }       // China
-      ],
-      "hi": [
-        { min: 60, max: 100, lat: 20.0 }       // India
-      ],
-      "ru": [
-        { min: 20, max: 180, lat: 55.0 }       // Russia
-      ],
-      "ja": [
-        { min: 120, max: 150, lat: 36.0 }      // Japan
-      ],
-      "ko": [
-        { min: 120, max: 135, lat: 37.5 }      // Korea
-      ]
-    };
-  }
-    
+  return {
+    "en": [
+      { min: -170, max: -30, lat: 40.0 },    // North America
+      { min: -10, max: 2, lat: 51.0 },       // UK (narrower range)
+      { min: 65, max: 90, lat: 20.0 },       // South Asia (India)
+      { min: 110, max: 155, lat: -25.0 }     // Australia/NZ
+    ],
+    "de": [
+      { min: 5, max: 15, lat: 51.0 }         // Germany
+    ],
+    "ru": [
+      { min: 20, max: 180, lat: 55.0 }       // Russia
+    ],
+    "es": [
+      { min: -120, max: -30, lat: 15.0 },    // Latin America
+      { min: -10, max: 5, lat: 40.0 }        // Spain
+    ],
+    "pt": [
+      { min: -70, max: -35, lat: -10.0 },    // Brazil
+      { min: -10, max: 0, lat: 39.0 }        // Portugal
+    ],
+    "fr": [
+      { min: -80, max: -60, lat: 45.0 },     // Quebec/Canada
+      { min: -5, max: 8, lat: 46.0 },        // France
+      { min: 0, max: 20, lat: 14.0 }         // Francophone Africa
+    ],
+    "ar": [
+      { min: -10, max: 0, lat: 30.0 },       // North Africa
+      { min: 25, max: 60, lat: 25.0 }        // Middle East
+    ],
+    "zh": [
+      { min: 70, max: 135, lat: 35.0 }       // China
+    ],
+    "hi": [
+      { min: 70, max: 90, lat: 20.0 }        // India
+    ],
+    "ja": [
+      { min: 125, max: 150, lat: 36.0 }      // Japan
+    ],
+    "ko": [
+      { min: 125, max: 130, lat: 37.5 }      // Korea
+    ],
+    "it": [
+      { min: 7, max: 18, lat: 42.0 }         // Italy
+    ],
+    "pl": [
+      { min: 14, max: 24, lat: 52.0 }        // Poland
+    ]
+  };
+}
+
     // Language-based latitude estimation with geographical consistency check
     function estimateLatitude(longitude) {
-      const languages = getBrowserLanguages();
-      let bestLat = null;
-      const llr = languageLongitudeRanges();
-
-      // First try to find a geographically consistent language
-      for (const language of languages) {
-        const langCode = getLanguageCode(language);
-        
-        // Check if this language has specific longitude ranges defined
-        if (llr[langCode]) {
-          for (const range of llr[langCode]) {
-            // Check if the detected longitude falls within this language's expected range
-            if (longitude >= range.min && longitude <= range.max) {
-              console.log(`Found matching language ${langCode} for longitude ${longitude}, using latitude ${range.lat}`);
-              return range.lat;
-            }
-          }
+  const languages = getBrowserLanguages();
+  const llr = languageLongitudeRanges();
+  
+  // 1. First try non-English languages for geographical consistency
+  const nonEnglishLangs = languages.filter(lang => !getLanguageCode(lang).startsWith('en'));
+  
+  // Try non-English languages first
+  for (const language of nonEnglishLangs) {
+    const langCode = getLanguageCode(language);
+    
+    // Check if this language has specific longitude ranges defined
+    if (llr[langCode]) {
+      for (const range of llr[langCode]) {
+        // Check if the detected longitude falls within this language's expected range
+        if (longitude >= range.min && longitude <= range.max) {
+          console.log(`Found matching non-English language ${langCode} for longitude ${longitude}, using latitude ${range.lat}`);
+          return range.lat;
         }
       }
-      
-      // If no geographically consistent language found, try the general language map
-      for (const language of languages) {
-        const langCode = getLanguageCode(language);
-        if (languageLatitudeMap[langCode]) {
-          bestLat = languageLatitudeMap[langCode];
-          break;
-        }
-      }
-      
-      // Fall back to hemisphere estimation based on longitude if no language match
-      if (bestLat === null) {
-        // Most populated areas are in Northern hemisphere
-        bestLat = 20.0;
-        
-        // Special case for southern hemisphere longitudes (South America, Australia, etc.)
-        if ((longitude > -120 && longitude < -30) || (longitude > 100 && longitude < 180)) {
-          bestLat = -20.0;
-        }
-      }
-      
-      return bestLat;
     }
+  }
+  
+  // 2. If no non-English match, try all languages
+  for (const language of languages) {
+    const langCode = getLanguageCode(language);
+    
+    if (llr[langCode]) {
+      for (const range of llr[langCode]) {
+        if (longitude >= range.min && longitude <= range.max) {
+          console.log(`Found matching language ${langCode} for longitude ${longitude}, using latitude ${range.lat}`);
+          return range.lat;
+        }
+      }
+    }
+  }
+  
+  // 3. If no geographically consistent language found, try the general language map
+  // Prioritize non-English languages first
+  for (const language of nonEnglishLangs) {
+    const langCode = getLanguageCode(language);
+    if (languageLatitudeMap[langCode]) {
+      return languageLatitudeMap[langCode];
+    }
+  }
+  
+  // Then try any language
+  for (const language of languages) {
+    const langCode = getLanguageCode(language);
+    if (languageLatitudeMap[langCode]) {
+      return languageLatitudeMap[langCode];
+    }
+  }
+  
+  // 4. Regional longitude-based fallback
+  if (longitude > 10 && longitude < 40) {
+    // Eastern Europe
+    return 50.0;
+  } else if (longitude >= 40 && longitude < 60) {
+    // Western Russia
+    return 55.0;
+  } else if (longitude >= 60 && longitude < 90) {
+    // Central Asia
+    return 45.0;
+  } else if (longitude >= 90 && longitude < 120) {
+    // East Asia
+    return 35.0;
+  } else if (longitude >= 120 && longitude < 150) {
+    // Far East Asia
+    return 35.0;
+  } else if (longitude > -10 && longitude <= 10) {
+    // Western Europe
+    return 48.0;
+  } else if (longitude > -30 && longitude <= -10) {
+    // Atlantic/Western Europe
+    return 45.0;
+  } else if (longitude > -60 && longitude <= -30) {
+    // Eastern Americas
+    return 40.0;
+  } else if (longitude > -120 && longitude <= -60) {
+    // Americas
+    return 35.0;
+  } else if (longitude > -180 && longitude <= -120) {
+    // Western Americas/Pacific
+    return 45.0;
+  } else if (longitude > 150 || longitude <= -150) {
+    // Pacific region
+    return 0.0;
+  }
+  
+  // Final fallback - estimate hemisphere based on longitude
+  return (longitude > -120 && longitude < -30) || (longitude > 100 && longitude < 180) ? -20.0 : 20.0;
+}
 
     // Get all browser languages
     function getBrowserLanguages() {
@@ -534,9 +606,129 @@
     }
 
     function centerOnTimezone() {
+  try {
+    // Get the IANA timezone identifier
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    console.log(`Detected timezone: ${timezone}`);
+    
+    // Get coordinates from timezone
+    const coords = getTimezoneCoordinates(timezone);
+    
+    if (coords) {
+      console.log(`Using timezone coordinates: ${coords.lat}, ${coords.lng} (${timezone})`);
+      // Center globe on these coordinates
+      focusOnPoint(coords.lat, coords.lng);
+      
+      // Add a blue marker for user's timezone location
+      addUserLocationMarker(coords.lat, coords.lng);
+      return;
+    }
+  } catch (err) {
+    console.warn("Error detecting timezone:", err);
+  }
+  
+  // Fallback to original method if timezone detection fails
+  fallbackTimezoneDetection();
+}
+
+function getTimezoneCoordinates(timezone) {
+  const timezoneMap = {
+    // Europe
+    "Europe/Berlin": { lat: 52.5200, lng: 13.4050 },
+    "Europe/London": { lat: 51.5074, lng: -0.1278 },
+    "Europe/Paris": { lat: 48.8566, lng: 2.3522 },
+    "Europe/Rome": { lat: 41.9028, lng: 12.4964 },
+    "Europe/Madrid": { lat: 40.4168, lng: -3.7038 },
+    "Europe/Moscow": { lat: 55.7558, lng: 37.6173 },
+    "Europe/Kiev": { lat: 50.4501, lng: 30.5234 },
+    "Europe/Warsaw": { lat: 52.2297, lng: 21.0122 },
+    "Europe/Vienna": { lat: 48.2082, lng: 16.3738 },
+    "Europe/Stockholm": { lat: 59.3293, lng: 18.0686 },
+    "Europe/Athens": { lat: 37.9838, lng: 23.7275 },
+    "Europe/Istanbul": { lat: 41.0082, lng: 28.9784 },
+    "Europe/Amsterdam": { lat: 52.3676, lng: 4.9041 },
+    "Europe/Brussels": { lat: 50.8503, lng: 4.3517 },
+    "Europe/Prague": { lat: 50.0755, lng: 14.4378 },
+    "Europe/Lisbon": { lat: 38.7223, lng: -9.1393 },
+    "Europe/Dublin": { lat: 53.3498, lng: -6.2603 },
+    "Europe/Budapest": { lat: 47.4979, lng: 19.0402 },
+    "Europe/Copenhagen": { lat: 55.6761, lng: 12.5683 },
+    "Europe/Oslo": { lat: 59.9139, lng: 10.7522 },
+    "Europe/Helsinki": { lat: 60.1699, lng: 24.9384 },
+    "Europe/Zurich": { lat: 47.3769, lng: 8.5417 },
+    
+    // North America
+    "America/New_York": { lat: 40.7128, lng: -74.0060 },
+    "America/Chicago": { lat: 41.8781, lng: -87.6298 },
+    "America/Denver": { lat: 39.7392, lng: -104.9903 },
+    "America/Los_Angeles": { lat: 34.0522, lng: -118.2437 },
+    "America/Toronto": { lat: 43.6532, lng: -79.3832 },
+    "America/Vancouver": { lat: 49.2827, lng: -123.1207 },
+    "America/Mexico_City": { lat: 19.4326, lng: -99.1332 },
+    
+    // Asia
+    "Asia/Tokyo": { lat: 35.6762, lng: 139.6503 },
+    "Asia/Shanghai": { lat: 31.2304, lng: 121.4737 },
+    "Asia/Hong_Kong": { lat: 22.3193, lng: 114.1694 },
+    "Asia/Singapore": { lat: 1.3521, lng: 103.8198 },
+    "Asia/Seoul": { lat: 37.5665, lng: 126.9780 },
+    "Asia/Dubai": { lat: 25.2048, lng: 55.2708 },
+    "Asia/Kolkata": { lat: 28.6139, lng: 77.2090 },
+    "Asia/Bangkok": { lat: 13.7563, lng: 100.5018 },
+    "Asia/Jakarta": { lat: -6.2088, lng: 106.8456 },
+    "Asia/Manila": { lat: 14.5995, lng: 120.9842 },
+    "Asia/Taipei": { lat: 25.0330, lng: 121.5654 },
+    "Asia/Jerusalem": { lat: 31.7683, lng: 35.2137 },
+    
+    // Australia and Oceania
+    "Australia/Sydney": { lat: -33.8688, lng: 151.2093 },
+    "Australia/Melbourne": { lat: -37.8136, lng: 144.9631 },
+    "Australia/Brisbane": { lat: -27.4698, lng: 153.0251 },
+    "Australia/Perth": { lat: -31.9505, lng: 115.8605 },
+    "Pacific/Auckland": { lat: -36.8485, lng: 174.7633 },
+    
+    // South America
+    "America/Sao_Paulo": { lat: -23.5505, lng: -46.6333 },
+    "America/Buenos_Aires": { lat: -34.6037, lng: -58.3816 },
+    "America/Santiago": { lat: -33.4489, lng: -70.6693 },
+    "America/Lima": { lat: -12.0464, lng: -77.0428 },
+    "America/Bogota": { lat: 4.7110, lng: -74.0721 },
+    
+    // Africa
+    "Africa/Cairo": { lat: 30.0444, lng: 31.2357 },
+    "Africa/Johannesburg": { lat: -26.2041, lng: 28.0473 },
+    "Africa/Lagos": { lat: 6.5244, lng: 3.3792 },
+    "Africa/Nairobi": { lat: -1.2921, lng: 36.8219 },
+    "Africa/Casablanca": { lat: 33.5731, lng: -7.5898 }
+  };
+  
+  // Try exact match
+  if (timezoneMap[timezone]) {
+    return timezoneMap[timezone];
+  }
+  
+  // If exact match not found, try to find a city in the same region
+  // Extract the region part (e.g., "Europe" from "Europe/Berlin")
+  const region = timezone.split('/')[0];
+  
+  // Find any timezone in the same region
+  for (const [tz, coords] of Object.entries(timezoneMap)) {
+    if (tz.startsWith(region + '/')) {
+      console.log(`No exact match for ${timezone}, using ${tz} as approximate match`);
+      return coords;
+    }
+  }
+  
+  // No match found
+  return null;
+}
+
+    function fallbackTimezoneDetection() {
       // Get local timezone offset in minutes
       const timezoneOffsetMinutes = new Date().getTimezoneOffset();
       
+      console.log("timezoneOffsetMinutes " + timezoneOffsetMinutes);
+
       // Convert to hours (negative because getTimezoneOffset returns difference from UTC)
       const timezoneOffsetHours = -timezoneOffsetMinutes / 60;
       
