@@ -264,13 +264,13 @@
         'Consecrated By', 'Bishop Line', 'Notes'
       ],
       markerColor: '#ff0000',
-      markerPulseColor: 'rgba(255, 0, 0, 0.4)',
-      markerSize: 0.5,
-      markerRingSize: 3.6,
+      markerPulseColor: '#ff0000',
+      markerSize: 0.4,
+      markerRingSize: 1.5,
       labelAltitude: 0.05, // Adjusted to work better with large Earth radius
       autoRotate: false,
       autoRotateSpeed: 0.1,
-      theme: 'dark', // 'light', 'dark', or null for system preference
+      theme: null, // 'light', 'dark', or null for system preference
       focusAnimationDuration: 1000, // ms to animate to a point
       focusDistanceFactor: 0.8, // distance factor when focusing on a point (lower = closer)
       cloudOpacity: 0.8, // Add this line for cloud opacity
@@ -458,7 +458,6 @@
 
     // Extract language code from full locale string
     function getLanguageCode(locale) { 
-      console.log(locale);
       return locale.split('-')[0].toLowerCase(); 
     }
 
@@ -551,47 +550,6 @@
       
       // Center globe on this position
       focusOnPoint(estimatedLatitude, approximateLongitude);
-    }
-
-    function showProximitySearchResults(results) {
-        const searchResultsContainer = document.getElementById('searchResults');
-        const searchInput = document.getElementById('searchInput');
-        
-        // Clear previous results
-        searchResultsContainer.innerHTML = '';
-        searchResults = [];
-        selectedSearchIndex = -1;
-        
-        // Add results to global searchResults array
-        searchResults = results.map(result => result.priestData);
-        
-        // Create result items
-        results.forEach((result, i) => {
-            const priest = result.priestData;
-            const resultItem = document.createElement('div');
-            resultItem.className = 'search-result-item';
-            resultItem.tabIndex = i + 200;
-            resultItem.textContent = `${priest.Name} (${priest['Location/Area'] || 'Unknown'})`;
-            
-            resultItem.addEventListener('click', () => {
-            showPriestInfo(priest);
-            focusOnPoint(priest.Latitude, priest.Longitude);
-            highlightSelectedPriest(priest);
-            searchResultsContainer.style.display = 'none';
-            });
-            
-            resultItem.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                resultItem.click();
-            }
-            });
-            
-            searchResultsContainer.appendChild(resultItem);
-        });
-        
-        // Display results
-        searchResultsContainer.style.display = 'block';
     }
 
     function getUserLocation() {
@@ -824,6 +782,44 @@
           
           request.onerror = (event) => reject(event.target.error);
         });
+      },
+    
+      async hasTexture(url) {
+        if (!this.db) return false;
+        
+        return new Promise((resolve) => {
+          try {
+            const transaction = this.db.transaction(['textures'], 'readonly');
+            const store = transaction.objectStore('textures');
+            
+            // Use the faster .count() method instead of .get() to just check existence
+            const request = store.count(url);
+            
+            request.onsuccess = (event) => {
+              resolve(event.target.result > 0);
+            };
+            
+            request.onerror = () => {
+              resolve(false);
+            };
+            
+            // Safety in case transaction takes too long
+            transaction.oncomplete = () => {
+              // This might never be reached if the request completes first
+            };
+            
+            transaction.onerror = () => {
+              resolve(false);
+            };
+            
+            transaction.onabort = () => {
+              resolve(false);
+            };
+          } catch (err) {
+            console.warn('Error checking texture cache:', err);
+            resolve(false);
+          }
+        });
       }
     };
 
@@ -857,57 +853,69 @@
       },
       
       async loadTexture(type, resolution, retryCount = 0, maxRetries = 3) {
-  const url = this.getTextureUrl(type, resolution);
   
-  // Return cached texture if already loaded
-  if (this.loadedTextures[resolution][type]) {
-    return this.loadedTextures[resolution][type];
-  }
+        const url = this.getTextureUrl(type, resolution);
   
-  // Try to get from cache
-  try {
-    const cachedBlob = await TextureCache.getTexture(url);
-    if (cachedBlob) {
-      const texture = await this._createTextureFromBlob(cachedBlob);
-      this.loadedTextures[resolution][type] = texture;
-      return texture;
-    }
-  } catch (err) {
-    console.warn('Error loading texture from cache:', err);
-  }
-  
-  // Fetch from network with retry logic
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Failed to load texture: ${url}`);
-    
-    const blob = await response.blob();
-    
-    // Store in cache
-    try {
-      await TextureCache.storeTexture(url, blob);
-    } catch (err) {
-      console.warn('Error storing texture in cache:', err);
-    }
-    
-    // Create texture
-    const texture = await this._createTextureFromBlob(blob);
-    this.loadedTextures[resolution][type] = texture;
-    return texture;
-  } catch (err) {
-    // Retry logic
-    if (retryCount < maxRetries) {
-      console.warn(`Retry ${retryCount + 1}/${maxRetries} for texture: ${url}`);
-      // Exponential backoff - wait longer between each retry
-      await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, retryCount)));
-      return this.loadTexture(type, resolution, retryCount + 1, maxRetries);
-    }
-    
-    console.error('Error loading texture after retries:', err);
-    // Return a default fallback texture
-    return this._createFallbackTexture(type);
-  }
-},
+        // Return cached texture if already loaded
+        if (this.loadedTextures[resolution][type]) {
+          return this.loadedTextures[resolution][type];
+        }
+        
+        // Try to get from cache
+        try {
+          const cachedBlob = await TextureCache.getTexture(url);
+          if (cachedBlob) {
+            console.log(`Using cached texture: ${type} (${resolution})`);
+            const texture = await this._createTextureFromBlob(cachedBlob);
+            this.loadedTextures[resolution][type] = texture;
+            return texture;
+          }
+        } catch (err) {
+          console.warn('Error loading texture from cache:', err);
+        }
+        
+        // Fetch from network with retry logic
+        try {
+          console.log(`Fetching texture: ${type} (${resolution})`);
+          const response = await fetch(url, {
+            // Add cache control headers
+            headers: {
+              'Cache-Control': 'max-age=86400', // Cache for 24 hours
+            },
+            // Use cache-first strategy
+            cache: 'force-cache'
+          });
+          
+          if (!response.ok) throw new Error(`Failed to load texture: ${url} (${response.status})`);
+          
+          const blob = await response.blob();
+          
+          // Store in cache
+          try {
+            await TextureCache.storeTexture(url, blob);
+            console.log(`Texture cached: ${type} (${resolution})`);
+          } catch (err) {
+            console.warn('Error storing texture in cache:', err);
+          }
+          
+          // Create texture
+          const texture = await this._createTextureFromBlob(blob);
+          this.loadedTextures[resolution][type] = texture;
+          return texture;
+        } catch (err) {
+          // Retry logic
+          if (retryCount < maxRetries) {
+            console.warn(`Retry ${retryCount + 1}/${maxRetries} for texture: ${url}`);
+            // Exponential backoff - wait longer between each retry
+            await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, retryCount)));
+            return this.loadTexture(type, resolution, retryCount + 1, maxRetries);
+          }
+          
+          console.error('Error loading texture after retries:', err);
+          // Return a default fallback texture
+          return this._createFallbackTexture(type);
+        }
+      },
 
       // 2. Add a new method to TextureManager to create fallback textures
       _createFallbackTexture(type) {
@@ -1309,6 +1317,7 @@
       }
       
       async init() {
+        
         // Initialize texture manager
         this.textureManager = await TextureManager.init();
         
@@ -1317,13 +1326,13 @@
         const cloudGeometry = new THREE.SphereGeometry(this.cloudRadius, 64, 64);
         const atmosphereGeometry = new THREE.SphereGeometry(this.atmosphereRadius, 64, 64);
         
-        // Create materials
+        // Create materials (shader creation is unchanged)
         this.earthMaterial = new THREE.ShaderMaterial({
           vertexShader: EarthPBRShader.vertexShader,
           fragmentShader: EarthPBRShader.fragmentShader,
           uniforms: THREE.UniformsUtils.clone(EarthPBRShader.uniforms),
           flatShading: false,
-          derivatives: true // Enable derivatives for normal mapping
+          derivatives: true
         });
         
         this.cloudMaterial = new THREE.ShaderMaterial({
@@ -1362,13 +1371,16 @@
         this.scene.add(this.cloudMesh);
         this.scene.add(this.atmosphereMesh);
         
-        // Load initial low-resolution textures
-        await this.loadTextures('low');
+        // STEP 1: Start with empty textures for immediate rendering
+        this.loadEmptyTextures();
         
-        // Set up zoom listener
-        this.setupZoomListener();
+        // Update shader properties with initial settings
+        this.updateShaderProperties();
         
-        // Initial solar position update based on current time
+        // STEP 2-5: Begin progressive texture loading (non-blocking)
+        this.progressivelyLoadTextures();
+        
+        // Set up solar position and other initializations
         const dt = new Date();
         const [longitude, declination] = calculateSolarPosition(dt);
         this.updateSunDirection(longitude, declination);
@@ -1379,35 +1391,124 @@
           const [longitude, declination] = calculateSolarPosition(dt);
           this.updateSunDirection(longitude, declination);
         }, 60000);
-    
+        
         return this;
       }
       
+      areLowResTexturesCached = async function() {
+        try {
+          const timeout = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Cache check timeout')), 50)
+          );
+          
+          for (const type of this.textureManager.textureTypes) {
+            const url = this.textureManager.getTextureUrl(type, 'low');
+            
+            const isCached = await Promise.race([
+              TextureCache.hasTexture(url),
+              timeout
+            ]);
+            
+            if (!isCached) {
+              return false; // Early return if any texture isn't cached
+            }
+          }
+          
+          return true;
+        } catch (err) {
+          console.warn('Fast low-res cache check failed:', err);
+          return false;
+        }
+      }
+
+      loadEmptyTextures() {
+        console.log('Using empty textures for initial rendering');
+        
+        // Create empty textures for each type
+        const textures = {};
+        this.textureManager.textureTypes.forEach(type => {
+          textures[type] = this.textureManager._createFallbackTexture(type);
+        });
+        
+        // Update material uniforms with empty textures
+        this.earthMaterial.uniforms.dayMap.value = textures.earth_daymap;
+        this.earthMaterial.uniforms.nightMap.value = textures.earth_nightmap;
+        this.earthMaterial.uniforms.normalMap.value = textures.earth_normal_map;
+        this.earthMaterial.uniforms.specularMap.value = textures.earth_specular_map;
+        this.cloudMaterial.uniforms.cloudMap.value = textures.earth_clouds;
+      }
+
+      async progressivelyLoadTextures() {
+        try {
+          // STEP 2: Check if low-resolution textures are cached
+          const lowResCached = await this.areLowResTexturesCached();
+          
+          if (lowResCached) {
+            // If low-res textures are cached, load them immediately (still faster than high-res)
+            console.log('Found cached low-resolution textures, loading them first');
+            this.loadTextures('low').catch(err => console.warn('Error loading low-res textures:', err));
+          } else {
+            // If not cached, need to load from network after a short delay
+            // to allow the empty textures to render first
+            setTimeout(() => {
+              console.log('Loading low-resolution textures from network');
+              this.loadTextures('low').catch(err => console.warn('Error loading low-res textures:', err));
+            }, 100);
+          }
+          
+          // STEP 4: Check if high-resolution textures are cached
+          setTimeout(async () => {
+            const highResCached = await this.areHighResTexturesCached();
+            
+            if (highResCached) {
+              // Load high-res textures from cache after low-res textures have loaded
+              console.log('Found cached high-resolution textures, upgrading');
+              this.loadTextures('high').catch(err => console.warn('Error loading high-res textures:', err));
+            } else {
+              // STEP 5: Load high-res from network with longer delay
+              setTimeout(() => {
+                console.log('Loading high-resolution textures from network');
+                this.loadTextures('high').catch(err => console.warn('Error loading high-res textures:', err));
+              }, 5000); // 5 second delay to ensure low-res textures are loaded and displayed first
+            }
+          }, 850); // Small delay to ensure we don't block loading low-res textures
+          
+        } catch (err) {
+          console.error('Error in progressive texture loading:', err);
+        }
+      }
+
       async loadTextures(resolution) {
         try {
+          // Start loading textures
+          const startTime = performance.now();
+          console.log(`Loading ${resolution} resolution textures...`);
+          
           const textures = await this.textureManager.loadAllTextures(resolution);
           
-          // Update Earth shader uniforms
+          // Update the materials with new textures
           this.earthMaterial.uniforms.dayMap.value = textures.earth_daymap;
           this.earthMaterial.uniforms.nightMap.value = textures.earth_nightmap;
           this.earthMaterial.uniforms.normalMap.value = textures.earth_normal_map;
           this.earthMaterial.uniforms.specularMap.value = textures.earth_specular_map;
-          
-          // Update Cloud shader uniform
           this.cloudMaterial.uniforms.cloudMap.value = textures.earth_clouds;
           
+          // Update current resolution
           this.currentResolution = resolution;
-          console.log(`Loaded ${resolution} resolution textures`);
           
-          // Update shader properties
-          this.updateShaderProperties();
+          // Log performance
+          const loadTime = (performance.now() - startTime).toFixed(0);
+          console.log(`✓ Completed loading ${resolution} textures in ${loadTime}ms`);
           
           return true;
         } catch (err) {
-          console.error('Critical error loading textures:', err);
+          console.error(`Error loading ${resolution} textures:`, err);
           
-          // Create a simple fallback Earth if we reached this point
-          this.createFallbackEarth();
+          // Only create fallback if we failed to load low-res textures
+          // (we already have empty textures loaded)
+          if (resolution === 'low' && !this.textureLoadingFailed) {
+            this.createFallbackEarth();
+          }
           
           return false;
         }
@@ -1496,25 +1597,54 @@
         }
       }
       
+      // New method to check if all high-res textures are cached
+      async areHighResTexturesCached() {
+        try {
+          // Set a timeout for cache checking to avoid long startup delays
+          const timeout = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Cache check timeout')), 500)
+          );
+          
+          // Check textures one by one and fail fast if any aren't cached
+          for (const type of this.textureManager.textureTypes) {
+            const url = this.textureManager.getTextureUrl(type, 'high');
+            
+            // Use Promise.race to implement timeout for each check
+            const isCached = await Promise.race([
+              TextureCache.hasTexture(url),
+              timeout
+            ]);
+            
+            if (!isCached) {
+              console.log(`High-res texture not cached: ${type}`);
+              return false; // Early return if any texture isn't cached
+            }
+          }
+          
+          console.log('All high-resolution textures are cached');
+          return true;
+        } catch (err) {
+          console.warn('Fast cache check failed:', err);
+          return false; // Safely default to low-res on any error
+        }
+      }
+
+      // Modified zoom listener to avoid redundant loading attempts
       setupZoomListener() {
-        // Check zoom level periodically
+        // Just monitor for fallback to low-res if high-res fails
         setInterval(() => {
-          // Skip if texture loading previously failed
           if (this.textureLoadingFailed) return;
           
-          const distance = this.camera.position.distanceTo(new THREE.Vector3(0, 0, 0));
-          
-          // Switch to high-res textures when zoomed in
-          if (distance < this.zoomThreshold && this.currentResolution === 'low') {
-            this.loadTextures('high');
-          }
-          // Switch back to low-res textures when zoomed out
-          else if (distance >= this.zoomThreshold && this.currentResolution === 'high') {
+          // If for some reason we're still on empty textures after a while,
+          // attempt to load low-res textures
+          if (!this.earthMaterial.uniforms.dayMap.value || 
+              this.earthMaterial.uniforms.dayMap.value.image.width <= 64) {
+            console.log('Still using empty textures, attempting to load low-resolution textures');
             this.loadTextures('low');
           }
-        }, 1000);
+        }, 10000); // Check after 10 seconds
       }
-      
+
       update() {
         if (this.cloudMesh) {
           this.cloudMesh.rotation.y += this.options.cloudRotationSpeed;
@@ -1707,23 +1837,29 @@
     }
 
     function highlightSelectedPriest(priest) {
+      // First reset all markers to their default color
       resetAllMarkers();
       
+      // Then highlight the selected priest's markers
       scene.children
-        .filter(obj => obj.name === 'priest-marker')
-        .filter(marker => marker.priestData?.Name === priest.Name)
-        .forEach(marker => marker.material.color.set('yellow'));
+        .filter(obj => obj.name === 'priest-marker' && obj.priestData && obj.priestData.Name === priest.Name)
+        .forEach(marker => {
+          console.log(`Highlighting marker for ${priest.Name}`);
+          marker.material.color.set('yellow');
+        });
       
+      // Find all pulse groups with this priest's data
       scene.children
-        .filter(obj => obj.name === 'priest-pulse')
-        .filter(pulse => pulse.priestData?.Name === priest.Name)
+        .filter(obj => obj.name === 'priest-pulse' && obj.priestData && obj.priestData.Name === priest.Name)
         .forEach(pulse => {
+          // For each child of the pulse group that's a mesh
           pulse.children
             .filter(child => child.isMesh)
-            .forEach(mesh => mesh.material.color.set('rgba(255, 255, 0, 0.4)'));
+            .forEach(mesh => {
+              mesh.material.color.set('rgba(255, 255, 0, 0.4)');
+            });
         });
     }
-
 
     // Select the current search result
     function selectSearchResult(priest) {
@@ -1751,59 +1887,75 @@
           
     // Mouse click event handler
     function onDocumentMouseClick(event) {
+      // Calculate mouse position in normalized device coordinates
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
       
+      // Update the raycaster with the camera and mouse position
       raycaster.setFromCamera(mouse, camera);
       
-      // First check if we hit the globe itself
-      const globeIntersects = raycaster.intersectObject(globe);
-      
-      // If hit on globe, determine if it's front or back side
-      if (globeIntersects.length > 0) {
-        const hitPoint = globeIntersects[0].point;
-        
-        // Skip if we hit the back side
-        if (!isPointOnFrontSide(hitPoint, camera)) {
-          return;
-        }
-      }
-      
-      // Check for priest marker hits
-      const objects = scene.children.filter(obj => 
-        obj.name === 'priest-marker' || obj.name === 'priest-pulse' || obj.name === 'priest-marker-invisible'
+      // Get all interactive objects (markers and their related elements)
+      const interactiveObjects = scene.children.filter(obj => 
+        obj.name === 'priest-marker' || 
+        obj.name === 'priest-pulse' || 
+        obj.name === 'priest-marker-invisible'
       );
       
-      const intersects = raycaster.intersectObjects(objects, true);
+      // Find all intersections with interactive objects
+      const intersects = raycaster.intersectObjects(interactiveObjects, true);
       
+      // If we have intersections
       if (intersects.length > 0) {
+        console.log("got intersect!")
+        /*
         // Filter out back-side hits
-        const frontSideHits = intersects.filter(hit => 
-          isPointOnFrontSide(hit.point, camera)
-        );
+        const frontSideHits = intersects.filter(hit => {
+          // For each hit, check if it's on the front side
+          const hitPoint = hit.point.clone();
+          const cameraToHit = new THREE.Vector3().subVectors(hitPoint, camera.position);
+          const cameraToCenter = new THREE.Vector3().subVectors(new THREE.Vector3(0, 0, 0), camera.position);
+          return cameraToHit.dot(cameraToCenter) <= 0;
+        });
         
         if (frontSideHits.length === 0) return;
-        
-        // Process hits as before, but only for front-side objects
+        */
+        frontSideHits = intersects;
+        console.log("got frontSideHits!")
+
+        // Map to collect unique priest data
         const hitPriests = new Map();
         
+        // Process each hit
         for (const hit of frontSideHits) {
           const obj = hit.object;
-          const priestData = obj.name === 'priest-marker' || obj.name === 'priest-marker-invisible'
-            ? obj.priestData 
-            : obj.parent.priestData;
+          let priestData;
           
+          // Get priest data based on object type
+          if (obj.name === 'priest-marker' || obj.name === 'priest-marker-invisible') {
+            priestData = obj.priestData;
+          } else if (obj.parent && obj.parent.name === 'priest-pulse') {
+            priestData = obj.parent.priestData;
+          } else if (obj.name === 'priest-pulse') {
+            priestData = obj.priestData;
+          }
+          
+          // Add to our map if we found priest data
           if (priestData && !hitPriests.has(priestData.Name)) {
             hitPriests.set(priestData.Name, {
               priestData: priestData,
               distance: hit.distance
             });
+            
+            // Debug information
+            console.log(`Hit detected for priest: ${priestData.Name}`);
           }
         }
         
-        // Convert to array and sort by distance
+        // Convert map to array and sort by distance
         const hitResults = Array.from(hitPriests.values())
           .sort((a, b) => a.distance - b.distance);
+        
+        console.log(`Found ${hitResults.length} hit results`);
         
         if (hitResults.length === 1) {
           // Single priest hit
@@ -1813,15 +1965,17 @@
           focusOnPoint(priestData.Latitude, priestData.Longitude);
         } else if (hitResults.length > 1) {
           // Multiple priests hit
+          event.stopPropagation();
           showProximitySearchResults(hitResults);
         }
+      } else {
+        console.log('No intersections found');
       }
     }
-
     // Function to display search results when multiple priests are selected
     function showProximitySearchResults(results) {
-      const searchResultsContainer = document.getElementById('searchResults');
-      
+      let searchResultsContainer = document.getElementById('searchResults');
+
       // Clear previous results
       searchResultsContainer.innerHTML = '';
       searchResults = [];
@@ -2035,7 +2189,7 @@ Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,Ge
     const markerMaterial = new THREE.MeshPhongMaterial({ 
       color: CONFIG.markerColor,
       shininess: 0,
-      flatShading: false // Ensure smooth shading
+      flatShading: false
     });
     
     const marker = new THREE.Mesh(markerGeometry, markerMaterial);
@@ -2048,31 +2202,32 @@ Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,Ge
     // Add marker to scene
     scene.add(marker);
     
-    // Add pulsating ring around marker with smooth edges
-    const pulseGeometry = new THREE.RingGeometry(CONFIG.markerSize, CONFIG.markerRingSize, 32);
+    // === REPLACED RING WITH SQUISHED SPHERE ===
+    // Add pulsating squished sphere around marker
+    const pulseGeometry = new THREE.SphereGeometry(CONFIG.markerRingSize, 32, 32);
     const pulseMaterial = new THREE.MeshBasicMaterial({
       color: CONFIG.markerPulseColor,
       transparent: true,
-      opacity: 0.3,
+      opacity: 0.9,
       side: THREE.DoubleSide
     });
     
-    // Create a 3D object for the pulse ring
-    const pulse = new THREE.Group();
     const pulseMesh = new THREE.Mesh(pulseGeometry, pulseMaterial);
+    // Make it a squished sphere by scaling down the y-axis
+    pulseMesh.scale.y = 0.25; // Adjust this value to control how squished it is
     
-    // Make the ring face the camera
-    pulseMesh.lookAt(0, 0, 0);
+    // Create a group to contain the pulse mesh
+    const pulse = new THREE.Group();
     pulse.add(pulseMesh);
     
-    // Position pulse at same coordinates as marker
+    // Position pulse at the same coordinates as marker
     pulse.position.set(position.x, position.y, position.z);
-    pulse.lookAt(0, 0, 0);
+    pulse.lookAt(0, 0, 0); // Orient properly toward center
     pulse.name = 'priest-pulse';
     pulse.priestData = priest;
     
     // Add random offset for animation
-    pulseMesh.pulseOffset = Math.random() * Math.PI * 2;
+    pulseMesh.pulseOffset = 0.0;
     
     // Add to pulse meshes array for animation
     pulseMeshes.push(pulseMesh);
@@ -2080,29 +2235,24 @@ Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,Ge
     // Add pulse to scene
     scene.add(pulse);
     
-    // Add invisible larger detection ring
-    const invisibleRingGeometry = new THREE.CircleGeometry(CONFIG.markerRingSize * 4, 32);
-    const invisibleRingMaterial = new THREE.MeshBasicMaterial({
+    // Add invisible larger detection sphere for better interaction
+    const invisibleSphereGeometry = new THREE.SphereGeometry(CONFIG.markerRingSize * 1.5, 16, 16);
+    const invisibleSphereMaterial = new THREE.MeshBasicMaterial({
       transparent: true,
       opacity: 0.0,
-      side: THREE.DoubleSide
     });
     
-    const invisibleRing = new THREE.Mesh(invisibleRingGeometry, invisibleRingMaterial);
-    
-    // Make it face the camera
-    invisibleRing.lookAt(0, 0, 0);
+    const invisibleSphere = new THREE.Mesh(invisibleSphereGeometry, invisibleSphereMaterial);
     
     // Position at same coordinates as marker
-    invisibleRing.position.set(position.x, position.y, position.z);
-    invisibleRing.name = 'priest-marker-invisible';
-    invisibleRing.priestData = priest;
+    invisibleSphere.position.set(position.x, position.y, position.z);
+    invisibleSphere.name = 'priest-marker-invisible';
+    invisibleSphere.priestData = priest;
     
     // Add to scene
-    scene.add(invisibleRing);
+    scene.add(invisibleSphere);
   });
 }
-
     // Show priest info in the panel
     function showPriestInfo(priest) {
       const infoPanel = document.getElementById('infoPanel');
