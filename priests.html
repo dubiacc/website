@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catholic Resistance Globe</title>
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/three@0.137.0/build/three.min.js"></script>
-  <script src="https://unpkg.com/three-globe@2.24.4/dist/three-globe.min.js"></script>
-  <script src="https://unpkg.com/three@0.137.0/examples/js/controls/OrbitControls.js"></script>
-  <script src="https://unpkg.com/papaparse@5.3.0/papaparse.min.js"></script>
+  <script src="/static/js/three.min.js"></script>
+  <script src="/static/js/three-globe.min.js"></script>
+  <script src="/static/js/OrbitControls.js"></script>
+  <script src="/static/js/papaparse.min.js"></script>
   <style>
     :root {
       --background-color: #f5f5f5;
@@ -101,6 +101,7 @@
     #priestInfo {
         display: flex;
         flex-direction: column;
+        margin-top: 10px;
     }
 
     .search-input {
@@ -174,13 +175,12 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         font-family: 'Times';
         font-style: italic;
+        font-size: 1.2rem;
     }
     
     .info-panel h2 {
         margin-top: 0;
-        margin-bottom: 21px;
         font-size: 2rem;
-        text-transform: uppercase;
         font-weight: bold;
     }
     
@@ -191,6 +191,47 @@
         justify-content: space-between;
     }
     
+    /* Add these styles to your existing CSS */
+    .info-paragraph {
+      margin-bottom: 10px;
+    }
+
+    .notes-section, .mass-times-section {
+      padding-top: 8px;
+    }
+
+    .notes-section strong, .mass-times-section strong {
+      display: inline;
+      padding-right: 5px;
+    }
+
+    .notes-section p, .mass-times-section p {
+      display: inline;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .mass-times-section {
+      color: #8b0000;
+      font-weight: 500;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .notes-section, .mass-times-section {
+        border-top: 1px solid rgba(255,255,255,0.1);
+      }
+      
+      .mass-times-section {
+        color: #ff6b6b;
+      }
+    }
+
+    /* Make title more prominent */
+    #priestName {
+      font-family: 'UnifrakturMaguntia', serif;
+      font-size: 2.5rem;
+    }
+
     .close-btn {
         position: absolute;
         top: 20px;
@@ -283,12 +324,31 @@
       focusAnimationDuration: 1000, // ms to animate to a point
       focusDistanceFactor: 0.8, // distance factor when focusing on a point (lower = closer)
       cloudOpacity: 0.8, // Add this line for cloud opacity
-      cloudBrightness: 1.2 // Add this line for cloud brightness
+      cloudBrightness: 1.2, // Add this line for cloud brightness
+      parishesUrl: null, // Set to CSV URL or null to use the default data
+      parishMarkerColor: '#cc0000',
+      parishMarkerSize: 0.3,
+      parishLineColor: '#cc0000',
+      parishLineWidth: 2,
     };
+
+    // Default priest data as fallback
+    const defaultPriestCsvData = `PriestID,Type,Name,Born Year,Associates With,Beliefs,Location/Area,Contact/Website,Ordained in Rite,Ordained By,Consecrated in Rite,Consecrated By,Bishop Line,Notes
+    pr001,Bishop,Richard Williamson,,SSPX (originally),Resistance,England,,Old Rite,Archbishop Lefebvre,Old Rite,Archbishop Lefebvre,Lefebvre,Consecrated in 1988 by Archbishop Lefebvre; leads "SSPX Resistance"
+    pr002,Bishop,Gerardo Zendejas,,Resistance,Non-sede,USA,https://thebluepaper.org/,Old Rite,Archbishop Lefebvre,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated bishop on May 11 2017 by Bp. Williamson
+    pr003,Bishop,Jean-Michel Faure,1941,Resistance,Non-sede,France,,Old Rite,Archbishop Lefebvre,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated in 2015 by Bp. Williamson in Brazil`;
+      
+    // Default parish data as fallback
+    const defaultParishCsvData = `ParishID,PriestID,ParishName,Latitude,Longitude,IsHomePriest,MassTimes,Notes
+    p001,pr001,St. Mary's Traditional Chapel,51.5074,-0.1278,true,"Sun 8:00AM, 10:30AM; Wed 7:00PM",Main parish for Bp. Williamson
+    p002,pr001,Sacred Heart Mission,52.4862,-1.8904,false,"1st Sun 4:00PM",Monthly Mass
+    p003,pr002,St. Athanasius Church,40.7128,-74.0060,true,"Sun 9:00AM, 11:00AM; Daily 7:30AM",Home base for Fr. Zendejas
+    p004,pr003,Notre Dame de La Salette,48.8566,2.3522,true,"Sun 9:30AM; Thu 6:30PM",Fr. Faure's primary church`;
+
 
     // Global variables
     let renderer, scene, camera, controls, globe;
-    let priests = [];
+    let priestMap = new Map(); // Map priestID to priest object
     let selectedPoint = null;
     let isGlobeReady = false;
     let raycaster, mouse;
@@ -298,7 +358,8 @@
     let searchResults = [];
     let selectedSearchIndex = -1;
     let enhancedEarth = null;
-    
+    let parishes = [];
+
     function isMobile() {
       // Check for touch capability
       if ('ontouchstart' in window || navigator.maxTouchPoints > 0)
@@ -383,103 +444,103 @@
     };
 
     function languageLongitudeRanges() {
-  return {
-    "en": [
-      { min: -170, max: -30, lat: 40.0 },    // North America
-      { min: -10, max: 2, lat: 51.0 },       // UK (narrower range)
-      { min: 65, max: 90, lat: 20.0 },       // South Asia (India)
-      { min: 110, max: 155, lat: -25.0 }     // Australia/NZ
-    ],
-    "de": [
-      { min: 5, max: 15, lat: 51.0 }         // Germany
-    ],
-    "ru": [
-      { min: 20, max: 180, lat: 55.0 }       // Russia
-    ],
-    "es": [
-      { min: -120, max: -30, lat: 15.0 },    // Latin America
-      { min: -10, max: 5, lat: 40.0 }        // Spain
-    ],
-    "pt": [
-      { min: -70, max: -35, lat: -10.0 },    // Brazil
-      { min: -10, max: 0, lat: 39.0 }        // Portugal
-    ],
-    "fr": [
-      { min: -80, max: -60, lat: 45.0 },     // Quebec/Canada
-      { min: -5, max: 8, lat: 46.0 },        // France
-      { min: 0, max: 20, lat: 14.0 }         // Francophone Africa
-    ],
-    "ar": [
-      { min: -10, max: 0, lat: 30.0 },       // North Africa
-      { min: 25, max: 60, lat: 25.0 }        // Middle East
-    ],
-    "zh": [
-      { min: 70, max: 135, lat: 35.0 }       // China
-    ],
-    "hi": [
-      { min: 70, max: 90, lat: 20.0 }        // India
-    ],
-    "ja": [
-      { min: 125, max: 150, lat: 36.0 }      // Japan
-    ],
-    "ko": [
-      { min: 125, max: 130, lat: 37.5 }      // Korea
-    ],
-    "it": [
-      { min: 7, max: 18, lat: 42.0 }         // Italy
-    ],
-    "pl": [
-      { min: 14, max: 24, lat: 52.0 }        // Poland
-    ]
-  };
-}
+      return {
+        "en": [
+          { min: -170, max: -30, lat: 40.0 },    // North America
+          { min: -10, max: 2, lat: 51.0 },       // UK (narrower range)
+          { min: 65, max: 90, lat: 20.0 },       // South Asia (India)
+          { min: 110, max: 155, lat: -25.0 }     // Australia/NZ
+        ],
+        "de": [
+          { min: 5, max: 15, lat: 51.0 }         // Germany
+        ],
+        "ru": [
+          { min: 20, max: 180, lat: 55.0 }       // Russia
+        ],
+        "es": [
+          { min: -120, max: -30, lat: 15.0 },    // Latin America
+          { min: -10, max: 5, lat: 40.0 }        // Spain
+        ],
+        "pt": [
+          { min: -70, max: -35, lat: -10.0 },    // Brazil
+          { min: -10, max: 0, lat: 39.0 }        // Portugal
+        ],
+        "fr": [
+          { min: -80, max: -60, lat: 45.0 },     // Quebec/Canada
+          { min: -5, max: 8, lat: 46.0 },        // France
+          { min: 0, max: 20, lat: 14.0 }         // Francophone Africa
+        ],
+        "ar": [
+          { min: -10, max: 0, lat: 30.0 },       // North Africa
+          { min: 25, max: 60, lat: 25.0 }        // Middle East
+        ],
+        "zh": [
+          { min: 70, max: 135, lat: 35.0 }       // China
+        ],
+        "hi": [
+          { min: 70, max: 90, lat: 20.0 }        // India
+        ],
+        "ja": [
+          { min: 125, max: 150, lat: 36.0 }      // Japan
+        ],
+        "ko": [
+          { min: 125, max: 130, lat: 37.5 }      // Korea
+        ],
+        "it": [
+          { min: 7, max: 18, lat: 42.0 }         // Italy
+        ],
+        "pl": [
+          { min: 14, max: 24, lat: 52.0 }        // Poland
+        ]
+      };
+    }
 
     // Language-based latitude estimation with geographical consistency check
     function estimateLatitude(longitude) {
-  const languages = getBrowserLanguages();
-  const llr = languageLongitudeRanges();
-  
-  // 1. First try non-English languages for geographical consistency
-  const nonEnglishLangs = languages.filter(lang => !getLanguageCode(lang).startsWith('en'));
-  
-  // Try non-English languages first
-  for (const language of nonEnglishLangs) {
-    const langCode = getLanguageCode(language);
+      const languages = getBrowserLanguages();
+    const llr = languageLongitudeRanges();
     
-    // Check if this language has specific longitude ranges defined
-    if (llr[langCode]) {
-      for (const range of llr[langCode]) {
-        // Check if the detected longitude falls within this language's expected range
-        if (longitude >= range.min && longitude <= range.max) {
-          console.log(`Found matching non-English language ${langCode} for longitude ${longitude}, using latitude ${range.lat}`);
-          return range.lat;
+    // 1. First try non-English languages for geographical consistency
+    const nonEnglishLangs = languages.filter(lang => !getLanguageCode(lang).startsWith('en'));
+    
+    // Try non-English languages first
+    for (const language of nonEnglishLangs) {
+      const langCode = getLanguageCode(language);
+      
+      // Check if this language has specific longitude ranges defined
+      if (llr[langCode]) {
+        for (const range of llr[langCode]) {
+          // Check if the detected longitude falls within this language's expected range
+          if (longitude >= range.min && longitude <= range.max) {
+            console.log(`Found matching non-English language ${langCode} for longitude ${longitude}, using latitude ${range.lat}`);
+            return range.lat;
+          }
         }
       }
     }
-  }
-  
-  // 2. If no non-English match, try all languages
-  for (const language of languages) {
-    const langCode = getLanguageCode(language);
     
-    if (llr[langCode]) {
-      for (const range of llr[langCode]) {
-        if (longitude >= range.min && longitude <= range.max) {
-          console.log(`Found matching language ${langCode} for longitude ${longitude}, using latitude ${range.lat}`);
-          return range.lat;
+    // 2. If no non-English match, try all languages
+    for (const language of languages) {
+      const langCode = getLanguageCode(language);
+      
+      if (llr[langCode]) {
+        for (const range of llr[langCode]) {
+          if (longitude >= range.min && longitude <= range.max) {
+            console.log(`Found matching language ${langCode} for longitude ${longitude}, using latitude ${range.lat}`);
+            return range.lat;
+          }
         }
       }
     }
-  }
-  
-  // 3. If no geographically consistent language found, try the general language map
-  // Prioritize non-English languages first
-  for (const language of nonEnglishLangs) {
-    const langCode = getLanguageCode(language);
-    if (languageLatitudeMap[langCode]) {
-      return languageLatitudeMap[langCode];
+    
+    // 3. If no geographically consistent language found, try the general language map
+    // Prioritize non-English languages first
+    for (const language of nonEnglishLangs) {
+      const langCode = getLanguageCode(language);
+      if (languageLatitudeMap[langCode]) {
+        return languageLatitudeMap[langCode];
+      }
     }
-  }
   
   // Then try any language
   for (const language of languages) {
@@ -540,6 +601,28 @@
     // Extract language code from full locale string
     function getLanguageCode(locale) { 
       return locale.split('-')[0].toLowerCase(); 
+    }
+
+    // Load parishes data
+    function loadParishesData() {
+      if (CONFIG.parishesUrl) {
+        fetch(CONFIG.parishesUrl)
+          .then(response => response.text())
+          .then(csvData => {
+            parseParishesData(csvData);
+            populateGlobeWithPriests();
+          })
+          .catch(error => {
+            console.error('Error loading parishes data:', error);
+            console.log('Falling back to default parishes data');
+            parseParishesData(defaultParishCsvData);
+            populateGlobeWithPriests();
+          });
+      } else {
+        // Use default hardcoded data
+        parseParishesData(defaultParishCsvData);
+        populateGlobeWithPriests();
+      }
     }
 
     // 7. Improved click detection to prevent clicking through the globe
@@ -1026,7 +1109,7 @@ function getTimezoneCoordinates(timezone) {
 
     // Progressive texture loader
     const TextureManager = {
-      baseUrl: 'https://dubia.cc/',
+      baseUrl: window.location.origin + '/static/img/',
       resolutions: {
         low: '2k_',
         high: '8k_'
@@ -1532,8 +1615,9 @@ function getTimezoneCoordinates(timezone) {
           vertexShader: EarthPBRShader.vertexShader,
           fragmentShader: EarthPBRShader.fragmentShader,
           uniforms: THREE.UniformsUtils.clone(EarthPBRShader.uniforms),
-          flatShading: false,
-          derivatives: true
+          extensions: {
+            derivatives: true
+          }
         });
         
         this.cloudMaterial = new THREE.ShaderMaterial({
@@ -1541,7 +1625,6 @@ function getTimezoneCoordinates(timezone) {
           fragmentShader: CloudShader.fragmentShader,
           uniforms: THREE.UniformsUtils.clone(CloudShader.uniforms),
           transparent: true,
-          flatShading: false,
           blending: THREE.CustomBlending,
           blendSrc: THREE.SrcAlphaFactor,
           blendDst: THREE.OneMinusSrcAlphaFactor
@@ -1552,7 +1635,6 @@ function getTimezoneCoordinates(timezone) {
           fragmentShader: AtmosphereShader.fragmentShader,
           uniforms: THREE.UniformsUtils.clone(AtmosphereShader.uniforms),
           transparent: true,
-          flatShading: false,
           blending: THREE.AdditiveBlending,
           side: THREE.BackSide
         });
@@ -2023,7 +2105,9 @@ function getTimezoneCoordinates(timezone) {
     }
     
 
+    // Update resetAllMarkers to also reset parish markers
     function resetAllMarkers() {
+      // Reset priest markers
       scene.children
         .filter(obj => obj.name === 'priest-marker')
         .forEach(marker => marker.material.color.set(CONFIG.markerColor));
@@ -2034,6 +2118,19 @@ function getTimezoneCoordinates(timezone) {
           pulse.children
             .filter(child => child.isMesh)
             .forEach(mesh => mesh.material.color.set(CONFIG.markerPulseColor));
+        });
+        
+      // Reset parish markers
+      scene.children
+        .filter(obj => obj.name === 'parish-marker')
+        .forEach(marker => marker.material.color.set(CONFIG.parishMarkerColor));
+        
+      // Reset parish lines
+      scene.children
+        .filter(obj => obj.name === 'parish-line')
+        .forEach(line => {
+          line.material.color.set(CONFIG.parishLineColor);
+          line.material.opacity = 0.7;
         });
     }
 
@@ -2086,7 +2183,6 @@ function getTimezoneCoordinates(timezone) {
         }
     }
           
-    // Mouse click event handler
     function onDocumentMouseClick(event) {
       // Calculate mouse position in normalized device coordinates
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -2095,11 +2191,13 @@ function getTimezoneCoordinates(timezone) {
       // Update the raycaster with the camera and mouse position
       raycaster.setFromCamera(mouse, camera);
       
-      // Get all interactive objects (markers and their related elements)
+      // Get all interactive objects
       const interactiveObjects = scene.children.filter(obj => 
         obj.name === 'priest-marker' || 
         obj.name === 'priest-pulse' || 
-        obj.name === 'priest-marker-invisible'
+        obj.name === 'priest-marker-invisible' ||
+        obj.name === 'parish-marker' ||
+        obj.name === 'parish-marker-invisible'
       );
       
       // Find all intersections with interactive objects
@@ -2107,8 +2205,7 @@ function getTimezoneCoordinates(timezone) {
       
       // If we have intersections
       if (intersects.length > 0) {
-        console.log("got intersect!")
-        /*
+
         // Filter out back-side hits
         const frontSideHits = intersects.filter(hit => {
           // For each hit, check if it's on the front side
@@ -2119,60 +2216,198 @@ function getTimezoneCoordinates(timezone) {
         });
         
         if (frontSideHits.length === 0) return;
-        */
-        frontSideHits = intersects;
-        console.log("got frontSideHits!")
-
-        // Map to collect unique priest data
+        
+        // Maps to collect unique data
         const hitPriests = new Map();
+        const hitParishes = new Map();
         
         // Process each hit
         for (const hit of frontSideHits) {
           const obj = hit.object;
-          let priestData;
           
-          // Get priest data based on object type
-          if (obj.name === 'priest-marker' || obj.name === 'priest-marker-invisible') {
-            priestData = obj.priestData;
-          } else if (obj.parent && obj.parent.name === 'priest-pulse') {
-            priestData = obj.parent.priestData;
-          } else if (obj.name === 'priest-pulse') {
-            priestData = obj.priestData;
-          }
-          
-          // Add to our map if we found priest data
-          if (priestData && !hitPriests.has(priestData.Name)) {
-            hitPriests.set(priestData.Name, {
-              priestData: priestData,
-              distance: hit.distance
-            });
-            
-            // Debug information
-            console.log(`Hit detected for priest: ${priestData.Name}`);
+          // Check for priest data
+          if ((obj.name === 'priest-marker' || obj.name === 'priest-marker-invisible') && obj.priestData) {
+            if (!hitPriests.has(obj.priestData.Name)) {
+              hitPriests.set(obj.priestData.Name, {
+                data: obj.priestData,
+                distance: hit.distance,
+                type: 'priest'
+              });
+            }
+          } else if (obj.parent && obj.parent.name === 'priest-pulse' && obj.parent.priestData) {
+            if (!hitPriests.has(obj.parent.priestData.Name)) {
+              hitPriests.set(obj.parent.priestData.Name, {
+                data: obj.parent.priestData,
+                distance: hit.distance,
+                type: 'priest'
+              });
+            }
+          } 
+          // Check for parish data
+          else if ((obj.name === 'parish-marker' || obj.name === 'parish-marker-invisible') && obj.parishData) {
+            if (!hitParishes.has(obj.parishData.ParishID)) {
+              hitParishes.set(obj.parishData.ParishID, {
+                data: obj.parishData,
+                distance: hit.distance,
+                type: 'parish'
+              });
+            }
           }
         }
         
-        // Convert map to array and sort by distance
-        const hitResults = Array.from(hitPriests.values())
-          .sort((a, b) => a.distance - b.distance);
+        // Combine and sort all hits
+        const allHits = [
+          ...Array.from(hitPriests.values()),
+          ...Array.from(hitParishes.values())
+        ].sort((a, b) => a.distance - b.distance);
         
-        console.log(`Found ${hitResults.length} hit results`);
-        
-        if (hitResults.length === 1) {
-          // Single priest hit
-          const priestData = hitResults[0].priestData;
-          showPriestInfo(priestData);
-          highlightSelectedPriest(priestData);
-          focusOnPoint(priestData.Latitude, priestData.Longitude);
-        } else if (hitResults.length > 1) {
-          // Multiple priests hit
+        if (allHits.length === 1) {
+          // Single hit
+          const hit = allHits[0];
+          if (hit.type === 'priest') {
+            showPriestInfo(hit.data);
+            highlightSelectedPriest(hit.data);
+            focusOnPoint(hit.data.Latitude, hit.data.Longitude);
+          } else {
+            // Show parish info
+            showParishInfo(hit.data);
+            highlightSelectedParish(hit.data);
+            focusOnPoint(hit.data.Latitude, hit.data.Longitude);
+          }
+        } else if (allHits.length > 1) {
+          // Multiple hits
           event.stopPropagation();
-          showProximitySearchResults(hitResults);
+          showProximitySearchResults(allHits);
         }
-      } else {
-        console.log('No intersections found');
       }
     }
+
+    // Add function to show parish info
+    function showParishInfo(parish) {
+      const infoPanel = document.getElementById('infoPanel');
+      const priestName = document.getElementById('priestName');
+      const priestInfo = document.getElementById('priestInfo');
+      
+      // Set parish name
+      priestName.textContent = parish.ParishName;
+      
+      // Clear previous info
+      priestInfo.innerHTML = '';
+      
+      // Get the priest associated with this parish
+      const priest = priestMap.get(parish.PriestID);
+      
+      // Priest information if available
+      if (priest) {
+        const priestParagraph = document.createElement('p');
+        priestParagraph.className = 'info-paragraph';
+        
+        let title;
+        switch(priest.Type) {
+          case "Bishop":
+            title = "Bp.";
+            break;
+          case "Father":
+            title = "Fr.";
+            break;
+          case "Sister":
+            title = "Sr.";
+            break;
+          case "Mother":
+            title = "M.";
+            break;
+          case "Brother":
+            title = "Br.";
+            break;
+          default:
+            title = "";
+        }
+        
+        let lastName = priest.Name.split(' ').pop();
+        let firstInitial = priest.Name.charAt(0);
+        
+        priestParagraph.textContent = `This parish is ${parish.IsHomePriest ? 'the home parish of' : 'served by'} ${title} ${firstInitial}. ${lastName}.`;
+        priestInfo.appendChild(priestParagraph);
+      }
+      
+      // Mass times section
+      if (parish.MassTimes) {
+        const massTimesSection = document.createElement('span');
+        massTimesSection.className = 'mass-times-section';
+        
+        const massTimesTitle = document.createElement('strong');
+        massTimesTitle.textContent = 'Mass Times:';
+        massTimesSection.appendChild(massTimesTitle);
+        
+        const massTimesList = document.createElement('p');
+        massTimesList.textContent = parish.MassTimes;
+        massTimesSection.appendChild(massTimesList);
+        
+        priestInfo.appendChild(massTimesSection);
+      }
+      
+      // Notes section
+      if (parish.Notes) {
+        const notesSection = document.createElement('span');
+        notesSection.className = 'notes-section';
+        
+        const notesTitle = document.createElement('strong');
+        notesTitle.textContent = 'Notes:';
+        notesSection.appendChild(notesTitle);
+        
+        const notesContent = document.createElement('p');
+        notesContent.textContent = parish.Notes;
+        notesSection.appendChild(notesContent);
+        
+        priestInfo.appendChild(notesSection);
+      }
+      
+      // Add Google Maps link
+      const mapsRow = document.createElement('div');
+      mapsRow.className = 'info-row';
+      mapsRow.innerHTML = `<a href="${parish.GoogleMaps}" target="_blank" class="info-link maps">View on Google Maps</a>`;
+      priestInfo.appendChild(mapsRow);
+      
+      // Show the info panel
+      infoPanel.style.display = 'block';
+    }
+
+    // Highlight selected parish
+    function highlightSelectedParish(parish) {
+      // First reset all markers
+      resetAllMarkers();
+      
+      // Then highlight the selected parish marker
+      scene.children
+        .filter(obj => obj.name === 'parish-marker' && obj.parishData && obj.parishData.ParishID === parish.ParishID)
+        .forEach(marker => {
+          marker.material.color.set('yellow');
+        });
+      
+      // Highlight connected lines
+      scene.children
+        .filter(obj => obj.name === 'parish-line')
+        .forEach(line => {
+          // Get the positions of the line's vertices
+          const positions = line.geometry.attributes.position.array;
+          const lineStart = new THREE.Vector3(positions[0], positions[1], positions[2]);
+          const lineEnd = new THREE.Vector3(positions[3], positions[4], positions[5]);
+          
+          // Get the position of the selected parish
+          const parishPosition = getPointOnGlobe(parish.Latitude, parish.Longitude, CONFIG.labelAltitude);
+          
+          // Calculate distances to line start and end
+          const distanceToStart = lineStart.distanceTo(parishPosition);
+          const distanceToEnd = lineEnd.distanceTo(parishPosition);
+          
+          // If parish position is close to either end of the line, highlight it
+          if (distanceToStart < 1 || distanceToEnd < 1) {
+            line.material.color.set('yellow');
+            line.material.opacity = 1.0;
+          }
+        });
+    }
+
     // Function to display search results when multiple priests are selected
     function showProximitySearchResults(results) {
       let searchResultsContainer = document.getElementById('searchResults');
@@ -2183,20 +2418,30 @@ function getTimezoneCoordinates(timezone) {
       selectedSearchIndex = -1;
       
       // Add results to global searchResults array
-      searchResults = results.map(result => result.priestData);
+      searchResults = results.map(result => result.data);
       
       // Create result items
       results.forEach((result, i) => {
-        const priest = result.priestData;
+        const data = result.data;
         const resultItem = document.createElement('div');
         resultItem.className = 'search-result-item';
         resultItem.tabIndex = i + 200;
-        resultItem.textContent = `${priest.Name} (${priest['Location/Area'] || 'Unknown'})`;
+        
+        if (result.type === 'priest') {
+          resultItem.textContent = `${data.Name} (${data['Location/Area'] || 'Unknown'})`;
+        } else {
+          resultItem.textContent = `${data.ParishName} (Parish)`;
+        }
         
         resultItem.addEventListener('click', () => {
-          showPriestInfo(priest);
-          focusOnPoint(priest.Latitude, priest.Longitude);
-          highlightSelectedPriest(priest);
+          if (result.type === 'priest') {
+            showPriestInfo(data);
+            highlightSelectedPriest(data);
+          } else {
+            showParishInfo(data);
+            highlightSelectedParish(data);
+          }
+          focusOnPoint(data.Latitude, data.Longitude);
           searchResultsContainer.style.display = 'none';
         });
         
@@ -2244,41 +2489,32 @@ function getTimezoneCoordinates(timezone) {
       });
     }
     
-    // Load priests data
+    // Load priests data (from URL or fallback)
     function loadPriestsData() {
-      // Default data as fallback
-      const defaultCsvData = `Type,Name,Born Year,Associates With,Beliefs,Location/Area,Contact/Website,Ordained in Rite,Ordained By,Consecrated in Rite,Consecrated By,Bishop Line,Notes
-Bishop,Richard Williamson,,SSPX (originally),Resistance,England,,Old Rite,Archbishop Lefebvre,Old Rite,Archbishop Lefebvre,Lefebvre,Consecrated in 1988 by Archbishop Lefebvre; leads "SSPX Resistance"
-Bishop,Gerardo Zendejas,,Resistance,Non-sede,USA,https://thebluepaper.org/,Old Rite,Archbishop Lefebvre,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated bishop on May 11 2017 by Bp. Williamson
-Bishop,Jean-Michel Faure,1941,Resistance,Non-sede,France,,Old Rite,Archbishop Lefebvre,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated in 2015 by Bp. Williamson in Brazil
-Bishop,Paul Morgan,,Independent? (formerly SSPX),Mixed,Unknown,,Old Rite,Archbishop Lefebvre,,,,Former SSPX District Superior of GB; uncertain present status
-Bishop,Thomas Aquinas (OSB),,Resistance,Non-sede,Brazil,,Old Rite,Archbishop Lefebvre,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated in 2016 by Bp. Williamson (Nova Friburgo)
-Bishop,Giacomo Ballini,,Resistance,Non-sede,Italy/Ireland,,Old Rite,,Old Rite,Bp. R. Williamson,Lefebvre,Works with Fr. Chazal/Hewko
-Bishop,Czeslaw Stobnicki,,Resistance,Non-sede,Poland,,Old Rite,,Old Rite,Bp. R. Williamson,Lefebvre,Little info available; mention as "Bp. Stobnicki (PL)"
-Bishop,Carlo Maria Viganò,1941,Independent? (ex-Nuncio),Unclear (traditional-leaning),Europe,,New Rite (likely),Pope Paul VI or John Paul II,New Rite (likely),,,"Conciliar, sometimes labeled "sede?" by rumor, but no official claim"
-Father,Martin Fuchs,,Resistance,Non-sede,Austria,https://corjesu.info/wordpress/?p=2240,Old Rite,,,,,Mentioned with "SSPX Resistance" in Austria
-Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,German SSPX Resistance priest`;
-      
+      // Load priests data
       if (CONFIG.dataUrl) {
-        // Fetch data from configured URL
         fetch(CONFIG.dataUrl)
           .then(response => response.text())
           .then(csvData => {
-            parseAndProcessData(csvData);
+            parsePriestsData(csvData);
+            // After priests are loaded, load parishes
+            loadParishesData();
           })
           .catch(error => {
-            console.error('Error loading data:', error);
-            console.log('Falling back to default data');
-            parseAndProcessData(defaultCsvData);
+            console.error('Error loading priests data:', error);
+            console.log('Falling back to default priests data');
+            parsePriestsData(defaultPriestCsvData);
+            loadParishesData();
           });
       } else {
         // Use default hardcoded data
-        parseAndProcessData(defaultCsvData);
+        parsePriestsData(defaultPriestCsvData);
+        loadParishesData();
       }
     }
-    
-    // Parse and process CSV data
-    function parseAndProcessData(csvData) {
+
+    // Parse priests data
+    function parsePriestsData(csvData) {
       Papa.parse(csvData, {
         header: true,
         skipEmptyLines: true,
@@ -2286,21 +2522,55 @@ Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,Ge
           // Process data and add missing columns (lat, long, GoogleMaps)
           priests = addGeoData(results.data);
           
-          // Once data is loaded, populate the globe
-          window.setTimeout(function() {
-            populateGlobeWithMarkers(priests);
-          }, 400);
+          // Create a map of priest IDs to priest objects
+          priestMap.clear();
+          priests.forEach(priest => {
+            priestMap.set(priest.PriestID, priest);
+          });
+          
+          console.log(`Loaded ${priests.length} priests`);
         },
         error: (error) => {
-          console.error('Error parsing CSV:', error);
+          console.error('Error parsing priests CSV:', error);
         }
       });
     }
-    
-    // Add geographic data to priests
+
+    // Parse parishes data
+    function parseParishesData(csvData) {
+      Papa.parse(csvData, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (results) => {
+          parishes = results.data.map(parish => {
+            // Convert boolean string to actual boolean
+            parish.IsHomePriest = parish.IsHomePriest === 'true';
+            
+            // Add GoogleMaps link
+            parish.GoogleMaps = `https://maps.google.com/?q=${parish.Latitude},${parish.Longitude}`;
+            
+            // Convert string coordinates to numbers
+            parish.Latitude = parseFloat(parish.Latitude);
+            parish.Longitude = parseFloat(parish.Longitude);
+            
+            // Ensure MassTimes exists (might be empty in some cases)
+            parish.MassTimes = parish.MassTimes || '';
+            
+            return parish;
+          });
+          
+          console.log(`Loaded ${parishes.length} parishes`);
+        },
+        error: (error) => {
+          console.error('Error parsing parishes CSV:', error);
+        }
+      });
+    }
+
+    // Modify addGeoData to handle the priests with PriestID
     function addGeoData(priests) {
       return priests.map(priest => {
-        // Assign locations to actual coordinates
+        // Use existing location data if available, otherwise assign new coordinates
         let lat, lng;
         
         switch(priest['Location/Area']) {
@@ -2345,7 +2615,7 @@ Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,Ge
         };
       });
     }
-    
+
     function getPointOnGlobe(lat, lng, altitude = 0) {
       const phi = (90 - lat) * Math.PI / 180;
       const theta = (lng + 180) * Math.PI / 180;
@@ -2361,127 +2631,360 @@ Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,Ge
       return new THREE.Vector3(x, y, z);
     }
 
+    // Function to populate the globe with both priests and parishes
+    function populateGlobeWithPriests() {
+      if (!isGlobeReady) {
+        console.log('Globe not ready yet, waiting...');
+        setTimeout(populateGlobeWithPriests, 500);
+        return;
+      }
+      
+      // Clear existing markers
+      const existingObjects = scene.children.filter(obj => 
+        obj.name === 'priest-marker' || 
+        obj.name === 'priest-pulse' || 
+        obj.name === 'priest-marker-invisible' ||
+        obj.name === 'parish-marker' ||
+        obj.name === 'parish-line'
+      );
+      
+      existingObjects.forEach(obj => scene.remove(obj));
+      
+      // Clear pulse meshes array
+      pulseMeshes = [];
+      
+      // Add priest markers
+      populateGlobeWithMarkers(priests);
+      
+      // Add parish markers
+      addParishesToGlobe();
+    }
+    
+    // Function to add parishes to the globe
+    function addParishesToGlobe() {
+      parishes.forEach(parish => {
+        // Get coordinates
+        const lat = parish.Latitude;
+        const lng = parish.Longitude;
+        
+        // Calculate position on globe surface
+        const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
+        
+        // Add parish marker (red dot)
+        const markerGeometry = new THREE.SphereGeometry(CONFIG.parishMarkerSize, 16, 16);
+        markerGeometry.computeVertexNormals(); // Ensure smooth normals
+        
+        const markerMaterial = new THREE.MeshPhongMaterial({ 
+          color: CONFIG.parishMarkerColor,
+          shininess: 0,
+          flatShading: false
+        });
+        
+        const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+        
+        // Set marker position
+        marker.position.set(position.x, position.y, position.z);
+        marker.name = 'parish-marker';
+        marker.parishData = parish;
+        
+        // Add marker to scene
+        scene.add(marker);
+        
+        // If not home parish, add line to priest's home parish
+        if (!parish.IsHomePriest) {
+          // Find this priest's home parish
+          const homePrish = parishes.find(p => 
+            p.PriestID === parish.PriestID && p.IsHomePriest
+          );
+          
+          if (homePrish) {
+            // Calculate home parish position
+            const homePosition = getPointOnGlobe(
+              homePrish.Latitude, 
+              homePrish.Longitude, 
+              CONFIG.labelAltitude
+            );
+            
+            // Create a line between parish and home parish
+            const lineGeometry = new THREE.BufferGeometry();
+            const points = [
+              new THREE.Vector3(position.x, position.y, position.z),
+              new THREE.Vector3(homePosition.x, homePosition.y, homePosition.z)
+            ];
+            lineGeometry.setFromPoints(points);
+            
+            const lineMaterial = new THREE.LineBasicMaterial({
+              color: CONFIG.parishLineColor,
+              linewidth: CONFIG.parishLineWidth,
+              transparent: true,
+              opacity: 0.7
+            });
+            
+            const line = new THREE.Line(lineGeometry, lineMaterial);
+            line.name = 'parish-line';
+            
+            // Add line to scene
+            scene.add(line);
+          }
+        }
+        
+        // Add invisible larger detection sphere for better interaction
+        const invisibleSphereGeometry = new THREE.SphereGeometry(CONFIG.parishMarkerSize * 2, 16, 16);
+        const invisibleSphereMaterial = new THREE.MeshBasicMaterial({
+          transparent: true,
+          opacity: 0.0,
+        });
+        
+        const invisibleSphere = new THREE.Mesh(invisibleSphereGeometry, invisibleSphereMaterial);
+        
+        // Position at same coordinates as marker
+        invisibleSphere.position.set(position.x, position.y, position.z);
+        invisibleSphere.name = 'parish-marker-invisible';
+        invisibleSphere.parishData = parish;
+        
+        // Add to scene
+        scene.add(invisibleSphere);
+      });
+    }
+
     // Populate the globe with markers and pulse rings
     function populateGlobeWithMarkers(data) {
-  if (!globe) return;
-  
-  // Clear any existing markers
-  const existingMarkers = scene.children.filter(obj => 
-    obj.name === 'priest-marker' || obj.name === 'priest-pulse' || obj.name === 'priest-marker-invisible'
-  );
-  existingMarkers.forEach(marker => scene.remove(marker));
-  
-  // Clear pulse meshes array
-  pulseMeshes = [];
-  
-  // Create markers for each priest
-  data.forEach(priest => {
-    // Get coordinates
-    const lat = priest.Latitude;
-    const lng = priest.Longitude;
-    
-    // Calculate position on globe surface
-    const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
-    
-    // Add dot marker with smooth shading
-    const markerGeometry = new THREE.SphereGeometry(CONFIG.markerSize, 16, 16);
-    markerGeometry.computeVertexNormals(); // Ensure smooth normals
-    
-    const markerMaterial = new THREE.MeshPhongMaterial({ 
-      color: CONFIG.markerColor,
-      shininess: 0,
-      flatShading: false
-    });
-    
-    const marker = new THREE.Mesh(markerGeometry, markerMaterial);
-    
-    // Set marker position
-    marker.position.set(position.x, position.y, position.z);
-    marker.name = 'priest-marker';
-    marker.priestData = priest;
-    
-    // Add marker to scene
-    scene.add(marker);
-    
-    // === REPLACED RING WITH SQUISHED SPHERE ===
-    // Add pulsating squished sphere around marker
-    const pulseGeometry = new THREE.SphereGeometry(CONFIG.markerRingSize, 32, 32);
-    const pulseMaterial = new THREE.MeshBasicMaterial({
-      color: CONFIG.markerPulseColor,
-      transparent: true,
-      opacity: 0.9,
-      side: THREE.DoubleSide
-    });
-    
-    const pulseMesh = new THREE.Mesh(pulseGeometry, pulseMaterial);
-    // Make it a squished sphere by scaling down the y-axis
-    pulseMesh.scale.y = 0.25; // Adjust this value to control how squished it is
-    
-    // Create a group to contain the pulse mesh
-    const pulse = new THREE.Group();
-    pulse.add(pulseMesh);
-    
-    // Position pulse at the same coordinates as marker
-    pulse.position.set(position.x, position.y, position.z);
-    pulse.lookAt(0, 0, 0); // Orient properly toward center
-    pulse.name = 'priest-pulse';
-    pulse.priestData = priest;
-    
-    // Add random offset for animation
-    pulseMesh.pulseOffset = 0.0;
-    
-    // Add to pulse meshes array for animation
-    pulseMeshes.push(pulseMesh);
-    
-    // Add pulse to scene
-    scene.add(pulse);
-    
-    // Add invisible larger detection sphere for better interaction
-    const invisibleSphereGeometry = new THREE.SphereGeometry(CONFIG.markerRingSize * 1.5, 16, 16);
-    const invisibleSphereMaterial = new THREE.MeshBasicMaterial({
-      transparent: true,
-      opacity: 0.0,
-    });
-    
-    const invisibleSphere = new THREE.Mesh(invisibleSphereGeometry, invisibleSphereMaterial);
-    
-    // Position at same coordinates as marker
-    invisibleSphere.position.set(position.x, position.y, position.z);
-    invisibleSphere.name = 'priest-marker-invisible';
-    invisibleSphere.priestData = priest;
-    
-    // Add to scene
-    scene.add(invisibleSphere);
-  });
-}
+      if (!globe) return;
+      
+      // Clear any existing markers
+      const existingMarkers = scene.children.filter(obj => 
+        obj.name === 'priest-marker' || obj.name === 'priest-pulse' || obj.name === 'priest-marker-invisible'
+      );
+      existingMarkers.forEach(marker => scene.remove(marker));
+      
+      // Clear pulse meshes array
+      pulseMeshes = [];
+      
+      // Create markers for each priest
+      data.forEach(priest => {
+        // Get coordinates
+        const lat = priest.Latitude;
+        const lng = priest.Longitude;
+        
+        // Calculate position on globe surface
+        const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
+        
+        // Add dot marker with smooth shading
+        const markerGeometry = new THREE.SphereGeometry(CONFIG.markerSize, 16, 16);
+        markerGeometry.computeVertexNormals(); // Ensure smooth normals
+        
+        const markerMaterial = new THREE.MeshPhongMaterial({ 
+          color: CONFIG.markerColor,
+          shininess: 0,
+          flatShading: false
+        });
+        
+        const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+        
+        // Set marker position
+        marker.position.set(position.x, position.y, position.z);
+        marker.name = 'priest-marker';
+        marker.priestData = priest;
+        
+        // Add marker to scene
+        scene.add(marker);
+        
+        // === REPLACED RING WITH SQUISHED SPHERE ===
+        // Add pulsating squished sphere around marker
+        const pulseGeometry = new THREE.SphereGeometry(CONFIG.markerRingSize, 32, 32);
+        const pulseMaterial = new THREE.MeshBasicMaterial({
+          color: CONFIG.markerPulseColor,
+          transparent: true,
+          opacity: 0.9,
+          side: THREE.DoubleSide
+        });
+        
+        const pulseMesh = new THREE.Mesh(pulseGeometry, pulseMaterial);
+        // Make it a squished sphere by scaling down the y-axis
+        pulseMesh.scale.y = 0.25; // Adjust this value to control how squished it is
+        
+        // Create a group to contain the pulse mesh
+        const pulse = new THREE.Group();
+        pulse.add(pulseMesh);
+        
+        // Position pulse at the same coordinates as marker
+        pulse.position.set(position.x, position.y, position.z);
+        pulse.lookAt(0, 0, 0); // Orient properly toward center
+        pulse.name = 'priest-pulse';
+        pulse.priestData = priest;
+        
+        // Add random offset for animation
+        pulseMesh.pulseOffset = 0.0;
+        
+        // Add to pulse meshes array for animation
+        pulseMeshes.push(pulseMesh);
+        
+        // Add pulse to scene
+        scene.add(pulse);
+        
+        // Add invisible larger detection sphere for better interaction
+        const invisibleSphereGeometry = new THREE.SphereGeometry(CONFIG.markerRingSize * 1.5, 16, 16);
+        const invisibleSphereMaterial = new THREE.MeshBasicMaterial({
+          transparent: true,
+          opacity: 0.0,
+        });
+        
+        const invisibleSphere = new THREE.Mesh(invisibleSphereGeometry, invisibleSphereMaterial);
+        
+        // Position at same coordinates as marker
+        invisibleSphere.position.set(position.x, position.y, position.z);
+        invisibleSphere.name = 'priest-marker-invisible';
+        invisibleSphere.priestData = priest;
+        
+        // Add to scene
+        scene.add(invisibleSphere);
+      });
+    }
+
     // Show priest info in the panel
     function showPriestInfo(priest) {
       const infoPanel = document.getElementById('infoPanel');
       const priestName = document.getElementById('priestName');
       const priestInfo = document.getElementById('priestInfo');
       
-      // Set priest name
-      priestName.textContent = priest.Name;
+      // Set priest name with title abbreviation and last name
+      let title;
+      switch(priest.Type) {
+        case "Bishop":
+          title = "Bp.";
+          break;
+        case "Father":
+          title = "Fr.";
+          break;
+        case "Sister":
+          title = "Sr.";
+          break;
+        case "Mother":
+          title = "M.";
+          break;
+        case "Brother":
+          title = "Br.";
+          break;
+        default:
+          title = "";
+      }
+      
+      let lastName = priest.Name.split(' ').pop();
+      let firstInitial = priest.Name.charAt(0);
+      
+      priestName.textContent = `${title} ${firstInitial}. ${lastName}`;
       
       // Clear previous info
       priestInfo.innerHTML = '';
       
-      // Add fields in configured order
-      CONFIG.fieldOrder.forEach(field => {
-        if (priest[field]) {
-          const row = document.createElement('div');
-          row.className = 'info-row';
-          
-          if (field === 'Contact/Website' && priest[field].startsWith('http')) {
-            let niceurl = priest[field].replace("https://", "").replace("http://");
-            row.innerHTML = `<strong>${field}:</strong> <a href="${priest[field]}" target="_blank" class="info-link">${niceurl}</a>`;
-          } else {
-            row.innerHTML = `<strong>${field}:</strong> <p>${priest[field]}</p>`;
-          }
-          
-          priestInfo.appendChild(row);
+      // Create first paragraph: biographical info
+      const bioParagraph = document.createElement('p');
+      bioParagraph.className = 'info-paragraph';
+      let bioText = '';
+      
+      // Born year
+      if (priest['Born Year']) {
+        bioText += `Born ${priest['Born Year']}, `;
+      }
+      
+      // Ordination info
+      if (priest['Ordained in Rite'] || priest['Ordained By']) {
+        bioText += 'Ordained priest in ';
+        if (priest['Ordained in Rite']) {
+          bioText += priest['Ordained in Rite'] + ' ';
         }
-      });
+        if (priest['Ordained By']) {
+          bioText += 'by ' + priest['Ordained By'] + ', ';
+        } else {
+          bioText += ', ';
+        }
+      }
+      
+      // Consecration info (for bishops)
+      if (priest.Type === "Bishop" && (priest['Consecrated in Rite'] || priest['Consecrated By'])) {
+        bioText += 'Consecrated Bishop in ';
+        if (priest['Consecrated in Rite']) {
+          bioText += priest['Consecrated in Rite'] + ' ';
+        }
+        if (priest['Consecrated By']) {
+          bioText += 'by ' + priest['Consecrated By'] + ' ';
+        }
+        
+        // Bishop line
+        if (priest['Bishop Line']) {
+          bioText += `(Bishop line: ${priest['Bishop Line']})`;
+        }
+        bioText += '.';
+      } else if (bioText) {
+        // End the sentence if it's not empty and not a bishop
+        bioText = bioText.replace(/, $/, '.');
+      }
+      
+      // Only add the paragraph if we have bio info
+      if (bioText) {
+        bioParagraph.textContent = bioText;
+        priestInfo.appendChild(bioParagraph);
+      }
+      
+      // Create second paragraph: ministry info
+      const ministryParagraph = document.createElement('p');
+      ministryParagraph.className = 'info-paragraph';
+      let ministryText = '';
+      
+      // Location
+      if (priest['Location/Area']) {
+        ministryText += `Operates in ${priest['Location/Area']}`;
+      }
+      
+      // Associates With
+      if (priest['Associates With']) {
+        if (ministryText) ministryText += ', ';
+        ministryText += `associates with ${priest['Associates With']}`;
+      }
+      
+      // Beliefs
+      if (priest['Beliefs']) {
+        if (ministryText) ministryText += ', ';
+        ministryText += `holds ${priest['Beliefs']} beliefs`;
+      }
+      
+      // End the sentence if it's not empty
+      if (ministryText) {
+        ministryText += '.';
+        ministryParagraph.textContent = ministryText;
+        priestInfo.appendChild(ministryParagraph);
+      }
+      
+      // Contact/Website as a clickable link if present
+      if (priest['Contact/Website']) {
+        const contactRow = document.createElement('p');
+        contactRow.className = 'info-paragraph';
+        
+        if (priest['Contact/Website'].startsWith('http')) {
+          let niceurl = priest['Contact/Website'].replace(/^https?:\/\//, "");
+          contactRow.innerHTML = `Website: <a href="${priest['Contact/Website']}" target="_blank" class="info-link">${niceurl}</a>`;
+        } else {
+          contactRow.innerHTML = `Contact: ${priest['Contact/Website']}`;
+        }
+        
+        priestInfo.appendChild(contactRow);
+      }
+      
+      // Notes section (kept separate as requested)
+      if (priest['Notes']) {
+        const notesSection = document.createElement('span');
+        notesSection.className = 'notes-section';
+        
+        const notesTitle = document.createElement('strong');
+        notesTitle.textContent = 'Notes:';
+        notesSection.appendChild(notesTitle);
+        
+        const notesContent = document.createElement('p');
+        notesContent.textContent = priest['Notes'];
+        notesSection.appendChild(notesContent);
+        
+        priestInfo.appendChild(notesSection);
+      }
       
       // Add Google Maps link
       const mapsRow = document.createElement('div');
@@ -2492,70 +2995,103 @@ Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,Ge
       // Show the info panel
       infoPanel.style.display = 'block';
     }
-    
+
     // Handle search input
     function handleSearch(event) {
-        const searchTerm = event.target.value.toLowerCase();
-        const searchResultsContainer = document.getElementById('searchResults');
+      const searchTerm = event.target.value.toLowerCase();
+      const searchResultsContainer = document.getElementById('searchResults');
+      
+      // Reset search results
+      searchResultsContainer.innerHTML = '';
+      searchResults = [];
+      selectedSearchIndex = -1;
+      
+      if (searchTerm.length < 1) {
+        searchResultsContainer.style.display = 'none';
+        resetAllMarkers();
+        return;
+      }
+      
+      // Filter priests based on search term
+      const matchingPriests = priests.filter(priest => 
+        priest.Name.toLowerCase().includes(searchTerm) || 
+        (priest['Location/Area'] && priest['Location/Area'].toLowerCase().includes(searchTerm))
+      ).map(priest => ({ data: priest, type: 'priest' }));
+      
+      // Filter parishes based on search term
+      const matchingParishes = parishes.filter(parish => 
+        parish.ParishName.toLowerCase().includes(searchTerm) ||
+        (parish.Notes && parish.Notes.toLowerCase().includes(searchTerm))
+      ).map(parish => ({ data: parish, type: 'parish' }));
+      
+      // Combine the results
+      const combinedResults = [...matchingPriests, ...matchingParishes];
+      
+      // Update searchResults array with just the data
+      searchResults = combinedResults.map(item => item.data);
+      
+      // Highlight matching markers
+      if (combinedResults.length > 0) {
+        // Reset all markers first
+        resetAllMarkers();
         
-        // Reset search results
-        searchResultsContainer.innerHTML = '';
-        searchResults = [];
-        selectedSearchIndex = -1;
+        // Highlight priest markers
+        matchingPriests.forEach(item => {
+          scene.children
+            .filter(obj => obj.name === 'priest-marker' && obj.priestData && obj.priestData.Name === item.data.Name)
+            .forEach(marker => {
+              marker.material.color.set('yellow');
+            });
+        });
         
-        if (searchTerm.length < 1) {
-            searchResultsContainer.style.display = 'none';
-            resetAllMarkers();
-            return;
-        }
-        
-        // Filter priests based on search term
-        searchResults = priests.filter(priest => 
-            priest.Name.toLowerCase().includes(searchTerm) || 
-            (priest['Location/Area'] && priest['Location/Area'].toLowerCase().includes(searchTerm))
-        );
-        
-        // Highlight matching markers
-        const markers = globe.children.filter(obj => obj.name === 'priest-marker');
-        markers.forEach(marker => {
-            const priest = marker.priestData;
-            const isMatch = searchResults.some(p => p.Name === priest.Name);
-            
-            marker.material.color.set(isMatch ? 'yellow' : CONFIG.markerColor);
+        // Highlight parish markers
+        matchingParishes.forEach(item => {
+          scene.children
+            .filter(obj => obj.name === 'parish-marker' && obj.parishData && obj.parishData.ParishID === item.data.ParishID)
+            .forEach(marker => {
+              marker.material.color.set('yellow');
+            });
         });
         
         // Populate search results dropdown
-        if (searchResults.length > 0) {
-            searchResults.forEach((priest, i) => {
-            const resultItem = document.createElement('div');
-            resultItem.className = 'search-result-item';
-            // Use consecutive tabindex values starting from 1 higher than the search input
-            resultItem.tabIndex = i + 200; 
-            resultItem.textContent = `${priest.Name} (${priest['Location/Area'] || 'Unknown'})`;
-            
-            // Add click and keydown handlers
-            resultItem.addEventListener('click', () => {
-                showPriestInfo(priest);
-                focusOnPoint(priest.Latitude, priest.Longitude);
-                highlightSelectedPriest(priest);
-                searchResultsContainer.style.display = 'none';
-                document.getElementById('searchInput').value = '';
-            });
-            
-            resultItem.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                resultItem.click();
-                }
-            });
-            
-            searchResultsContainer.appendChild(resultItem);
-            });
-            
-            searchResultsContainer.style.display = 'block';
-        } else {
+        combinedResults.forEach((item, i) => {
+          const resultItem = document.createElement('div');
+          resultItem.className = 'search-result-item';
+          resultItem.tabIndex = i + 200;
+          
+          if (item.type === 'priest') {
+            resultItem.textContent = `${item.data.Name} (${item.data['Location/Area'] || 'Unknown'})`;
+          } else {
+            resultItem.textContent = `${item.data.ParishName} (Parish)`;
+          }
+          
+          resultItem.addEventListener('click', () => {
+            if (item.type === 'priest') {
+              showPriestInfo(item.data);
+              highlightSelectedPriest(item.data);
+            } else {
+              showParishInfo(item.data);
+              highlightSelectedParish(item.data);
+            }
+            focusOnPoint(item.data.Latitude, item.data.Longitude);
             searchResultsContainer.style.display = 'none';
-        }
+            document.getElementById('searchInput').value = '';
+          });
+          
+          resultItem.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              resultItem.click();
+            }
+          });
+          
+          searchResultsContainer.appendChild(resultItem);
+        });
+        
+        searchResultsContainer.style.display = 'block';
+      } else {
+        searchResultsContainer.style.display = 'none';
+      }
     }
 
     function clearSearchResults(searchResultsContainer) {
