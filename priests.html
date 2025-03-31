@@ -282,6 +282,59 @@
         max-height: 60vh;
       }
     }
+    .parishes-section {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .parishes-section h3 {
+    margin-top: 0;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+  }
+
+  .parishes-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 5px;
+  }
+
+  .parish-item {
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .parishes-section {
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+  }
+
+  .priest-link {
+      color: var(--link-color);
+      text-decoration: underline;
+      cursor: pointer;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      display: inline-block;
+    }
+    
+    .priest-link:hover {
+      text-decoration: none;
+    }
+    
+    .parish-item {
+      cursor: pointer;
+      padding: 3px 0;
+      transition: background-color 0.2s;
+    }
+    
+    .parish-item:hover {
+      background-color: rgba(128, 128, 128, 0.1);
+      border-radius: 3px;
+      padding-left: 5px;
+    }
   </style>
 </head>
 <body>
@@ -329,7 +382,7 @@
       parishMarkerColor: '#cc0000',
       parishMarkerSize: 0.3,
       parishLineColor: '#cc0000',
-      parishLineWidth: 2,
+      parishLineWidth: 30,
     };
 
     // Default priest data as fallback
@@ -342,7 +395,8 @@
     const defaultParishCsvData = `ParishID,PriestID,ParishName,Latitude,Longitude,IsHomePriest,MassTimes,Notes
     p001,pr001,St. Mary's Traditional Chapel,51.5074,-0.1278,true,"Sun 8:00AM, 10:30AM; Wed 7:00PM",Main parish for Bp. Williamson
     p002,pr001,Sacred Heart Mission,52.4862,-1.8904,false,"1st Sun 4:00PM",Monthly Mass
-    p003,pr002,St. Athanasius Church,40.7128,-74.0060,true,"Sun 9:00AM, 11:00AM; Daily 7:30AM",Home base for Fr. Zendejas
+    p003,pr002,St. Athanasius Church,40.7128,-74.0060,false,"Sun 9:00AM; 11:00AM; Daily 7:30AM",Home base for Fr. Zendejas
+    p005,pr002,Heart of Jesus Church,47.7128,-74.0060,false,"Sun 6:00PM; Daily 7:30AM",Fr. Zendejas secondary church
     p004,pr003,Notre Dame de La Salette,48.8566,2.3522,true,"Sun 9:30AM; Thu 6:30PM",Fr. Faure's primary church`;
 
 
@@ -610,17 +664,26 @@
           .then(response => response.text())
           .then(csvData => {
             parseParishesData(csvData);
+            // Synchronize priest locations with home parishes
+            synchronizePriestLocations();
+            // Then populate the globe
             populateGlobeWithPriests();
           })
           .catch(error => {
             console.error('Error loading parishes data:', error);
             console.log('Falling back to default parishes data');
             parseParishesData(defaultParishCsvData);
+            // Synchronize priest locations with home parishes
+            synchronizePriestLocations();
+            // Then populate the globe
             populateGlobeWithPriests();
           });
       } else {
         // Use default hardcoded data
         parseParishesData(defaultParishCsvData);
+        // Synchronize priest locations with home parishes
+        synchronizePriestLocations();
+        // Then populate the globe
         populateGlobeWithPriests();
       }
     }
@@ -2135,29 +2198,72 @@ function getTimezoneCoordinates(timezone) {
     }
 
     function highlightSelectedPriest(priest) {
-      // First reset all markers to their default color
-      resetAllMarkers();
-      
-      // Then highlight the selected priest's markers
-      scene.children
-        .filter(obj => obj.name === 'priest-marker' && obj.priestData && obj.priestData.Name === priest.Name)
-        .forEach(marker => {
-          console.log(`Highlighting marker for ${priest.Name}`);
-          marker.material.color.set('yellow');
+  // First reset all markers to their default color
+  resetAllMarkers();
+  
+  // Clean priest ID
+  const priestID = priest.PriestID.trim();
+  
+  console.log(`Highlighting priest: ${priest.Name} (ID: '${priestID}')`);
+  
+  // Then highlight the selected priest's markers
+  scene.children
+    .filter(obj => obj.name === 'priest-marker' && obj.priestData && obj.priestData.Name === priest.Name)
+    .forEach(marker => {
+      console.log(`Highlighting priest marker for ${priest.Name}`);
+      marker.material.color.set('yellow');
+    });
+  
+  // Find all pulse groups with this priest's data
+  scene.children
+    .filter(obj => obj.name === 'priest-pulse' && obj.priestData && obj.priestData.Name === priest.Name)
+    .forEach(pulse => {
+      // For each child of the pulse group that's a mesh
+      pulse.children
+        .filter(child => child.isMesh)
+        .forEach(mesh => {
+          mesh.material.color.set('rgba(255, 255, 0, 0.4)');
         });
-      
-      // Find all pulse groups with this priest's data
-      scene.children
-        .filter(obj => obj.name === 'priest-pulse' && obj.priestData && obj.priestData.Name === priest.Name)
-        .forEach(pulse => {
-          // For each child of the pulse group that's a mesh
-          pulse.children
-            .filter(child => child.isMesh)
-            .forEach(mesh => {
-              mesh.material.color.set('rgba(255, 255, 0, 0.4)');
-            });
-        });
-    }
+    });
+  
+  // Find all parishes served by this priest
+  console.log(`Looking for parishes with PriestID: '${priestID}'`);
+  const servedParishes = parishes.filter(parish => parish.PriestID.trim() === priestID);
+  console.log(`Found ${servedParishes.length} parishes for ${priest.Name}: ${servedParishes.map(p => p.ParishName).join(', ')}`);
+  
+  // Highlight parish markers in green (was orange)
+  servedParishes.forEach(parish => {
+    console.log(`Looking to highlight parish: ${parish.ParishName} (ID: '${parish.ParishID.trim()}')`);
+    
+    const parishMarkers = scene.children.filter(
+      obj => obj.name === 'parish-marker' && 
+      obj.parishData && 
+      obj.parishData.ParishID.trim() === parish.ParishID.trim()
+    );
+    
+    console.log(`Found ${parishMarkers.length} markers for parish ${parish.ParishName}`);
+    
+    parishMarkers.forEach(marker => {
+      console.log(`Setting color for parish marker: ${parish.ParishName}`);
+      marker.material.color.set('#00cc00'); // Changed from 'orange' to bright green
+    });
+  });
+  
+  // Highlight all parish lines connected to this priest
+  console.log(`Looking for lines with priestID: '${priestID}'`);
+  const priestLines = scene.children.filter(
+    obj => obj.name === 'parish-line' && obj.priestID && obj.priestID.trim() === priestID
+  );
+  
+  console.log(`Found ${priestLines.length} connecting lines for priest ${priest.Name}`);
+  
+  priestLines.forEach(line => {
+    console.log(`Setting color for connecting line`);
+    line.material.color.set('#00cc00'); // Changed from 'orange' to bright green
+    line.material.opacity = 1.0;
+    line.material.linewidth = 2; // Increased line width for better visibility (note: may not work in all browsers)
+  });
+}
 
     // Select the current search result
     function selectSearchResult(priest) {
@@ -2294,8 +2400,11 @@ function getTimezoneCoordinates(timezone) {
       // Clear previous info
       priestInfo.innerHTML = '';
       
+      // Clean IDs
+      const priestID = parish.PriestID.trim();
+      
       // Get the priest associated with this parish
-      const priest = priestMap.get(parish.PriestID);
+      const priest = priestMap.get(priestID);
       
       // Priest information if available
       if (priest) {
@@ -2328,6 +2437,18 @@ function getTimezoneCoordinates(timezone) {
         
         priestParagraph.textContent = `This parish is ${parish.IsHomePriest ? 'the home parish of' : 'served by'} ${title} ${firstInitial}. ${lastName}.`;
         priestInfo.appendChild(priestParagraph);
+        
+        // Add a link to show priest info
+        const priestLink = document.createElement('p');
+        priestLink.className = 'info-paragraph';
+        priestLink.innerHTML = `<a href="#" class="priest-link">View ${title} ${lastName}'s information</a>`;
+        priestLink.querySelector('a').addEventListener('click', (e) => {
+          e.preventDefault();
+          showPriestInfo(priest);
+          highlightSelectedPriest(priest);
+          // Don't change camera focus since we're already looking at the parish
+        });
+        priestInfo.appendChild(priestLink);
       }
       
       // Mass times section
@@ -2374,39 +2495,91 @@ function getTimezoneCoordinates(timezone) {
 
     // Highlight selected parish
     function highlightSelectedParish(parish) {
-      // First reset all markers
-      resetAllMarkers();
-      
-      // Then highlight the selected parish marker
-      scene.children
-        .filter(obj => obj.name === 'parish-marker' && obj.parishData && obj.parishData.ParishID === parish.ParishID)
-        .forEach(marker => {
-          marker.material.color.set('yellow');
-        });
-      
-      // Highlight connected lines
-      scene.children
-        .filter(obj => obj.name === 'parish-line')
-        .forEach(line => {
-          // Get the positions of the line's vertices
-          const positions = line.geometry.attributes.position.array;
-          const lineStart = new THREE.Vector3(positions[0], positions[1], positions[2]);
-          const lineEnd = new THREE.Vector3(positions[3], positions[4], positions[5]);
-          
-          // Get the position of the selected parish
-          const parishPosition = getPointOnGlobe(parish.Latitude, parish.Longitude, CONFIG.labelAltitude);
-          
-          // Calculate distances to line start and end
-          const distanceToStart = lineStart.distanceTo(parishPosition);
-          const distanceToEnd = lineEnd.distanceTo(parishPosition);
-          
-          // If parish position is close to either end of the line, highlight it
-          if (distanceToStart < 1 || distanceToEnd < 1) {
-            line.material.color.set('yellow');
-            line.material.opacity = 1.0;
-          }
-        });
+  // First reset all markers
+  resetAllMarkers();
+  
+  // Clean IDs
+  const parishID = parish.ParishID.trim();
+  const priestID = parish.PriestID.trim();
+  
+  console.log(`Highlighting parish: ${parish.ParishName} (ID: '${parishID}')`);
+  
+  // Then highlight the selected parish marker in yellow
+  scene.children
+    .filter(obj => obj.name === 'parish-marker' && 
+             obj.parishData && 
+             obj.parishData.ParishID.trim() === parishID)
+    .forEach(marker => {
+      console.log(`Setting parish marker to yellow: ${parish.ParishName}`);
+      marker.material.color.set('yellow');
+    });
+  
+  // Get the priest for this parish
+  const priest = priestMap.get(priestID);
+  
+  if (priest) {
+    console.log(`Found priest for parish: ${priest.Name} (ID: '${priestID}')`);
+    
+    // Find all parishes served by this priest
+    const priestParishes = parishes.filter(p => p.PriestID.trim() === priestID);
+    console.log(`Found ${priestParishes.length} parishes for priest ${priest.Name}`);
+    
+    // Find the home parish for this priest
+    const homeParish = priestParishes.find(p => p.IsHomePriest);
+    
+    // Highlight priest marker
+    scene.children
+      .filter(obj => obj.name === 'priest-marker' && 
+               obj.priestData && 
+               obj.priestData.PriestID.trim() === priestID)
+      .forEach(marker => {
+        console.log(`Highlighting priest marker for ${priest.Name}`);
+        marker.material.color.set(parish.IsHomePriest ? 'yellow' : '#00cc00'); // Changed from 'orange' to green
+      });
+    
+    // Highlight priest pulse
+    scene.children
+      .filter(obj => obj.name === 'priest-pulse' && 
+               obj.priestData && 
+               obj.priestData.PriestID.trim() === priestID)
+      .forEach(pulse => {
+        pulse.children
+          .filter(child => child.isMesh)
+          .forEach(mesh => {
+            mesh.material.color.set(parish.IsHomePriest ? 'rgba(255, 255, 0, 0.4)' : 'rgba(0, 204, 0, 0.4)'); // Changed from orange to green
+          });
+      });
+    
+    // If this is not the home parish, highlight all other parishes in green
+    if (!parish.IsHomePriest) {
+      priestParishes.forEach(p => {
+        if (p.ParishID.trim() !== parishID) {
+          console.log(`Highlighting related parish: ${p.ParishName}`);
+          scene.children
+            .filter(obj => obj.name === 'parish-marker' && 
+                     obj.parishData && 
+                     obj.parishData.ParishID.trim() === p.ParishID.trim())
+            .forEach(marker => {
+              marker.material.color.set('#00cc00'); // Changed from 'orange' to green
+            });
+        }
+      });
     }
+    
+    // Highlight connecting lines involving this parish or priest
+    console.log(`Looking for parish lines with priestID: '${priestID}'`);
+    scene.children
+      .filter(obj => obj.name === 'parish-line' && 
+               obj.priestID && 
+               obj.priestID.trim() === priestID)
+      .forEach(line => {
+        console.log(`Highlighting parish line`);
+        line.material.color.set('#00cc00'); // Changed from 'orange' to green
+        line.material.opacity = 1.0;
+        line.material.linewidth = 2; // Increased linewidth
+      });
+  }
+}
 
     // Function to display search results when multiple priests are selected
     function showProximitySearchResults(results) {
@@ -2519,16 +2692,34 @@ function getTimezoneCoordinates(timezone) {
         header: true,
         skipEmptyLines: true,
         complete: (results) => {
+          // Clean data by trimming all fields, especially IDs
+          const cleanData = results.data.map(priest => {
+            // Create a new object with trimmed keys and values
+            const cleanedPriest = {};
+            Object.keys(priest).forEach(key => {
+              // Trim both the key and value if they're strings
+              const cleanKey = typeof key === 'string' ? key.trim() : key;
+              const value = priest[key];
+              const cleanValue = typeof value === 'string' ? value.trim() : value;
+              cleanedPriest[cleanKey] = cleanValue;
+            });
+            return cleanedPriest;
+          });
+          
           // Process data and add missing columns (lat, long, GoogleMaps)
-          priests = addGeoData(results.data);
+          priests = addGeoData(cleanData);
           
           // Create a map of priest IDs to priest objects
           priestMap.clear();
           priests.forEach(priest => {
-            priestMap.set(priest.PriestID, priest);
+            // Make sure PriestID is trimmed
+            const priestID = priest.PriestID.trim();
+            priest.PriestID = priestID; // Ensure PriestID is stored trimmed
+            priestMap.set(priestID, priest);
           });
           
           console.log(`Loaded ${priests.length} priests`);
+          console.log("Priest IDs:", priests.map(p => `'${p.PriestID}'`).join(", "));
         },
         error: (error) => {
           console.error('Error parsing priests CSV:', error);
@@ -2543,23 +2734,62 @@ function getTimezoneCoordinates(timezone) {
         skipEmptyLines: true,
         complete: (results) => {
           parishes = results.data.map(parish => {
+            // Create a new object with trimmed fields
+            const cleanedParish = {};
+            Object.keys(parish).forEach(key => {
+              // Trim both the key and value if they're strings
+              const cleanKey = typeof key === 'string' ? key.trim() : key;
+              const value = parish[key];
+              const cleanValue = typeof value === 'string' ? value.trim() : value;
+              cleanedParish[cleanKey] = cleanValue;
+            });
+            
+            // Now use the cleaned parish object
+            const processedParish = { ...cleanedParish };
+            
             // Convert boolean string to actual boolean
-            parish.IsHomePriest = parish.IsHomePriest === 'true';
+            processedParish.IsHomePriest = processedParish.IsHomePriest === 'true';
             
             // Add GoogleMaps link
-            parish.GoogleMaps = `https://maps.google.com/?q=${parish.Latitude},${parish.Longitude}`;
+            processedParish.GoogleMaps = `https://maps.google.com/?q=${processedParish.Latitude},${processedParish.Longitude}`;
             
             // Convert string coordinates to numbers
-            parish.Latitude = parseFloat(parish.Latitude);
-            parish.Longitude = parseFloat(parish.Longitude);
+            processedParish.Latitude = parseFloat(processedParish.Latitude);
+            processedParish.Longitude = parseFloat(processedParish.Longitude);
             
             // Ensure MassTimes exists (might be empty in some cases)
-            parish.MassTimes = parish.MassTimes || '';
+            processedParish.MassTimes = processedParish.MassTimes || '';
             
-            return parish;
+            // Make sure PriestID is trimmed
+            if (processedParish.PriestID) {
+              processedParish.PriestID = processedParish.PriestID.trim();
+            }
+            
+            // Make sure ParishID is trimmed
+            if (processedParish.ParishID) {
+              processedParish.ParishID = processedParish.ParishID.trim();
+            }
+            
+            return processedParish;
           });
           
           console.log(`Loaded ${parishes.length} parishes`);
+          console.log("Parish IDs:", parishes.map(p => `'${p.ParishID}'`).join(", "));
+          console.log("Parish Priest IDs:", parishes.map(p => `'${p.PriestID}'`).join(", "));
+          
+          // Log parishes associated with each priest ID
+          const priestParishes = {};
+          parishes.forEach(parish => {
+            if (!priestParishes[parish.PriestID]) {
+              priestParishes[parish.PriestID] = [];
+            }
+            priestParishes[parish.PriestID].push(parish.ParishName);
+          });
+          
+          console.log("Parishes by Priest ID:");
+          Object.keys(priestParishes).forEach(priestID => {
+            console.log(`Priest ID '${priestID}': ${priestParishes[priestID].join(", ")}`);
+          });
         },
         error: (error) => {
           console.error('Error parsing parishes CSV:', error);
@@ -2662,90 +2892,241 @@ function getTimezoneCoordinates(timezone) {
     
     // Function to add parishes to the globe
     function addParishesToGlobe() {
-      parishes.forEach(parish => {
-        // Get coordinates
-        const lat = parish.Latitude;
-        const lng = parish.Longitude;
+  console.log(`Adding ${parishes.length} parishes to the globe`);
+  
+  parishes.forEach(parish => {
+    // Get clean ID
+    const parishID = parish.ParishID.trim();
+    const priestID = parish.PriestID.trim();
+    
+    // Get coordinates
+    const lat = parish.Latitude;
+    const lng = parish.Longitude;
+    
+    // Calculate position on globe surface
+    const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
+    
+    // Check if this parish is a home parish for its priest
+    const isHomePriestParish = parish.IsHomePriest;
+    console.log(`Parish: ${parish.ParishName} (ID: ${parishID}), PriestID: ${priestID}, IsHomePriest: ${isHomePriestParish}`);
+    
+    // Add parish marker (red dot) only if it's not a home parish
+    // (home parishes will be represented by the priest's marker)
+    if (!isHomePriestParish) {
+      const markerGeometry = new THREE.SphereGeometry(CONFIG.parishMarkerSize, 16, 16);
+      markerGeometry.computeVertexNormals(); // Ensure smooth normals
+      
+      const markerMaterial = new THREE.MeshPhongMaterial({ 
+        color: CONFIG.parishMarkerColor,
+        shininess: 0,
+        flatShading: false
+      });
+      
+      const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+      
+      // Set marker position
+      marker.position.set(position.x, position.y, position.z);
+      marker.name = 'parish-marker';
+      marker.parishData = {
+        ...parish,
+        ParishID: parishID, // Ensure the data has the clean ID
+        PriestID: priestID  // Ensure the data has the clean ID
+      };
+      
+      // Add marker to scene
+      scene.add(marker);
+      console.log(`Added marker for parish: ${parish.ParishName} (${parishID})`);
+    }
+    
+    // Find the priest for this parish
+    const priest = priestMap.get(priestID);
+    
+    // If not home parish, add curved line to priest's home parish
+    if (!isHomePriestParish && priest) {
+      // Find this priest's home parish
+      const homeParish = parishes.find(p => 
+        p.PriestID.trim() === priestID && p.IsHomePriest
+      );
+      
+      if (homeParish) {
+        console.log(`Creating arc line from ${parish.ParishName} to ${homeParish.ParishName}`);
         
-        // Calculate position on globe surface
-        const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
+        // Calculate home parish position
+        const homePosition = getPointOnGlobe(
+          homeParish.Latitude, 
+          homeParish.Longitude, 
+          CONFIG.labelAltitude
+        );
         
-        // Add parish marker (red dot)
-        const markerGeometry = new THREE.SphereGeometry(CONFIG.parishMarkerSize, 16, 16);
-        markerGeometry.computeVertexNormals(); // Ensure smooth normals
+        // Create points for the arc - Use higher arc for better visibility
+        const arcPoints = createArcPoints(
+          position, 
+          homePosition, 
+          CONFIG.labelAltitude * 200.0 // Increased from 2 to 4 for higher arc
+        );
         
-        const markerMaterial = new THREE.MeshPhongMaterial({ 
-          color: CONFIG.parishMarkerColor,
-          shininess: 0,
-          flatShading: false
+        // Create a line geometry from the arc points
+        const lineGeometry = new THREE.BufferGeometry().setFromPoints(arcPoints);
+        
+        const lineMaterial = new THREE.LineBasicMaterial({
+          color: CONFIG.parishLineColor,
+          lineWidth: CONFIG.parishLineWidth,
+          transparent: true,
+          opacity: 0.7
         });
         
-        const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+        const line = new THREE.Line(lineGeometry, lineMaterial);
+        line.name = 'parish-line';
+        // Store references to connected parishes for easier highlighting
+        line.parishStart = parishID;
+        line.parishEnd = homeParish.ParishID.trim();
+        line.priestID = priestID;
         
-        // Set marker position
-        marker.position.set(position.x, position.y, position.z);
-        marker.name = 'parish-marker';
-        marker.parishData = parish;
+        // Add line to scene
+        scene.add(line);
+        console.log(`Added arc line for parishes of priest: ${priest.Name}`);
+      } else {
+        // If priest has no home parish, connect to priest's location
+        console.log(`Creating arc line from ${parish.ParishName} to priest location for ${priest.Name} (no home parish)`);
         
-        // Add marker to scene
-        scene.add(marker);
+        // Calculate priest position
+        const priestPosition = getPointOnGlobe(
+          priest.Latitude, 
+          priest.Longitude, 
+          CONFIG.labelAltitude
+        );
         
-        // If not home parish, add line to priest's home parish
-        if (!parish.IsHomePriest) {
-          // Find this priest's home parish
-          const homePrish = parishes.find(p => 
-            p.PriestID === parish.PriestID && p.IsHomePriest
-          );
-          
-          if (homePrish) {
-            // Calculate home parish position
-            const homePosition = getPointOnGlobe(
-              homePrish.Latitude, 
-              homePrish.Longitude, 
-              CONFIG.labelAltitude
-            );
-            
-            // Create a line between parish and home parish
-            const lineGeometry = new THREE.BufferGeometry();
-            const points = [
-              new THREE.Vector3(position.x, position.y, position.z),
-              new THREE.Vector3(homePosition.x, homePosition.y, homePosition.z)
-            ];
-            lineGeometry.setFromPoints(points);
-            
-            const lineMaterial = new THREE.LineBasicMaterial({
-              color: CONFIG.parishLineColor,
-              linewidth: CONFIG.parishLineWidth,
-              transparent: true,
-              opacity: 0.7
-            });
-            
-            const line = new THREE.Line(lineGeometry, lineMaterial);
-            line.name = 'parish-line';
-            
-            // Add line to scene
-            scene.add(line);
+        // Create points for the arc - Use higher arc for better visibility
+        const arcPoints = createArcPoints(
+          position, 
+          priestPosition, 
+          CONFIG.labelAltitude * 200.0 // Increased from 2 to 4 for higher arc
+        );
+        
+        // Create a line geometry from the arc points
+        const lineGeometry = new THREE.BufferGeometry().setFromPoints(arcPoints);
+        
+        const lineMaterial = new THREE.LineBasicMaterial({
+          color: CONFIG.parishLineColor,
+          linewidth: CONFIG.parishLineWidth,
+          transparent: true,
+          opacity: 0.7
+        });
+        
+        const line = new THREE.Line(lineGeometry, lineMaterial);
+        line.name = 'parish-line';
+        // Store references to connected parishes for easier highlighting
+        line.parishStart = parishID;
+        line.priestID = priestID;
+        
+        // Add line to scene
+        scene.add(line);
+        console.log(`Added arc line from parish to priest location: ${priest.Name}`);
+      }
+    }
+    
+    // Add invisible larger detection sphere for better interaction
+    const invisibleSphereGeometry = new THREE.SphereGeometry(CONFIG.parishMarkerSize * 2, 16, 16);
+    const invisibleSphereMaterial = new THREE.MeshBasicMaterial({
+      transparent: true,
+      opacity: 0.0,
+    });
+    
+    const invisibleSphere = new THREE.Mesh(invisibleSphereGeometry, invisibleSphereMaterial);
+    
+    // Position at same coordinates as marker
+    invisibleSphere.position.set(position.x, position.y, position.z);
+    invisibleSphere.name = 'parish-marker-invisible';
+    invisibleSphere.parishData = {
+      ...parish,
+      ParishID: parishID, // Ensure the data has the clean ID
+      PriestID: priestID  // Ensure the data has the clean ID
+    };
+    
+    // Add to scene
+    scene.add(invisibleSphere);
+  });
+}
+
+    function synchronizePriestLocations() {
+      console.log("Starting priest location synchronization");
+      
+      // For each priest
+      priests.forEach(priest => {
+        // Make sure we're working with a clean priest ID
+        const priestID = priest.PriestID.trim();
+        
+        // Find the home parish for this priest
+        const homeParish = parishes.find(parish => 
+          parish.PriestID.trim() === priestID && parish.IsHomePriest === true
+        );
+        
+        // If the priest has a home parish, update their location
+        if (homeParish) {
+          console.log(`Updating location for ${priest.Name} (ID: ${priestID}) to match home parish ${homeParish.ParishName} at ${homeParish.Latitude}, ${homeParish.Longitude}`);
+          priest.Latitude = homeParish.Latitude;
+          priest.Longitude = homeParish.Longitude;
+          priest.GoogleMaps = `https://maps.google.com/?q=${homeParish.Latitude},${homeParish.Longitude}`;
+        } else {
+          console.log(`Priest ${priest.Name} (ID: ${priestID}) has no home parish, keeping original location`);
+          // List parishes for this priest
+          const priestParishes = parishes.filter(p => p.PriestID.trim() === priestID);
+          if (priestParishes.length > 0) {
+            console.log(`  Parishes for ${priest.Name}:`);
+            priestParishes.forEach(p => console.log(`  - ${p.ParishName} (Home: ${p.IsHomePriest})`));
+          } else {
+            console.log(`  No parishes found for ${priest.Name}`);
           }
         }
-        
-        // Add invisible larger detection sphere for better interaction
-        const invisibleSphereGeometry = new THREE.SphereGeometry(CONFIG.parishMarkerSize * 2, 16, 16);
-        const invisibleSphereMaterial = new THREE.MeshBasicMaterial({
-          transparent: true,
-          opacity: 0.0,
-        });
-        
-        const invisibleSphere = new THREE.Mesh(invisibleSphereGeometry, invisibleSphereMaterial);
-        
-        // Position at same coordinates as marker
-        invisibleSphere.position.set(position.x, position.y, position.z);
-        invisibleSphere.name = 'parish-marker-invisible';
-        invisibleSphere.parishData = parish;
-        
-        // Add to scene
-        scene.add(invisibleSphere);
       });
     }
+
+
+    function createArcPoints(startPos, endPos, maxHeight) {
+  const numPoints = 100; // Number of points for the arc line
+  const points = [];
+  
+  // Calculate vector from start to end
+  const direction = new THREE.Vector3().subVectors(endPos, startPos);
+  const distance = direction.length();
+  
+  // Create midpoint for the arc
+  const midpoint = new THREE.Vector3().addVectors(startPos, endPos).multiplyScalar(0.5);
+  const midpointLength = midpoint.length();
+  
+  // Calculate the angle between points (in radians)
+  const angle = startPos.angleTo(endPos);
+  
+  // Adjust maxHeight based on the angle between points to prevent clipping
+  // For points that are further apart, we need higher arcs
+  const dynamicHeight = maxHeight * (1 + Math.sin(angle * 0.5) * 5);
+  
+  // Make sure our arc always goes outward from the globe center
+  midpoint.normalize().multiplyScalar(midpointLength + dynamicHeight);
+  
+  // Create arc using quadratic Bezier curve
+  for (let i = 0; i <= numPoints; i++) {
+    const t = i / numPoints;
+    
+    // Quadratic Bezier: (1-t)^2 * P0 + 2(1-t)t * P1 + t^2 * P2
+    const point = new THREE.Vector3();
+    
+    // First term: (1-t)^2 * P0
+    point.copy(startPos).multiplyScalar(Math.pow(1 - t, 2));
+    
+    // Second term: 2(1-t)t * P1
+    const midPointTerm = new THREE.Vector3().copy(midpoint).multiplyScalar(2 * (1 - t) * t);
+    point.add(midPointTerm);
+    
+    // Third term: t^2 * P2
+    const endPointTerm = new THREE.Vector3().copy(endPos).multiplyScalar(t * t);
+    point.add(endPointTerm);
+    
+    points.push(point);
+  }
+  
+  return points;
+}
 
     // Populate the globe with markers and pulse rings
     function populateGlobeWithMarkers(data) {
@@ -2968,6 +3349,54 @@ function getTimezoneCoordinates(timezone) {
         }
         
         priestInfo.appendChild(contactRow);
+      }
+      
+      // Add parishes served section with mass times
+      // Use trimmed priest ID
+      const priestID = priest.PriestID.trim();
+      console.log(`Looking for parishes with PriestID: '${priestID}'`);
+      
+      const priestParishes = parishes.filter(parish => parish.PriestID.trim() === priestID);
+      console.log(`Found ${priestParishes.length} parishes for ${priest.Name}: ${priestParishes.map(p => p.ParishName).join(', ')}`);
+      
+      if (priestParishes.length > 0) {
+        const parishesSection = document.createElement('div');
+        parishesSection.className = 'parishes-section';
+        
+        const parishesTitle = document.createElement('h3');
+        parishesTitle.textContent = 'Parishes Served';
+        parishesSection.appendChild(parishesTitle);
+        
+        const parishesList = document.createElement('ul');
+        parishesList.className = 'parishes-list';
+        
+        // Sort parishes with home parish first, then alphabetically
+        priestParishes.sort((a, b) => {
+          if (a.IsHomePriest && !b.IsHomePriest) return -1;
+          if (!a.IsHomePriest && b.IsHomePriest) return 1;
+          return a.ParishName.localeCompare(b.ParishName);
+        });
+        
+        priestParishes.forEach(parish => {
+          const parishitem = document.createElement('li');
+          parishitem.className = 'parish-item';
+          
+          const homeIndicator = parish.IsHomePriest ? ' (Home)' : '';
+          parishitem.innerHTML = `<strong>${parish.ParishName}${homeIndicator}:</strong> ${parish.MassTimes || 'No scheduled Masses'}`;
+          
+          // Add click handler to highlight this parish
+          parishitem.style.cursor = 'pointer';
+          parishitem.addEventListener('click', () => {
+            showParishInfo(parish);
+            highlightSelectedParish(parish);
+            focusOnPoint(parish.Latitude, parish.Longitude);
+          });
+          
+          parishesList.appendChild(parishitem);
+        });
+        
+        parishesSection.appendChild(parishesList);
+        priestInfo.appendChild(parishesSection);
       }
       
       // Notes section (kept separate as requested)
