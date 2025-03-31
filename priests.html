@@ -207,8 +207,13 @@
         align-items: center;
         cursor: pointer;
     }
-    
     .info-link {
+      background: #004970;
+      color: white;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    .info-link.maps {
         background: #700000;
         color: white;
         padding: 10px;
@@ -219,15 +224,19 @@
         text-decoration: none;
     }
     
-    .info-link:hover {
+    .info-link.maps:hover {
       text-decoration: underline;
     }
     
     @media (max-width: 600px) {
       .title {
-        font-size: 3.5rem;
+        display: none;
       }
       
+      .search-container {
+        margin-top: 20px;
+      }
+
       .info-panel {
         max-height: 60vh;
       }
@@ -240,7 +249,7 @@
 
   <div class="search-container">
     <div style="display: flex; flex-direction: column;">
-        <input autofocus="true" type="text" class="search-input" placeholder="Search by name or location..." id="searchInput">
+        <input autofocus="true" type="text" class="search-input" placeholder="Search Resistance priests..." id="searchInput">
         <div class="search-results" id="searchResults"></div>
     </div>
 
@@ -2464,7 +2473,8 @@ Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,Ge
           row.className = 'info-row';
           
           if (field === 'Contact/Website' && priest[field].startsWith('http')) {
-            row.innerHTML = `<strong>${field}:</strong> <a href="${priest[field]}" target="_blank" class="info-link">${priest[field]}</a>`;
+            let niceurl = priest[field].replace("https://", "").replace("http://");
+            row.innerHTML = `<strong>${field}:</strong> <a href="${priest[field]}" target="_blank" class="info-link">${niceurl}</a>`;
           } else {
             row.innerHTML = `<strong>${field}:</strong> <p>${priest[field]}</p>`;
           }
@@ -2476,7 +2486,7 @@ Father,Peter Lang,,Resistance,Non-sede,Germany,pater.lang@gmx.de,Old Rite,,,,,Ge
       // Add Google Maps link
       const mapsRow = document.createElement('div');
       mapsRow.className = 'info-row';
-      mapsRow.innerHTML = `<a href="${priest.GoogleMaps}" target="_blank" class="info-link">View on Google Maps</a>`;
+      mapsRow.innerHTML = `<a href="${priest.GoogleMaps}" target="_blank" class="info-link maps">View on Google Maps</a>`;
       priestInfo.appendChild(mapsRow);
       
       // Show the info panel
