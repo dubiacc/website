@@ -327,9 +327,9 @@
       color: white;
       font-size: 1.5rem;
       background-color: black;
-      text-shadow: 2px 2px 0px black;
       margin-right: 10px;
       padding: 5px;
+      text-decoration: none;
     }
 
 
@@ -344,9 +344,9 @@
         flex-grow: 1;
       }
       .links > div {
-        flex-direction: column;
+        flex-direction: row;
         display: flex;
-        flex-grow: 1;
+        flex-grow: 0;
       }
       .links > div > a {
         margin-top: 5px;
@@ -403,7 +403,7 @@
   <script>
     // Configuration - Change these values to configure the application
     const CONFIG = {
-      currentZoomLevel: isMobile() ? 400.0 : 300.0,
+      currentZoomLevel: isMobile() ? 300.0 : 400.0,
       dataUrl: null, // Set to CSV URL or null to use the default data
       fieldOrder: [
         'Type', 'Born Year', 'Associates With', 'Beliefs', 'Location/Area',
@@ -816,7 +816,7 @@
     if (coords) {
       console.log(`Using timezone coordinates: ${coords.lat}, ${coords.lng} (${timezone})`);
       // Center globe on these coordinates
-      focusOnPoint(coords.lat, coords.lng);
+      focusOnPoint(coords.lat, coords.lng, CONFIG.currentZoomLevel);
       
       // Add a blue marker for user's timezone location
       addUserLocationMarker(coords.lat, coords.lng);
@@ -940,7 +940,7 @@ function getTimezoneCoordinates(timezone) {
       console.log(`Browser languages: ${getBrowserLanguages().join(', ')}, approximate longitude: ${approximateLongitude}, estimated latitude: ${estimatedLatitude}`);
       
       // Center globe on this position
-      focusOnPoint(estimatedLatitude, approximateLongitude);
+      focusOnPoint(estimatedLatitude, approximateLongitude, CONFIG.currentZoomLevel);
     }
 
     function getUserLocation() {
@@ -955,7 +955,7 @@ function getTimezoneCoordinates(timezone) {
             addUserLocationMarker(userLat, userLng);
             
             // Center globe on user location
-            focusOnPoint(userLat, userLng);
+            focusOnPoint(userLat, userLng, config.currentZoomLevel);
           },
           // Error callback
           (error) => {
@@ -1007,9 +1007,6 @@ function getTimezoneCoordinates(timezone) {
       
       // Center globe based on user location/timezone
       centerOnTimezone();
-      
-      // Remove this line - no UI control for cloud opacity
-      // addCloudOpacityControl();
       
       // Update solar position periodically
       setInterval(() => {
@@ -2324,9 +2321,8 @@ function getTimezoneCoordinates(timezone) {
         if (selectedSearchIndex >= 0 && selectedSearchIndex < items.length) {
             const priest = searchResults[selectedSearchIndex];
             if (!priest) return;
-            
             showPriestInfo(priest);
-            focusOnPoint(priest.Latitude, priest.Longitude);
+            focusOnPoint(priest.Latitude, priest.Longitude, 200.0);
             highlightSelectedPriest(priest);
             
             // Hide search results and clear input
@@ -2419,12 +2415,12 @@ function getTimezoneCoordinates(timezone) {
           if (hit.type === 'priest') {
             showPriestInfo(hit.data);
             highlightSelectedPriest(hit.data);
-            focusOnPoint(hit.data.Latitude, hit.data.Longitude);
+            focusOnPoint(hit.data.Latitude, hit.data.Longitude, 250.0);
           } else {
             // Show parish info
             showParishInfo(hit.data);
             highlightSelectedParish(hit.data);
-            focusOnPoint(hit.data.Latitude, hit.data.Longitude);
+            focusOnPoint(hit.data.Latitude, hit.data.Longitude, 250.0);
           }
         } else if (allHits.length > 1) {
           // Multiple hits
@@ -2639,7 +2635,7 @@ function getTimezoneCoordinates(timezone) {
 
   function resetSearchResultsContainer() {
     let searchResultsContainer = document.getElementById('searchResults');
-    searchResultsContainer.innerHTML = '<div class="links"><div style="padding-top:10px;padding-left:5px;margin-right:10px;"><a class="outbound-link"href="https://github.com/fschutt/dubiacc/issues">report error</a><a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">request mass</a><a class="outbound-link" href="https://dubia.cc">back to dubia</a>';
+    searchResultsContainer.innerHTML = '<div class="links"><div style="padding-top:10px;padding-left:5px;margin-right:10px;"><a class="outbound-link"href="https://github.com/fschutt/dubiacc/issues">report error</a><a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">request mass</a><a style="color:white;" class="outbound-link" href="https://dubia.cc">back to dubia.cc</a>';
   }
 
     // Function to display search results when multiple priests are selected
@@ -2675,7 +2671,7 @@ function getTimezoneCoordinates(timezone) {
             showParishInfo(data);
             highlightSelectedParish(data);
           }
-          focusOnPoint(data.Latitude, data.Longitude);
+          focusOnPoint(data.Latitude, data.Longitude, 250.0);
           resetSearchResultsContainer();
         });
         
@@ -3446,7 +3442,7 @@ function getTimezoneCoordinates(timezone) {
           parishitem.addEventListener('click', () => {
             showParishInfo(parish);
             highlightSelectedParish(parish);
-            focusOnPoint(parish.Latitude, parish.Longitude);
+            focusOnPoint(parish.Latitude, parish.Longitude, 250.0);
           });
           
           parishesList.appendChild(parishitem);
@@ -3543,7 +3539,7 @@ function getTimezoneCoordinates(timezone) {
               showParishInfo(item.data);
               highlightSelectedParish(item.data);
             }
-            focusOnPoint(item.data.Latitude, item.data.Longitude);
+            focusOnPoint(item.data.Latitude, item.data.Longitude, 250.0);
             resetSearchResultsContainer();
             document.getElementById('searchInput').value = '';
           });
@@ -3575,7 +3571,7 @@ function getTimezoneCoordinates(timezone) {
         showPriestInfo(priest);
         
         // Focus on the point
-        focusOnPoint(priest.Latitude, priest.Longitude);
+        focusOnPoint(priest.Latitude, priest.Longitude, 250.0);
         
         // Reset markers color
         markers.forEach(marker => {
