@@ -84,6 +84,7 @@
         font-size: 5rem;
         color: #ffffff;
         z-index: 10;
+        pointer-events: none;
         margin: 2rem 0px;
     }
     
@@ -192,10 +193,6 @@
     }
     
     /* Add these styles to your existing CSS */
-    .info-paragraph {
-      margin-bottom: 10px;
-    }
-
     .notes-section, .mass-times-section {
       padding-top: 8px;
     }
@@ -282,16 +279,10 @@
         max-height: 60vh;
       }
     }
-    .parishes-section {
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(0,0,0,0.1);
-  }
 
   .parishes-section h3 {
     margin-top: 0;
     font-size: 1.3rem;
-    margin-bottom: 10px;
   }
 
   .parishes-list {
@@ -316,7 +307,6 @@
       text-decoration: underline;
       cursor: pointer;
       margin-top: 5px;
-      margin-bottom: 15px;
       display: inline-block;
     }
     
@@ -326,14 +316,25 @@
     
     .parish-item {
       cursor: pointer;
-      padding: 3px 0;
       transition: background-color 0.2s;
     }
     
+    .parish-item strong {
+      text-decoration: underline;
+    }
     .parish-item:hover {
       background-color: rgba(128, 128, 128, 0.1);
       border-radius: 3px;
       padding-left: 5px;
+    }
+
+    .outbound-link, .outbound-link:visited, .outbound-link:focus, .outbound-link:hover {
+      color: white;
+      font-size: 1.5rem;
+      background-color: black;
+      text-shadow: 2px 2px 0px black;
+      margin-right: 10px;
+      padding: 5px;
     }
   </style>
 </head>
@@ -393,7 +394,7 @@
       
     // Default parish data as fallback
     const defaultParishCsvData = `ParishID,PriestID,ParishName,Latitude,Longitude,IsHomePriest,MassTimes,Notes
-    p001,pr001,St. Mary's Traditional Chapel,51.5074,-0.1278,true,"Sun 8:00AM, 10:30AM; Wed 7:00PM",Main parish for Bp. Williamson
+    p001,pr001,St. Mary's Traditional Chapel,51.5074,-0.1278,true,"Sun 8:00AM, 10:30AM; Wed 7:00PM",
     p002,pr001,Sacred Heart Mission,52.4862,-1.8904,false,"1st Sun 4:00PM",Monthly Mass
     p003,pr002,St. Athanasius Church,40.7128,-74.0060,false,"Sun 9:00AM; 11:00AM; Daily 7:30AM",Home base for Fr. Zendejas
     p005,pr002,Heart of Jesus Church,47.7128,-74.0060,false,"Sun 6:00PM; Daily 7:30AM",Fr. Zendejas secondary church
@@ -977,6 +978,8 @@ function getTimezoneCoordinates(timezone) {
 
     // Main initialization function
     function init() {
+      resetSearchResultsContainer();
+
       // Initialize Three.js scene
       initScene();
       
@@ -2126,7 +2129,7 @@ function getTimezoneCoordinates(timezone) {
       // Close search results when clicking outside
       document.addEventListener('click', (e) => {
         if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-          searchResults.style.display = 'none';
+          resetSearchResultsContainer();
         }
       });
       
@@ -2284,7 +2287,7 @@ function getTimezoneCoordinates(timezone) {
             highlightSelectedPriest(priest);
             
             // Hide search results and clear input
-            searchResultsContainer.style.display = 'none';
+            resetSearchResultsContainer();
             document.getElementById('searchInput').value = '';
         }
     }
@@ -2408,7 +2411,7 @@ function getTimezoneCoordinates(timezone) {
       
       // Priest information if available
       if (priest) {
-        const priestParagraph = document.createElement('p');
+        const priestParagraph = document.createElement('span');
         priestParagraph.className = 'info-paragraph';
         
         let title;
@@ -2435,36 +2438,30 @@ function getTimezoneCoordinates(timezone) {
         let lastName = priest.Name.split(' ').pop();
         let firstInitial = priest.Name.charAt(0);
         
-        priestParagraph.textContent = `This parish is ${parish.IsHomePriest ? 'the home parish of' : 'served by'} ${title} ${firstInitial}. ${lastName}.`;
-        priestInfo.appendChild(priestParagraph);
-        
+        const priestParagraph2 = document.createElement('p');
+        priestParagraph2.textContent = `This parish is ${parish.IsHomePriest ? 'the home parish of' : 'served by'} `;
+        priestParagraph2.style.display = 'inline';
+
         // Add a link to show priest info
         const priestLink = document.createElement('p');
         priestLink.className = 'info-paragraph';
-        priestLink.innerHTML = `<a href="#" class="priest-link">View ${title} ${lastName}'s information</a>`;
+        priestLink.innerHTML = `<a href="#" class="priest-link">${title} ${firstInitial}. ${lastName}</a>`;
         priestLink.querySelector('a').addEventListener('click', (e) => {
           e.preventDefault();
           showPriestInfo(priest);
           highlightSelectedPriest(priest);
           // Don't change camera focus since we're already looking at the parish
         });
-        priestInfo.appendChild(priestLink);
-      }
-      
-      // Mass times section
-      if (parish.MassTimes) {
-        const massTimesSection = document.createElement('span');
-        massTimesSection.className = 'mass-times-section';
-        
-        const massTimesTitle = document.createElement('strong');
-        massTimesTitle.textContent = 'Mass Times:';
-        massTimesSection.appendChild(massTimesTitle);
-        
-        const massTimesList = document.createElement('p');
-        massTimesList.textContent = parish.MassTimes;
-        massTimesSection.appendChild(massTimesList);
-        
-        priestInfo.appendChild(massTimesSection);
+        priestLink.style.display = 'inline';
+
+        const priestParagraph3 = document.createElement('p');
+        priestParagraph3.textContent = `.`;
+        priestParagraph3.style.display = 'inline';
+
+        priestParagraph.appendChild(priestParagraph2);
+        priestParagraph.appendChild(priestLink);
+        priestParagraph.appendChild(priestParagraph3);
+        priestInfo.appendChild(priestParagraph);
       }
       
       // Notes section
@@ -2481,6 +2478,22 @@ function getTimezoneCoordinates(timezone) {
         notesSection.appendChild(notesContent);
         
         priestInfo.appendChild(notesSection);
+      }
+
+      // Mass times section
+      if (parish.MassTimes) {
+        const massTimesSection = document.createElement('span');
+        massTimesSection.className = 'mass-times-section';
+        
+        const massTimesTitle = document.createElement('strong');
+        massTimesTitle.textContent = 'Mass Times:';
+        massTimesSection.appendChild(massTimesTitle);
+        
+        const massTimesList = document.createElement('p');
+        massTimesList.textContent = parish.MassTimes;
+        massTimesSection.appendChild(massTimesList);
+        
+        priestInfo.appendChild(massTimesSection);
       }
       
       // Add Google Maps link
@@ -2581,6 +2594,11 @@ function getTimezoneCoordinates(timezone) {
   }
 }
 
+  function resetSearchResultsContainer() {
+    let searchResultsContainer = document.getElementById('searchResults');
+    searchResultsContainer.innerHTML = '<div style="position:absolute;font-size:1.5rem;"><div style="padding-top:10px;padding-left:5px;"><a class="outbound-link"href="https://github.com/fschutt/dubiacc/issues">report error</a><a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">request mass</a><a class="outbound-link" href="https://dubia.cc">back to dubia</a>';
+  }
+
     // Function to display search results when multiple priests are selected
     function showProximitySearchResults(results) {
       let searchResultsContainer = document.getElementById('searchResults');
@@ -2615,7 +2633,7 @@ function getTimezoneCoordinates(timezone) {
             highlightSelectedParish(data);
           }
           focusOnPoint(data.Latitude, data.Longitude);
-          searchResultsContainer.style.display = 'none';
+          resetSearchResultsContainer();
         });
         
         resultItem.addEventListener('keydown', (e) => {
@@ -3295,47 +3313,47 @@ function getTimezoneCoordinates(timezone) {
         if (priest['Bishop Line']) {
           bioText += `(Bishop line: ${priest['Bishop Line']})`;
         }
-        bioText += '.';
+        bioText += '. ';
       } else if (bioText) {
         // End the sentence if it's not empty and not a bishop
-        bioText = bioText.replace(/, $/, '.');
+        bioText = bioText.replace(/, $/, '. ');
       }
-      
-      // Only add the paragraph if we have bio info
-      if (bioText) {
-        bioParagraph.textContent = bioText;
-        priestInfo.appendChild(bioParagraph);
-      }
-      
-      // Create second paragraph: ministry info
-      const ministryParagraph = document.createElement('p');
-      ministryParagraph.className = 'info-paragraph';
-      let ministryText = '';
       
       // Location
       if (priest['Location/Area']) {
-        ministryText += `Operates in ${priest['Location/Area']}`;
+        bioText += `Operates in ${priest['Location/Area']}`;
       }
       
       // Associates With
       if (priest['Associates With']) {
-        if (ministryText) ministryText += ', ';
-        ministryText += `associates with ${priest['Associates With']}`;
+        if (bioText) bioText += ', ';
+        bioText += `associates with ${priest['Associates With']}`;
       }
       
       // Beliefs
       if (priest['Beliefs']) {
-        if (ministryText) ministryText += ', ';
-        ministryText += `holds ${priest['Beliefs']} beliefs`;
+        if (bioText) bioText += ', ';
+        bioText += `holds ${priest['Beliefs']} beliefs`;
       }
-      
-      // End the sentence if it's not empty
-      if (ministryText) {
-        ministryText += '.';
-        ministryParagraph.textContent = ministryText;
-        priestInfo.appendChild(ministryParagraph);
+
+      // Notes section (kept separate as requested)
+      if (priest['Notes']) {
+        
+        if (bioText) {
+          // End the sentence if it's not empty
+          bioText += ".\n";
+        }
+
+        bioText += priest['Notes'];
       }
-      
+
+      // Only add the paragraph if we have bio info
+      if (bioText) {
+        bioText += '. ';
+        bioParagraph.textContent = bioText;
+        priestInfo.appendChild(bioParagraph);
+      }
+
       // Contact/Website as a clickable link if present
       if (priest['Contact/Website']) {
         const contactRow = document.createElement('p');
@@ -3350,7 +3368,7 @@ function getTimezoneCoordinates(timezone) {
         
         priestInfo.appendChild(contactRow);
       }
-      
+
       // Add parishes served section with mass times
       // Use trimmed priest ID
       const priestID = priest.PriestID.trim();
@@ -3362,10 +3380,6 @@ function getTimezoneCoordinates(timezone) {
       if (priestParishes.length > 0) {
         const parishesSection = document.createElement('div');
         parishesSection.className = 'parishes-section';
-        
-        const parishesTitle = document.createElement('h3');
-        parishesTitle.textContent = 'Parishes Served';
-        parishesSection.appendChild(parishesTitle);
         
         const parishesList = document.createElement('ul');
         parishesList.className = 'parishes-list';
@@ -3399,22 +3413,6 @@ function getTimezoneCoordinates(timezone) {
         priestInfo.appendChild(parishesSection);
       }
       
-      // Notes section (kept separate as requested)
-      if (priest['Notes']) {
-        const notesSection = document.createElement('span');
-        notesSection.className = 'notes-section';
-        
-        const notesTitle = document.createElement('strong');
-        notesTitle.textContent = 'Notes:';
-        notesSection.appendChild(notesTitle);
-        
-        const notesContent = document.createElement('p');
-        notesContent.textContent = priest['Notes'];
-        notesSection.appendChild(notesContent);
-        
-        priestInfo.appendChild(notesSection);
-      }
-      
       // Add Google Maps link
       const mapsRow = document.createElement('div');
       mapsRow.className = 'info-row';
@@ -3436,7 +3434,7 @@ function getTimezoneCoordinates(timezone) {
       selectedSearchIndex = -1;
       
       if (searchTerm.length < 1) {
-        searchResultsContainer.style.display = 'none';
+        resetSearchResultsContainer();
         resetAllMarkers();
         return;
       }
@@ -3503,7 +3501,7 @@ function getTimezoneCoordinates(timezone) {
               highlightSelectedParish(item.data);
             }
             focusOnPoint(item.data.Latitude, item.data.Longitude);
-            searchResultsContainer.style.display = 'none';
+            resetSearchResultsContainer();
             document.getElementById('searchInput').value = '';
           });
           
@@ -3519,12 +3517,12 @@ function getTimezoneCoordinates(timezone) {
         
         searchResultsContainer.style.display = 'block';
       } else {
-        searchResultsContainer.style.display = 'none';
+        resetSearchResultsContainer();
       }
     }
 
     function clearSearchResults(searchResultsContainer) {
-        searchResultsContainer.style.display = 'none';
+        resetSearchResultsContainer();
         // Clear search input
         document.getElementById('searchInput').value = '';
     }
