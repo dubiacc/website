@@ -1,4 +1,4 @@
-# The Historical Decline of Europe
+# Real History: The Historical Decline of Europe
 
 ## Introduction
 

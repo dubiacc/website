@@ -519,6 +519,9 @@
         }
     },
     "authors": {
+        "bishop-williamson": {
+            "displayname": "+Richard Williamson (1940-2025)"
+        },
         "discord:821379162828439581": {
             "displayname": "Test User",
             "contact": "https://discord.gg/sYHehWCPJh",
