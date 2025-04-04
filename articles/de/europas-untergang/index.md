@@ -2,7 +2,7 @@ War die Aufklärung wirklich ein Fortschritt? Dieser Artikel beleuchtet die kath
 auf den historischen Niedergang der Kultur und Politik Europas seit dem Mittelalter durch die 
 Entthronung Christi aus der westlichen Zivilisation.
 
-# Wahre Geschichte: Der historische Niedergang Europas
+# Der historische Niedergang Europas
 
 ## Einleitung
 
@@ -10,7 +10,7 @@ Die Geschichte dient sowohl als Spiegel als auch als Prophet — sie reflektiert
 
 Es existieren zwei Interpretationen der europäischen Geschichte in starkem Gegensatz zueinander: die liberale Erzählung vom "Fortschritt" von vermeintlicher Dunkelheit zur Erleuchtung und das katholische Verständnis des Niedergangs von einer christuszentrierten Zivilisation zu einer des Chaos und der geistlichen Armut. Indem wir wichtige historische Wendepunkte durch diese kontrastierenden Perspektiven betrachten, können wir unsere gegenwärtige Lage und den Weg zu einer authentischen Wiederherstellung besser verstehen.
 
-## Das Mittelalter (13.-14. Jahrhundert)
+## Das Mittelalter
 
 Die liberale Sichtweise verwirft das Mittelalter als "dunkles Zeitalter" — eine Periode der Unwissenheit, des Aberglaubens und der Tyrannei. Nach dieser Perspektive war das mittelalterliche Europa intellektuell stagnierend, von der katholischen Kirche unterdrückt und von despotischen Monarchen regiert, die Menschenrechte und Würde mit Füßen traten. Diese Charakterisierung dient einer Erzählung, die die Moderne als Befreier der Menschheit von religiöser und monarchischer Knechtschaft positioniert.
 
@@ -20,7 +20,7 @@ Der mittelalterliche Mensch, ob Bauer oder Adliger, lebte innerhalb einer kohär
 
 Die mittelalterliche Auffassung von Autorität unterschied sich grundlegend von modernen Vorstellungen. Politische Macht stieg von Gott durch angemessene Kanäle herab (am sichtbarsten in der heiligen Salbung der Könige), nicht von der Volkssouveränität nach oben. Diese göttliche Investitur der Autorität schuf Stabilität und Legitimität, die die persönlichen Qualitäten einzelner Herrscher transzendierte. Wenn ein König vom Erzbischof gesalbt wurde, bezeugten die Menschen die sichtbare Verleihung göttlicher Autorität — selbst wenn der König selbst Fehler hatte — und die soziale Ordnung funktionierte entsprechend.
 
-## Die Inquisition (15.-16. Jahrhundert)
+## Die Inquisition
 
 Moderne Liberale reagieren mit Entsetzen auf die bloße Erwähnung der Inquisition und behandeln sie als selbstverständlich böse — den Archetyp religiöser Intoleranz und Unterdrückung. Die Inquisition ist zu einem Triggerwort wie "Faschismus" oder "Kolonialismus" geworden, das angeführt wird, um den rationalen Diskurs zu beenden, anstatt die historische Realität zu verstehen.
 
@@ -30,7 +30,7 @@ Mittelalterliche Kriege waren in Umfang und Zerstörung begrenzt, gerade weil ei
 
 Die Inquisition funktionierte als institutionelle Absicherung gegen die Auflösung dieser vereinten christlichen Gesellschaft. Durch die Identifizierung und Bekämpfung von Häresie bewahrte sie die Königsherrschaft Christi über alle Aspekte des Lebens: Politik, Wirtschaft, Künste, Universitäten und soziale Beziehungen. Weit entfernt von der karikaturhaften Darstellung sadistischer Folterkammern, die in der populären Vorstellung fortbesteht, folgte die Inquisition sorgfältigen gerichtlichen Verfahren, die in vielerlei Hinsicht humaner waren als zeitgenössische weltliche Gerichte.
 
-## Die protestantische Revolution
+## Luthers Revolution
 
 Der Liberalismus feiert die protestantische Reformation als das Hervortreten der Menschheit aus katholischer Unterdrückung — die Morgendämmerung religiöser Freiheit und individuellen Gewissens. Luther wird zu einem Helden, der das Monopol der Kirche auf die Wahrheit brach und Einzelpersonen ermächtigte, die Schrift selbst zu interpretieren. Dieser "Durchbruch" initiierte angeblich eine Kaskade befreiender Entwicklungen, die in der modernen Demokratie gipfelten.
 
@@ -70,11 +70,11 @@ Die amerikanische Revolution etablierte religiöse Neutralität auf Bundesebene,
 
 Der Slogan der Revolutionen — "Freiheit, Gleichheit, Brüderlichkeit" — klang edel, maskierte aber tiefe Unordnung. "Freiheit" bedeutete Freiheit von göttlichem und natürlichem Gesetz; "Gleichheit" leugnete natürliche und hierarchische Unterschiede, die für soziale Harmonie wesentlich sind; "Brüderlichkeit" bot eine Fälschung von Einheit ohne die Vaterschaft Gottes. Indem sie Christus prinzipiell entthronte, legten diese Revolutionen den Grundstein für den modernen Säkularismus.
 
-## Das 19. und 20. Jahrhundert
+## 19. und 20. Jahrhundert
 
 Der Liberalismus interpretiert die vergangenen zwei Jahrhunderte als stetigen Fortschritt der Menschheit zu größerer Freiheit, mehr Rechten und Würde. Die Ausbreitung der Demokratie, die Abschaffung der Sklaverei, das Frauenwahlrecht, Bürgerrechtsbewegungen und die Erweiterung persönlicher Freiheiten werden als Triumphe des menschlichen Geistes über veraltete religiöse Einschränkungen gefeiert. Jegliche Rückschläge werden als vorübergehende Abweichungen in einer ansonsten aufwärts gerichteten Trajektorie abgetan.
 
-Aus katholischer Perspektive stellen das 19. und 20. Jahrhundert die logische Kulmination der Rebellion gegen göttliche Autorität dar — eine rapide Beschleunigung in Richtung geistliches und soziales Chaos. Als Christus systematisch aus jedem Lebensbereich entthront wurde — Künste, Bildung, Wirtschaft, Politik, Familie — verlor die westliche Zivilisation ihr Gravitationszentrum.
+Aus katholischer Perspektive stellen das 19. und 20. Jahrhundert die logische Vollendung der Rebellion gegen göttliche Autorität dar — eine rapide Beschleunigung in Richtung geistliches und soziales Chaos. Als Christus systematisch aus jedem Lebensbereich entthront wurde — Künste, Bildung, Wirtschaft, Politik, Familie — verlor die westliche Zivilisation ihr Gravitationszentrum.
 
 Das 19. Jahrhundert sah den Triumph des Liberalismus in ganz Europa, wobei traditionelle katholische Monarchie und soziale Lehre zunehmend marginalisiert wurden. Göttliches Königtum wich der konstitutionellen Monarchie oder dem Republikanismus; Gilden und organische soziale Strukturen wurden durch industriellen Kapitalismus und Klassenkonflikte ersetzt; religiöse Bildung wich säkularisierter staatlicher Schulbildung.
 
