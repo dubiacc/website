@@ -1,11 +1,11 @@
-Want to learn ecclesiastical Latin? Use our free vocabulary and grammar trainer
+Want to learn Latin? Use our free vocabulary and grammar trainer
 and get started with reading Cicero, St. Augustine and St. Thomas Aquinas in 
 the language of the Church. 
 
-# Learn Church Latin
+# Learning Latin Online
 
-This free course offers a simple way to learn ecclesiastical Latin. 
-The course is split into vocabulary tests (V01 - V03) and grammar tests (G1 - G11).
+This free course offers a simple way to learn Latin. The course is split into 
+vocabulary tests (V01 - V03) and grammar tests (G1 - G11). 
 
 Starting off, you'll memorize the 1000 most common Latin words. You can now already read 
 most prayers in the Divine Office, but you won't truly understand the syntax or how 

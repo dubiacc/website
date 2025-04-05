@@ -2337,7 +2337,7 @@ fn article2html(
     let content = match (lang, slug) {
         ("de", "rosenkranz") => rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries(), &meta),
         ("en", "rosary") => rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries(), &meta),
-        ("en", "learn-latin") => {
+        ("en", "online-latin-trainer") => {
             let l = langtrain::TrainLang::Latin;
             let grammar_lessons = l.get_grammar_lessons(lang);
             a.sections.push(ArticleSection { title: format!("V01: 1000 words"), indent: 2, pars: Vec::new() });
