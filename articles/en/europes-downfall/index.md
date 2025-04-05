@@ -1,12 +1,12 @@
-# Real History: The Historical Decline of Europe
+We were told in school that the so-called Enlightenment finally overcame the medieval "Dark Ages" - but at what cost? 
 
-## Introduction
+# The Historical Decline of Europe
 
 History serves as both mirror and prophet — reflecting our past while forecasting our future. Yet in today's educational landscape, history has been deliberately marginalized. This is no accident. A proper understanding of history reveals patterns that challenge modern assumptions and threaten contemporary ideologies. This article examines European history from a traditional Catholic perspective, tracing what can only be described as a methodical dethroning of Christ from Western civilization—a process spanning centuries that has led to our current spiritual and cultural crisis.
 
 Two interpretations of European history exist in stark opposition: the liberal narrative of "progress" from supposed darkness to enlightenment, and the Catholic understanding of decline from a Christ-centered civilization to one of chaos and spiritual poverty. By examining key historical turning points through these contrasting lenses, we can better understand our present predicament and the path to authentic restoration.
 
-## The Middle Ages (13th-14th Century)
+## The Middle Ages
 
 The liberal view dismisses the Middle Ages as the "Dark Ages" — a period of ignorance, superstition, and tyranny. According to this perspective, medieval Europe was intellectually stagnant, oppressed by the Catholic Church, and ruled by despotic monarchs who trampled human rights and dignity. This characterization serves a narrative that positions modernity as the liberator of humanity from religious and monarchical bondage.
 
@@ -16,7 +16,7 @@ The medieval person, whether peasant or noble, lived within a coherent worldview
 
 The medieval conception of authority differed fundamentally from modern notions. Political power descended from God through proper channels (most visibly in the sacred anointing of kings), not upward from popular sovereignty. This divine investiture of authority created stability and legitimacy that transcended the personal qualities of individual rulers. When a king was anointed by the Archbishop, people witnessed the visible bestowal of divine authority—even if the king himself was flawed—and the social order functioned accordingly.
 
-## The Inquisition (15th-16th century)
+## The Inquisition
 
 Modern liberals react with horror at the mere mention of the Inquisition, treating it as self-evidently evil—the archetype of religious intolerance and oppression. The Inquisition has become a trigger word like "fascism" or "colonialism," invoked to shut down rational discourse rather than to understand historical reality.
 
@@ -66,7 +66,7 @@ The American Revolution established religious neutrality at the federal level, w
 
 The revolutions' slogan—"Liberty, Equality, Fraternity"—sounded noble but masked profound disorder. "Liberty" meant freedom from divine and natural law; "equality" denied natural and hierarchical distinctions essential to social harmony; "fraternity" offered a counterfeit unity without the fatherhood of God. By dethroning Christ in principle, these revolutions laid the foundation for modern secularism.
 
-## The 19th and 20th Centuries
+## 19th and 20th Centuries
 
 Liberalism interprets the past two centuries as humanity's steady progress toward greater freedom, rights, and dignity. Democracy's spread, slavery's abolition, women's suffrage, civil rights movements, and expanding personal freedoms are celebrated as triumphs of the human spirit over outdated religious constraints. Any setbacks are dismissed as temporary aberrations in an otherwise upward trajectory.
 
@@ -78,7 +78,7 @@ The 20th century — far from being the pinnacle of human progress—proved the 
 
 Modern "human rights" discourse perfectly illustrates this devolution. Beginning with legitimate rights grounded in natural law, it has progressively expanded to include manufactured "rights" that directly contradict divine law—abortion, same-sex marriage, gender ideology, euthanasia. Without the anchor of divine authority, rights claims become arbitrary assertions of autonomous will, ultimately devolving into the principle that might makes right.
 
-## Conclusion: The Path Forward
+## The Path Forward
 
 The liberal and Catholic interpretations of European history cannot be reconciled—they represent fundamentally opposed worldviews. The confusion afflicting many modern Catholics stems from attempting to synthesize these contradictory perspectives. One cannot simultaneously embrace the kingship of Christ and the sovereignty of autonomous human reason; one cannot serve both God and liberal democracy.
 
@@ -115,7 +115,7 @@ For those seeking deeper understanding of these historical developments from a t
 ```
 {
     "date": "2025-01-04",
-    "authors": ["discord:296693580016386048"],
-    "tags": ["geschichte"]
+    "authors": ["bishop-williamson"],
+    "tags": ["history"]
 }
 ```

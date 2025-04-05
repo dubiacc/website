@@ -4,11 +4,11 @@ Entthronung Christi aus der westlichen Zivilisation.
 
 # Der historische Niedergang Europas
 
-## Einleitung
+Die Geschichte dient sowohl als Spiegel als auch als Prophet — sie reflektiert unsere Vergangenheit und prognostiziert unsere Zukunft. Doch in den heutigen Schulen wird die Geschichte bewusst nur einseitig beleuchtet: das dunkle Mittelalter ist überwunden, die Menschen sind jetzt rational und intelligent, extreme Ideologien sind grundweg falsch, ein Mittelweg, der nicht zu radikal ist, ist die beste Lösung. Dies ist kein Zufall, denn ein angemessenes Verständnis der Geschichte offenbart Muster, die moderne Annahmen in Frage stellen und zeitgenössische Ideologien bedrohen.
 
-Die Geschichte dient sowohl als Spiegel als auch als Prophet — sie reflektiert unsere Vergangenheit und prognostiziert unsere Zukunft. Doch in der heutigen Bildungslandschaft wurde die Geschichte bewusst marginalisiert. Dies ist kein Zufall. Ein angemessenes Verständnis der Geschichte offenbart Muster, die moderne Annahmen in Frage stellen und zeitgenössische Ideologien bedrohen. Dieser Artikel untersucht die europäische Geschichte aus einer traditionellen katholischen Perspektive und zeichnet nach, was nur als methodische Entthronung Christi aus der westlichen Zivilisation beschrieben werden kann — ein Prozess, der sich über Jahrhunderte erstreckt und zu unserer gegenwärtigen geistlichen und kulturellen Krise geführt hat.
+## Einführung
 
-Es existieren zwei Interpretationen der europäischen Geschichte in starkem Gegensatz zueinander: die liberale Erzählung vom "Fortschritt" von vermeintlicher Dunkelheit zur Erleuchtung und das katholische Verständnis des Niedergangs von einer christuszentrierten Zivilisation zu einer des Chaos und der geistlichen Armut. Indem wir wichtige historische Wendepunkte durch diese kontrastierenden Perspektiven betrachten, können wir unsere gegenwärtige Lage und den Weg zu einer authentischen Wiederherstellung besser verstehen.
+Es existieren zwei Interpretationen der europäischen Geschichte in starkem Gegensatz zueinander: die liberale Erzählung vom "Fortschritt" von vermeintlicher Dunkelheit zur Erleuchtung - und das katholische Verständnis des Niedergangs von einer christuszentrierten Zivilisation zu einer des Chaos und der geistlichen Armut. In jedem Zeitalter betrachten wir daher zunächst die liberale Erzählung, danach die katholische.
 
 ## Das Mittelalter
 
@@ -82,7 +82,7 @@ Das 20. Jahrhundert — weit davon entfernt, der Höhepunkt menschlichen Fortsch
 
 Der moderne Diskurs über "Menschenrechte" illustriert diese Entwicklung perfekt. Beginnend mit legitimen Rechten, die im Naturrecht verankert sind, hat er sich progressiv erweitert, um fabrizierte "Rechte" einzuschließen, die direkt dem göttlichen Gesetz widersprechen — Abtreibung, gleichgeschlechtliche Ehe, Geschlechterideologie, Euthanasie. Ohne den Anker göttlicher Autorität werden Rechtsansprüche zu willkürlichen Behauptungen autonomen Willens, die letztendlich zum Prinzip degenerieren, dass Macht Recht schafft.
 
-## Schlussfolgerung: Der Weg nach vorne
+## Vorwärts in die Vergangenheit
 
 Die liberale und katholische Interpretation der europäischen Geschichte können nicht miteinander versöhnt werden — sie repräsentieren fundamental entgegengesetzte Weltanschauungen. Die Verwirrung, die viele moderne Katholiken plagt, stammt aus dem Versuch, diese widersprüchlichen Perspektiven zu synthetisieren. Man kann nicht gleichzeitig das Königtum Christi und die Souveränität autonomer menschlicher Vernunft umarmen; man kann nicht sowohl Gott als auch der liberalen Demokratie dienen.
 
