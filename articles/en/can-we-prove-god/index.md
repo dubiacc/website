@@ -1,12 +1,14 @@
+The article was taken from a 
 # Can we prove that God exists?
 
 The question of God's existence has occupied philosophers for millennia. 
 In this post, we present a philosophical case for God based on reason 
 rather than revelation.
 
-## The First Cause (Aristoteles)
+## The First Cause
 
-Every effect must have a cause. Consider any object or event in our universe:
+Aristoteles, "the Philosopher", explains: Every effect must have a cause. 
+Consider any object or event in our universe:
 
 - Where did the first human come from?
 - Where did the first cell come from?
@@ -129,3 +131,11 @@ analysis of causality and existence.
 From here, one might explore whether this God has communicated with humanity, 
 whether religious texts contain genuine revelation or just hallucinations - 
 and what implications this has for how we should live.
+
+```
+{
+    "date": "2025-04-08",
+    "authors": ["fr-hesse"],
+    "tags": ["atheism"]
+}
+```

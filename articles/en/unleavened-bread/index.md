@@ -54,3 +54,11 @@ bread. He sees this not as a divisive issue but as a legitimate liturgical varia
 reflects different aspects of the same Eucharistic mystery. The Catholic practice emphasizes 
 Christ's sinlessness and the historical continuity with the Passover, while acknowledging 
 the equally valid symbolism in the Eastern practice.
+
+```
+{
+    "authors": ["thomas-aquinas"],
+    "date": "1240-01-01",
+    "tags": ["orthodoxy"]
+}
+```

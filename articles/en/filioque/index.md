@@ -25,3 +25,11 @@ Aquinas also addresses linguistic concerns, noting that when Greek Fathers say t
 ## Conclusion
 
 The Catholic teaching on the Filioque, as Aquinas demonstrates, preserves both the monarchy of the Father as the ultimate source within the Trinity and the consubstantiality of the Son with the Father. Far from being a novel doctrine, the procession of the Holy Spirit from both the Father and the Son is attested by numerous Eastern Fathers and serves to protect the unity of the divine essence and the distinction of divine persons in Trinitarian theology.
+
+```
+{
+    "date": "2025-04-08",
+    "authors": ["thomas-aquinas"],
+    "tags": ["orthodoxy"]
+}
+```

@@ -167,48 +167,6 @@ is man-centered: "Hi, folks. I'm Father James. Call me Jim. Today, we're gonna
 celebrate together a Eucharistic picnic. So we're all gonna be happy, happy,
 right? Let's give a round of applause to show how happy we're going to be."
 
-## A Humorous Note
-
-You ask a modernist to recite his two times table. 
-
-"Two times two is four," he says. 
-
-"Two times three is six." 
-
-"Two times four is eight." 
-
-"Two times five is eleven."
-
-"Two times six is twelve..." 
-
-You say, "You made a mistake. You said two times five is eleven."
-
-"No," he says with a charming smile, "Two times five are eleven."
-
-"What convinces you?", you ask. 
-
-"I feel it. I feel that twice five is eleven."
-
-"Then why do you say two times two is four?" 
-
-"Because I feel it." 
-
-"Why do you say two times three is six?" 
-
-"Because I feel it."
-
-"In other words, your whole times table is based on your feelings?" 
-
-"Absolutely, yes," he says with a tremendous sweet smile from ear to ear.
-
-The only thing a sane man can do at that point is cut and run. He's talking to a
-madman. The madman is charming, the madman is sweet, the madman is kind, the
-madman is nice. The madman can even say a lot of true things. But when I start
-scratching, I realize he's basing "two and two are four" not upon reality, but
-upon his feelings. He's crazy!
-
-That's the modern world.
-
 ## What Can Catholics Do?
 
 What must Catholics do in these times? First, pray the Rosary - I recommend 15

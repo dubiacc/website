@@ -30,3 +30,11 @@ As for the claim that Mary needed to share our fallen nature to transmit humanit
 ## Conclusion
 
 The Catholic doctrine of the Immaculate Conception, as rooted in the teachings examined by Aquinas, does not diminish Mary's virtues but rather recognizes the perfect work of grace in her from the beginning of her existence. Far from removing her free cooperation with God, it acknowledges that her "fiat" was given from a heart uniquely prepared by God's grace. The Eastern Fathers' emphasis on Mary's exceptional purity provides a foundation for this understanding, even if they did not articulate the doctrine with the precision of later theological development.
+
+```
+{
+    "date": "2025-04-08",
+    "authors": ["thomas-aquinas"],
+    "tags": ["orthodoxy"]
+}
+```

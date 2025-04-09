@@ -95,22 +95,32 @@ The path forward requires courage to reject the dominant narrative of progress a
 For those seeking deeper understanding of these historical developments from a traditional Catholic perspective, the following sources provide valuable insight:
 
 1. Belloc, Hilaire. *Europe and the Faith*
+
 2. Belloc, Hilaire. *The Crisis of Civilization*
+
 3. Danby, Michael. *Church and State*
+
 4. Davies, Michael. *The Reign of Christ the King*
+
 5. De Maistre, Joseph. *Considerations on France*
+
 6. Donoso Cortés, Juan. *Essays on Catholicism, Liberalism, and Socialism*
-7. Hull, Charles Henry. *The Economic Writings of Sir William Petty*
-8. Kuehnelt-Leddihn, Erik von. *Liberty or Equality*
-9. Moczar, Diane. *Seven Lies About Catholic History*
-10. Pope Leo XIII. *Libertas Praestantissimum* (On Human Liberty)
-11. Pope Pius IX. *Quanta Cura* (Condemning Current Errors)
-12. Pope Pius X. *Notre Charge Apostolique* (On the "Sillon" Movement)
-13. Pope Pius XI. *Quas Primas* (On the Kingship of Christ)
-14. Reynolds, E.E. *St. Thomas More*
-15. Walsh, William Thomas. *Characters of the Inquisition*
-16. Walsh, William Thomas. *Isabella of Spain*
-17. Weaver, Richard M. *Ideas Have Consequences*
+
+7.  Moczar, Diane. *Seven Lies About Catholic History*
+
+8.  Pope Leo XIII. *Libertas praestantissimum donum* (On Human Liberty)
+
+9.  Pope Pius IX. *Quanta Cura* (Condemning Current Errors)
+
+10. Pope Pius X. *Notre Charge Apostolique* (On the "Sillon" Movement)
+
+11. Pope Pius XI. *Quas Primas* (On the Kingship of Christ)
+
+12. Reynolds, E.E. *St. Thomas More*
+
+13. Walsh, William Thomas. *Characters of the Inquisition*
+
+14. Weaver, Richard M. *Ideas Have Consequences*
 
 ```
 {

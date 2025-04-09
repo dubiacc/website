@@ -27,3 +27,11 @@ Far from separating believers from God, created grace is precisely what unites t
 ## Conclusion
 
 While the language and conceptual frameworks differ between East and West, both traditions affirm that through grace, God truly communicates Himself to human beings, making them partakers of divine life. The Catholic understanding of created grace, properly understood, does not diminish the reality of deification but provides a theological explanation for how finite creatures can participate in infinite divine life without confusion of natures. As Aquinas demonstrates through his engagement with Eastern Fathers, the fundamental mystery of divine-human communion remains central to both traditions, despite differences in theological expression.
+
+```
+{
+    "authors": ["thomas-aquinas"],
+    "date": "1230-01-01",
+    "tags": ["orthodoxy"]
+}
+```

@@ -23,3 +23,12 @@ The difference between East and West is not in the valuation of celibacy itself 
 ## Conclusion
 
 While defending the Western practice, Aquinas would acknowledge that clerical celibacy is a matter of Church discipline rather than divine law, which is why the Catholic Church today recognizes the validity of married Eastern Catholic and Orthodox priests. The difference in practice should not be seen as one tradition being right and the other wrong, but as complementary expressions of the same priesthood that emphasize different aspects of ministerial life. Both traditions preserve important values: the East maintains the apostolic tradition of married clergy, while the West emphasizes the special witness of celibacy for the kingdom that Christ himself praised.
+
+
+```
+{
+    "date": "1240-01-01",
+    "authors": ["thomas-aquinas"],
+    "tags": ["orthodoxy"]
+}
+```

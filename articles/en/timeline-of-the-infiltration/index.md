@@ -96,7 +96,7 @@ this was vetoed by Emperor Franz Josef of Austria:
 > Emperor Franz Josef came to prove through the Austrian secret service that 
 > Mariano Rampolla del Tindero was a Freemason.
 >
-> -- Dr. Hw. Gregorius Hesse - [YouTube Sermon at 13:59](https://youtu.be/uCEyYsJjwvU?t=837)
+> -- [Dr. Hw. Gregorius Hesse](https://gregorius-hesse.at/person/persoenlichkeit/) -- ["Zerstörung der Kirche aus dem inneren und äußeren", video at 13:59](https://youtu.be/uCEyYsJjwvU?t=837)
 
 However, the alleged source of the Austrian intelligence, Mgr. Jouin, only began 
 his anti-Masonic work after 1909, years after the 1903 conclave. Second, Pope St. 
@@ -118,7 +118,7 @@ list, dismissed the inclusion of Rampolla (referred to by initials C...R...) as:
 > ...the entirely gratuitous allegation of unscrupulous sectarians [which] 
 > cannot constitute any charge against anyone in the world.
 >
-> -- [R.I.S.S. (1 May 1929), quoted in Sodalitium n°62](https://archive.is/wip/IIGXy)
+> -- [R.I.S.S. (1 May 1929), quoted in: Sodalitium no. 62](https://archive.is/wip/IIGXy)
 
 Ricossa also notes that Rampolla's name was later removed from the list of "saints" 
 in Aleister Crowley's Gnostic Mass canon, which closely mirrored the O.T.O. list.
@@ -150,7 +150,7 @@ conversation with St. Pius X himself in May 1914:
 > occurred. Seriously, His Holiness remarked that it was sad, but true, 
 > that Rampolla consisted of two different persons.
 >
-> —- [Ludwig von Pastor, Tagebücher – Briefe – Erinnerungen, p. 598]()
+> —- [Ludwig von Pastor: Tagebücher – Briefe – Erinnerungen, p. 598](https://books.google.de/books/about/Tageb%C3%BCcher_Briefe_Erinnerungen_1854_192.html?id=xBobmN2Sf34C&redir_esc=y) -- [quoted in: Sodalitium no. 62](https://archive.is/IIGXy#selection-4725.0-4736.0)
 
 From his powerful position, Cardinal Rampolla began strategically selecting 
 and placing seminarians and priests in important positions. Under his 
@@ -191,7 +191,7 @@ with Rampolla for decades, since Chiesa had been Rampollas private secretary.
 > by Rampolla as his private secretary at the Nunciature in Madrid. It was to 
 > become a twenty-year relationship.
 > 
-> -- [Martínez, p. 38]()
+> -- [Martinez, Mary Ball: Untermining of the Catholic Church, p. 38](https://ia601303.us.archive.org/35/items/undermining-of-the-catholic-church_202402/UnderminingOfTheCatholicChurch.pdf)
 
 His election, along with Pietro Gasparri becoming Secretary of State, effectively 
 meant that Rampolla's influence continued despite the earlier veto:
@@ -201,7 +201,7 @@ meant that Rampolla's influence continued despite the earlier veto:
 > after all, mounted the papal throne in the person of his two closest 
 > assistants [Benedict XV and Gasparri].
 > 
-> -- [Martínez, p. 45]()
+> -- [Martinez, Mary Ball: Untermining of the Catholic Church, p. 45](https://ia601303.us.archive.org/35/items/undermining-of-the-catholic-church_202402/UnderminingOfTheCatholicChurch.pdf)
 
 Under Benedict XV, the Vatican began to subtly reverse Pius X's anti-modernist 
 stance. He signaled this shift early on:
@@ -211,7 +211,7 @@ stance. He signaled this shift early on:
 > gave teachers and preachers everywhere to understand that the war between the 
 > Vatican and the Modernists was over.
 > 
-> -- [Martínez, p. 47]()
+> -- [Martinez, Mary Ball: Untermining of the Catholic Church, p. 47](https://ia601303.us.archive.org/35/items/undermining-of-the-catholic-church_202402/UnderminingOfTheCatholicChurch.pdf)
 
 He also targeted traditionalist vigilance groups like the Sodalitium Pianum, 
 eventually ordering its dissolution under pressure from Secretary Gasparri 
@@ -243,7 +243,7 @@ Vatican push for its condemnation. Martínez states:
 > to Freemasonry. Vatican pressure was being seconded by pressure from the French 
 > government.
 > 
-> -- [Martínez, p. 53]()
+> -- [Martinez, Mary Ball: Untermining of the Catholic Church, p. 53](https://ia601303.us.archive.org/35/items/undermining-of-the-catholic-church_202402/UnderminingOfTheCatholicChurch.pdf)
 
 The eventual condemnation followed a campaign potentially involving manipulated 
 information presented to the Pope (Martínez, p. 55).
@@ -259,7 +259,7 @@ the martyrs (Iniquis Afflictisquae), Gasparri actively worked against the Criste
 > of the Mexican hierarchy to refuse encouragement to the fighters. He alerted the 
 > bishops of the United States to refuse all appeals for economic aid.
 > 
-> -- [Martínez, p. 59]()
+> -- [Martinez, Mary Ball: Untermining of the Catholic Church, p. 59](https://ia601303.us.archive.org/35/items/undermining-of-the-catholic-church_202402/UnderminingOfTheCatholicChurch.pdf)
 
 Ultimately, Gasparri orchestrated the Cristero surrender ("los arreglos") through 
 compromising bishops, bypassing those loyal to the cause and leaving the Cristeros 
@@ -273,7 +273,7 @@ The outcome was devastating:
 > scandal, with its obvious complicity on the part of the Vatican, touches on 
 > the Holy See itself and it is so grave that one can foresee a great loss of faith.
 > 
-> -- [Martínez, pp. 183-184]()
+> -- [Martinez, Mary Ball: Untermining of the Catholic Church, pp. 183-184](https://ia601303.us.archive.org/35/items/undermining-of-the-catholic-church_202402/UnderminingOfTheCatholicChurch.pdf)
 
 Martínez concludes that Pius XI likely acted against the Cristeros only: "because of 
 enormous pressure put on him by individuals determined to get their way. In the end 
@@ -302,7 +302,7 @@ Pius XII's active support for Bugnini's commission:
 > could arrive at remarkable results even in periods when the Pope’s illness prevented 
 > anyone else from seeing him.
 > 
-> -- [Bugnini, quoted by Martínez, p. 97]()
+> -- [Bugnini, quoted by Martínez, p. 97](https://ia601303.us.archive.org/35/items/undermining-of-the-catholic-church_202402/UnderminingOfTheCatholicChurch.pdf)
 
 A new translation of the Psalms further eroded liturgical tradition, particularly 
 Gregorian chant (Martínez, p. 77, 95). By 1958, liturgical changes were widespread, 
@@ -388,6 +388,14 @@ Providence for the eventual restoration of Holy Mother Church.
 
 ## Sources
 
-[Original Sermon by Fr. Hesse in Germany (YouTube)]()
+[Hesse, G.:"Zerstörung der Kirche aus dem inneren und äußeren"](https://youtu.be/uCEyYsJjwvU)
 [Bailey, David C.: Viva Cristo Rey - The Cristero Rebellion and the Church-State Conflict in Mexico]()
-[Martinez, Mary Ball: Untermining of the Catholic Church ](https://ia601303.us.archive.org/35/items/undermining-of-the-catholic-church_202402/UnderminingOfTheCatholicChurch.pdf)
+[Martinez, Mary Ball: Untermining of the Catholic Church](https://ia601303.us.archive.org/35/items/undermining-of-the-catholic-church_202402/UnderminingOfTheCatholicChurch.pdf)
+
+```
+{
+    "authors": ["fr-hesse"],
+    "date": "2000-01-01",
+    "tags": ["history", "vatican-ii"]
+}
+```

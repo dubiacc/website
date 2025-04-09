@@ -522,6 +522,15 @@
         "bishop-williamson": {
             "displayname": "Bp. R. Williamson"
         },
+        "fr-hesse": {
+            "displayname": "Fr. G. Hesse"
+        },
+        "thomas-aquinas": {
+            "displayname": "St. Thomas Aquinas"
+        },
+        "greg-taylor": {
+            "displayname": "Greg Taylor"
+        },
         "discord:821379162828439581": {
             "displayname": "Test User",
             "contact": "https://discord.gg/sYHehWCPJh",
@@ -693,10 +702,9 @@
                     "id": "messe",
                     "title": "Lateinischen Messen",
                     "links": [
-                        {"slug": "https://www.latinmass.com/find-latin-mass", "title": "latinmass.com/find-latin-mass"},
-                        {"slug": "https://latinmassdir.org", "title": "LatinMassDir.org"},
-                        {"slug": "https://sspx.org/en/mass-centers", "title": "Interaktive Karte von Messorten der FSSPX"},
-                        {"slug": "https://www.cathinfo.com/sspx-resistance-chapels/", "title": "SSPX Resistance Messorte"}
+                        {"slug": "/priests", "title": "Karte von Resistance Messorten"},
+                        {"slug": "/en/on-ecclesia-dei-groups", "title": "➽ Warum sollte man nicht zu Ecclesia-Dei Gruppen gehen?"},
+                        {"slug": "/en/resistance-timeline", "title": "➽ Warum sollte man nicht (mehr) zur Piusbruderschaft gehen?"}
                     ]
                 },
                 {
@@ -906,7 +914,7 @@
             "tags": {
                 "islam": "Islam",
                 "judaism": "Judaism",
-                "eastern-orthodoxy": "Eastern Orthodoxy",
+                "orthodoxy": "Eastern Orthodoxy",
                 "oriental-orthodoxy": "Oriental Orthodoxy",
                 "atheism": "Atheism",
                 "history": "History",
@@ -928,10 +936,9 @@
                     "id": "mass",
                     "title": "Latin Mass Locations",
                     "links": [
-                        {"slug": "https://www.latinmass.com/find-latin-mass", "title": "latinmass.com/find-latin-mass"},
-                        {"slug": "https://latinmassdir.org", "title": "LatinMassDir.org"},
-                        {"slug": "https://sspx.org/en/mass-centers", "title": "SSPX Mass Centers"},
-                        {"slug": "https://www.cathinfo.com/sspx-resistance-chapels/", "title": "SSPX Resistance Mass Centers"}
+                        {"slug": "/priests", "title": "Map of Resistance Mass Locations"},
+                        {"slug": "/en/on-ecclesia-dei-groups", "title": "➽ Why you shouldn't attend FSSP Masses"},
+                        {"slug": "/en/resistance-timeline", "title": "➽ Why you shouldn't attend SSPX Masses (anymore)"}
                     ]
                 },
                 {
