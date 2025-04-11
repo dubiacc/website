@@ -684,7 +684,7 @@
   <script>
         // Configuration - Change these values to configure the application
         const CONFIG = {
-      minDistance: 160.0,
+      minDistance: 120.0,
       maxDistance: 500.0,
       currentZoomLevel: 800.0,
       dataUrl: null, // Set to CSV URL or null to use the default data
@@ -2805,7 +2805,7 @@ function getTimezoneCoordinates(timezone) {
             addUserLocationMarker(userLat, userLng);
             
             // Center globe on user location
-            focusOnPoint(userLat, userLng, config.currentZoomLevel);
+            focusOnPoint(userLat, userLng, CONFIG.currentZoomLevel);
           },
           // Error callback
           (error) => {
@@ -4231,6 +4231,7 @@ function getTimezoneCoordinates(timezone) {
         }
     }
           
+    // Replace the existing onDocumentMouseClick function with this improved version
     function onDocumentMouseClick(event) {
       // Calculate mouse position in normalized device coordinates
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -4239,31 +4240,81 @@ function getTimezoneCoordinates(timezone) {
       // Update the raycaster with the camera and mouse position
       raycaster.setFromCamera(mouse, camera);
       
-      // Get all interactive objects
-      const interactiveObjects = scene.children.filter(obj => 
-        obj.name === 'priest-marker' || 
-        obj.name === 'priest-pulse' || 
-        obj.name === 'priest-marker-invisible' ||
-        obj.name === 'parish-marker' ||
-        obj.name === 'parish-marker-invisible'
-      );
+      // Get all interactive objects - flatten the scene hierarchy to catch ALL markers
+      // This addresses a key issue where intersectObjects() may not be finding nested objects
+      const interactiveObjects = [];
       
-      // Find all intersections with interactive objects
-      const intersects = raycaster.intersectObjects(interactiveObjects, true);
+      // Helper function to recursively find all interactive objects
+      function findInteractiveObjects(parent) {
+        if (!parent) return;
+        
+        // Check if this object is interactive
+        if (parent.name === 'priest-marker' || 
+            parent.name === 'priest-pulse' || 
+            parent.name === 'priest-marker-invisible' ||
+            parent.name === 'parish-marker' ||
+            parent.name === 'parish-marker-invisible') {
+          interactiveObjects.push(parent);
+        }
+        
+        // Process children
+        if (parent.children && parent.children.length > 0) {
+          parent.children.forEach(child => findInteractiveObjects(child));
+        }
+      }
       
-      // If we have intersections
+      // Start with all scene children
+      scene.children.forEach(obj => findInteractiveObjects(obj));
+      
+      console.log(`Found ${interactiveObjects.length} interactive objects for raycasting`);
+      
+      // Enhanced debugging - check if we're hitting ANY object first
+      const anyIntersections = raycaster.intersectObjects(scene.children, true);
+      console.log(`Ray intersects with ${anyIntersections.length} total objects`);
+      
+      if (anyIntersections.length > 0) {
+        console.log("First hit object:", anyIntersections[0].object.name || "unnamed");
+        
+        // Check if the first hit is the earth - if so, log its position
+        if (anyIntersections[0].object.name === 'earth-mesh') {
+          console.log("Hit the earth at distance:", anyIntersections[0].distance);
+          // Continue with the raycasting to see if markers are further along the ray
+        }
+      }
+      
+      // Find all intersections with specifically interactive objects
+      const intersects = raycaster.intersectObjects(interactiveObjects, false);
+      console.log(`Ray intersects with ${intersects.length} interactive objects`);
+      
+      // If we have intersections with interactive objects, process them
       if (intersects.length > 0) {
-
-        // Filter out back-side hits
+        // Don't filter front/back side for invisible markers - they're meant to be clickable
+        // Only filter for visible markers to avoid clicking through the globe
         const frontSideHits = intersects.filter(hit => {
-          // For each hit, check if it's on the front side
+          const obj = hit.object;
+          
+          // Always allow invisible markers (they're designed for better click detection)
+          if (obj.name.includes('invisible')) {
+            return true;
+          }
+          
+          // For visible markers, check if they're on front side
           const hitPoint = hit.point.clone();
           const cameraToHit = new THREE.Vector3().subVectors(hitPoint, camera.position);
           const cameraToCenter = new THREE.Vector3().subVectors(new THREE.Vector3(0, 0, 0), camera.position);
-          return cameraToHit.dot(cameraToCenter) <= 0;
+          
+          // Changed logic: if the marker is farther from camera than globe center, it's back-side
+          const isFrontSide = cameraToHit.length() < cameraToCenter.length() + 100;
+          console.log(`Marker ${obj.name}: distance=${cameraToHit.length()}, center distance=${cameraToCenter.length()}, front=${isFrontSide}`);
+          return isFrontSide;
         });
         
-        if (frontSideHits.length === 0) return;
+        console.log(`Found ${frontSideHits.length} front-side hits`);
+        
+        if (frontSideHits.length === 0) {
+          console.log("All hits were on backside of globe or filtered out");
+          return;
+        }
         
         // Maps to collect unique data
         const hitPriests = new Map();
@@ -4272,9 +4323,11 @@ function getTimezoneCoordinates(timezone) {
         // Process each hit
         for (const hit of frontSideHits) {
           const obj = hit.object;
+          console.log(`Processing hit on object: ${obj.name}`);
           
           // Check for priest data
           if ((obj.name === 'priest-marker' || obj.name === 'priest-marker-invisible') && obj.priestData) {
+            console.log(`Hit priest: ${obj.priestData.Name}`);
             if (!hitPriests.has(obj.priestData.Name)) {
               hitPriests.set(obj.priestData.Name, {
                 data: obj.priestData,
@@ -4283,6 +4336,7 @@ function getTimezoneCoordinates(timezone) {
               });
             }
           } else if (obj.parent && obj.parent.name === 'priest-pulse' && obj.parent.priestData) {
+            console.log(`Hit priest pulse: ${obj.parent.priestData.Name}`);
             if (!hitPriests.has(obj.parent.priestData.Name)) {
               hitPriests.set(obj.parent.priestData.Name, {
                 data: obj.parent.priestData,
@@ -4293,6 +4347,7 @@ function getTimezoneCoordinates(timezone) {
           } 
           // Check for parish data
           else if ((obj.name === 'parish-marker' || obj.name === 'parish-marker-invisible') && obj.parishData) {
+            console.log(`Hit parish: ${obj.parishData.ParishName}`);
             if (!hitParishes.has(obj.parishData.ParishID)) {
               hitParishes.set(obj.parishData.ParishID, {
                 data: obj.parishData,
@@ -4303,34 +4358,107 @@ function getTimezoneCoordinates(timezone) {
           }
         }
         
-        // Combine and sort all hits
+        // Only include parish hits for click interactions
+        // Priests are only searchable from the text input
         const allHits = [
-          ...Array.from(hitPriests.values()),
+          // Exclude priests from click results
           ...Array.from(hitParishes.values())
         ].sort((a, b) => a.distance - b.distance);
         
+        console.log(`Total processed parish hits: ${allHits.length}`);
+        
         if (allHits.length === 1) {
-          // Single hit
+          // Single parish hit
           const hit = allHits[0];
-          if (hit.type === 'priest') {
-            showPriestInfo(hit.data);
-            highlightSelectedPriest(hit.data);
-            focusOnPoint(hit.data.Latitude, hit.data.Longitude, 250.0);
-          } else {
-            // Show parish info
-            showParishInfo(hit.data);
-            highlightSelectedParish(hit.data);
-            focusOnPoint(hit.data.Latitude, hit.data.Longitude, 250.0);
-          }
+          console.log(`Selected single parish: ${hit.data.ParishName}`);
+          
+          // Always show parish info for single parish hit
+          showParishInfo(hit.data);
+          highlightSelectedParish(hit.data);
+          focusOnPoint(hit.data.Latitude, hit.data.Longitude, CONFIG.minDistance);
         } else if (allHits.length > 1) {
-          // Multiple hits
+          // Multiple parish hits
+          console.log(`Multiple parish hits (${allHits.length}), showing proximity search`);
           event.stopPropagation();
           showProximitySearchResults(allHits);
+        } else if (hitPriests.size > 0) {
+          // We had priest hits but no parish hits
+          // Show the first priest directly
+          const priestHit = Array.from(hitPriests.values())[0];
+          console.log(`Selected priest: ${priestHit.data.Name}`);
+          showPriestInfo(priestHit.data);
+          highlightSelectedPriest(priestHit.data);
+          focusOnPoint(priestHit.data.Latitude, priestHit.data.Longitude, CONFIG.minDistance);
+        }
+      } else {
+        console.log("No intersections with interactive objects - trying fallback method");
+        
+        // FALLBACK METHOD: Use screen projection to detect closest marker
+        // This works even when raycasting fails due to layering issues
+        const screenVector = new THREE.Vector3();
+        let closestObject = null;
+        let closestDistance = Infinity;
+        let closestData = null;
+        let closestType = null;
+        
+        // Check each interactive object
+        interactiveObjects.forEach(obj => {
+          // Skip invisible objects
+          if (!obj.visible) return;
+          
+          // Get world position
+          const worldPos = obj.position.clone();
+          
+          // Project to screen space
+          screenVector.copy(worldPos);
+          screenVector.project(camera);
+          
+          // Convert to screen coordinates
+          const screenX = (screenVector.x * 0.5 + 0.5) * window.innerWidth;
+          const screenY = -(screenVector.y * 0.5 - 0.5) * window.innerHeight;
+          
+          // Calculate distance from click
+          const distance = Math.sqrt(
+            Math.pow(screenX - event.clientX, 2) + 
+            Math.pow(screenY - event.clientY, 2)
+          );
+          
+          // Check if closer than current closest and within threshold (50px)
+          if (distance < closestDistance && distance < 50) {
+            closestDistance = distance;
+            closestObject = obj;
+            
+            // Determine type and data
+            if (obj.name.includes('priest')) {
+              closestType = 'priest';
+              closestData = obj.priestData || (obj.parent && obj.parent.priestData);
+            } else if (obj.name.includes('parish')) {
+              closestType = 'parish';
+              closestData = obj.parishData;
+            }
+          }
+        });
+        
+        // If we found a close object, use it
+        if (closestObject && closestData) {
+          console.log(`Fallback method found: ${closestType} - ${closestData.Name || closestData.ParishName} (${closestDistance.toFixed(2)}px away)`);
+          
+          if (closestType === 'priest') {
+            showPriestInfo(closestData);
+            highlightSelectedPriest(closestData);
+            focusOnPoint(closestData.Latitude, closestData.Longitude, CONFIG.minDistance);
+          } else {
+            showParishInfo(closestData);
+            highlightSelectedParish(closestData);
+            focusOnPoint(closestData.Latitude, closestData.Longitude, CONFIG.minDistance);
+          }
+        } else {
+          console.log("No nearby markers found using fallback method");
         }
       }
     }
-
-    // Add function to show parish info
+      
+    // Function to show parish info
     function showParishInfo(parish) {
       const infoPanel = document.getElementById('infoPanel');
       const priestName = document.getElementById('priestName');
@@ -4580,7 +4708,7 @@ function getTimezoneCoordinates(timezone) {
             showParishInfo(data);
             highlightSelectedParish(data);
           }
-          focusOnPoint(data.Latitude, data.Longitude, 250.0);
+          focusOnPoint(data.Latitude, data.Longitude, CONFIG.minDistance);
           resetSearchResultsContainer();
         });
         
@@ -5357,7 +5485,7 @@ function getTimezoneCoordinates(timezone) {
           parishitem.addEventListener('click', () => {
             showParishInfo(parish);
             highlightSelectedParish(parish);
-            focusOnPoint(parish.Latitude, parish.Longitude, 250.0);
+            focusOnPoint(parish.Latitude, parish.Longitude, CONFIG.minDistance);
           });
           
           parishesList.appendChild(parishitem);
@@ -5454,7 +5582,7 @@ function getTimezoneCoordinates(timezone) {
               showParishInfo(item.data);
               highlightSelectedParish(item.data);
             }
-            focusOnPoint(item.data.Latitude, item.data.Longitude, 250.0);
+            focusOnPoint(item.data.Latitude, item.data.Longitude, CONFIG.minDistance);
             resetSearchResultsContainer();
             document.getElementById('searchInput').value = '';
           });
@@ -5486,7 +5614,7 @@ function getTimezoneCoordinates(timezone) {
         showPriestInfo(priest);
         
         // Focus on the point
-        focusOnPoint(priest.Latitude, priest.Longitude, 250.0);
+        focusOnPoint(priest.Latitude, priest.Longitude, CONFIG.minDistance);
         
         // Reset markers color
         markers.forEach(marker => {
@@ -5496,8 +5624,13 @@ function getTimezoneCoordinates(timezone) {
 
     // Focus camera on a specific point
     function focusOnPoint(lat, lng, zoomLevel = CONFIG.minDistance) {
+
+      const zoomRange = CONFIG.maxDistance - CONFIG.minDistance;
+      const zoomFactor = Math.min(1, Math.max(0, (zoomLevel - CONFIG.minDistance) / zoomRange));
+      const latdiff = 5.0 * zoomFactor;
+
       // Calculate target position for the globe point
-      const targetPosition = getPointOnGlobe(lat - 5, lng, 2);
+      const targetPosition = getPointOnGlobe(lat - latdiff, lng, 2);
       
       // Normalized direction vector
       const direction = new THREE.Vector3();
