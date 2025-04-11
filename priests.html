@@ -682,8 +682,9 @@
   </div>
 
   <script>
-        // Configuration - Change these values to configure the application
-        const CONFIG = {
+
+    // Configuration - Change these values to configure the application
+    const CONFIG = {
       minDistance: 120.0,
       maxDistance: 500.0,
       currentZoomLevel: 800.0,
@@ -714,8 +715,8 @@
       osmTiles: {
         enabled: true,              // Enable OSM tiles 
         zoomThreshold: 350,         // Show OSM tiles when camera distance is less than this value (increased from 220)
-        minZoom: 3,                 // Minimum OSM zoom level
-        maxZoom: 10,                // Decreased from 19 for testing
+        minZoom: 0,                 // Minimum OSM zoom level
+        maxZoom: 7,                // Decreased from 19 for testing
         tileSize: 256,              // Tile size in pixels
         opacity: 1.0,               // OSM tile opacity (increased from 0.8)
         debugZLevel: 1,             // Force a specific z-level for debugging
@@ -726,21 +727,21 @@
         maxVisibleTiles: 200,       // Maximum number of visible tiles (for performance)
         // More conservative altitude to zoom mapping
         altitudeToZoomMap: [        
-          { altitude: 350, zoom: 3 },
-          { altitude: 280, zoom: 4 },
-          { altitude: 220, zoom: 5 },
-          { altitude: 190, zoom: 6 },
-          { altitude: 170, zoom: 7 },
-          { altitude: 160, zoom: 8 },
-          { altitude: 150, zoom: 9 },
-          { altitude: 140, zoom: 10 },
-          { altitude: 130, zoom: 11 },
-          { altitude: 125, zoom: 12 },
-          { altitude: 120, zoom: 13 }
+          { altitude: 350, zoom: 2 },
+          { altitude: 280, zoom: 3 },
+          { altitude: 220, zoom: 4 },
+          { altitude: 190, zoom: 5 },
+          { altitude: 170, zoom: 6 },
+          { altitude: 160, zoom: 7 },
+          { altitude: 150, zoom: 7 },
+          { altitude: 140, zoom: 7 },
+          { altitude: 130, zoom: 7 },
+          { altitude: 125, zoom: 7 },
+          { altitude: 120, zoom: 7 }
         ],
         providers: {
           osm: {
-            url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            url: window.origin + '/tiledownload/tiles/{z}/{y}/{x}.avif',
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           },
           carto: {
@@ -2944,6 +2945,9 @@
       
       // Start animation loop
       enhancedAnimate();
+
+      // Show tutorial on first load
+      checkFirstTimeUser();
     }
     
     // Get current theme (light/dark)
@@ -3645,7 +3649,7 @@
         const xhr = new XMLHttpRequest();
         xhr.open('GET', request.url, true);
         xhr.responseType = 'blob';
-        
+                
         xhr.onload = () => {
           if (xhr.status === 200) {
             // Convert blob to image texture
@@ -4322,7 +4326,7 @@
         });
         
         console.log(`Found ${result.length} visible tiles at z-level ${zLevel}`);
-        
+                
         // If we have too many tiles, prioritize those closest to view center
         if (result.length > this.config.maxVisibleTiles * 0.7) {
           return this.prioritizeTiles(result, centerTile, this.config.maxVisibleTiles * 0.7);
@@ -4410,7 +4414,7 @@
           return;
         }
         
-        // More aggressive throttling to prevent endless loops
+        // MUCH more aggressive throttling to prevent endless loops
         const now = performance.now();
         if (now - this.lastUpdateTime < this.updateThrottleMs) {
           return;
@@ -4446,6 +4450,13 @@
             this.requestQueue.clear();
           }
           
+          // IMPORTANT NEW CHECK: Skip update if zoom level isn't appropriate for OSM tiles
+          if (distance > this.config.zoomThreshold) {
+            console.log(`Distance ${distance.toFixed(1)} > threshold ${this.config.zoomThreshold}, skipping OSM tile update`);
+            this._updateInProgress = false;
+            return;
+          }
+          
           // Check if we need to clean up excess tiles
           if (this.activeTiles.size > this.config.maxVisibleTiles) {
             // Run cleanup directly instead of scheduling it
@@ -4469,6 +4480,7 @@
           
           // Exit early if no visible tiles (e.g., camera facing away from globe)
           if (visibleTiles.length === 0) {
+            console.log("No visible tiles found, skipping update");
             this._updateInProgress = false;
             return;
           }
@@ -4482,9 +4494,12 @@
             }
           });
           
-          // CRITICAL FIX: If we're not adding any new tiles, don't continue processing
+          // IMPROVED FIX: If we're not adding any new tiles, don't continue processing
+          // AND record a timestamp to prevent immediate re-checking
           if (newTileCount === 0) {
-            console.log(`No new tiles to add, skipping update`);
+            console.log(`No new tiles to add, skipping update and extending throttle time`);
+            // Extend throttle time significantly when we have no new tiles to add
+            this.lastUpdateTime = performance.now() + 2000; // Add 2 seconds to prevent checks
             this._updateInProgress = false;
             return;
           }
@@ -4509,9 +4524,8 @@
           // Sort by priority (highest first)
           tilesWithPriority.sort((a, b) => b.priority - a.priority);
           
-          // IMPORTANT: More conservative limit - load fewer tiles at once
-          // Reduced batch size to avoid overwhelming the system
-          const tileBatchSize = Math.min(10, newTileCount);
+          // EVEN MORE CONSERVATIVE LIMIT: load fewer tiles at once
+          const tileBatchSize = Math.min(5, newTileCount); // Reduced from 10 to 5
           const tilesToLoad = tilesWithPriority.slice(0, tileBatchSize);
           
           // Load the highest priority tiles
@@ -4569,6 +4583,9 @@
           if (this.tileGroup.visible) {
             console.log('Hiding OSM tiles, distance:', distance);
             this.tileGroup.visible = false;
+            
+            // IMPORTANT: Add a longer delay before next update attempt
+            this.lastUpdateTime = performance.now() + 1000;
           }
         }
       }
@@ -4865,7 +4882,7 @@
           
           // Track last update time to throttle updates
           let lastUpdateTime = 0;
-          const minimumUpdateInterval = 500; // ms, more aggressive throttling
+          const minimumUpdateInterval = 1000; // INCREASED from 500 to 1000ms
           
           controls.update = () => {
             // Call original function
@@ -4884,8 +4901,8 @@
               const distance = camera.position.length();
               this.osmTileManager.toggleTilesVisibility(distance);
               
-              // Only update tiles if they're visible
-              if (this.osmTileManager.tileGroup.visible) {
+              // Only update tiles if they're visible AND we're close enough
+              if (this.osmTileManager.tileGroup.visible && distance < this.osmTileManager.config.zoomThreshold) {
                 this.osmTileManager.updateTiles(camera, distance);
               }
             }
@@ -4905,9 +4922,12 @@
             cameraUpdateTimer = setTimeout(() => {
               if (this.osmTileManager && this.osmTileManager.tileGroup.visible) {
                 const distance = camera.position.length();
-                this.osmTileManager.updateTiles(camera, distance);
+                // Only update if we're close enough
+                if (distance < this.osmTileManager.config.zoomThreshold) {
+                  this.osmTileManager.updateTiles(camera, distance);
+                }
               }
-            }, 250); // Only update after camera has stopped changing for 250ms
+            }, 500); // INCREASED from 250 to 500ms
           });
         }
       }
