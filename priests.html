@@ -711,6 +711,56 @@
       parishMarkerSize: 0.3,
       parishLineColor: '#cc0000',
       parishLineWidth: 30,
+      osmTiles: {
+        enabled: true,              // Enable OSM tiles 
+        zoomThreshold: 350,         // Show OSM tiles when camera distance is less than this value (increased from 220)
+        minZoom: 3,                 // Minimum OSM zoom level
+        maxZoom: 10,                // Decreased from 19 for testing
+        tileSize: 256,              // Tile size in pixels
+        opacity: 1.0,               // OSM tile opacity (increased from 0.8)
+        debugZLevel: 1,             // Force a specific z-level for debugging
+        defaultProvider: 'osm',     // Default tile provider ('osm', 'carto', 'stamen')
+        maxConcurrentRequests: 6,   // Maximum concurrent tile requests
+        tileFadeInDuration: 200,    // Duration to fade in tiles in ms
+        updateThrottleTime: 250,    // Minimum ms between tile updates
+        maxVisibleTiles: 200,       // Maximum number of visible tiles (for performance)
+        // More conservative altitude to zoom mapping
+        altitudeToZoomMap: [        
+          { altitude: 350, zoom: 3 },
+          { altitude: 280, zoom: 4 },
+          { altitude: 220, zoom: 5 },
+          { altitude: 190, zoom: 6 },
+          { altitude: 170, zoom: 7 },
+          { altitude: 160, zoom: 8 },
+          { altitude: 150, zoom: 9 },
+          { altitude: 140, zoom: 10 },
+          { altitude: 130, zoom: 11 },
+          { altitude: 125, zoom: 12 },
+          { altitude: 120, zoom: 13 }
+        ],
+        providers: {
+          osm: {
+            url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          },
+          carto: {
+            url: 'https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+            attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>'
+          },
+          stamen: {
+            url: 'https://stamen-tiles-a.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg',
+            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>'
+          },
+          dark: {
+            url: 'https://cartodb-basemaps-a.global.ssl.fastly.net/dark_all/{z}/{y}/{x}.png',
+            attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>'
+          },
+          satellite: {
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+          }
+        }
+      }
     };
 
     // Default priest data as fallback
@@ -1825,365 +1875,365 @@
     // Call this function when DOM is loaded
     document.addEventListener('DOMContentLoaded', initLanguage);
 
-// First-time user tutorial system
+    // First-time user tutorial system
 
-// Check if this is the first visit
-function checkFirstTimeUser() {
-  // Check if this is the first visit
-  const hasVisited = localStorage.getItem('hasVisitedClergyMap');
-  
-  if (!hasVisited) {
-    // Set the flag to prevent showing the tutorial again
-    localStorage.setItem('hasVisitedClergyMap', 'true');
-    
-    // Wait for the map to be fully loaded before showing tutorial
-    window.addEventListener('cities-loaded', () => {
-      // Start the tutorial
-      showTutorial();
-    });
-  }
-}
-
-// Show tutorial
-function showTutorial() {
-  console.log('Starting first-time user tutorial');
-  
-  // Show the first step after a delay
-  setTimeout(() => {
-    showTutorialStep(1);
-  }, 2000);
-}
-
-// Show tutorial steps
-function showTutorialStep(step) {
-  // Clear any existing tutorial labels
-  const existingLabels = document.querySelectorAll('.tutorial-label');
-  existingLabels.forEach(label => label.remove());
-  
-  // Create label element
-  const label = document.createElement('div');
-  label.className = 'tutorial-label';
-  document.body.appendChild(label);
-  
-  let target, text;
-  
-  switch (step) {
-    case 1:
-      // Show user location label
-      target = scene.getObjectByName('user-location');
-      text = getTranslatedText('YOUR_LOCATION');
-      break;
+    // Check if this is the first visit
+    function checkFirstTimeUser() {
+      // Check if this is the first visit
+      const hasVisited = localStorage.getItem('hasVisitedClergyMap');
       
-    case 2:
-      // Find nearest priest and show label
-      const nearestPriest = findNearestPriest();
-      target = nearestPriest ? scene.getObjectByName(nearestPriest.markerName) : null;
-      text = nearestPriest ? 
-          `${getTranslatedText('NEAREST_PRIEST')}: ${nearestPriest.name}` : 
-          getTranslatedText('NO_PRIESTS_FOUND');
-      break;
-      
-    case 3:
-      // Find nearest parish and show label
-      const nearestParish = findNearestParish();
-      target = nearestParish ? scene.getObjectByName(nearestParish.markerName) : null;
-      text = nearestParish ? 
-          `${getTranslatedText('NEAREST_PARISH')}: ${nearestParish.name}` : 
-          getTranslatedText('NO_PARISHES_FOUND');
-      break;
-      
-    default:
-      // End tutorial
-      return;
-  }
-  
-  if (target) {
-    // Position label near the target
-    positionLabelAtObject(label, target, text);
-    
-    // Move to next step after delay
-    setTimeout(() => {
-      showTutorialStep(step + 1);
-    }, 4000);
-  } else {
-    // Skip to next step if target not found
-    setTimeout(() => {
-      showTutorialStep(step + 1);
-    }, 1000);
-  }
-}
-
-// Position label at 3D object
-function positionLabelAtObject(label, object, text) {
-  // Set label text
-  label.textContent = text;
-  
-  // Function to update label position each frame
-  function updatePosition() {
-    // Convert 3D position to screen coordinates
-    const vector = object.position.clone();
-    vector.project(camera);
-    
-    const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
-    const y = (-(vector.y * 0.5) + 0.5) * window.innerHeight;
-    
-    // Only show label if object is in front of the camera (z < 1)
-    if (vector.z < 1) {
-      label.style.display = 'block';
-      label.style.transform = `translate(-50%, -100%) translate(${x}px, ${y - 20}px)`;
-    } else {
-      label.style.display = 'none';
-    }
-    
-    // Continue updating until label is removed
-    if (document.body.contains(label)) {
-      requestAnimationFrame(updatePosition);
-    }
-  }
-  
-  // Start updating
-  updatePosition();
-}
-
-// Find nearest priest to user location
-function findNearestPriest() {
-  const userLocation = scene.getObjectByName('user-location');
-  if (!userLocation) return null;
-  
-  let nearestPriest = null;
-  let minDistance = Infinity;
-  
-  // Search all priest markers
-  scene.children
-    .filter(obj => obj.name === 'priest-marker')
-    .forEach(marker => {
-      const distance = userLocation.position.distanceTo(marker.position);
-      if (distance < minDistance) {
-        minDistance = distance;
-        nearestPriest = {
-          markerName: marker.name,
-          name: marker.priestData.Name,
-          position: marker.position,
-          data: marker.priestData
-        };
+      if (!hasVisited) {
+        // Set the flag to prevent showing the tutorial again
+        localStorage.setItem('hasVisitedClergyMap', 'true');
+        
+        // Wait for the map to be fully loaded before showing tutorial
+        window.addEventListener('cities-loaded', () => {
+          // Start the tutorial
+          showTutorial();
+        });
       }
-    });
-  
-  return nearestPriest;
-}
+    }
 
-// Find nearest parish (excluding home parishes)
-function findNearestParish() {
-  const userLocation = scene.getObjectByName('user-location');
-  if (!userLocation) return null;
-  
-  let nearestParish = null;
-  let minDistance = Infinity;
-  
-  // Search all parish markers (excluding home parishes)
-  scene.children
-    .filter(obj => obj.name === 'parish-marker' && obj.parishData && !obj.parishData.IsHomePriest)
-    .forEach(marker => {
-      const distance = userLocation.position.distanceTo(marker.position);
-      if (distance < minDistance) {
-        minDistance = distance;
-        nearestParish = {
-          markerName: marker.name,
-          name: marker.parishData.ParishName,
-          position: marker.position,
-          data: marker.parishData
-        };
+    // Show tutorial
+    function showTutorial() {
+      console.log('Starting first-time user tutorial');
+      
+      // Show the first step after a delay
+      setTimeout(() => {
+        showTutorialStep(1);
+      }, 2000);
+    }
+
+    // Show tutorial steps
+    function showTutorialStep(step) {
+      // Clear any existing tutorial labels
+      const existingLabels = document.querySelectorAll('.tutorial-label');
+      existingLabels.forEach(label => label.remove());
+      
+      // Create label element
+      const label = document.createElement('div');
+      label.className = 'tutorial-label';
+      document.body.appendChild(label);
+      
+      let target, text;
+      
+      switch (step) {
+        case 1:
+          // Show user location label
+          target = scene.getObjectByName('user-location');
+          text = getTranslatedText('YOUR_LOCATION');
+          break;
+          
+        case 2:
+          // Find nearest priest and show label
+          const nearestPriest = findNearestPriest();
+          target = nearestPriest ? scene.getObjectByName(nearestPriest.markerName) : null;
+          text = nearestPriest ? 
+              `${getTranslatedText('NEAREST_PRIEST')}: ${nearestPriest.name}` : 
+              getTranslatedText('NO_PRIESTS_FOUND');
+          break;
+          
+        case 3:
+          // Find nearest parish and show label
+          const nearestParish = findNearestParish();
+          target = nearestParish ? scene.getObjectByName(nearestParish.markerName) : null;
+          text = nearestParish ? 
+              `${getTranslatedText('NEAREST_PARISH')}: ${nearestParish.name}` : 
+              getTranslatedText('NO_PARISHES_FOUND');
+          break;
+          
+        default:
+          // End tutorial
+          return;
       }
-    });
-  
-  return nearestParish;
-}
-
-// Enhanced priest marker creation with better shading
-function createEnhancedPriestMarker(lat, lng, priest) {
-  // Create marker geometry with higher detail for better shading
-  const markerGeometry = new THREE.SphereGeometry(CONFIG.markerSize, 32, 32);
-  
-  // Create shiny material for the marker
-  const markerMaterial = new THREE.MeshPhongMaterial({ 
-    color: CONFIG.markerColor,
-    shininess: 80,
-    specular: 0x881111, // Adding a reddish specular highlight
-    emissive: 0x330000,
-    emissiveIntensity: 0.2
-  });
-  
-  const marker = new THREE.Mesh(markerGeometry, markerMaterial);
-  
-  // Set marker position
-  const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
-  marker.position.set(position.x, position.y, position.z);
-  marker.name = 'priest-marker';
-  marker.priestData = priest;
-  
-  return marker;
-}
-
-// Enhanced parish marker creation with better shading
-function createEnhancedParishMarker(lat, lng, parish) {
-  // Create marker geometry with higher detail for better shading
-  const markerGeometry = new THREE.SphereGeometry(CONFIG.parishMarkerSize, 32, 32);
-  
-  // Create shiny material for the marker
-  const markerMaterial = new THREE.MeshPhongMaterial({ 
-    color: CONFIG.parishMarkerColor,
-    shininess: 80,
-    specular: 0x881111, // Adding a reddish specular highlight
-    emissive: 0x330000,
-    emissiveIntensity: 0.1
-  });
-  
-  const marker = new THREE.Mesh(markerGeometry, markerMaterial);
-  
-  // Set marker position
-  const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
-  marker.position.set(position.x, position.y, position.z);
-  marker.name = 'parish-marker';
-  marker.parishData = parish;
-  
-  return marker;
-}
-
-// Replace the original marker creation with enhanced versions
-// This function should be called during initialization
-function enhanceExistingMarkers() {
-  // Replace existing priest markers
-  scene.children
-    .filter(obj => obj.name === 'priest-marker')
-    .forEach(marker => {
-      const priestData = marker.priestData;
-      const position = marker.position.clone();
       
-      // Calculate lat/lng from position
-      const lat = priestData.Latitude;
-      const lng = priestData.Longitude;
-      
-      // Remove old marker
-      scene.remove(marker);
-      
-      // Create enhanced marker
-      const enhancedMarker = createEnhancedPriestMarker(lat, lng, priestData);
-      scene.add(enhancedMarker);
-    });
-  
-  // Replace existing parish markers
-  scene.children
-    .filter(obj => obj.name === 'parish-marker')
-    .forEach(marker => {
-      const parishData = marker.parishData;
-      const position = marker.position.clone();
-      
-      // Calculate lat/lng from position
-      const lat = parishData.Latitude;
-      const lng = parishData.Longitude;
-      
-      // Remove old marker
-      scene.remove(marker);
-      
-      // Create enhanced marker
-      const enhancedMarker = createEnhancedParishMarker(lat, lng, parishData);
-      scene.add(enhancedMarker);
-    });
-}
+      if (target) {
+        // Position label near the target
+        positionLabelAtObject(label, target, text);
+        
+        // Move to next step after delay
+        setTimeout(() => {
+          showTutorialStep(step + 1);
+        }, 4000);
+      } else {
+        // Skip to next step if target not found
+        setTimeout(() => {
+          showTutorialStep(step + 1);
+        }, 1000);
+      }
+    }
 
-// Override the populateGlobeWithMarkers function to use enhanced markers
-function populateGlobeWithMarkers(data) {
-  if (!globe) return;
-  
-  // Clear any existing markers
-  const existingMarkers = scene.children.filter(obj => 
-    obj.name === 'priest-marker' || obj.name === 'priest-pulse' || obj.name === 'priest-marker-invisible'
-  );
-  existingMarkers.forEach(marker => scene.remove(marker));
-  
-  // Clear pulse meshes array
-  pulseMeshes = [];
-  
-  // Create markers for each priest
-  data.forEach(priest => {
-    // Get coordinates
-    const lat = priest.Latitude;
-    const lng = priest.Longitude;
-    
-    // Create enhanced marker
-    const marker = createEnhancedPriestMarker(lat, lng, priest);
-    
-    // Add to scene
-    scene.add(marker);
-    
-    // Create pulsing ring effect
-    const pulse = createPulseEffect(lat, lng, priest);
-    scene.add(pulse);
-    
-    // Add invisible larger detection sphere for better interaction
-    const invisibleSphere = createInvisibleSphere(lat, lng, priest);
-    scene.add(invisibleSphere);
-  });
-}
+    // Position label at 3D object
+    function positionLabelAtObject(label, object, text) {
+      // Set label text
+      label.textContent = text;
+      
+      // Function to update label position each frame
+      function updatePosition() {
+        // Convert 3D position to screen coordinates
+        const vector = object.position.clone();
+        vector.project(camera);
+        
+        const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+        const y = (-(vector.y * 0.5) + 0.5) * window.innerHeight;
+        
+        // Only show label if object is in front of the camera (z < 1)
+        if (vector.z < 1) {
+          label.style.display = 'block';
+          label.style.transform = `translate(-50%, -100%) translate(${x}px, ${y - 20}px)`;
+        } else {
+          label.style.display = 'none';
+        }
+        
+        // Continue updating until label is removed
+        if (document.body.contains(label)) {
+          requestAnimationFrame(updatePosition);
+        }
+      }
+      
+      // Start updating
+      updatePosition();
+    }
 
-// Create pulsing effect for markers
-function createPulseEffect(lat, lng, priest) {
-  // Create a group for the pulse effect
-  const pulse = new THREE.Group();
-  pulse.name = 'priest-pulse';
-  pulse.priestData = priest;
-  
-  // Set position
-  const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
-  pulse.position.set(position.x, position.y, position.z);
-  
-  // Create squished sphere for the pulse effect
-  const pulseGeometry = new THREE.SphereGeometry(CONFIG.markerRingSize, 32, 32);
-  const pulseMaterial = new THREE.MeshBasicMaterial({
-    color: CONFIG.markerPulseColor,
-    transparent: true,
-    opacity: 0.9,
-    side: THREE.DoubleSide
-  });
-  
-  const pulseMesh = new THREE.Mesh(pulseGeometry, pulseMaterial);
-  // Make it a squished sphere by scaling down the y-axis
-  pulseMesh.scale.y = 0.25; // Adjust this value to control how squished it is
-  
-  // Add random offset for animation
-  pulseMesh.pulseOffset = Math.random() * Math.PI * 2;
-  
-  // Add to pulse group
-  pulse.add(pulseMesh);
-  
-  // Add to pulse meshes array for animation
-  pulseMeshes.push(pulseMesh);
-  
-  // Orient pulse toward center
-  pulse.lookAt(0, 0, 0);
-  
-  return pulse;
-}
+    // Find nearest priest to user location
+    function findNearestPriest() {
+      const userLocation = scene.getObjectByName('user-location');
+      if (!userLocation) return null;
+      
+      let nearestPriest = null;
+      let minDistance = Infinity;
+      
+      // Search all priest markers
+      scene.children
+        .filter(obj => obj.name === 'priest-marker')
+        .forEach(marker => {
+          const distance = userLocation.position.distanceTo(marker.position);
+          if (distance < minDistance) {
+            minDistance = distance;
+            nearestPriest = {
+              markerName: marker.name,
+              name: marker.priestData.Name,
+              position: marker.position,
+              data: marker.priestData
+            };
+          }
+        });
+      
+      return nearestPriest;
+    }
 
-// Create invisible sphere for better interaction
-function createInvisibleSphere(lat, lng, priest) {
-  // Create geometry for invisible detection sphere
-  const invisibleSphereGeometry = new THREE.SphereGeometry(CONFIG.markerRingSize * 1.5, 16, 16);
-  const invisibleSphereMaterial = new THREE.MeshBasicMaterial({
-    transparent: true,
-    opacity: 0.0,
-  });
-  
-  const invisibleSphere = new THREE.Mesh(invisibleSphereGeometry, invisibleSphereMaterial);
-  
-  // Set position
-  const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
-  invisibleSphere.position.set(position.x, position.y, position.z);
-  invisibleSphere.name = 'priest-marker-invisible';
-  invisibleSphere.priestData = priest;
-  
-  return invisibleSphere;
-}
+    // Find nearest parish (excluding home parishes)
+    function findNearestParish() {
+      const userLocation = scene.getObjectByName('user-location');
+      if (!userLocation) return null;
+      
+      let nearestParish = null;
+      let minDistance = Infinity;
+      
+      // Search all parish markers (excluding home parishes)
+      scene.children
+        .filter(obj => obj.name === 'parish-marker' && obj.parishData && !obj.parishData.IsHomePriest)
+        .forEach(marker => {
+          const distance = userLocation.position.distanceTo(marker.position);
+          if (distance < minDistance) {
+            minDistance = distance;
+            nearestParish = {
+              markerName: marker.name,
+              name: marker.parishData.ParishName,
+              position: marker.position,
+              data: marker.parishData
+            };
+          }
+        });
+      
+      return nearestParish;
+    }
+
+    // Enhanced priest marker creation with better shading
+    function createEnhancedPriestMarker(lat, lng, priest) {
+      // Create marker geometry with higher detail for better shading
+      const markerGeometry = new THREE.SphereGeometry(CONFIG.markerSize, 32, 32);
+      
+      // Create shiny material for the marker
+      const markerMaterial = new THREE.MeshPhongMaterial({ 
+        color: CONFIG.markerColor,
+        shininess: 80,
+        specular: 0x881111, // Adding a reddish specular highlight
+        emissive: 0x330000,
+        emissiveIntensity: 0.2
+      });
+      
+      const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+      
+      // Set marker position
+      const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
+      marker.position.set(position.x, position.y, position.z);
+      marker.name = 'priest-marker';
+      marker.priestData = priest;
+      
+      return marker;
+    }
+
+    // Enhanced parish marker creation with better shading
+    function createEnhancedParishMarker(lat, lng, parish) {
+      // Create marker geometry with higher detail for better shading
+      const markerGeometry = new THREE.SphereGeometry(CONFIG.parishMarkerSize, 32, 32);
+      
+      // Create shiny material for the marker
+      const markerMaterial = new THREE.MeshPhongMaterial({ 
+        color: CONFIG.parishMarkerColor,
+        shininess: 80,
+        specular: 0x881111, // Adding a reddish specular highlight
+        emissive: 0x330000,
+        emissiveIntensity: 0.1
+      });
+      
+      const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+      
+      // Set marker position
+      const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
+      marker.position.set(position.x, position.y, position.z);
+      marker.name = 'parish-marker';
+      marker.parishData = parish;
+      
+      return marker;
+    }
+
+    // Replace the original marker creation with enhanced versions
+    // This function should be called during initialization
+    function enhanceExistingMarkers() {
+      // Replace existing priest markers
+      scene.children
+        .filter(obj => obj.name === 'priest-marker')
+        .forEach(marker => {
+          const priestData = marker.priestData;
+          const position = marker.position.clone();
+          
+          // Calculate lat/lng from position
+          const lat = priestData.Latitude;
+          const lng = priestData.Longitude;
+          
+          // Remove old marker
+          scene.remove(marker);
+          
+          // Create enhanced marker
+          const enhancedMarker = createEnhancedPriestMarker(lat, lng, priestData);
+          scene.add(enhancedMarker);
+        });
+      
+      // Replace existing parish markers
+      scene.children
+        .filter(obj => obj.name === 'parish-marker')
+        .forEach(marker => {
+          const parishData = marker.parishData;
+          const position = marker.position.clone();
+          
+          // Calculate lat/lng from position
+          const lat = parishData.Latitude;
+          const lng = parishData.Longitude;
+          
+          // Remove old marker
+          scene.remove(marker);
+          
+          // Create enhanced marker
+          const enhancedMarker = createEnhancedParishMarker(lat, lng, parishData);
+          scene.add(enhancedMarker);
+        });
+    }
+
+    // Override the populateGlobeWithMarkers function to use enhanced markers
+    function populateGlobeWithMarkers(data) {
+      if (!globe) return;
+      
+      // Clear any existing markers
+      const existingMarkers = scene.children.filter(obj => 
+        obj.name === 'priest-marker' || obj.name === 'priest-pulse' || obj.name === 'priest-marker-invisible'
+      );
+      existingMarkers.forEach(marker => scene.remove(marker));
+      
+      // Clear pulse meshes array
+      pulseMeshes = [];
+      
+      // Create markers for each priest
+      data.forEach(priest => {
+        // Get coordinates
+        const lat = priest.Latitude;
+        const lng = priest.Longitude;
+        
+        // Create enhanced marker
+        const marker = createEnhancedPriestMarker(lat, lng, priest);
+        
+        // Add to scene
+        scene.add(marker);
+        
+        // Create pulsing ring effect
+        const pulse = createPulseEffect(lat, lng, priest);
+        scene.add(pulse);
+        
+        // Add invisible larger detection sphere for better interaction
+        const invisibleSphere = createInvisibleSphere(lat, lng, priest);
+        scene.add(invisibleSphere);
+      });
+    }
+
+    // Create pulsing effect for markers
+    function createPulseEffect(lat, lng, priest) {
+      // Create a group for the pulse effect
+      const pulse = new THREE.Group();
+      pulse.name = 'priest-pulse';
+      pulse.priestData = priest;
+      
+      // Set position
+      const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
+      pulse.position.set(position.x, position.y, position.z);
+      
+      // Create squished sphere for the pulse effect
+      const pulseGeometry = new THREE.SphereGeometry(CONFIG.markerRingSize, 32, 32);
+      const pulseMaterial = new THREE.MeshBasicMaterial({
+        color: CONFIG.markerPulseColor,
+        transparent: true,
+        opacity: 0.9,
+        side: THREE.DoubleSide
+      });
+      
+      const pulseMesh = new THREE.Mesh(pulseGeometry, pulseMaterial);
+      // Make it a squished sphere by scaling down the y-axis
+      pulseMesh.scale.y = 0.25; // Adjust this value to control how squished it is
+      
+      // Add random offset for animation
+      pulseMesh.pulseOffset = Math.random() * Math.PI * 2;
+      
+      // Add to pulse group
+      pulse.add(pulseMesh);
+      
+      // Add to pulse meshes array for animation
+      pulseMeshes.push(pulseMesh);
+      
+      // Orient pulse toward center
+      pulse.lookAt(0, 0, 0);
+      
+      return pulse;
+    }
+
+    // Create invisible sphere for better interaction
+    function createInvisibleSphere(lat, lng, priest) {
+      // Create geometry for invisible detection sphere
+      const invisibleSphereGeometry = new THREE.SphereGeometry(CONFIG.markerRingSize * 1.5, 16, 16);
+      const invisibleSphereMaterial = new THREE.MeshBasicMaterial({
+        transparent: true,
+        opacity: 0.0,
+      });
+      
+      const invisibleSphere = new THREE.Mesh(invisibleSphereGeometry, invisibleSphereMaterial);
+      
+      // Set position
+      const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
+      invisibleSphere.position.set(position.x, position.y, position.z);
+      invisibleSphere.name = 'priest-marker-invisible';
+      invisibleSphere.priestData = priest;
+      
+      return invisibleSphere;
+    }
 
     // Global variables
     let renderer, scene, camera, controls, globe;
@@ -2655,122 +2705,122 @@ function createInvisibleSphere(lat, lng, priest) {
     }
 
     function centerOnTimezone() {
-  try {
-    // Get the IANA timezone identifier
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    console.log(`Detected timezone: ${timezone}`);
-    
-    // Get coordinates from timezone
-    const coords = getTimezoneCoordinates(timezone);
-    
-    if (coords) {
-      console.log(`Using timezone coordinates: ${coords.lat}, ${coords.lng} (${timezone})`);
-      // Center globe on these coordinates
-      focusOnPoint(coords.lat, coords.lng, CONFIG.currentZoomLevel);
-      
-      // Add a blue marker for user's timezone location
-      addUserLocationMarker(coords.lat, coords.lng);
-      return;
-    }
-  } catch (err) {
-    console.warn("Error detecting timezone:", err);
-  }
+      try {
+        // Get the IANA timezone identifier
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        console.log(`Detected timezone: ${timezone}`);
+        
+        // Get coordinates from timezone
+        const coords = getTimezoneCoordinates(timezone);
+        
+        if (coords) {
+          console.log(`Using timezone coordinates: ${coords.lat}, ${coords.lng} (${timezone})`);
+          // Center globe on these coordinates
+          focusOnPoint(coords.lat, coords.lng, CONFIG.currentZoomLevel);
+          
+          // Add a blue marker for user's timezone location
+          addUserLocationMarker(coords.lat, coords.lng);
+          return;
+        }
+      } catch (err) {
+        console.warn("Error detecting timezone:", err);
+      }
   
-  // Fallback to original method if timezone detection fails
-  fallbackTimezoneDetection();
-}
+      // Fallback to original method if timezone detection fails
+      fallbackTimezoneDetection();
+    }
 
-function getTimezoneCoordinates(timezone) {
-  const timezoneMap = {
-    // Europe
-    "Europe/Berlin": { lat: 52.5200, lng: 13.4050 },
-    "Europe/London": { lat: 51.5074, lng: -0.1278 },
-    "Europe/Paris": { lat: 48.8566, lng: 2.3522 },
-    "Europe/Rome": { lat: 41.9028, lng: 12.4964 },
-    "Europe/Madrid": { lat: 40.4168, lng: -3.7038 },
-    "Europe/Moscow": { lat: 55.7558, lng: 37.6173 },
-    "Europe/Kiev": { lat: 50.4501, lng: 30.5234 },
-    "Europe/Warsaw": { lat: 52.2297, lng: 21.0122 },
-    "Europe/Vienna": { lat: 48.2082, lng: 16.3738 },
-    "Europe/Stockholm": { lat: 59.3293, lng: 18.0686 },
-    "Europe/Athens": { lat: 37.9838, lng: 23.7275 },
-    "Europe/Istanbul": { lat: 41.0082, lng: 28.9784 },
-    "Europe/Amsterdam": { lat: 52.3676, lng: 4.9041 },
-    "Europe/Brussels": { lat: 50.8503, lng: 4.3517 },
-    "Europe/Prague": { lat: 50.0755, lng: 14.4378 },
-    "Europe/Lisbon": { lat: 38.7223, lng: -9.1393 },
-    "Europe/Dublin": { lat: 53.3498, lng: -6.2603 },
-    "Europe/Budapest": { lat: 47.4979, lng: 19.0402 },
-    "Europe/Copenhagen": { lat: 55.6761, lng: 12.5683 },
-    "Europe/Oslo": { lat: 59.9139, lng: 10.7522 },
-    "Europe/Helsinki": { lat: 60.1699, lng: 24.9384 },
-    "Europe/Zurich": { lat: 47.3769, lng: 8.5417 },
-    
-    // North America
-    "America/New_York": { lat: 40.7128, lng: -74.0060 },
-    "America/Chicago": { lat: 41.8781, lng: -87.6298 },
-    "America/Denver": { lat: 39.7392, lng: -104.9903 },
-    "America/Los_Angeles": { lat: 34.0522, lng: -118.2437 },
-    "America/Toronto": { lat: 43.6532, lng: -79.3832 },
-    "America/Vancouver": { lat: 49.2827, lng: -123.1207 },
-    "America/Mexico_City": { lat: 19.4326, lng: -99.1332 },
-    
-    // Asia
-    "Asia/Tokyo": { lat: 35.6762, lng: 139.6503 },
-    "Asia/Shanghai": { lat: 31.2304, lng: 121.4737 },
-    "Asia/Hong_Kong": { lat: 22.3193, lng: 114.1694 },
-    "Asia/Singapore": { lat: 1.3521, lng: 103.8198 },
-    "Asia/Seoul": { lat: 37.5665, lng: 126.9780 },
-    "Asia/Dubai": { lat: 25.2048, lng: 55.2708 },
-    "Asia/Kolkata": { lat: 28.6139, lng: 77.2090 },
-    "Asia/Bangkok": { lat: 13.7563, lng: 100.5018 },
-    "Asia/Jakarta": { lat: -6.2088, lng: 106.8456 },
-    "Asia/Manila": { lat: 14.5995, lng: 120.9842 },
-    "Asia/Taipei": { lat: 25.0330, lng: 121.5654 },
-    "Asia/Jerusalem": { lat: 31.7683, lng: 35.2137 },
-    
-    // Australia and Oceania
-    "Australia/Sydney": { lat: -33.8688, lng: 151.2093 },
-    "Australia/Melbourne": { lat: -37.8136, lng: 144.9631 },
-    "Australia/Brisbane": { lat: -27.4698, lng: 153.0251 },
-    "Australia/Perth": { lat: -31.9505, lng: 115.8605 },
-    "Pacific/Auckland": { lat: -36.8485, lng: 174.7633 },
-    
-    // South America
-    "America/Sao_Paulo": { lat: -23.5505, lng: -46.6333 },
-    "America/Buenos_Aires": { lat: -34.6037, lng: -58.3816 },
-    "America/Santiago": { lat: -33.4489, lng: -70.6693 },
-    "America/Lima": { lat: -12.0464, lng: -77.0428 },
-    "America/Bogota": { lat: 4.7110, lng: -74.0721 },
-    
-    // Africa
-    "Africa/Cairo": { lat: 30.0444, lng: 31.2357 },
-    "Africa/Johannesburg": { lat: -26.2041, lng: 28.0473 },
-    "Africa/Lagos": { lat: 6.5244, lng: 3.3792 },
-    "Africa/Nairobi": { lat: -1.2921, lng: 36.8219 },
-    "Africa/Casablanca": { lat: 33.5731, lng: -7.5898 }
-  };
-  
-  // Try exact match
-  if (timezoneMap[timezone]) {
-    return timezoneMap[timezone];
-  }
-  
-  // If exact match not found, try to find a city in the same region
-  // Extract the region part (e.g., "Europe" from "Europe/Berlin")
-  const region = timezone.split('/')[0];
-  
-  // Find any timezone in the same region
-  for (const [tz, coords] of Object.entries(timezoneMap)) {
-    if (tz.startsWith(region + '/')) {
-      console.log(`No exact match for ${timezone}, using ${tz} as approximate match`);
-      return coords;
+    function getTimezoneCoordinates(timezone) {
+      const timezoneMap = {
+        // Europe
+        "Europe/Berlin": { lat: 52.5200, lng: 13.4050 },
+        "Europe/London": { lat: 51.5074, lng: -0.1278 },
+        "Europe/Paris": { lat: 48.8566, lng: 2.3522 },
+        "Europe/Rome": { lat: 41.9028, lng: 12.4964 },
+        "Europe/Madrid": { lat: 40.4168, lng: -3.7038 },
+        "Europe/Moscow": { lat: 55.7558, lng: 37.6173 },
+        "Europe/Kiev": { lat: 50.4501, lng: 30.5234 },
+        "Europe/Warsaw": { lat: 52.2297, lng: 21.0122 },
+        "Europe/Vienna": { lat: 48.2082, lng: 16.3738 },
+        "Europe/Stockholm": { lat: 59.3293, lng: 18.0686 },
+        "Europe/Athens": { lat: 37.9838, lng: 23.7275 },
+        "Europe/Istanbul": { lat: 41.0082, lng: 28.9784 },
+        "Europe/Amsterdam": { lat: 52.3676, lng: 4.9041 },
+        "Europe/Brussels": { lat: 50.8503, lng: 4.3517 },
+        "Europe/Prague": { lat: 50.0755, lng: 14.4378 },
+        "Europe/Lisbon": { lat: 38.7223, lng: -9.1393 },
+        "Europe/Dublin": { lat: 53.3498, lng: -6.2603 },
+        "Europe/Budapest": { lat: 47.4979, lng: 19.0402 },
+        "Europe/Copenhagen": { lat: 55.6761, lng: 12.5683 },
+        "Europe/Oslo": { lat: 59.9139, lng: 10.7522 },
+        "Europe/Helsinki": { lat: 60.1699, lng: 24.9384 },
+        "Europe/Zurich": { lat: 47.3769, lng: 8.5417 },
+        
+        // North America
+        "America/New_York": { lat: 40.7128, lng: -74.0060 },
+        "America/Chicago": { lat: 41.8781, lng: -87.6298 },
+        "America/Denver": { lat: 39.7392, lng: -104.9903 },
+        "America/Los_Angeles": { lat: 34.0522, lng: -118.2437 },
+        "America/Toronto": { lat: 43.6532, lng: -79.3832 },
+        "America/Vancouver": { lat: 49.2827, lng: -123.1207 },
+        "America/Mexico_City": { lat: 19.4326, lng: -99.1332 },
+        
+        // Asia
+        "Asia/Tokyo": { lat: 35.6762, lng: 139.6503 },
+        "Asia/Shanghai": { lat: 31.2304, lng: 121.4737 },
+        "Asia/Hong_Kong": { lat: 22.3193, lng: 114.1694 },
+        "Asia/Singapore": { lat: 1.3521, lng: 103.8198 },
+        "Asia/Seoul": { lat: 37.5665, lng: 126.9780 },
+        "Asia/Dubai": { lat: 25.2048, lng: 55.2708 },
+        "Asia/Kolkata": { lat: 28.6139, lng: 77.2090 },
+        "Asia/Bangkok": { lat: 13.7563, lng: 100.5018 },
+        "Asia/Jakarta": { lat: -6.2088, lng: 106.8456 },
+        "Asia/Manila": { lat: 14.5995, lng: 120.9842 },
+        "Asia/Taipei": { lat: 25.0330, lng: 121.5654 },
+        "Asia/Jerusalem": { lat: 31.7683, lng: 35.2137 },
+        
+        // Australia and Oceania
+        "Australia/Sydney": { lat: -33.8688, lng: 151.2093 },
+        "Australia/Melbourne": { lat: -37.8136, lng: 144.9631 },
+        "Australia/Brisbane": { lat: -27.4698, lng: 153.0251 },
+        "Australia/Perth": { lat: -31.9505, lng: 115.8605 },
+        "Pacific/Auckland": { lat: -36.8485, lng: 174.7633 },
+        
+        // South America
+        "America/Sao_Paulo": { lat: -23.5505, lng: -46.6333 },
+        "America/Buenos_Aires": { lat: -34.6037, lng: -58.3816 },
+        "America/Santiago": { lat: -33.4489, lng: -70.6693 },
+        "America/Lima": { lat: -12.0464, lng: -77.0428 },
+        "America/Bogota": { lat: 4.7110, lng: -74.0721 },
+        
+        // Africa
+        "Africa/Cairo": { lat: 30.0444, lng: 31.2357 },
+        "Africa/Johannesburg": { lat: -26.2041, lng: 28.0473 },
+        "Africa/Lagos": { lat: 6.5244, lng: 3.3792 },
+        "Africa/Nairobi": { lat: -1.2921, lng: 36.8219 },
+        "Africa/Casablanca": { lat: 33.5731, lng: -7.5898 }
+      };
+      
+      // Try exact match
+      if (timezoneMap[timezone]) {
+        return timezoneMap[timezone];
+      }
+      
+      // If exact match not found, try to find a city in the same region
+      // Extract the region part (e.g., "Europe" from "Europe/Berlin")
+      const region = timezone.split('/')[0];
+      
+      // Find any timezone in the same region
+      for (const [tz, coords] of Object.entries(timezoneMap)) {
+        if (tz.startsWith(region + '/')) {
+          console.log(`No exact match for ${timezone}, using ${tz} as approximate match`);
+          return coords;
+        }
+      }
+      
+      // No match found
+      return null;
     }
-  }
-  
-  // No match found
-  return null;
-}
 
     function fallbackTimezoneDetection() {
       // Get local timezone offset in minutes
@@ -2842,6 +2892,9 @@ function getTimezoneCoordinates(timezone) {
       enhancedEarth.options.cloudBrightness = CONFIG.cloudBrightness;
       
       await enhancedEarth.init();
+      
+      // Initialize OSM tiles after Earth is initialized
+      enhancedEarth.initOSMTiles();
       
       // Set the globe reference to the earth mesh for compatibility
       globe = enhancedEarth.getEarthMesh();
@@ -3530,6 +3583,1117 @@ function getTimezoneCoordinates(timezone) {
       }
     };
 
+    class TileRequestQueue {
+      constructor(maxConcurrent = 4) {
+        this.queue = [];
+        this.maxConcurrent = maxConcurrent;
+        this.activeRequests = 0;
+        this.retryCountMap = new Map(); // Track retry count for each tile
+        this.maxRetries = 2; // Maximum number of retry attempts
+        this.textureLoader = new THREE.TextureLoader();
+      }
+      
+      add(tileRequest) {
+        const tileId = tileRequest.tileId;
+        
+        // Check if this tile has exceeded retry limit
+        const retryCount = this.retryCountMap.get(tileId) || 0;
+        if (retryCount >= this.maxRetries) {
+          console.log(`Skipping tile ${tileId} - reached maximum retry limit (${this.maxRetries})`);
+          return;
+        }
+        
+        // Check if this tile is already in the queue
+        const existingIndex = this.queue.findIndex(req => 
+          req.tileId === tileId
+        );
+        
+        if (existingIndex !== -1) {
+          // Update priority if this tile is already queued
+          this.queue[existingIndex].priority = Math.max(
+            this.queue[existingIndex].priority,
+            tileRequest.priority
+          );
+          return;
+        }
+        
+        // Add new request to queue
+        this.queue.push(tileRequest);
+        
+        // Sort queue by priority (descending)
+        this.queue.sort((a, b) => b.priority - a.priority);
+        
+        // Process queue
+        this.processQueue();
+      }
+
+      processQueue() {
+        if (this.queue.length === 0 || this.activeRequests >= this.maxConcurrent) {
+          return;
+        }
+        
+        // Get highest priority request
+        const request = this.queue.shift();
+        const tileId = request.tileId;
+        this.activeRequests++;
+        
+        // Update retry count
+        const retryCount = this.retryCountMap.get(tileId) || 0;
+        this.retryCountMap.set(tileId, retryCount + 1);
+        
+        // Use XHR to fetch the image
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', request.url, true);
+        xhr.responseType = 'blob';
+        
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            // Convert blob to image texture
+            const blob = xhr.response;
+            const img = new Image();
+            const url = URL.createObjectURL(blob);
+            
+            img.onload = () => {
+              // Create a texture from the image
+              const texture = new THREE.Texture(img);
+              texture.needsUpdate = true;
+              
+              // Call success callback
+              if (request.onLoad) {
+                request.onLoad(texture);
+              }
+              
+              // Release blob URL
+              URL.revokeObjectURL(url);
+              
+              // Continue processing queue
+              this.activeRequests--;
+              this.processQueue();
+            };
+            
+            img.onerror = () => {
+              console.error(`Failed to load image for tile ${tileId}`);
+              if (request.onError) {
+                request.onError(new Error('Image loading failed'));
+              }
+              URL.revokeObjectURL(url);
+              this.activeRequests--;
+              this.processQueue();
+            };
+            
+            img.src = url;
+          } else {
+            console.error(`XHR failed for tile ${tileId}: ${xhr.status}`);
+            if (request.onError) {
+              request.onError(new Error(`XHR failed: ${xhr.status}`));
+            }
+            this.activeRequests--;
+            this.processQueue();
+          }
+        };
+        
+        xhr.onerror = () => {
+          console.error(`Network error for tile ${tileId}`);
+          if (request.onError) {
+            request.onError(new Error('Network error'));
+          }
+          this.activeRequests--;
+          this.processQueue();
+        };
+        
+        xhr.send();
+      }
+
+      // Clear all pending requests (e.g. when changing zoom levels)
+      clear() {
+        this.queue = [];
+        // Don't clear retry counts - we want to keep track of these
+      }
+      
+      // Reset retry count for a specific tile (e.g. after successful load)
+      resetRetryCount(tileId) {
+        this.retryCountMap.delete(tileId);
+      }
+      
+      // Get number of pending requests
+      get pendingCount() {
+        return this.queue.length;
+      }
+    }
+
+    class OSMTileManager {
+      constructor(earthRadius, config) {
+        this.earthRadius = earthRadius;
+        this.config = config;
+        this.tileCache = new Map();
+        this.activeTiles = new Set();
+        this.tileGroup = new THREE.Group();
+        this.tileGroup.name = 'osm-tiles';
+        this.tileGroup.visible = false;
+        this.currentZLevel = null;
+        this.isEnabled = config.enabled;
+        this.lastViewCenter = null;
+        this.lastUpdateTime = 0;
+        this.updateThrottleMs = 400; // Increased from 200 to 400ms between updates
+        
+        // Initialize flags for update tracking
+        this._updateInProgress = false;
+        this._cleanupInProgress = false;
+        this._lastCleanupTime = 0;
+        
+        // Create request queue for async loading with retry limit
+        this.requestQueue = new TileRequestQueue(4); // Reduced from 6 to 4 concurrent requests
+        
+        // Debug UI for z-level adjustment
+        if (this.isEnabled) {
+          this.createDebugUI();
+        }
+        
+        // Stats for debugging
+        this.stats = {
+          tilesCreated: 0,
+          tilesLoaded: 0,
+          tilesCached: 0,
+          lastUpdateTiles: 0
+        };
+      }
+      
+      createDebugUI() {
+        // Create a simple debug UI for adjusting z-level and viewing stats
+        const debugDiv = document.createElement('div');
+        debugDiv.style.position = 'absolute';
+        debugDiv.style.bottom = '40px';
+        debugDiv.style.left = '20px';
+        debugDiv.style.zIndex = '1000';
+        debugDiv.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        debugDiv.style.padding = '10px';
+        debugDiv.style.borderRadius = '5px';
+        debugDiv.style.color = 'white';
+        debugDiv.style.fontFamily = 'Arial, sans-serif';
+        debugDiv.style.fontSize = '12px';
+        
+        // Z-level selector
+        const zLevelDiv = document.createElement('div');
+        zLevelDiv.innerHTML = '<span>OSM Z-Level: </span>';
+        
+        const zLevelSelect = document.createElement('select');
+        zLevelSelect.id = 'osm-z-level';
+        
+        // Add auto option
+        const autoOption = document.createElement('option');
+        autoOption.value = '';
+        autoOption.textContent = 'Auto';
+        autoOption.selected = true;
+        zLevelSelect.appendChild(autoOption);
+        
+        // Add z-level options
+        for (let z = this.config.minZoom; z <= this.config.maxZoom; z++) {
+          const option = document.createElement('option');
+          option.value = z;
+          option.textContent = z.toString();
+          zLevelSelect.appendChild(option);
+        }
+        
+        zLevelSelect.addEventListener('change', (e) => {
+          const value = e.target.value;
+          this.config.debugZLevel = value === '' ? null : parseInt(value, 10);
+          
+          // Clear tiles and update
+          this.clearTiles();
+          this.requestQueue.clear();
+          this.updateTiles(camera, camera.position.length());
+        });
+        
+        zLevelDiv.appendChild(zLevelSelect);
+        debugDiv.appendChild(zLevelDiv);
+        
+        // Zoom threshold adjustment slider
+        const thresholdDiv = document.createElement('div');
+        thresholdDiv.style.marginTop = '10px';
+        thresholdDiv.innerHTML = '<span>Zoom Threshold: </span>';
+        
+        const thresholdSlider = document.createElement('input');
+        thresholdSlider.type = 'range';
+        thresholdSlider.min = '150';
+        thresholdSlider.max = '350';
+        thresholdSlider.step = '10';
+        thresholdSlider.value = this.config.zoomThreshold.toString();
+        thresholdSlider.style.width = '100%';
+        
+        thresholdSlider.addEventListener('input', (e) => {
+          this.config.zoomThreshold = parseInt(e.target.value, 10);
+          thresholdValue.textContent = this.config.zoomThreshold.toString();
+          this.toggleTilesVisibility(camera.position.length());
+        });
+        
+        const thresholdValue = document.createElement('span');
+        thresholdValue.textContent = this.config.zoomThreshold.toString();
+        thresholdValue.style.marginLeft = '5px';
+        
+        thresholdDiv.appendChild(thresholdSlider);
+        thresholdDiv.appendChild(thresholdValue);
+        debugDiv.appendChild(thresholdDiv);
+        
+        // Provider selector
+        const providerDiv = document.createElement('div');
+        providerDiv.style.marginTop = '10px';
+        providerDiv.innerHTML = '<span>Tile Provider: </span>';
+        
+        const providerSelect = document.createElement('select');
+        providerSelect.id = 'osm-provider';
+        
+        // Add provider options
+        for (const [key, provider] of Object.entries(this.config.providers)) {
+          const option = document.createElement('option');
+          option.value = key;
+          option.textContent = key;
+          if (key === this.config.defaultProvider) {
+            option.selected = true;
+          }
+          providerSelect.appendChild(option);
+        }
+        
+        providerSelect.addEventListener('change', (e) => {
+          this.config.defaultProvider = e.target.value;
+          this.clearTiles();
+          this.requestQueue.clear();
+          this.updateTiles(camera, camera.position.length());
+        });
+        
+        providerDiv.appendChild(providerSelect);
+        debugDiv.appendChild(providerDiv);
+        
+        // Stats display
+        const statsDiv = document.createElement('div');
+        statsDiv.id = 'osm-stats';
+        statsDiv.style.marginTop = '10px';
+        statsDiv.style.fontSize = '10px';
+        statsDiv.style.fontFamily = 'monospace';
+        debugDiv.appendChild(statsDiv);
+        this.debugInfoElement = statsDiv;
+        
+        // Toggle button
+        const toggleButton = document.createElement('button');
+        toggleButton.textContent = this.isEnabled ? 'Disable OSM' : 'Enable OSM';
+        toggleButton.style.marginTop = '10px';
+        toggleButton.style.width = '100%';
+        toggleButton.style.padding = '5px';
+        
+        toggleButton.addEventListener('click', () => {
+          this.isEnabled = !this.isEnabled;
+          toggleButton.textContent = this.isEnabled ? 'Disable OSM' : 'Enable OSM';
+          this.tileGroup.visible = this.isEnabled;
+          if (this.isEnabled) {
+            this.updateTiles(camera, camera.position.length());
+          }
+        });
+        
+        debugDiv.appendChild(toggleButton);
+        
+        // Add to document
+        document.body.appendChild(debugDiv);
+      }
+      
+      // Update debug info with current stats
+      updateDebugInfo() {
+        if (!this.debugInfoElement) return;
+        
+        const distance = camera.position.length();
+        const zLevel = this.calculateZoomLevel(distance);
+        
+        this.debugInfoElement.innerHTML = `
+          Distance: ${distance.toFixed(0)}<br>
+          Current Z-Level: ${this.currentZLevel || 'none'}<br>
+          Active Tiles: ${this.activeTiles.size}<br>
+          Cached Tiles: ${this.tileCache.size}<br>
+          Pending Requests: ${this.requestQueue.pendingCount}<br>
+          Stats: +${this.stats.lastUpdateTiles} (${this.stats.tilesCreated}/${this.stats.tilesLoaded}/${this.stats.tilesCached})
+        `;
+      }
+      
+      getTileGroup() {
+        return this.tileGroup;
+      }
+      
+      clearTiles() {
+        // Remove all tiles from the group
+        const tilesToRemove = [];
+        
+        // First collect all tiles to avoid modifying while iterating
+        this.tileGroup.children.forEach(tile => {
+          if (tile.name && tile.name.startsWith('tile-')) {
+            tilesToRemove.push(tile);
+          }
+        });
+        
+        // Then remove them in a separate step
+        tilesToRemove.forEach(tile => {
+          this.tileGroup.remove(tile);
+          
+          // Properly dispose resources
+          if (tile.material) {
+            if (tile.material.map) {
+              tile.material.map.dispose();
+            }
+            tile.material.dispose();
+          }
+          if (tile.geometry) {
+            tile.geometry.dispose();
+          }
+        });
+        
+        // Clear tracking sets
+        this.activeTiles.clear();
+        
+        // Don't clear the cache - it's useful to keep for fast reloading
+        // But we could implement a cache aging/cleanup mechanism if needed
+        
+        console.log(`Cleared ${tilesToRemove.length} tiles`);
+      }
+      
+      // Calculate the appropriate OSM zoom level based on camera distance
+      calculateZoomLevel(distance) {
+        if (this.config.debugZLevel !== null) {
+          return this.config.debugZLevel;
+        }
+        
+        // Use explicit altitude-to-zoom mapping if available
+        if (this.config.altitudeToZoomMap && this.config.altitudeToZoomMap.length > 0) {
+          // Find the appropriate zoom level based on the altitude mapping
+          for (const mapping of this.config.altitudeToZoomMap) {
+            if (distance >= mapping.altitude) {
+              return mapping.zoom;
+            }
+          }
+          
+          // If we're closer than any defined mapping, use the highest zoom level
+          if (distance < this.config.altitudeToZoomMap[this.config.altitudeToZoomMap.length - 1].altitude) {
+            return this.config.maxZoom;
+          }
+          
+          // If we're further than any defined mapping, use the lowest zoom level
+          return this.config.minZoom;
+        }
+        
+        // Otherwise use the improved logarithmic scale method
+        // The curve is designed to give more detail at closer distances
+        
+        // Get normalized distance (0 = closest, 1 = farthest)
+        const maxDistance = this.config.zoomThreshold;
+        const minDistance = CONFIG.minDistance;
+        
+        // Cap distance to our threshold
+        const clampedDistance = Math.min(distance, maxDistance);
+        
+        // Calculate normalized distance (0 = closest, 1 = farthest)
+        const normalizedDistance = Math.max(0.0001, (clampedDistance - minDistance) / (maxDistance - minDistance));
+        
+        // Use logarithmic scale for more natural zoom progression
+        // This gives more zoom levels at close distances and fewer at far distances
+        const logFactor = 1 - Math.log(normalizedDistance * 0.9 + 0.1) / Math.log(0.1);
+        
+        // Map to zoom level range
+        let zoomLevel = Math.floor(
+          this.config.minZoom + 
+          logFactor * (this.config.maxZoom - this.config.minZoom)
+        );
+        
+        // Ensure zoom level is within bounds
+        zoomLevel = Math.max(this.config.minZoom, Math.min(this.config.maxZoom, zoomLevel));
+        
+        return zoomLevel;
+      }
+      
+      // Convert lat/lng to tile coordinates at a given zoom level
+      latLngToTile(lat, lng, zoom) {
+        const n = Math.pow(2, zoom);
+        const x = Math.floor((lng + 180) / 360 * n);
+        const latRad = lat * Math.PI / 180;
+        const y = Math.floor((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2 * n);
+        return { x, y, z: zoom };
+      }
+      
+      // Get tile URL from provider
+      getTileUrl(x, y, z) {
+        const provider = this.config.providers[this.config.defaultProvider];
+        return provider.url.replace('{x}', x).replace('{y}', y).replace('{z}', z);
+      }
+      
+      // Create a tile mesh material
+      createTileMesh(x, y, z, priority = 0) {
+        const tileId = `${x}-${y}-${z}`;
+        
+        // Check if this tile ID is in our "failed attempts" map
+        if (this.requestQueue.retryCountMap.get(tileId) >= this.requestQueue.maxRetries) {
+          console.log(`Skipping tile ${tileId} - already reached maximum retry limit`);
+          return null;
+        }
+        
+        // Check if we're already at the tile limit
+        if (this.activeTiles.size >= this.config.maxVisibleTiles && !this.activeTiles.has(tileId)) {
+          // Skip creating new tiles if we're at the limit
+          return null;
+        }
+        
+        // Check if we already have this tile in cache
+        if (this.tileCache.has(tileId) && this.tileCache.get(tileId).mesh) {
+          const cachedTile = this.tileCache.get(tileId);
+          
+          // If mesh exists and isn't in the scene, add it
+          if (!this.activeTiles.has(tileId)) {
+            // Ensure visibility and opacity are set correctly
+            if (cachedTile.mesh.material) {
+              cachedTile.mesh.material.opacity = this.config.opacity;
+              cachedTile.mesh.visible = true;
+            }
+            
+            this.tileGroup.add(cachedTile.mesh);
+            this.activeTiles.add(tileId);
+            this.stats.tilesCached++;
+            
+            // Reset retry count for this tile since we found it in cache
+            this.requestQueue.resetRetryCount(tileId);
+          }
+          
+          return cachedTile.mesh;
+        }
+        
+        // Calculate tile boundaries in lat/lng
+        const n = Math.pow(2, z);
+        const northLat = Math.atan(Math.sinh(Math.PI * (1 - 2 * y / n))) * 180 / Math.PI;
+        const southLat = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + 1) / n))) * 180 / Math.PI;
+        const westLng = x / n * 360 - 180;
+        const eastLng = (x + 1) / n * 360 - 180;
+        
+        // Create a placeholder material with higher visibility
+        const material = new THREE.MeshBasicMaterial({
+          color: 0xff0000, // Bright red for debugging
+          transparent: true,
+          opacity: 0.7, // Higher initial opacity for visibility
+          side: THREE.FrontSide
+        });
+        
+        // Create a geometry for the tile
+        const segmentsPerTile = 6; // Lower value for better performance (was 8)
+        const geometry = new THREE.PlaneGeometry(1, 1, segmentsPerTile, segmentsPerTile);
+        
+        // Create mesh
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.name = `tile-${tileId}`;
+        mesh.visible = true; // Ensure visibility is explicitly set
+        
+        // Store in cache
+        this.tileCache.set(tileId, { mesh, loading: true });
+        this.activeTiles.add(tileId);
+        this.stats.tilesCreated++;
+        
+        // Position the tile on the globe
+        this.positionTileOnGlobe(mesh, northLat, southLat, westLng, eastLng);
+        
+        // Add to the tile group
+        this.tileGroup.add(mesh);
+        
+        // Get tile URL
+        const url = this.getTileUrl(x, y, z);
+        
+        // Queue the texture request with priority
+        this.requestQueue.add({
+          tileId,
+          url,
+          priority,
+          onLoad: (texture) => {
+            // Skip if tile was removed while loading
+            if (!this.activeTiles.has(tileId)) {
+              // Release texture resources
+              texture.dispose();
+              return;
+            }
+            
+            // Create new material with the loaded texture
+            const newMaterial = new THREE.MeshBasicMaterial({
+              map: texture,
+              transparent: true,
+              opacity: this.config.opacity,
+              side: THREE.FrontSide
+            });
+            
+            // Update the mesh material
+            if (mesh.material) {
+              mesh.material.dispose();
+            }
+            mesh.material = newMaterial;
+            mesh.visible = true; // Ensure visibility after texture load
+            
+            // Update cache
+            if (this.tileCache.has(tileId)) {
+              this.tileCache.set(tileId, { mesh, loading: false });
+            }
+            
+            // Reset retry count for successful load
+            this.requestQueue.resetRetryCount(tileId);
+            
+            this.stats.tilesLoaded++;
+          },
+          onError: (error) => {
+            console.error(`Error loading tile ${tileId}:`, error);
+            // Keep red placeholder on error
+            if (mesh.material) {
+              mesh.material.color.set(0xff0000);
+              mesh.material.opacity = 0.5;
+            }
+            // Mark as loaded even if it failed
+            if (this.tileCache.has(tileId)) {
+              this.tileCache.get(tileId).loading = false;
+            }
+          }
+        });
+        
+        return mesh;
+      }
+
+      // Position a tile mesh on the globe
+      positionTileOnGlobe(mesh, northLat, southLat, westLng, eastLng) {
+        // Modify the plane geometry to conform to the sphere
+        const positions = mesh.geometry.attributes.position.array;
+        
+        for (let i = 0; i < positions.length; i += 3) {
+          // Normalized coordinates within the tile (0 to 1)
+          const u = positions[i] + 0.5;     // x coordinate (0 to 1)
+          const v = positions[i + 1] + 0.5; // y coordinate (0 to 1)
+          
+          // Interpolate lat/lng
+          const lat = northLat + v * (southLat - northLat);
+          const lng = westLng + u * (eastLng - westLng);
+          
+          // Convert to 3D point on sphere
+          const phi = (90 - lat) * Math.PI / 180;
+          const theta = (lng + 180) * Math.PI / 180;
+          
+          // Calculate point on sphere surface
+          positions[i] = -this.earthRadius * Math.sin(phi) * Math.cos(theta);     // x
+          positions[i + 1] = this.earthRadius * Math.cos(phi);                    // y
+          positions[i + 2] = this.earthRadius * Math.sin(phi) * Math.sin(theta);  // z
+        }
+        
+        // Update the geometry
+        mesh.geometry.attributes.position.needsUpdate = true;
+        mesh.geometry.computeVertexNormals();
+      }
+      
+      // Fix the intersectSphere method in the raycaster
+      intersectSphere(raycaster, sphere) {
+        // Extract the ray from the raycaster
+        const ray = raycaster.ray;
+        const origin = ray.origin;
+        const direction = ray.direction;
+        
+        // Vector from ray origin to sphere center
+        const oc = new THREE.Vector3().subVectors(sphere.center, origin);
+        
+        // Calculate coefficients for quadratic equation
+        const a = direction.dot(direction); // Should be 1 if direction is normalized
+        const b = 2 * oc.dot(direction);
+        const c = oc.dot(oc) - sphere.radius * sphere.radius;
+        const discriminant = b * b - 4 * a * c;
+        
+        // No intersection
+        if (discriminant < 0) {
+          return null;
+        }
+        
+        // Calculate intersection points
+        const sqrtDiscriminant = Math.sqrt(discriminant);
+        let t = (-b - sqrtDiscriminant) / (2 * a); // First intersection
+        
+        // If t is negative, ray is inside sphere or pointing away
+        if (t < 0) {
+          t = (-b + sqrtDiscriminant) / (2 * a); // Second intersection
+          if (t < 0) {
+            return null; // Both intersections behind ray origin
+          }
+        }
+        
+        // Calculate intersection point
+        return new THREE.Vector3().addVectors(
+          origin, 
+          direction.clone().multiplyScalar(t)
+        );
+      }
+      
+      // Implement proper frustum culling to determine visible tiles
+      getVisibleTilesInFrustum(camera, zLevel) {
+        // Create a frustum from the camera
+        const frustum = new THREE.Frustum();
+        const projScreenMatrix = new THREE.Matrix4();
+        
+        // Update the projection matrix
+        camera.updateMatrixWorld();
+        projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+        frustum.setFromProjectionMatrix(projScreenMatrix);
+        
+        // Define a set of test points on the globe at different latitudes and longitudes
+        const visibleTiles = new Set();
+        const globe = this.earthRadius;
+        
+        // Create a temporary bounding sphere for testing
+        const boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), globe * 1.02);
+        
+        // First test if the globe itself is visible
+        if (!frustum.intersectsSphere(boundingSphere)) {
+          console.log("Globe is not in frustum");
+          return []; // Empty set
+        }
+        
+        // Check view center
+        const viewCenter = this.getCameraViewCenter(camera);
+        const centerTile = this.latLngToTile(viewCenter.lat, viewCenter.lng, zLevel);
+        
+        // Add center tile to visible tiles
+        visibleTiles.add(`${centerTile.x},${centerTile.y}`);
+        
+        // Use a sampling approach - create a grid of sample points across the globe
+        // The number of samples depends on the zoom level - more samples at higher zoom
+        const sampleCount = Math.max(12, Math.min(24, zLevel * 2)); 
+        
+        // Sample visible points across the globe surface
+        const step = 360 / sampleCount;
+        
+        // First pass - create a coarse grid of test points
+        for (let lat = -80; lat <= 80; lat += step) {
+          for (let lng = -180; lng <= 180; lng += step) {
+            // Convert to 3D point
+            const point = this.latLngToPoint(lat, lng);
+            
+            // Test if point is in frustum
+            if (frustum.containsPoint(point)) {
+              // Convert to tile coordinates
+              const tile = this.latLngToTile(lat, lng, zLevel);
+              visibleTiles.add(`${tile.x},${tile.y}`);
+              
+              // Also add neighboring tiles for smoother loading
+              for (let dx = -1; dx <= 1; dx++) {
+                for (let dy = -1; dy <= 1; dy++) {
+                  const nx = tile.x + dx;
+                  const ny = tile.y + dy;
+                  
+                  // Ensure tile coordinates are valid
+                  if (nx >= 0 && nx < Math.pow(2, zLevel) && ny >= 0 && ny < Math.pow(2, zLevel)) {
+                    visibleTiles.add(`${nx},${ny}`);
+                  }
+                }
+              }
+            }
+          }
+        }
+        
+        // Additional test - check where camera is pointing directly
+        const raycaster = new THREE.Raycaster();
+        raycaster.set(camera.position, new THREE.Vector3(0, 0, 0).sub(camera.position).normalize());
+        
+        const intersection = this.intersectSphere(raycaster, boundingSphere);
+        if (intersection) {
+          // Convert to lat/lng
+          const point = intersection.clone().normalize().multiplyScalar(globe);
+          const lat = 90 - Math.acos(point.y / globe) * 180 / Math.PI;
+          const lng = Math.atan2(point.z, point.x) * 180 / Math.PI;
+          
+          // Get tile and surrounding area
+          const tile = this.latLngToTile(lat, lng, zLevel);
+          
+          // Add a larger region around the center point
+          const radius = Math.min(4, Math.floor(12 / zLevel) + 1);
+          for (let dx = -radius; dx <= radius; dx++) {
+            for (let dy = -radius; dy <= radius; dy++) {
+              const nx = tile.x + dx;
+              const ny = tile.y + dy;
+              
+              if (nx >= 0 && nx < Math.pow(2, zLevel) && ny >= 0 && ny < Math.pow(2, zLevel)) {
+                visibleTiles.add(`${nx},${ny}`);
+              }
+            }
+          }
+        }
+        
+        // Convert back to individual coordinates
+        const result = [];
+        visibleTiles.forEach(coordStr => {
+          const [x, y] = coordStr.split(',').map(Number);
+          result.push({ x, y });
+        });
+        
+        console.log(`Found ${result.length} visible tiles at z-level ${zLevel}`);
+        
+        // If we have too many tiles, prioritize those closest to view center
+        if (result.length > this.config.maxVisibleTiles * 0.7) {
+          return this.prioritizeTiles(result, centerTile, this.config.maxVisibleTiles * 0.7);
+        }
+        
+        return result;
+      }
+      
+      // Helper to convert lat/lng to 3D point
+      latLngToPoint(lat, lng) {
+        const phi = (90 - lat) * Math.PI / 180;
+        const theta = (lng + 180) * Math.PI / 180;
+        
+        const x = -this.earthRadius * Math.sin(phi) * Math.cos(theta);
+        const y = this.earthRadius * Math.cos(phi);
+        const z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
+        
+        return new THREE.Vector3(x, y, z);
+      }
+      
+      // Prioritize tiles based on distance from center
+      prioritizeTiles(tiles, centerTile, maxCount) {
+        // Calculate distance from center tile
+        const tilesWithDistance = tiles.map(tile => {
+          const dx = tile.x - centerTile.x;
+          const dy = tile.y - centerTile.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          return { ...tile, distance };
+        });
+        
+        // Sort by distance (closest first)
+        tilesWithDistance.sort((a, b) => a.distance - b.distance);
+        
+        // Take only the closest tiles
+        return tilesWithDistance.slice(0, maxCount);
+      }
+      
+      // Calculate view center in lat/lng from camera
+      getCameraViewCenter(camera) {
+        // Get camera direction
+        const cameraDirection = new THREE.Vector3();
+        camera.getWorldDirection(cameraDirection);
+        cameraDirection.multiplyScalar(-1); // Invert to point at globe
+        
+        // Find intersection with globe
+        const raycaster = new THREE.Raycaster(camera.position, cameraDirection);
+        const globeCenter = new THREE.Vector3(0, 0, 0);
+        const distance = camera.position.distanceTo(globeCenter);
+        
+        // Since we don't do a proper ray-sphere intersection, approximate where
+        // the camera is looking on the globe surface
+        const pointOnGlobe = cameraDirection.clone().normalize().multiplyScalar(this.earthRadius);
+        
+        // Convert to lat/lng
+        const lat = 90 - (Math.acos(pointOnGlobe.y / this.earthRadius) * 180 / Math.PI);
+        const lng = Math.atan2(pointOnGlobe.z, pointOnGlobe.x) * 180 / Math.PI;
+        
+        return { lat, lng };
+      }
+      
+      // Calculate priority for a tile based on its distance from view center
+      calculateTilePriority(tileX, tileY, zLevel, viewCenterLat, viewCenterLng) {
+        // Convert tile to lat/lng of its center
+        const n = Math.pow(2, zLevel);
+        const tileCenterLat = Math.atan(Math.sinh(Math.PI * (1 - (2 * (tileY + 0.5)) / n))) * 180 / Math.PI;
+        const tileCenterLng = (tileX + 0.5) / n * 360 - 180;
+        
+        // Calculate distance from view center (simplified version using lat/lng directly)
+        const latDiff = viewCenterLat - tileCenterLat;
+        const lngDiff = viewCenterLng - tileCenterLng;
+        
+        // Simple Euclidean distance - not perfect on a sphere but good enough for priority
+        const distance = Math.sqrt(latDiff * latDiff + lngDiff * lngDiff);
+        
+        // Higher number = higher priority (1.0 = highest, 0.0 = lowest)
+        // Exponential falloff with distance
+        const priority = Math.max(0, Math.min(1, Math.exp(-distance / 20)));
+        
+        return priority;
+      }
+
+      // Update tiles based on camera position with frustum culling
+      updateTiles(camera, distance) {
+        if (!this.isEnabled) {
+          return;
+        }
+        
+        // More aggressive throttling to prevent endless loops
+        const now = performance.now();
+        if (now - this.lastUpdateTime < this.updateThrottleMs) {
+          return;
+        }
+        this.lastUpdateTime = now;
+        
+        // Check if we're in the middle of a tile update already
+        if (this._updateInProgress) {
+          console.log("Update already in progress, skipping");
+          return;
+        }
+        
+        // Set update in progress flag
+        this._updateInProgress = true;
+        
+        try {
+          // Calculate appropriate zoom level
+          const zLevel = this.calculateZoomLevel(distance);
+          
+          // Get view center for reference
+          const viewCenter = this.getCameraViewCenter(camera);
+          this.lastViewCenter = viewCenter;
+          
+          // If zoom level has changed, clear everything
+          if (this.currentZLevel !== zLevel) {
+            console.log(`Updating OSM tiles to z-level: ${zLevel} (from ${this.currentZLevel})`);
+            this.currentZLevel = zLevel;
+            
+            // Clear existing tiles
+            this.clearTiles();
+            
+            // Clear tile request queue
+            this.requestQueue.clear();
+          }
+          
+          // Check if we need to clean up excess tiles
+          if (this.activeTiles.size > this.config.maxVisibleTiles) {
+            // Run cleanup directly instead of scheduling it
+            this.cleanupExcessTiles();
+            this._updateInProgress = false;
+            return;
+          }
+          
+          // Add a check to prevent processing if we already have enough tiles
+          if (this.activeTiles.size >= this.config.maxVisibleTiles * 0.9) {
+            console.log(`Already have ${this.activeTiles.size} tiles, skipping update`);
+            this._updateInProgress = false;
+            return;
+          }
+          
+          // Reset stats for this update
+          this.stats.lastUpdateTiles = 0;
+          
+          // Use frustum culling to determine visible tiles
+          const visibleTiles = this.getVisibleTilesInFrustum(camera, zLevel);
+          
+          // Exit early if no visible tiles (e.g., camera facing away from globe)
+          if (visibleTiles.length === 0) {
+            this._updateInProgress = false;
+            return;
+          }
+          
+          // Calculate how many new tiles we would add
+          let newTileCount = 0;
+          visibleTiles.forEach(tile => {
+            const tileId = `${tile.x}-${tile.y}-${zLevel}`;
+            if (!this.activeTiles.has(tileId)) {
+              newTileCount++;
+            }
+          });
+          
+          // CRITICAL FIX: If we're not adding any new tiles, don't continue processing
+          if (newTileCount === 0) {
+            console.log(`No new tiles to add, skipping update`);
+            this._updateInProgress = false;
+            return;
+          }
+          
+          console.log(`Found ${visibleTiles.length} visible tiles, ${newTileCount} new to load`);
+          
+          // Sort tiles by priority (distance from view center)
+          const centerTile = this.latLngToTile(viewCenter.lat, viewCenter.lng, zLevel);
+          
+          // Calculate priority for each tile
+          const tilesWithPriority = visibleTiles.map(tile => {
+            const dx = tile.x - centerTile.x;
+            const dy = tile.y - centerTile.y;
+            const distanceSquared = dx * dx + dy * dy;
+            
+            // Priority decreases with distance from center (1.0 = highest, near 0 = lowest)
+            const priority = 1.0 / (1.0 + distanceSquared * 0.05);
+            
+            return { ...tile, priority };
+          });
+          
+          // Sort by priority (highest first)
+          tilesWithPriority.sort((a, b) => b.priority - a.priority);
+          
+          // IMPORTANT: More conservative limit - load fewer tiles at once
+          // Reduced batch size to avoid overwhelming the system
+          const tileBatchSize = Math.min(10, newTileCount);
+          const tilesToLoad = tilesWithPriority.slice(0, tileBatchSize);
+          
+          // Load the highest priority tiles
+          tilesToLoad.forEach(tile => {
+            // Create the tile with priority
+            this.createTileMesh(tile.x, tile.y, zLevel, tile.priority);
+            this.stats.lastUpdateTiles++;
+          });
+          
+          // Update debug info if UI exists
+          if (this.debugInfoElement) {
+            this.updateDebugInfo();
+          }
+        } finally {
+          // Always clear the update flag when done
+          this._updateInProgress = false;
+        }
+      }
+
+      logTileStatus() {
+        console.log(`Tile Group Visible: ${this.tileGroup.visible}`);
+        console.log(`Tile Group Children: ${this.tileGroup.children.length}`);
+        console.log(`Active Tiles: ${this.activeTiles.size}`);
+        
+        // Check sample tiles
+        if (this.tileGroup.children.length > 0) {
+          const sampleTiles = this.tileGroup.children.slice(0, 3);
+          sampleTiles.forEach((tile, i) => {
+            console.log(`Tile ${i} visible: ${tile.visible}, opacity: ${tile.material ? tile.material.opacity : 'N/A'}`);
+          });
+        }
+      }
+
+      // Show/hide tiles based on zoom level with smooth transition
+      toggleTilesVisibility(distance) {
+        // Show tiles only when close enough
+        if (distance < this.config.zoomThreshold && this.isEnabled) {
+          if (!this.tileGroup.visible) {
+            console.log('Showing OSM tiles, distance:', distance);
+            
+            // Force visibility of the tile group
+            this.tileGroup.visible = true;
+            
+            // Ensure all child tiles are also visible and have proper opacity
+            this.tileGroup.children.forEach(child => {
+              if (child.material) {
+                child.material.opacity = this.config.opacity;
+                child.visible = true;
+              }
+            });
+            
+            console.log(`Made ${this.tileGroup.children.length} tiles visible with opacity ${this.config.opacity}`);
+          }
+        } else {
+          if (this.tileGroup.visible) {
+            console.log('Hiding OSM tiles, distance:', distance);
+            this.tileGroup.visible = false;
+          }
+        }
+      }
+
+      // Flag to track if cleanup is in progress
+      _cleanupInProgress = false;
+      _lastCleanupTime = 0;
+      _updateInProgress = false;
+
+      // Remove least recently used tiles to stay within tile limit
+      cleanupExcessTiles() {
+        // Prevent overlapping cleanup operations or too frequent cleanups
+        const now = performance.now();
+        if (this._cleanupInProgress || now - this._lastCleanupTime < 2000) {
+          return;
+        }
+        
+        // Double-check tile count since we may have just cleaned up
+        const tileCount = this.activeTiles.size;
+        if (tileCount <= this.config.maxVisibleTiles) {
+          return;
+        }
+        
+        // Mark cleanup as in progress
+        this._cleanupInProgress = true;
+        this._lastCleanupTime = now;
+        
+        console.log(`Cleaning up excess tiles: ${tileCount} > ${this.config.maxVisibleTiles}`);
+        
+        try {
+          // Get view center
+          const viewCenter = this.lastViewCenter || { lat: 0, lng: 0 };
+          
+          // Calculate distance for each tile from view center
+          const tilesWithDistances = [];
+          
+          // Use a copy of activeTiles to avoid modification during iteration
+          Array.from(this.activeTiles).forEach(tileId => {
+            // Skip if already removed
+            if (!this.activeTiles.has(tileId)) {
+              return;
+            }
+            
+            // Find mesh in the scene
+            const tileMesh = this.tileGroup.children.find(child => 
+              child.name === `tile-${tileId}`
+            );
+            
+            if (!tileMesh) {
+              // Tile is in activeTiles but not in scene, remove from tracking
+              this.activeTiles.delete(tileId);
+              return;
+            }
+            
+            // Extract tile coordinates from ID (format: x-y-z)
+            const parts = tileId.split('-');
+            if (parts.length !== 3) {
+              return;
+            }
+            
+            const x = parseInt(parts[0], 10);
+            const y = parseInt(parts[1], 10);
+            const z = parseInt(parts[2], 10);
+            
+            // Calculate tile center in lat/lng
+            const n = Math.pow(2, z);
+            const tileCenterLat = Math.atan(Math.sinh(Math.PI * (1 - (2 * (y + 0.5)) / n))) * 180 / Math.PI;
+            const tileCenterLng = (x + 0.5) / n * 360 - 180;
+            
+            // Calculate distance from view center (simplified version using lat/lng directly)
+            const latDiff = viewCenter.lat - tileCenterLat;
+            const lngDiff = viewCenter.lng - tileCenterLng;
+            
+            // Simple Euclidean distance - not perfect on a sphere but good enough for priority
+            const distance = Math.sqrt(latDiff * latDiff + lngDiff * lngDiff);
+            
+            tilesWithDistances.push({ tileMesh, distance, tileId });
+          });
+          
+          // Sort by distance (farthest first)
+          tilesWithDistances.sort((a, b) => b.distance - a.distance);
+          
+          // Calculate how many tiles to remove - be more conservative
+          const numToRemove = Math.min(
+            tilesWithDistances.length, 
+            Math.ceil((this.activeTiles.size - this.config.maxVisibleTiles) * 0.7) // Remove 70% of excess
+          );
+          
+          // Count of actually removed tiles
+          let removedCount = 0;
+          
+          // Remove excess tiles starting from the farthest
+          for (let i = 0; i < numToRemove; i++) {
+            const { tileMesh, tileId } = tilesWithDistances[i];
+            
+            // Remove from scene (if it exists)
+            if (tileMesh && tileMesh.parent === this.tileGroup) {
+              this.tileGroup.remove(tileMesh);
+              
+              // Properly dispose resources
+              if (tileMesh.material) {
+                if (tileMesh.material.map) {
+                  tileMesh.material.map.dispose();
+                }
+                tileMesh.material.dispose();
+              }
+              if (tileMesh.geometry) {
+                tileMesh.geometry.dispose();
+              }
+              
+              // Remove from active tiles
+              this.activeTiles.delete(tileId);
+              removedCount++;
+            }
+          }
+          
+          console.log(`Actually removed ${removedCount} excess tiles, remaining: ${this.activeTiles.size}`);
+        } finally {
+          // Always mark cleanup as complete
+          this._cleanupInProgress = false;
+        }
+      }
+
+  }
+
     // Earth object with PBR rendering
     class EnhancedEarth {
       constructor(scene, camera) {
@@ -3664,6 +4828,87 @@ function getTimezoneCoordinates(timezone) {
         } catch (err) {
           console.warn('Fast low-res cache check failed:', err);
           return false;
+        }
+      }
+
+      initOSMTiles() {
+        // Create tile manager
+        this.osmTileManager = new OSMTileManager(this.earthRadius, CONFIG.osmTiles);
+        
+        // Add tile group to scene
+        const tileGroup = this.osmTileManager.getTileGroup();
+        tileGroup.visible = true; // Ensure it starts visible for initial debugging
+        this.scene.add(tileGroup);
+        
+        // Monitor camera changes to update tiles
+        this.setupTileUpdateListeners();
+        
+        // Force an initial update after a short delay
+        setTimeout(() => {
+          if (this.osmTileManager && camera) {
+            const distance = camera.position.length();
+            console.log("Initial OSM tiles update, distance:", distance);
+            this.osmTileManager.tileGroup.visible = true;
+            this.osmTileManager.updateTiles(camera, distance);
+            
+            // Log status after update
+            setTimeout(() => {
+              this.osmTileManager.logTileStatus();
+            }, 1000);
+          }
+        }, 2000);
+      }
+
+      setupTileUpdateListeners() {
+        if (controls) {
+          const originalUpdateFunction = controls.update;
+          
+          // Track last update time to throttle updates
+          let lastUpdateTime = 0;
+          const minimumUpdateInterval = 500; // ms, more aggressive throttling
+          
+          controls.update = () => {
+            // Call original function
+            originalUpdateFunction.call(controls);
+            
+            // Throttle OSM tile updates to prevent excessive calls
+            const now = performance.now();
+            if (now - lastUpdateTime < minimumUpdateInterval) {
+              return;
+            }
+            
+            lastUpdateTime = now;
+            
+            // Update OSM tiles based on camera distance
+            if (this.osmTileManager) {
+              const distance = camera.position.length();
+              this.osmTileManager.toggleTilesVisibility(distance);
+              
+              // Only update tiles if they're visible
+              if (this.osmTileManager.tileGroup.visible) {
+                this.osmTileManager.updateTiles(camera, distance);
+              }
+            }
+          };
+        }
+        
+        // Throttle event listener for camera changes
+        if (camera) {
+          let cameraUpdateTimer = null;
+          
+          camera.addEventListener('change', () => {
+            // Debounce camera updates
+            if (cameraUpdateTimer) {
+              clearTimeout(cameraUpdateTimer);
+            }
+            
+            cameraUpdateTimer = setTimeout(() => {
+              if (this.osmTileManager && this.osmTileManager.tileGroup.visible) {
+                const distance = camera.position.length();
+                this.osmTileManager.updateTiles(camera, distance);
+              }
+            }, 250); // Only update after camera has stopped changing for 250ms
+          });
         }
       }
 
@@ -3909,7 +5154,6 @@ function getTimezoneCoordinates(timezone) {
       }
     }
 
-
     function getKeyboardFocusableElements(element = document) {
         return Array.from(element.querySelectorAll(
             'a, button, input, textarea, select, details,[tabindex]:not([tabindex="-1"])'
@@ -4110,7 +5354,6 @@ function getTimezoneCoordinates(timezone) {
       // This would be better handled by recreating the globe
     }
     
-
     // Update resetAllMarkers to also reset parish markers
     function resetAllMarkers() {
       // Reset priest markers
@@ -4986,161 +6229,161 @@ function getTimezoneCoordinates(timezone) {
     
     // Function to add parishes to the globe
     function addParishesToGlobe() {
-  console.log(`Adding ${parishes.length} parishes to the globe`);
-  
-  parishes.forEach(parish => {
-    // Get clean ID
-    const parishID = parish.ParishID.trim();
-    const priestID = parish.PriestID.trim();
-    
-    // Get coordinates
-    const lat = parish.Latitude;
-    const lng = parish.Longitude;
-    
-    // Calculate position on globe surface
-    const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
-    
-    // Check if this parish is a home parish for its priest
-    const isHomePriestParish = parish.IsHomePriest;
-    console.log(`Parish: ${parish.ParishName} (ID: ${parishID}), PriestID: ${priestID}, IsHomePriest: ${isHomePriestParish}`);
-    
-    // Add parish marker (red dot) only if it's not a home parish
-    // (home parishes will be represented by the priest's marker)
-    if (!isHomePriestParish) {
-      const markerGeometry = new THREE.SphereGeometry(CONFIG.parishMarkerSize, 16, 16);
-      markerGeometry.computeVertexNormals(); // Ensure smooth normals
+      console.log(`Adding ${parishes.length} parishes to the globe`);
       
-      const markerMaterial = new THREE.MeshPhongMaterial({ 
-        color: CONFIG.parishMarkerColor,
-        shininess: 0,
-        flatShading: false
+      parishes.forEach(parish => {
+        // Get clean ID
+        const parishID = parish.ParishID.trim();
+        const priestID = parish.PriestID.trim();
+        
+        // Get coordinates
+        const lat = parish.Latitude;
+        const lng = parish.Longitude;
+        
+        // Calculate position on globe surface
+        const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
+        
+        // Check if this parish is a home parish for its priest
+        const isHomePriestParish = parish.IsHomePriest;
+        console.log(`Parish: ${parish.ParishName} (ID: ${parishID}), PriestID: ${priestID}, IsHomePriest: ${isHomePriestParish}`);
+        
+        // Add parish marker (red dot) only if it's not a home parish
+        // (home parishes will be represented by the priest's marker)
+        if (!isHomePriestParish) {
+          const markerGeometry = new THREE.SphereGeometry(CONFIG.parishMarkerSize, 16, 16);
+          markerGeometry.computeVertexNormals(); // Ensure smooth normals
+          
+          const markerMaterial = new THREE.MeshPhongMaterial({ 
+            color: CONFIG.parishMarkerColor,
+            shininess: 0,
+            flatShading: false
+          });
+          
+          const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+          
+          // Set marker position
+          marker.position.set(position.x, position.y, position.z);
+          marker.name = 'parish-marker';
+          marker.parishData = {
+            ...parish,
+            ParishID: parishID, // Ensure the data has the clean ID
+            PriestID: priestID  // Ensure the data has the clean ID
+          };
+          
+          // Add marker to scene
+          scene.add(marker);
+          console.log(`Added marker for parish: ${parish.ParishName} (${parishID})`);
+        }
+        
+        // Find the priest for this parish
+        const priest = priestMap.get(priestID);
+        
+        // If not home parish, add curved line to priest's home parish
+        if (!isHomePriestParish && priest) {
+          // Find this priest's home parish
+          const homeParish = parishes.find(p => 
+            p.PriestID.trim() === priestID && p.IsHomePriest
+          );
+          
+          if (homeParish) {
+            console.log(`Creating arc line from ${parish.ParishName} to ${homeParish.ParishName}`);
+            
+            // Calculate home parish position
+            const homePosition = getPointOnGlobe(
+              homeParish.Latitude, 
+              homeParish.Longitude, 
+              CONFIG.labelAltitude
+            );
+            
+            // Create points for the arc - Use higher arc for better visibility
+            const arcPoints = createArcPoints(
+              position, 
+              homePosition, 
+              CONFIG.labelAltitude * 200.0 // Increased from 2 to 4 for higher arc
+            );
+            
+            // Create a line geometry from the arc points
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints(arcPoints);
+            
+            const lineMaterial = new THREE.LineBasicMaterial({
+              color: CONFIG.parishLineColor,
+              lineWidth: CONFIG.parishLineWidth,
+              transparent: true,
+              opacity: 0.7
+            });
+            
+            const line = new THREE.Line(lineGeometry, lineMaterial);
+            line.name = 'parish-line';
+            // Store references to connected parishes for easier highlighting
+            line.parishStart = parishID;
+            line.parishEnd = homeParish.ParishID.trim();
+            line.priestID = priestID;
+            
+            // Add line to scene
+            scene.add(line);
+            console.log(`Added arc line for parishes of priest: ${priest.Name}`);
+          } else {
+            // If priest has no home parish, connect to priest's location
+            console.log(`Creating arc line from ${parish.ParishName} to priest location for ${priest.Name} (no home parish)`);
+            
+            // Calculate priest position
+            const priestPosition = getPointOnGlobe(
+              priest.Latitude, 
+              priest.Longitude, 
+              CONFIG.labelAltitude
+            );
+            
+            // Create points for the arc - Use higher arc for better visibility
+            const arcPoints = createArcPoints(
+              position, 
+              priestPosition, 
+              CONFIG.labelAltitude * 200.0 // Increased from 2 to 4 for higher arc
+            );
+            
+            // Create a line geometry from the arc points
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints(arcPoints);
+            
+            const lineMaterial = new THREE.LineBasicMaterial({
+              color: CONFIG.parishLineColor,
+              linewidth: CONFIG.parishLineWidth,
+              transparent: true,
+              opacity: 0.7
+            });
+            
+            const line = new THREE.Line(lineGeometry, lineMaterial);
+            line.name = 'parish-line';
+            // Store references to connected parishes for easier highlighting
+            line.parishStart = parishID;
+            line.priestID = priestID;
+            
+            // Add line to scene
+            scene.add(line);
+            console.log(`Added arc line from parish to priest location: ${priest.Name}`);
+          }
+        }
+        
+        // Add invisible larger detection sphere for better interaction
+        const invisibleSphereGeometry = new THREE.SphereGeometry(CONFIG.parishMarkerSize * 2, 16, 16);
+        const invisibleSphereMaterial = new THREE.MeshBasicMaterial({
+          transparent: true,
+          opacity: 0.0,
+        });
+        
+        const invisibleSphere = new THREE.Mesh(invisibleSphereGeometry, invisibleSphereMaterial);
+        
+        // Position at same coordinates as marker
+        invisibleSphere.position.set(position.x, position.y, position.z);
+        invisibleSphere.name = 'parish-marker-invisible';
+        invisibleSphere.parishData = {
+          ...parish,
+          ParishID: parishID, // Ensure the data has the clean ID
+          PriestID: priestID  // Ensure the data has the clean ID
+        };
+        
+        // Add to scene
+        scene.add(invisibleSphere);
       });
-      
-      const marker = new THREE.Mesh(markerGeometry, markerMaterial);
-      
-      // Set marker position
-      marker.position.set(position.x, position.y, position.z);
-      marker.name = 'parish-marker';
-      marker.parishData = {
-        ...parish,
-        ParishID: parishID, // Ensure the data has the clean ID
-        PriestID: priestID  // Ensure the data has the clean ID
-      };
-      
-      // Add marker to scene
-      scene.add(marker);
-      console.log(`Added marker for parish: ${parish.ParishName} (${parishID})`);
     }
-    
-    // Find the priest for this parish
-    const priest = priestMap.get(priestID);
-    
-    // If not home parish, add curved line to priest's home parish
-    if (!isHomePriestParish && priest) {
-      // Find this priest's home parish
-      const homeParish = parishes.find(p => 
-        p.PriestID.trim() === priestID && p.IsHomePriest
-      );
-      
-      if (homeParish) {
-        console.log(`Creating arc line from ${parish.ParishName} to ${homeParish.ParishName}`);
-        
-        // Calculate home parish position
-        const homePosition = getPointOnGlobe(
-          homeParish.Latitude, 
-          homeParish.Longitude, 
-          CONFIG.labelAltitude
-        );
-        
-        // Create points for the arc - Use higher arc for better visibility
-        const arcPoints = createArcPoints(
-          position, 
-          homePosition, 
-          CONFIG.labelAltitude * 200.0 // Increased from 2 to 4 for higher arc
-        );
-        
-        // Create a line geometry from the arc points
-        const lineGeometry = new THREE.BufferGeometry().setFromPoints(arcPoints);
-        
-        const lineMaterial = new THREE.LineBasicMaterial({
-          color: CONFIG.parishLineColor,
-          lineWidth: CONFIG.parishLineWidth,
-          transparent: true,
-          opacity: 0.7
-        });
-        
-        const line = new THREE.Line(lineGeometry, lineMaterial);
-        line.name = 'parish-line';
-        // Store references to connected parishes for easier highlighting
-        line.parishStart = parishID;
-        line.parishEnd = homeParish.ParishID.trim();
-        line.priestID = priestID;
-        
-        // Add line to scene
-        scene.add(line);
-        console.log(`Added arc line for parishes of priest: ${priest.Name}`);
-      } else {
-        // If priest has no home parish, connect to priest's location
-        console.log(`Creating arc line from ${parish.ParishName} to priest location for ${priest.Name} (no home parish)`);
-        
-        // Calculate priest position
-        const priestPosition = getPointOnGlobe(
-          priest.Latitude, 
-          priest.Longitude, 
-          CONFIG.labelAltitude
-        );
-        
-        // Create points for the arc - Use higher arc for better visibility
-        const arcPoints = createArcPoints(
-          position, 
-          priestPosition, 
-          CONFIG.labelAltitude * 200.0 // Increased from 2 to 4 for higher arc
-        );
-        
-        // Create a line geometry from the arc points
-        const lineGeometry = new THREE.BufferGeometry().setFromPoints(arcPoints);
-        
-        const lineMaterial = new THREE.LineBasicMaterial({
-          color: CONFIG.parishLineColor,
-          linewidth: CONFIG.parishLineWidth,
-          transparent: true,
-          opacity: 0.7
-        });
-        
-        const line = new THREE.Line(lineGeometry, lineMaterial);
-        line.name = 'parish-line';
-        // Store references to connected parishes for easier highlighting
-        line.parishStart = parishID;
-        line.priestID = priestID;
-        
-        // Add line to scene
-        scene.add(line);
-        console.log(`Added arc line from parish to priest location: ${priest.Name}`);
-      }
-    }
-    
-    // Add invisible larger detection sphere for better interaction
-    const invisibleSphereGeometry = new THREE.SphereGeometry(CONFIG.parishMarkerSize * 2, 16, 16);
-    const invisibleSphereMaterial = new THREE.MeshBasicMaterial({
-      transparent: true,
-      opacity: 0.0,
-    });
-    
-    const invisibleSphere = new THREE.Mesh(invisibleSphereGeometry, invisibleSphereMaterial);
-    
-    // Position at same coordinates as marker
-    invisibleSphere.position.set(position.x, position.y, position.z);
-    invisibleSphere.name = 'parish-marker-invisible';
-    invisibleSphere.parishData = {
-      ...parish,
-      ParishID: parishID, // Ensure the data has the clean ID
-      PriestID: priestID  // Ensure the data has the clean ID
-    };
-    
-    // Add to scene
-    scene.add(invisibleSphere);
-  });
-}
 
     function synchronizePriestLocations() {
       console.log("Starting priest location synchronization");
@@ -5177,50 +6420,50 @@ function getTimezoneCoordinates(timezone) {
 
 
     function createArcPoints(startPos, endPos, maxHeight) {
-  const numPoints = 100; // Number of points for the arc line
-  const points = [];
-  
-  // Calculate vector from start to end
-  const direction = new THREE.Vector3().subVectors(endPos, startPos);
-  const distance = direction.length();
-  
-  // Create midpoint for the arc
-  const midpoint = new THREE.Vector3().addVectors(startPos, endPos).multiplyScalar(0.5);
-  const midpointLength = midpoint.length();
-  
-  // Calculate the angle between points (in radians)
-  const angle = startPos.angleTo(endPos);
-  
-  // Adjust maxHeight based on the angle between points to prevent clipping
-  // For points that are further apart, we need higher arcs
-  const dynamicHeight = maxHeight * (1 + Math.sin(angle * 0.5) * 5);
-  
-  // Make sure our arc always goes outward from the globe center
-  midpoint.normalize().multiplyScalar(midpointLength + dynamicHeight);
-  
-  // Create arc using quadratic Bezier curve
-  for (let i = 0; i <= numPoints; i++) {
-    const t = i / numPoints;
-    
-    // Quadratic Bezier: (1-t)^2 * P0 + 2(1-t)t * P1 + t^2 * P2
-    const point = new THREE.Vector3();
-    
-    // First term: (1-t)^2 * P0
-    point.copy(startPos).multiplyScalar(Math.pow(1 - t, 2));
-    
-    // Second term: 2(1-t)t * P1
-    const midPointTerm = new THREE.Vector3().copy(midpoint).multiplyScalar(2 * (1 - t) * t);
-    point.add(midPointTerm);
-    
-    // Third term: t^2 * P2
-    const endPointTerm = new THREE.Vector3().copy(endPos).multiplyScalar(t * t);
-    point.add(endPointTerm);
-    
-    points.push(point);
-  }
-  
-  return points;
-}
+      const numPoints = 100; // Number of points for the arc line
+      const points = [];
+      
+      // Calculate vector from start to end
+      const direction = new THREE.Vector3().subVectors(endPos, startPos);
+      const distance = direction.length();
+      
+      // Create midpoint for the arc
+      const midpoint = new THREE.Vector3().addVectors(startPos, endPos).multiplyScalar(0.5);
+      const midpointLength = midpoint.length();
+      
+      // Calculate the angle between points (in radians)
+      const angle = startPos.angleTo(endPos);
+      
+      // Adjust maxHeight based on the angle between points to prevent clipping
+      // For points that are further apart, we need higher arcs
+      const dynamicHeight = maxHeight * (1 + Math.sin(angle * 0.5) * 5);
+      
+      // Make sure our arc always goes outward from the globe center
+      midpoint.normalize().multiplyScalar(midpointLength + dynamicHeight);
+      
+      // Create arc using quadratic Bezier curve
+      for (let i = 0; i <= numPoints; i++) {
+        const t = i / numPoints;
+        
+        // Quadratic Bezier: (1-t)^2 * P0 + 2(1-t)t * P1 + t^2 * P2
+        const point = new THREE.Vector3();
+        
+        // First term: (1-t)^2 * P0
+        point.copy(startPos).multiplyScalar(Math.pow(1 - t, 2));
+        
+        // Second term: 2(1-t)t * P1
+        const midPointTerm = new THREE.Vector3().copy(midpoint).multiplyScalar(2 * (1 - t) * t);
+        point.add(midPointTerm);
+        
+        // Third term: t^2 * P2
+        const endPointTerm = new THREE.Vector3().copy(endPos).multiplyScalar(t * t);
+        point.add(endPointTerm);
+        
+        points.push(point);
+      }
+      
+      return points;
+    }
 
     // Populate the globe with markers and pulse rings
     function populateGlobeWithMarkers(data) {
@@ -5685,6 +6928,104 @@ function getTimezoneCoordinates(timezone) {
       // Start animation
       animateCamera();
     }
+
+
+          // Add this to the global scope to call from the console
+          window.debugTiles = function() {
+      // Force update tiles
+      if (enhancedEarth && enhancedEarth.osmTileManager) {
+        enhancedEarth.osmTileManager.tileGroup.visible = true;
+        enhancedEarth.osmTileManager.logTileStatus();
+        
+        // Check if tiles are being created at all
+        const tileCount = enhancedEarth.osmTileManager.tileGroup.children.length;
+        console.log(`Tile count: ${tileCount}`);
+        
+        // If no tiles, force one to be created for diagnostic purposes
+        if (tileCount === 0) {
+          console.log("Creating a test tile...");
+          const testTile = enhancedEarth.osmTileManager.createTileMesh(0, 0, 0, 1.0);
+          if (testTile) {
+            console.log("Test tile created successfully");
+          } else {
+            console.log("Failed to create test tile");
+          }
+        }
+      } else {
+        console.log("Earth or tile manager not initialized");
+      }
+    };
+
+    // Add a manual test function to the window object for debugging
+    window.testCreateTile = function() {
+      if (enhancedEarth && enhancedEarth.osmTileManager) {
+        console.log("Creating test tile at zoom level 1...");
+        
+        // Force tile group visible
+        enhancedEarth.osmTileManager.tileGroup.visible = true;
+        
+        // Create a test tile at zoom level 1
+        const testTile = enhancedEarth.osmTileManager.createTileMesh(0, 0, 1, 1.0);
+        
+        if (testTile) {
+          console.log("Test tile created successfully:", testTile);
+          return testTile;
+        } else {
+          console.log("Failed to create test tile");
+        }
+      } else {
+        console.log("Earth or tile manager not initialized");
+      }
+    };
+
+    // 3. Add a debug trigger function to the window scope for manual testing
+    window.triggerOSMTileUpdate = function() {
+      if (enhancedEarth && enhancedEarth.osmTileManager) {
+        console.log("Manually triggering OSM tile update");
+        
+        // Force tile group visibility
+        enhancedEarth.osmTileManager.tileGroup.visible = true;
+        
+        // Force to a specific zoom level for testing
+        enhancedEarth.osmTileManager.currentZLevel = 1;
+        
+        // Clear existing tiles
+        enhancedEarth.osmTileManager.clearTiles();
+        
+        // Update tiles with current camera
+        const distance = camera.position.length();
+        console.log("Current camera distance:", distance);
+        enhancedEarth.osmTileManager.updateTiles(camera, distance);
+        
+        // Check status after update
+        setTimeout(() => {
+          enhancedEarth.osmTileManager.logTileStatus();
+        }, 1000);
+        
+        return "OSM tile update triggered";
+      } else {
+        return "Earth or tile manager not initialized";
+      }
+    };
+
+    // 4. Add a quick way to check if the OSM tiles group is in the scene
+    window.checkOSMTilesInScene = function() {
+      if (!scene) {
+        console.log("Scene not found");
+        return;
+      }
+      
+      // Check if the OSM tiles group exists in the scene
+      const tileGroups = scene.children.filter(obj => obj.name === 'osm-tiles');
+      
+      console.log(`Found ${tileGroups.length} OSM tile groups in scene`);
+      
+      if (tileGroups.length > 0) {
+        const group = tileGroups[0];
+        console.log(`Tile group visible: ${group.visible}`);
+        console.log(`Tile group children: ${group.children.length}`);
+      }
+    };
 
 
     // Initialize the application
