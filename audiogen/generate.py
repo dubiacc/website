@@ -101,79 +101,79 @@ def get_prayers() -> Dict[str, str]:
         "kreuzzeichen": "Im Namen des Vaters und des Sohnes und des Heiligen Geistes. Amen.",
         
         # Split the Credo into two parts due to length
-        "apostolisches_glaubensbekenntnis_1": """Ich glaube an Gott, den Vater, den Allmächtigen, den Schöpfer des Himmels und der Erde, und an Jesus Christus, seinen eingeborenen Sohn, unsern Herrn, empfangen durch den Heiligen Geist, geboren von der Jungfrau Maria, gelitten unter Pontius Pilatus, gekreuzigt, gestorben und begraben, hinabgestiegen in das Reich des Todes, am dritten Tage auferstanden von den Toten.""",
+        "apostolisches_glaubensbekenntnis_1": """Ich glaube an Gott, den Vater, den Allmächtigen, den Schöpfer des Himmels und der Erde, und an Jesus Christus, seinen eingeborenen Sohn, unseren Herrn, empfangen durch den Heiligen Geist, geboren von der Jungfrau Maria, gelitten unter Pontius Pilatus, gekreuzigt, gestorben und begraben, hinabgestiegen in das Reich des Todes, am dritten Tage auferstanden von den Toten.""",
         
-        "apostolisches_glaubensbekenntnis_2": """Aufgefahren in den Himmel; er sitzt zur Rechten Gottes, des allmächtigen Vaters; von dort wird er kommen, zu richten die Lebenden und die Toten. <pause />
-Ich glaube an den Heiligen Geist, die heilige katholische Kirche, Gemeinschaft der Heiligen, Vergebung der Sünden, Auferstehung der Toten und das ewige Leben. Amen.""",
+        "apostolisches_glaubensbekenntnis_2": """Aufgefahren in den Himmel; er sitzt zur Rechten Gottes, des allmächtigen Vaters; von dannen er kommen wird, zu richten die Lebenden und die Toten. <pause />
+Ich glaube an den Heiligen Geist, die heilige katholische Kirche, Gemeinschaft der Heiligen, Vergebung der Sünden, Auferstehung der Toten und das ewige Leben, Amen.""",
         
-        "vaterunser": """Vater unser im Himmel, geheiligt werde dein Name. Dein Reich komme. Dein Wille geschehe, wie im Himmel so auf Erden. <pause />
-Unser tägliches Brot gib uns heute. Und vergib uns unsere Schuld, wie auch wir vergeben unsern Schuldigern. Und führe uns nicht in Versuchung, sondern erlöse uns von dem Bösen. Amen.""",
+        "vaterunser": """Vater unser, der du bist im Himmel, geheiligt werde dein Name. Dein Reich komme, dein Wille geschehe, wie im Himmel so auch auf Erden. <pause />
+Unser tägliches Brot gib uns heute. Und vergib uns unsere Schuld, wie auch wir vergeben unseren Schuldigern. Und führe uns nicht in Versuchung, sondern erlöse uns von dem Übel. Amen.""",
         
-        "avemaria_glauben": """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der in uns den christlichen Glauben vermehre. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen.""",
+        "avemaria_glauben": """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern und gebenedeit ist die Frucht deines Leibes, Jesus, der in uns den christlichen Glauben vermehre. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />""",
         
-        "avemaria_hoffnung": """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der in uns die christliche Hoffnung stärke. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen.""",
+        "avemaria_hoffnung": """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der in uns die christliche Hoffnung stärke. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />""",
         
-        "avemaria_liebe": """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der in uns die christliche Liebe entzünde. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen.""",
+        "avemaria_liebe": """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der in uns die christliche Liebe entzünde. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />""",
         
-        "ehresei": """Ehre sei dem Vater und dem Sohn und dem Heiligen Geist, wie im Anfang, so auch jetzt und alle Zeit und in Ewigkeit. Amen.""",
+        "ehresei": """Ehre sei dem Vater und dem Sohn und dem Heiligen Geist, wie es war im Anfang, so auch jetzt und alle Zeit und in Ewigkeit, Amen.""",
         
-        "fatimagebet": """O mein Jesus, verzeih uns unsere Sünden, bewahre uns vor dem Feuer der Hölle, führe alle Seelen in den Himmel, besonders jene, die deiner Barmherzigkeit am meisten bedürfen.""",
+        "fatimagebet": """Oh mein Jesus, verzeih uns unsere Sünden, bewahre uns vor dem Feuer der Hölle, führe alle Seelen in den Himmel - besonders jene, die deiner Barmherzigkeit am meisten bedürfen.""",
         
         "salveregina": """Sei gegrüßt, o Königin, Mutter der Barmherzigkeit; unser Leben, unsere Wonne und unsere Hoffnung, sei gegrüßt! <pause />
-Zu dir rufen wir verbannte Kinder Evas; zu dir seufzen wir trauernd und weinend in diesem Tal der Tränen. <pause />
-Wohlan denn, unsere Fürsprecherin, wende deine barmherzigen Augen uns zu, und nach diesem Elend zeige uns Jesus, die gebenedeite Frucht deines Leibes! O gütige, o milde, o süße Jungfrau Maria!"""
+Zu dir rufen wir, verbannte Kinder Evas; zu dir seufzen wir, trauernd und weinend in diesem Tal der Tränen. <pause />
+Wohlan denn unsere Fürsprecherin, wende deine barmherzigen Augen uns zu, und nach diesem Elend zeige uns Jesus, die gebenedeite Frucht deines Leibes! O gütige, o milde, o süße Jungfrau Maria!"""
     }
 
     # Freudenreiche Geheimnisse (Joyful Mysteries)
-    prayers["avemaria_freudenreich_1"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, den du, o Jungfrau, vom Heiligen Geist empfangen hast. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen."""
+    prayers["avemaria_freudenreich_1"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, den du, o Jungfrau, vom Heiligen Geist empfangen hast. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
-    prayers["avemaria_freudenreich_2"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, den du, o Jungfrau, zu Elisabeth getragen hast. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen."""
+    prayers["avemaria_freudenreich_2"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, den du, o Jungfrau, zu Elisabeth getragen hast. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
-    prayers["avemaria_freudenreich_3"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, den du, o Jungfrau, geboren hast. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen."""
+    prayers["avemaria_freudenreich_3"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, den du, o Jungfrau, geboren hast. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
-    prayers["avemaria_freudenreich_4"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, den du, o Jungfrau, im Tempel aufgeopfert hast. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen."""
+    prayers["avemaria_freudenreich_4"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, den du, o Jungfrau, im Tempel aufgeopfert hast. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
-    prayers["avemaria_freudenreich_5"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, den du, o Jungfrau, im Tempel wiedergefunden hast. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen."""
+    prayers["avemaria_freudenreich_5"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, den du, o Jungfrau, im Tempel wiedergefunden hast. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
     # Schmerzhafte Geheimnisse (Sorrowful Mysteries)
-    prayers["avemaria_schmerzhaft_1"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der für uns Blut geschwitzt hat. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen."""
+    prayers["avemaria_schmerzhaft_1"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der für uns Blut geschwitzt hat. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
-    prayers["avemaria_schmerzhaft_2"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der für uns gegeißelt worden ist. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen."""
+    prayers["avemaria_schmerzhaft_2"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der für uns gegeißelt worden ist. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
-    prayers["avemaria_schmerzhaft_3"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der für uns mit Dornen gekrönt worden ist. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen."""
+    prayers["avemaria_schmerzhaft_3"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der für uns mit Dornen gekrönt worden ist. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
-    prayers["avemaria_schmerzhaft_4"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der für uns das schwere Kreuz getragen hat. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen."""
+    prayers["avemaria_schmerzhaft_4"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der für uns das schwere Kreuz getragen hat. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
-    prayers["avemaria_schmerzhaft_5"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der für uns gekreuzigt worden ist. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unsdes Todes. Amen."""
+    prayers["avemaria_schmerzhaft_5"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der für uns gekreuzigt worden ist. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
     # Glorreiche Geheimnisse (Glorious Mysteries)
-    prayers["avemaria_glorreich_1"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der von den Toten auferstanden ist. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen."""
+    prayers["avemaria_glorreich_1"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der von den Toten auferstanden ist. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
-    prayers["avemaria_glorreich_2"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der in den Himmel aufgefahren ist. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen."""
+    prayers["avemaria_glorreich_2"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der in den Himmel aufgefahren ist. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
-    prayers["avemaria_glorreich_3"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der uns den Heiligen Geist gesandt hat. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen."""
+    prayers["avemaria_glorreich_3"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der uns den Heiligen Geist gesandt hat. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
-    prayers["avemaria_glorreich_4"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der dich, o Jungfrau, in den Himmel aufgenommen hat. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen."""
+    prayers["avemaria_glorreich_4"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der dich, o Jungfrau, in den Himmel aufgenommen hat. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
-    prayers["avemaria_glorreich_5"] = """Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der dich, o Jungfrau, im Himmel gekrönt hat. <pause />
-Heilige Maria, Mutter Gottes, bitte für uns Sünder jetzt und in der Stunde unseres Todes. Amen."""
+    prayers["avemaria_glorreich_5"] = """Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern, und gebenedeit ist die Frucht deines Leibes, Jesus, der dich, o Jungfrau, im Himmel gekrönt hat. <pause />
+Heilige Maria, Mutter Gottes, bitte für uns Sünder - jetzt und in der Stunde unseres Todes, Amen. <pause />"""
 
     # Add title cards
     prayers["titel_freudenreich"] = "Freudenreiche Geheimnisse\n(Montag und Samstag)"
@@ -388,16 +388,16 @@ def create_special_html(special_type: str, config: Config, mystery_type: Optiona
     elif special_type == "credits":
         # Create different credits content based on mystery type
         title = "Der Rosenkranz"
-        text1 = "Erstellt mit ElevenLabs Text-to-Speech"
-        text2 = "Texte aus der katholischen Tradition"
+        text1 = ""
+        text2 = "Gebet der katholischen Tradition"
         
         if mystery_type:
             if mystery_type == "freudenreich":
-                text2 = "Die Freudenreichen Geheimnisse (Montag und Samstag)"
+                text2 = "Freudenreiche Geheimnisse (Montag und Samstag)"
             elif mystery_type == "schmerzhaft":
-                text2 = "Die Schmerzhaften Geheimnisse (Dienstag und Freitag)"
+                text2 = "Schmerzhafte Geheimnisse (Dienstag und Freitag)"
             elif mystery_type == "glorreich":
-                text2 = "Die Glorreichen Geheimnisse (Mittwoch und Sonntag)"
+                text2 = "Glorreiche Geheimnisse (Mittwoch und Sonntag)"
 
         html_content = f'''<!DOCTYPE html>
 <html>
@@ -517,13 +517,13 @@ def create_mystery_html(mystery_type: str, number: int, config: Config) -> str:
 </head>
 <body>
     <div class="container">
-        <p class="prayer">Gegrüßet seist du, Maria, voll der Gnade,</p>
+        <p class="prayer">Gegrüßet seiest du Maria, voll der Gnaden,</p>
         <p class="prayer">der Herr ist mit dir.</p>
         <p class="prayer">Du bist gebenedeit unter den Weibern,</p>
         <p class="prayer">und gebenedeit ist die Frucht deines Leibes, Jesus,</p>
         <p class="mystery">{mystery_text}</p>
         <p class="prayer">Heilige Maria, Mutter Gottes,</p>
-        <p class="prayer">bitte für uns Sünder jetzt und in der Stunde unseres Todes.</p>
+        <p class="prayer">bitte für uns Sünder - jetzt und in der Stunde unseres Todes.</p>
         <p class="prayer">Amen.</p>
     </div>
 </body>
@@ -551,8 +551,6 @@ def html_to_png(html_path: str, png_path: str, config: Config) -> bool:
     # Try different methods to convert HTML to PNG
     conversion_methods = [
         lambda: try_chrome_screenshot(find_chrome_executable(), abs_html_path, abs_png_path, config),
-        lambda: try_puppeteer_screenshot(abs_html_path, abs_png_path, config),
-        lambda: try_wkhtmltoimage(abs_html_path, abs_png_path, config)
     ]
     
     for method in conversion_methods:
@@ -597,7 +595,7 @@ def try_chrome_screenshot(chrome_cmd: str, abs_html_path: str, abs_png_path: str
     try:
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         try:
-            stdout, stderr = process.communicate(timeout=3)  # 3 second timeout
+            stdout, stderr = process.communicate(timeout=10)  # 3 second timeout
             if process.returncode == 0:
                 log("Chrome screenshot successful")
                 return True
@@ -611,69 +609,6 @@ def try_chrome_screenshot(chrome_cmd: str, abs_html_path: str, abs_png_path: str
             return False
     except Exception as e:
         log(f"Error running Chrome: {e}")
-        return False
-
-
-def try_puppeteer_screenshot(abs_html_path: str, abs_png_path: str, config: Config) -> bool:
-    """Try to use Puppeteer to create a screenshot"""
-    log("Trying with puppeteer-screenshot...")
-    puppeteer_cmd = [
-        'node', '-e',
-        f'''
-        const puppeteer = require('puppeteer');
-        (async () => {{
-          const browser = await puppeteer.launch();
-          const page = await browser.newPage();
-          await page.setViewport({{ width: {config.width}, height: {config.height} }});
-          await page.goto('file://{abs_html_path}');
-          await page.screenshot({{ path: '{abs_png_path}' }});
-          await browser.close();
-        }})();
-        '''
-    ]
-    
-    try:
-        process = subprocess.Popen(puppeteer_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        try:
-            stdout, stderr = process.communicate(timeout=3)
-            if process.returncode == 0:
-                log("Puppeteer screenshot successful")
-                return True
-                
-            log(f"Puppeteer failed with return code {process.returncode}")
-            log(f"STDERR: {stderr.decode('utf-8', errors='replace')}")
-            return False
-        except subprocess.TimeoutExpired:
-            process.kill()
-            log(f"Puppeteer process timed out after 3 seconds")
-            return False
-    except Exception as e:
-        log(f"Error running Puppeteer: {e}")
-        return False
-
-
-def try_wkhtmltoimage(abs_html_path: str, abs_png_path: str, config: Config) -> bool:
-    """Try to use wkhtmltoimage to create a screenshot"""
-    log("Trying with wkhtmltoimage...")
-    wkhtml_cmd = ['wkhtmltoimage', abs_html_path, abs_png_path]
-    
-    try:
-        process = subprocess.Popen(wkhtml_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        try:
-            stdout, stderr = process.communicate(timeout=3)
-            if process.returncode == 0:
-                log("wkhtmltoimage screenshot successful")
-                return True
-                
-            log(f"wkhtmltoimage failed with return code {process.returncode}")
-            log(f"STDERR: {stderr.decode('utf-8', errors='replace')}")
-            return False
-        except subprocess.TimeoutExpired:
-            process.kill()
-            log(f"wkhtmltoimage process timed out after 3 seconds")
-            return False
-    except Exception as e:
-        log(f"Error running wkhtmltoimage: {e}")
         return False
 
 
@@ -713,11 +648,11 @@ def generate_audio(text: str, filename: str, config: Config) -> str:
     
     # Ensure the text ends with "Amen." if it should
     if text.rstrip().endswith("Todes."):
-        text = text.rstrip() + " Amen."
+        text = text.replace("Todes.", "Todes, Amen.")
         log(f"Fixed missing 'Amen' at the end of prayer")
     
     # Replace <pause /> tags with ElevenLabs break tags
-    text_with_breaks = text.replace('<pause />', '<break time="0.7s" />')
+    text_with_breaks = text.replace("Heilige Maria, Mutter Gottes, ", "Heilige Maria, <break time=\"0.2s\" /> Mutter Gottes, <break time=\"0.2s\" /> ").replace('<pause />', '<break time="0.7s" />')
     
     # Try to generate audio with ElevenLabs
     api_url = f"https://api.elevenlabs.io/v1/text-to-speech/{config.voice_id}"
@@ -731,11 +666,11 @@ def generate_audio(text: str, filename: str, config: Config) -> str:
         "text": text_with_breaks,
         "model_id": "eleven_multilingual_v2",
         "voice_settings": {
-            "stability": 0.75,
-            "similarity_boost": 0.75,
+            "speaking_rate": 1.10,
+            "stability": 0.74,
+            "similarity_boost": 0.45,
             "style": 0.0,
             "use_speaker_boost": True,
-            "speaking_rate": 0.85  # Slightly slower for prayers
         }
     }
     
@@ -1020,8 +955,7 @@ def combine_video_audio(video_path: str, audio_path: str, output_path: str, conf
         '-map', '0:v',     # Use video from first input
         '-map', '1:a',     # Use audio from second input
         '-c:v', 'copy',    # Copy video stream without re-encoding
-        '-c:a', 'aac',     # Convert audio to AAC (good for mp4)
-        '-b:a', '192k',    # Audio bitrate
+        '-c:a', 'copy',     # Convert audio to AAC (good for mp4)
         '-shortest',       # End when shortest input ends
         output_path
     ]

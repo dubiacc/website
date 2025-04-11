@@ -1,0 +1,31 @@
+Convert this article into a form that is readable by elevenlabs. 
+The original that this article was made from is a subtitbled video (srt attached). 
+
+Keep the original speaking style, but follow the articles line of argumentation. 
+
+The original audio had lots of interruptions, side-tracked thoughts, etc. 
+
+My final goal is to create an automatically-edited video with subtitles in various languages. 
+
+So, the goals is to output a JSON file with timestamps from the original video and translated text, 
+so that I can later use ffmpeg to automatically cut the video together and use AI to dub it.
+
+Output should be a JSON list of sections:
+
+```
+[{'start': '00:00:05', 'end': '00:00:10', 'dub': 'This text will appear as a subtitle.'}]
+```
+
+Then I can use elevenlabs to generate the "dub" and use ffmpeg to cut and dub the video. 
+
+This way I can shorten the video and reduce unnecessary elements.
+
+---
+
+<ATTACHMENT1_ARTICLE>
+
+---
+
+<ATTACHMENT2_SRT_SUBTITLES>
+
+---
