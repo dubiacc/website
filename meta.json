@@ -703,13 +703,13 @@
                     "title": "Lateinischen Messen",
                     "links": [
                         {"slug": "/priests", "title": "Karte von Resistance Messorten"},
-                        {"slug": "/en/on-ecclesia-dei-groups", "title": "➽ Warum sollte man nicht zu Ecclesia-Dei Gruppen gehen?"},
-                        {"slug": "/en/resistance-timeline", "title": "➽ Warum sollte man nicht (mehr) zur Piusbruderschaft gehen?"}
+                        {"slug": "on-ecclesia-dei-groups", "title": "➽ Warum sollte man nicht zu Ecclesia-Dei Gruppen gehen?"},
+                        {"slug": "resistance-timeline", "title": "➽ Warum sollte man nicht (mehr) zur Piusbruderschaft gehen?"}
                     ]
                 },
                 {
                     "id": "bibeln",
-                    "title": "Bibeln und Kirchenväter",
+                    "title": "Kirchenväter",
                     "links": [
                         {"slug": "https://k-bibel.de/", "title": "K-Bibel.de"},
                         {"slug": "https://vulgata.online/", "title": "Vulgata Online"},
@@ -937,13 +937,13 @@
                     "title": "Latin Mass Locations",
                     "links": [
                         {"slug": "/priests", "title": "Map of Resistance Mass Locations"},
-                        {"slug": "/en/on-ecclesia-dei-groups", "title": "➽ Why you shouldn't attend FSSP Masses"},
-                        {"slug": "/en/resistance-timeline", "title": "➽ Why you shouldn't attend SSPX Masses (anymore)"}
+                        {"slug": "on-ecclesia-dei-groups", "title": "➽ Why not to attend FSSP Masses"},
+                        {"slug": "resistance-timeline", "title": "➽ Why not to attend SSPX Masses (anymore)"}
                     ]
                 },
                 {
                     "id": "bibles",
-                    "title": "Bibles and Church Fathers",
+                    "title": "Church Fathers",
                     "links": [
                         {"slug": "https://www.drbo.org/", "title": "Douay-Rheims Online"},
                         {"slug": "https://vulgata.online/", "title": "Vulgata Online"},

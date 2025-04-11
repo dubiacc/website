@@ -1,9 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+  <title>Entdecke den wahren katholischen Glauben - dubia.cc</title>
+  <meta name="description" content="<p class='first-graf'>dubia ist eine Sammlung von Artikeln über den traditionellen katholischen Glauben. Hat die Kirche wirklich...? Antworten auf Irrtümer, Gebete, uvm.</p>">
+  <link rel="alternate" hreflang="en" href="https://dubia.cc/en">
+  <link rel="alternate" hreflang="de" href="https://dubia.cc/de">
+  <link rel="alternate" hreflang="x-default" href="https://dubia.cc">
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161616" media="(prefers-color-scheme: dark)">
+  <link crossorigin="anonymous" rel="preload" href="/static/font/ssfp/SourceSerifPro-BASIC-RegularItalic.woff2" as="font" type="font/woff2">
+  <link crossorigin="anonymous" rel="preload" href="/static/font/ssfp/SourceSerifPro-BASIC-Regular.woff2" as="font" type="font/woff2">
+  <link crossorigin="anonymous" rel="preload" href="/static/font/ssfp/SourceSerifPro-BASIC-Semibold.woff2" as="font" type="font/woff2">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catholic Resistance Globe</title>
+  <title data-i18n="CATHOLIC_RESISTANCE_GLOBE">Catholic Resistance Globe</title>
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet">
   <script src="/static/js/three.min.js"></script>
   <script src="/static/js/three-globe.min.js"></script>
@@ -76,18 +89,6 @@
         width: 100%;
     }
     
-    .title {
-        mix-blend-mode: difference;
-        width: 100%;
-        text-align: center;
-        font-family: 'UnifrakturMaguntia', serif;
-        font-size: 5rem;
-        color: #ffffff;
-        z-index: 10;
-        pointer-events: none;
-        margin: 2rem 0px;
-    }
-    
     .search-container {
         display: flex;
         justify-content: space-between;
@@ -95,8 +96,8 @@
         pointer-events: none;
         z-index: 10;
         flex-grow: 1;
-        max-width: 500px;
-        width: 100%;
+        padding: 10px;
+        padding-top: 0px;
     }
 
     #priestInfo {
@@ -117,8 +118,6 @@
         outline: none;
         border: 3px solid var(--search-bg);
         pointer-events: all;
-        margin-left: 10px;
-        margin-right: 10px;
     }
     
     .search-input:focus {
@@ -137,10 +136,7 @@
         background: var(--search-results-bg);
         border-radius: 0 0 5px 5px;
         z-index: 11;
-        display: none;
         pointer-events: all;
-        margin-left: 10px;
-        margin-right: 10px;
         max-height: 200px;
         overflow-y: scroll;
     }
@@ -159,8 +155,6 @@
     }
 
     .info-panel {
-        margin-left: 10px;
-        margin-right: 10px;
         margin-bottom: 10px;
         box-shadow: 2.5px 2.5px 5px black;
         pointer-events: all;
@@ -354,11 +348,6 @@
         display: flex;
       }
 
-      .search-container {
-        margin-top: 20px;
-        
-      }
-
       .info-panel {
         max-height: 60vh;
         font-size: 0.9rem;
@@ -379,37 +368,332 @@
         font-size: 1rem;
       }
     }
+
+    /* Import the same fonts as dubia.cc */
+    @font-face {
+      font-family: 'Source Serif Pro';
+      font-weight: 400;
+      font-style: normal;
+      src: url('/static/font/ssfp/SourceSerifPro-BASIC-Regular.woff2') format('woff2');
+      font-display: swap;
+      unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
+    }
+
+    @font-face {
+      font-family: 'Source Serif Pro';
+      font-weight: 400;
+      font-style: italic;
+      src: url('/static/font/ssfp/SourceSerifPro-BASIC-RegularItalic.woff2') format('woff2');
+      font-display: swap;
+      unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
+    }
+
+    @font-face {
+      font-family: 'Source Serif Pro';
+      font-weight: 600;
+      font-style: normal;
+      src: url('/static/font/ssfp/SourceSerifPro-BASIC-Semibold.woff2') format('woff2');
+      font-display: swap;
+      unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
+    }
+
+    @font-face {
+      font-family: 'Kanzlei Initialen';
+      src: url('/static/font/kanzlei/Kanzlei-Initialen-D.ttf') format('truetype');
+      font-display: swap;
+      unicode-range: U+0044;
+    }
+
+    :root {
+      --GW-serif-font-stack: "Source Serif Pro", "Apple Garamond", "Baskerville", "Libre Baskerville", "Droid Serif", "Times New Roman", "Times", serif;
+      --GW-sans-serif-font-stack: "Lucida Sans Unicode", "Helvetica", "Trebuchet MS", sans-serif;
+      --GW-monospaced-font-stack: "IBM Plex Mono", "Liberation Mono", "Consolas", "Courier", monospace;
+      --background-color: #fff;
+      --text-color: #000;
+    }
+
+    /* Dark mode */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background-color: #161616;
+        --text-color: #f1f1f1;
+      }
+    }
+
+    /* Compact header styles */
+    #header {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+      padding: 10px 0;
+      max-width: 500px;
+      min-width: 500px;
+      z-index: 5;
+      height: 100%;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .title {
+      font-family: 'UnifrakturMaguntia', serif;
+      font-size: 2.5rem;
+      color: var(--background-color);
+      text-align: center;
+      background: var(--text-color);
+      mix-blend-mode: difference;
+      width: 100%;
+      text-align: center;
+      font-family: 'UnifrakturMaguntia', serif;
+      z-index: 10;
+      pointer-events: none;
+      padding: 10px 0px;
+      margin-bottom: 10px;
+    }
+
+    #sidebar {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      padding: 10px;
+    }
+
+    #sidebar a {
+      display: block;
+      border: 1px dotted currentColor;
+      text-align: center;
+      margin: 0 2px;
+      color: var(--text-color);
+      text-decoration: none;
+      font-family: var(--GW-serif-font-stack);
+    }
+
+    #sidebar a.logo {
+      display: flex;
+      align-items: center;
+      margin: 1px 0;
+      background-color: var(--background-color);
+    }
+
+    #sidebar .sidebar-links {
+      flex: 1 1 100%;
+      display: flex;
+      flex-flow: row wrap;
+      pointer-events: initial;
+    }
+
+    #sidebar .sidebar-links > * {
+      font-variant-caps: small-caps;
+      background: var(--background-color);
+      align-content: center;
+      justify-content: center;
+      flex: 1;
+      padding: 5px;
+      pointer-events: initial;
+      cursor: pointer;
+    }
+
+    /* Language selector */
+    .language-selector {
+      display: flex;
+      margin-left: 2px;
+    }
+
+    #language-select {
+      border: none;
+      border-radius: 0px;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      font-size: 14px;
+      cursor: pointer;
+      font-family: var(--GW-serif-font-stack);
+      font-variant-caps: small-caps;
+    }
+
+    /* Make the header more compact on mobile */
+    @media all and (max-width: 649px) {
+      .title {
+        font-size: 1.8rem;
+      }
+      
+      #sidebar .sidebar-links a {
+        padding: 3px 5px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Tutorial labels */
+    .tutorial-label {
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -100%);
+      transition: opacity 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .tutorial-label::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid rgba(0, 0, 0, 0.7);
+    }
+
+    /* Zoom controls */
+    .zoom-controls {
+      position: absolute;
+      bottom: 40px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      z-index: 5;
+    }
+
+    .zoom-button {
+      width: 40px;
+      height: 40px;
+      background-color: white;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.2s;
+    }
+
+    .zoom-button:hover {
+      background-color: #f0f0f0;
+    }
+
+    .zoom-button:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 120, 255, 0.5);
+    }
+
+    /* Attribution footer */
+    .attribution-footer {
+      font-size: 10px;
+      text-align: right;
+      z-index: 5;
+      position: absolute;
+      right: 20px;
+      bottom: 10px;
+      width: 100%;
+      color: grey !important;
+    }
+
+    .attribution-content a {
+      color: grey !important;
+      text-decoration: underline;
+    }
+
+    .attribution-content a:hover {
+      text-decoration: underline;
+    }
+
+    /* For RTL languages like Arabic */
+    [lang="ar"] {
+      direction: rtl;
+    }
+    
+    /* Adjust globe container to not overlap with header */
+    #globeContainer {
+      position: absolute;
+    }
   </style>
 </head>
 <body>
 
-  <h1 class="title">Catholic Resistance</h1>
-
-  <div class="search-container">
-    <div style="display: flex; flex-direction: column;">
-        <input autofocus="true" type="text" class="search-input" placeholder="Search Resistance priests..." id="searchInput">
-        <div class="search-results" id="searchResults"></div>
-    </div>
-
-    <div class="info-panel" id="infoPanel">
-        <button class="close-btn" id="closeBtn">×</button>
-        <h2 id="priestName"></h2>
-        <div id="priestInfo"></div>
+  <header id="header">
+    <nav id="sidebar">
+      <h1 class="title" data-i18n="CATHOLIC_RESISTANCE">Catholic Resistance</h1>
+      <div class="sidebar-links">
+        <a href="/" data-i18n="GLOBE">Home</a>
+        <a href="/en/topics" data-i18n="ARTICLES">Articles</a>
+        <a href="/en/tools" data-i18n="RESOURCES">Tools</a>
+        <a href="/en/contact" data-i18n="CONTACT">Contact</a>
+          <!-- Language selector -->
+          <div class="language-selector">
+            <select id="language-select">
+              <option value="en">English</option>
+              <option value="de">Deutsch</option>
+              <option value="fr">Français</option>
+              <option value="it">Italiano</option>
+              <option value="es">Español</option>
+              <option value="pl">Polski</option>
+              <option value="ro">Romana</option>
+              <option value="ru">Русский</option>
+              <option value="tr">Türkçe</option>
+              <option value="el">Ελληνικά</option>
+              <option value="ar">العربية</option>
+              <option value="tl">Filipino</option>
+              <option value="zh">中文</option>
+              <option value="ko">한국어</option>
+              <option value="ja">日本語</option>
+              <option value="pt">Português</option>
+            </select>
+          </div>
       </div>
-  </div>
+    </nav>
+
+    <div class="search-container">
+      <div style="display: flex; flex-direction: column;">
+        <input autofocus="true" type="text" class="search-input" placeholder="Search Resistance priests..." data-i18n-placeholder="SEARCH_RESISTANCE_PRIESTS" id="searchInput">
+        <div class="search-results" id="searchResults"></div>
+      </div>
+
+      <div class="info-panel" id="infoPanel">
+          <button class="close-btn" id="closeBtn">×</button>
+          <h2 id="priestName"></h2>
+          <div id="priestInfo"></div>
+        </div>
+    </div>
+  </header>
   
   <div id="globeContainer"></div>
 
+  <!-- Zoom controls -->
+  <div class="zoom-controls">
+    <button class="zoom-button zoom-in" aria-label="Zoom in">+</button>
+    <button class="zoom-button zoom-out" aria-label="Zoom out">-</button>
+  </div>
+
+  <!-- Attribution footer -->
+  <div class="attribution-footer">
+    <div class="attribution-content">
+      <span data-i18n="DATA_SOURCES">Data Sources</span>: 
+      <a href="https://github.com/johan/world.geo.json" target="_blank">World GeoJSON</a> | 
+      <a href="https://simplemaps.com/data/world-cities" target="_blank">World Cities Database</a>
+    </div>
+  </div>
+
   <script>
-    // Configuration - Change these values to configure the application
-    const CONFIG = {
-      currentZoomLevel: isMobile() ? 300.0 : 400.0,
+        // Configuration - Change these values to configure the application
+        const CONFIG = {
+      minDistance: 160.0,
+      maxDistance: 500.0,
+      currentZoomLevel: 800.0,
       dataUrl: null, // Set to CSV URL or null to use the default data
       fieldOrder: [
         'Type', 'Born Year', 'Associates With', 'Beliefs', 'Location/Area',
         'Contact/Website', 'Ordained in Rite', 'Ordained By', 'Consecrated in Rite',
         'Consecrated By', 'Bishop Line', 'Notes'
       ],
+      cameraYOffset: -50.0,
       markerColor: '#ff0000',
       markerPulseColor: '#ff0000',
       markerSize: 0.4,
@@ -443,6 +727,1463 @@
     p005,pr002,Heart of Jesus Church,47.7128,-74.0060,false,"Sun 6:00PM; Daily 7:30AM",Fr. Zendejas secondary church
     p004,pr003,Notre Dame de La Salette,48.8566,2.3522,true,"Sun 9:30AM; Thu 6:30PM",Fr. Faure's primary church`;
 
+    // Internationalization system
+    const LANGUAGES = {
+      'en': { code: 'en', name: 'English', isDefault: true },
+      'de': { code: 'de', name: 'Deutsch' },
+      'fr': { code: 'fr', name: 'Français' },
+      'it': { code: 'it', name: 'Italiano' },
+      'es': { code: 'es', name: 'Español' },
+      'pl': { code: 'pl', name: 'Polski' },
+      'ro': { code: 'ro', name: 'Română' },
+      'ru': { code: 'ru', name: 'Русский' },
+      'tr': { code: 'tr', name: 'Türkçe' },
+      'el': { code: 'el', name: 'Ελληνικά' },
+      'ar': { code: 'ar', name: 'العربية' },
+      'tl': { code: 'tl', name: 'Filipino' },
+      'zh': { code: 'zh', name: '中文' },
+      'ko': { code: 'ko', name: '한국어' },
+      'ja': { code: 'ja', name: '日本語' }
+    };
+
+    // Complete navigation configuration for all supported languages
+    const NAV_CONFIG = {
+      // English navigation
+      'en': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/en/topics' },
+        { key: 'RESOURCES', url: '/en/tools' },
+        { key: 'CONTACT', url: '/en/contact' }
+      ],
+      
+      // German navigation
+      'de': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/de/themen' },
+        { key: 'RESOURCES', url: '/de/werkzeuge' },
+        { key: 'CONTACT', url: '/de/kontakt' }
+      ],
+      
+      // French navigation
+      'fr': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/fr/sujets' },
+        { key: 'RESOURCES', url: '/fr/outils' },
+        { key: 'CONTACT', url: '/fr/contact' }
+      ],
+      
+      // Spanish navigation
+      'es': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/es/temas' },
+        { key: 'RESOURCES', url: '/es/herramientas' },
+        { key: 'CONTACT', url: '/es/contacto' }
+      ],
+      
+      // Portuguese navigation
+      'pt': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/pt/topicos' },
+        { key: 'RESOURCES', url: '/pt/ferramentas' },
+        { key: 'CONTACT', url: '/pt/contato' }
+      ],
+      
+      // Italian navigation
+      'it': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/it/argomenti' },
+        { key: 'RESOURCES', url: '/it/strumenti' },
+        { key: 'CONTACT', url: '/it/contatto' }
+      ],
+      
+      // Polish navigation
+      'pl': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/pl/artykuly' },
+        { key: 'RESOURCES', url: '/pl/narzedzia' },
+        { key: 'CONTACT', url: '/pl/kontakt' }
+      ],
+      
+      // Romanian navigation
+      'ro': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/ro/articole' },
+        { key: 'RESOURCES', url: '/ro/instrumente' },
+        { key: 'CONTACT', url: '/ro/contact' }
+      ],
+      
+      // Russian navigation
+      'ru': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/ru/stati' },
+        { key: 'RESOURCES', url: '/ru/instrumenty' },
+        { key: 'CONTACT', url: '/ru/kontakt' }
+      ],
+      
+      // Turkish navigation
+      'tr': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/tr/makaleler' },
+        { key: 'RESOURCES', url: '/tr/araclar' },
+        { key: 'CONTACT', url: '/tr/iletisim' }
+      ],
+      
+      // Greek navigation
+      'el': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/el/arthra' },
+        { key: 'RESOURCES', url: '/el/ergaleia' },
+        { key: 'CONTACT', url: '/el/epikoinonia' }
+      ],
+      
+      // Arabic navigation
+      'ar': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/ar/maqalat' },
+        { key: 'RESOURCES', url: '/ar/adawat' },
+        { key: 'CONTACT', url: '/ar/ittisal' }
+      ],
+      
+      // Filipino/Tagalog navigation
+      'tl': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/tl/mga-artikulo' },
+        { key: 'RESOURCES', url: '/tl/mga-kasangkapan' },
+        { key: 'CONTACT', url: '/tl/kontak' }
+      ],
+      
+      // Chinese navigation
+      'zh': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/zh/wenzhang' },
+        { key: 'RESOURCES', url: '/zh/gongju' },
+        { key: 'CONTACT', url: '/zh/lianxi' }
+      ],
+      
+      // Korean navigation
+      'ko': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/ko/geulmoeum' },
+        { key: 'RESOURCES', url: '/ko/dogu' },
+        { key: 'CONTACT', url: '/ko/yeonlakcheo' }
+      ],
+      
+      // Japanese navigation
+      'ja': [
+        { key: 'GLOBE', url: '/' },
+        { key: 'ARTICLES', url: '/ja/kiji' },
+        { key: 'RESOURCES', url: '/ja/tsuuru' },
+        { key: 'CONTACT', url: '/ja/renrakusaki' }
+      ]
+    };
+
+    // Translation dictionary
+    const TRANSLATIONS = {
+      'CATHOLIC_RESISTANCE': {
+        'en': 'Catholic Resistance',
+        'de': 'Katholischer Widerstand',
+        'fr': 'Résistance Catholique',
+        'it': 'Resistenza Cattolica',
+        'es': 'Resistencia Católica',
+        'pl': 'Opór Katolicki',
+        'ro': 'Rezistența Catolică',
+        'ru': 'Католическое Сопротивление',
+        'tr': 'Katolik Direniş',
+        'el': 'Καθολική Αντίσταση',
+        'ar': 'المقاومة الكاثوليكية',
+        'tl': 'Katolikong Paglaban',
+        'zh': '天主教抵抗',
+        'ko': '가톨릭 저항',
+        'ja': 'カトリックレジスタンス',
+        'pt': 'Resistência Católica'
+      },
+      'GLOBE': {
+        'en': 'Home',
+        'de': 'Startseite',
+        'fr': 'Accueil',
+        'it': 'Home',
+        'es': 'Inicio',
+        'pl': 'Strona główna',
+        'ro': 'Acasă',
+        'ru': 'Главная',
+        'tr': 'Ana Sayfa',
+        'el': 'Αρχική',
+        'ar': 'الرئيسية',
+        'tl': 'Tahanan',
+        'zh': '首页',
+        'ko': '홈',
+        'ja': 'ホーム',
+        'pt': 'Início'
+      },
+      'ARTICLES': {
+        'en': 'Articles',
+        'de': 'Artikel',
+        'fr': 'Articles',
+        'it': 'Articoli',
+        'es': 'Artículos',
+        'pl': 'Artykuły',
+        'ro': 'Articole',
+        'ru': 'Статьи',
+        'tr': 'Makaleler',
+        'el': 'Άρθρα',
+        'ar': 'المقالات',
+        'tl': 'Mga Artikulo',
+        'zh': '文章',
+        'ko': '기사',
+        'ja': '記事',
+        'pt': 'Artigos'
+      },
+      'RESOURCES': {
+        'en': 'Tools',
+        'de': 'Werkzeuge',
+        'fr': 'Outils',
+        'it': 'Strumenti',
+        'es': 'Herramientas',
+        'pl': 'Narzędzia',
+        'ro': 'Instrumente',
+        'ru': 'Инструменты',
+        'tr': 'Araçlar',
+        'el': 'Εργαλεία',
+        'ar': 'أدوات',
+        'tl': 'Mga Kasangkapan',
+        'zh': '工具',
+        'ko': '도구',
+        'ja': 'ツール',
+        'pt': 'Ferramentas'
+      },
+      'CONTACT': {
+        'en': 'Contact',
+        'de': 'Kontakt',
+        'fr': 'Contact',
+        'it': 'Contatto',
+        'es': 'Contacto',
+        'pl': 'Kontakt',
+        'ro': 'Contact',
+        'ru': 'Контакт',
+        'tr': 'İletişim',
+        'el': 'Επικοινωνία',
+        'ar': 'اتصال',
+        'tl': 'Kontak',
+        'zh': '联系',
+        'ko': '연락처',
+        'ja': '連絡先',
+        'pt': 'Contato'
+      },
+      'CATHOLIC_RESISTANCE_GLOBE': {
+        'en': 'Catholic Resistance Globe',
+        'de': 'Katholischer Widerstand Globus',
+        'fr': 'Globe de la Résistance Catholique',
+        'it': 'Globo della Resistenza Cattolica',
+        'es': 'Globo de la Resistencia Católica',
+        'pl': 'Globus Katolickiego Oporu',
+        'ro': 'Globul Rezistenței Catolice',
+        'ru': 'Глобус Католического Сопротивления',
+        'tr': 'Katolik Direniş Küre',
+        'el': 'Υδρόγειος Καθολικής Αντίστασης',
+        'ar': 'كرة المقاومة الكاثوليكية',
+        'tl': 'Globo ng Katolikong Paglaban',
+        'zh': '天主教抵抗地球仪',
+        'ko': '가톨릭 저항 지구본',
+        'ja': 'カトリックレジスタンス地球儀',
+        'pt': 'Globo da Resistência Católica'
+      },
+      'SEARCH_RESISTANCE_PRIESTS': {
+        'en': 'Search Resistance priests...',
+        'de': 'Priester suchen...',
+        'fr': 'Rechercher des prêtres de la Résistance...',
+        'it': 'Cerca sacerdoti della Resistenza...',
+        'es': 'Buscar sacerdotes de la Resistencia...',
+        'pl': 'Szukaj księży oporu...',
+        'ro': 'Caută preoți ai rezistenței...',
+        'ru': 'Поиск священников сопротивления...',
+        'tr': 'Direniş rahiplerini ara...',
+        'el': 'Αναζήτηση ιερέων αντίστασης...',
+        'ar': 'البحث عن كهنة المقاومة...',
+        'tl': 'Maghanap ng mga pari ng paglaban...',
+        'zh': '搜索抵抗神父...',
+        'ko': '저항 사제 검색...',
+        'ja': 'レジスタンス司祭を検索...',
+        'pt': 'Pesquisar padres da Resistência...'
+      },
+      'VIEW_ON_MAPS': {
+        'en': 'View on Google Maps',
+        'de': 'Auf Google Maps ansehen',
+        'fr': 'Voir sur Google Maps',
+        'it': 'Visualizza su Google Maps',
+        'es': 'Ver en Google Maps',
+        'pl': 'Zobacz w Google Maps',
+        'ro': 'Vizualizați pe Google Maps',
+        'ru': 'Посмотреть на Google Картах',
+        'tr': 'Google Haritalar\'da görüntüle',
+        'el': 'Προβολή στους Χάρτες Google',
+        'ar': 'عرض على خرائط Google',
+        'tl': 'Tingnan sa Google Maps',
+        'zh': '在谷歌地图上查看',
+        'ko': 'Google 지도에서 보기',
+        'ja': 'Google マップで見る',
+        'pt': 'Ver no Google Maps'
+      },
+      'NOTES': {
+        'en': 'Notes:',
+        'de': 'Hinweise:',
+        'fr': 'Notes:',
+        'it': 'Note:',
+        'es': 'Notas:',
+        'pl': 'Uwagi:',
+        'ro': 'Note:',
+        'ru': 'Примечания:',
+        'tr': 'Notlar:',
+        'el': 'Σημειώσεις:',
+        'ar': 'ملاحظات:',
+        'tl': 'Mga Tala:',
+        'zh': '备注:',
+        'ko': '참고:',
+        'ja': 'メモ:',
+        'pt': 'Notas:'
+      },
+      'MASS_TIMES': {
+        'en': 'Mass Times:',
+        'de': 'Messzeiten:',
+        'fr': 'Horaires des messes:',
+        'it': 'Orari delle messe:',
+        'es': 'Horarios de misa:',
+        'pl': 'Godziny mszy:',
+        'ro': 'Orele de slujbă:',
+        'ru': 'Время месс:',
+        'tr': 'Ayin Saatleri:',
+        'el': 'Ώρες Λειτουργίας:',
+        'ar': 'أوقات القداس:',
+        'tl': 'Oras ng Misa:',
+        'zh': '弥撒时间:',
+        'ko': '미사 시간:',
+        'ja': 'ミサの時間:',
+        'pt': 'Horários das Missas:'
+      },
+      'REPORT_ERROR': {
+        'en': 'report error',
+        'de': 'Fehler melden',
+        'fr': 'signaler une erreur',
+        'it': 'segnala errore',
+        'es': 'reportar error',
+        'pl': 'zgłoś błąd',
+        'ro': 'raportează eroare',
+        'ru': 'сообщить об ошибке',
+        'tr': 'hata bildir',
+        'el': 'αναφορά σφάλματος',
+        'ar': 'الإبلاغ عن خطأ',
+        'tl': 'iulat ang error',
+        'zh': '报告错误',
+        'ko': '오류 신고',
+        'ja': 'エラーを報告',
+        'pt': 'reportar erro'
+      },
+      'REQUEST_MASS': {
+        'en': 'request mass',
+        'de': 'Messe anfragen',
+        'fr': 'demander une messe',
+        'it': 'richiedi messa',
+        'es': 'solicitar misa',
+        'pl': 'prośba o mszę',
+        'ro': 'solicită slujbă',
+        'ru': 'запросить мессу',
+        'tr': 'ayin talep et',
+        'el': 'αιτηθείτε λειτουργία',
+        'ar': 'طلب قداس',
+        'tl': 'humiling ng misa',
+        'zh': '请求弥撒',
+        'ko': '미사 요청',
+        'ja': 'ミサのリクエスト',
+        'pt': 'solicitar missa'
+      },
+      'BACK_TO_SITE': {
+        'en': 'back to dubia.cc',
+        'de': 'zurück zu dubia.cc',
+        'fr': 'retour à dubia.cc',
+        'it': 'torna a dubia.cc',
+        'es': 'volver a dubia.cc',
+        'pl': 'powrót do dubia.cc',
+        'ro': 'înapoi la dubia.cc',
+        'ru': 'назад на dubia.cc',
+        'tr': 'dubia.cc\'e geri dön',
+        'el': 'επιστροφή στο dubia.cc',
+        'ar': 'العودة إلى dubia.cc',
+        'tl': 'bumalik sa dubia.cc',
+        'zh': '返回 dubia.cc',
+        'ko': 'dubia.cc로 돌아가기',
+        'ja': 'dubia.ccに戻る',
+        'pt': 'voltar para dubia.cc'
+      },
+      'HOME_PARISH': {
+        'en': ' (Home)',
+        'de': ' (Heimat)',
+        'fr': ' (Résidence)',
+        'it': ' (Casa)',
+        'es': ' (Sede)',
+        'pl': ' (Domowa)',
+        'ro': ' (Acasă)',
+        'ru': ' (Основной)',
+        'tr': ' (Ana)',
+        'el': ' (Έδρα)',
+        'ar': ' (الرئيسية)',
+        'tl': ' (Tahanan)',
+        'zh': ' (主教区)',
+        'ko': ' (본당)',
+        'ja': ' (本部)',
+        'pt': ' (Principal)'
+      },
+      'NO_SCHEDULED_MASSES': {
+        'en': 'No scheduled Masses',
+        'de': 'Keine geplanten Messen',
+        'fr': 'Pas de messes programmées',
+        'it': 'Nessuna messa programmata',
+        'es': 'No hay misas programadas',
+        'pl': 'Brak zaplanowanych mszy',
+        'ro': 'Fără slujbe programate',
+        'ru': 'Нет запланированных месс',
+        'tr': 'Planlanmış ayin yok',
+        'el': 'Δεν υπάρχουν προγραμματισμένες λειτουργίες',
+        'ar': 'لا توجد قداسات مجدولة',
+        'tl': 'Walang nakatakdang Misa',
+        'zh': '没有已安排的弥撒',
+        'ko': '예정된 미사 없음',
+        'ja': '予定されたミサはありません',
+        'pt': 'Sem Missas programadas'
+      },
+      'HOME_PARISH_OF': {
+        'en': 'This parish is the home parish of',
+        'de': 'Diese Gemeinde ist die Heimatgemeinde von',
+        'fr': 'Cette paroisse est la paroisse principale de',
+        'it': 'Questa parrocchia è la parrocchia principale di',
+        'es': 'Esta parroquia es la sede principal de',
+        'pl': 'Ta parafia jest parafią domową',
+        'ro': 'Această parohie este parohia de bază a',
+        'ru': 'Этот приход является основным приходом',
+        'tr': 'Bu cemaat, şu kişinin ana cemaatidir:',
+        'el': 'Αυτή η ενορία είναι η έδρα του',
+        'ar': 'هذه الرعية هي الرعية الرئيسية لـ',
+        'tl': 'Ang parokyang ito ay ang tahanan ng',
+        'zh': '这个堂区是以下神父的主教区',
+        'ko': '이 본당은 다음 사제의 주 본당입니다',
+        'ja': 'この小教区は次の司祭の本拠地です',
+        'pt': 'Esta paróquia é a paróquia principal de'
+      },
+      'SERVED_BY': {
+        'en': 'This parish is served by',
+        'de': 'Diese Gemeinde wird betreut von',
+        'fr': 'Cette paroisse est desservie par',
+        'it': 'Questa parrocchia è servita da',
+        'es': 'Esta parroquia es atendida por',
+        'pl': 'Ta parafia jest obsługiwana przez',
+        'ro': 'Această parohie este deservită de',
+        'ru': 'Этот приход обслуживается',
+        'tr': 'Bu cemaat şu kişi tarafından hizmet verilmektedir:',
+        'el': 'Αυτή η ενορία εξυπηρετείται από',
+        'ar': 'تخدم هذه الرعية من قبل',
+        'tl': 'Ang parokyang ito ay pinaglilingkuran ng',
+        'zh': '这个堂区由以下神父服务',
+        'ko': '이 본당은 다음 사제가 봉사합니다',
+        'ja': 'この小教区は次の司祭によって奉仕されています',
+        'pt': 'Esta paróquia é atendida por'
+      },
+      'YOUR_LOCATION': {
+        'en': 'Your Location',
+        'de': 'Ihr Standort',
+        'fr': 'Votre Emplacement',
+        'it': 'La tua posizione',
+        'es': 'Tu ubicación',
+        'pl': 'Twoja lokalizacja',
+        'ro': 'Locația ta',
+        'ru': 'Ваше местоположение',
+        'tr': 'Konumunuz',
+        'el': 'Η τοποθεσία σας',
+        'ar': 'موقعك',
+        'tl': 'Iyong Lokasyon',
+        'zh': '您的位置',
+        'ko': '당신의 위치',
+        'ja': 'あなたの位置',
+        'pt': 'Sua Localização'
+      },
+      'NEAREST_PRIEST': {
+        'en': 'Nearest Priest',
+        'de': 'Nächster Priester',
+        'fr': 'Prêtre le plus proche',
+        'it': 'Sacerdote più vicino',
+        'es': 'Sacerdote más cercano',
+        'pl': 'Najbliższy ksiądz',
+        'ro': 'Cel mai apropiat preot',
+        'ru': 'Ближайший священник',
+        'tr': 'En yakın rahip',
+        'el': 'Πλησιέστερος ιερέας',
+        'ar': 'أقرب كاهن',
+        'tl': 'Pinakamalapit na Pari',
+        'zh': '最近的神父',
+        'ko': '가장 가까운 사제',
+        'ja': '最寄りの司祭',
+        'pt': 'Padre Mais Próximo'
+      },
+      'NEAREST_PARISH': {
+        'en': 'Nearest Parish',
+        'de': 'Nächste Gemeinde',
+        'fr': 'Paroisse la plus proche',
+        'it': 'Parrocchia più vicina',
+        'es': 'Parroquia más cercana',
+        'pl': 'Najbliższa parafia',
+        'ro': 'Cea mai apropiată parohie',
+        'ru': 'Ближайший приход',
+        'tr': 'En yakın cemaat',
+        'el': 'Πλησιέστερη ενορία',
+        'ar': 'أقرب رعية',
+        'tl': 'Pinakamalapit na Parokya',
+        'zh': '最近的堂区',
+        'ko': '가장 가까운 본당',
+        'ja': '最寄りの小教区',
+        'pt': 'Paróquia Mais Próxima'
+      },
+      'GLOBE': {
+        'en': 'Globe',
+        'de': 'Globus',
+        'fr': 'Globe',
+        'it': 'Globo',
+        'es': 'Globo',
+        'pl': 'Globus',
+        'ro': 'Glob',
+        'ru': 'Глобус',
+        'tr': 'Küre',
+        'el': 'Υδρόγειος',
+        'ar': 'كرة أرضية',
+        'tl': 'Globo',
+        'zh': '地球仪',
+        'ko': '지구본',
+        'ja': '地球儀',
+        'pt': 'Globo'
+      },
+      'PRIESTS': {
+        'en': 'Priests',
+        'de': 'Priester',
+        'fr': 'Prêtres',
+        'it': 'Sacerdoti',
+        'es': 'Sacerdotes',
+        'pl': 'Księża',
+        'ro': 'Preoți',
+        'ru': 'Священники',
+        'tr': 'Rahipler',
+        'el': 'Ιερείς',
+        'ar': 'كهنة',
+        'tl': 'Mga Pari',
+        'zh': '神父',
+        'ko': '사제',
+        'ja': '司祭',
+        'pt': 'Padres'
+      },
+      'PARISHES': {
+        'en': 'Parishes',
+        'de': 'Gemeinden',
+        'fr': 'Paroisses',
+        'it': 'Parrocchie',
+        'es': 'Parroquias',
+        'pl': 'Parafie',
+        'ro': 'Parohii',
+        'ru': 'Приходы',
+        'tr': 'Cemaatler',
+        'el': 'Ενορίες',
+        'ar': 'الرعايا',
+        'tl': 'Mga Parokya',
+        'zh': '堂区',
+        'ko': '본당',
+        'ja': '小教区',
+        'pt': 'Paróquias'
+      },
+      'RESOURCES': {
+        'en': 'Resources',
+        'de': 'Ressourcen',
+        'fr': 'Ressources',
+        'it': 'Risorse',
+        'es': 'Recursos',
+        'pl': 'Zasoby',
+        'ro': 'Resurse',
+        'ru': 'Ресурсы',
+        'tr': 'Kaynaklar',
+        'el': 'Πόροι',
+        'ar': 'موارد',
+        'tl': 'Mga Mapagkukunan',
+        'zh': '资源',
+        'ko': '자원',
+        'ja': 'リソース',
+        'pt': 'Recursos'
+      },
+      'CONTACT': {
+        'en': 'Contact',
+        'de': 'Kontakt',
+        'fr': 'Contact',
+        'it': 'Contatto',
+        'es': 'Contacto',
+        'pl': 'Kontakt',
+        'ro': 'Contact',
+        'ru': 'Контакт',
+        'tr': 'İletişim',
+        'el': 'Επικοινωνία',
+        'ar': 'اتصال',
+        'tl': 'Kontak',
+        'zh': '联系',
+        'ko': '연락처',
+        'ja': '連絡先',
+        'pt': 'Contato'
+      },
+      'DATA_SOURCES': {
+        'en': 'Data Sources',
+        'de': 'Datenquellen',
+        'fr': 'Sources de données',
+        'it': 'Fonti dei dati',
+        'es': 'Fuentes de datos',
+        'pl': 'Źródła danych',
+        'ro': 'Surse de date',
+        'ru': 'Источники данных',
+        'tr': 'Veri Kaynakları',
+        'el': 'Πηγές δεδομένων',
+        'ar': 'مصادر البيانات',
+        'tl': 'Mga Pinagmulan ng Data',
+        'zh': '数据来源',
+        'ko': '데이터 출처',
+        'ja': 'データソース',
+        'pt': 'Fontes de Dados'
+      },
+      'NO_PRIESTS_FOUND': {
+        'en': 'No priests found in your area',
+        'de': 'Keine Priester in Ihrer Nähe gefunden',
+        'fr': 'Aucun prêtre trouvé dans votre région',
+        'it': 'Nessun sacerdote trovato nella tua zona',
+        'es': 'No se encontraron sacerdotes en tu área',
+        'pl': 'Nie znaleziono księży w twojej okolicy',
+        'ro': 'Nu s-au găsit preoți în zona ta',
+        'ru': 'Священники в вашем районе не найдены',
+        'tr': 'Bölgenizde rahip bulunamadı',
+        'el': 'Δεν βρέθηκαν ιερείς στην περιοχή σας',
+        'ar': 'لم يتم العثور على كهنة في منطقتك',
+        'tl': 'Walang nakitang mga pari sa iyong lugar',
+        'zh': '您所在地区没有找到神父',
+        'ko': '해당 지역에서 사제를 찾을 수 없습니다',
+        'ja': 'お近くの司祭が見つかりません',
+        'pt': 'Nenhum padre encontrado na sua área'
+      },
+      'NO_PARISHES_FOUND': {
+        'en': 'No parishes found in your area',
+        'de': 'Keine Gemeinden in Ihrer Nähe gefunden',
+        'fr': 'Aucune paroisse trouvée dans votre région',
+        'it': 'Nessuna parrocchia trovata nella tua zona',
+        'es': 'No se encontraron parroquias en tu área',
+        'pl': 'Nie znaleziono parafii w twojej okolicy',
+        'ro': 'Nu s-au găsit parohii în zona ta',
+        'ru': 'Приходы в вашем районе не найдены',
+        'tr': 'Bölgenizde cemaat bulunamadı',
+        'el': 'Δεν βρέθηκαν ενορίες στην περιοχή σας',
+        'ar': 'لم يتم العثور على رعايا في منطقتك',
+        'tl': 'Walang nakitang mga parokya sa iyong lugar',
+        'zh': '您所在地区没有找到堂区',
+        'ko': '해당 지역에서 본당을 찾을 수 없습니다',
+        'ja': 'お近くの小教区が見つかりません',
+        'pt': 'Nenhuma paróquia encontrada na sua área'
+      },
+      'TITLE_BISHOP': {
+        'en': 'Bp.',
+        'de': 'Bf.',
+        'fr': 'Mgr.',
+        'it': 'Mons.',
+        'es': 'Mons.',
+        'pl': 'Bp.',
+        'ro': 'PS.',
+        'ru': 'Еп.',
+        'tr': 'Psks.',
+        'el': 'Επ.',
+        'ar': 'أسقف.',
+        'tl': 'Ob.',
+        'zh': '主教.',
+        'ko': '주교.',
+        'ja': '司教.',
+        'pt': 'Dom.'
+      },
+      'TITLE_FATHER': {
+        'en': 'Fr.',
+        'de': 'P.',
+        'fr': 'P.',
+        'it': 'P.',
+        'es': 'P.',
+        'pl': 'Ks.',
+        'ro': 'Pr.',
+        'ru': 'о.',
+        'tr': 'Pdr.',
+        'el': 'π.',
+        'ar': 'أب.',
+        'tl': 'P.',
+        'zh': '神父.',
+        'ko': '신부.',
+        'ja': '神父.',
+        'pt': 'Pe.'
+      },
+      'TITLE_SISTER': {
+        'en': 'Sr.',
+        'de': 'Schw.',
+        'fr': 'Sr.',
+        'it': 'Suor.',
+        'es': 'Hna.',
+        'pl': 'S.',
+        'ro': 'S.',
+        'ru': 'с.',
+        'tr': 'Rah.',
+        'el': 'Αδ.',
+        'ar': 'أخت.',
+        'tl': 'Sor.',
+        'zh': '修女.',
+        'ko': '수녀.',
+        'ja': 'シスター.',
+        'pt': 'Ir.'
+      },
+      'TITLE_MOTHER': {
+        'en': 'M.',
+        'de': 'M.',
+        'fr': 'M.',
+        'it': 'M.',
+        'es': 'M.',
+        'pl': 'M.',
+        'ro': 'M.',
+        'ru': 'м.',
+        'tr': 'Anne.',
+        'el': 'Μ.',
+        'ar': 'أم.',
+        'tl': 'Ina.',
+        'zh': '院长.',
+        'ko': '원장.',
+        'ja': 'マザー.',
+        'pt': 'Me.'
+      },
+      'TITLE_BROTHER': {
+        'en': 'Br.',
+        'de': 'Br.',
+        'fr': 'Fr.',
+        'it': 'Fr.',
+        'es': 'Hno.',
+        'pl': 'Br.',
+        'ro': 'Fr.',
+        'ru': 'бр.',
+        'tr': 'Bir.',
+        'el': 'Αδ.',
+        'ar': 'أخ.',
+        'tl': 'Bro.',
+        'zh': '修士.',
+        'ko': '수사.',
+        'ja': 'ブラザー.',
+        'pt': 'Ir.'
+      },
+      'WEBSITE': {
+        'en': 'Website',
+        'de': 'Webseite',
+        'fr': 'Site web',
+        'it': 'Sito web',
+        'es': 'Sitio web',
+        'pl': 'Strona internetowa',
+        'ro': 'Site web',
+        'ru': 'Веб-сайт',
+        'tr': 'Web sitesi',
+        'el': 'Ιστοσελίδα',
+        'ar': 'موقع الكتروني',
+        'tl': 'Website',
+        'zh': '网站',
+        'ko': '웹사이트',
+        'ja': 'ウェブサイト',
+        'pt': 'Site'
+      },
+      'CONTACT': {
+        'en': 'Contact',
+        'de': 'Kontakt',
+        'fr': 'Contact',
+        'it': 'Contatto',
+        'es': 'Contacto',
+        'pl': 'Kontakt',
+        'ro': 'Contact',
+        'ru': 'Контакт',
+        'tr': 'İletişim',
+        'el': 'Επικοινωνία',
+        'ar': 'اتصال',
+        'tl': 'Kontak',
+        'zh': '联系方式',
+        'ko': '연락처',
+        'ja': '連絡先',
+        'pt': 'Contato'
+      },
+      'BORN': {
+        'en': 'Born',
+        'de': 'Geboren',
+        'fr': 'Né en',
+        'it': 'Nato nel',
+        'es': 'Nacido en',
+        'pl': 'Urodzony',
+        'ro': 'Născut în',
+        'ru': 'Родился в',
+        'tr': 'Doğum',
+        'el': 'Γεννήθηκε',
+        'ar': 'ولد في',
+        'tl': 'Ipinanganak',
+        'zh': '出生于',
+        'ko': '출생',
+        'ja': '生まれ',
+        'pt': 'Nascido em'
+      },
+      'ORDAINED_PRIEST_IN': {
+        'en': 'Ordained priest in',
+        'de': 'Zum Priester geweiht in',
+        'fr': 'Ordonné prêtre en',
+        'it': 'Ordinato sacerdote in',
+        'es': 'Ordenado sacerdote en',
+        'pl': 'Wyświęcony na kapłana w',
+        'ro': 'Hirotonit preot în',
+        'ru': 'Рукоположен в священники в',
+        'tr': 'Rahip olarak atandı',
+        'el': 'Χειροτονήθηκε ιερέας σε',
+        'ar': 'رُسم كاهناً في',
+        'tl': 'Inordenan bilang pari sa',
+        'zh': '司铎任职于',
+        'ko': '사제서품',
+        'ja': '司祭叙階',
+        'pt': 'Ordenado padre em'
+      },
+      'BY': {
+        'en': 'by',
+        'de': 'durch',
+        'fr': 'par',
+        'it': 'da',
+        'es': 'por',
+        'pl': 'przez',
+        'ro': 'de',
+        'ru': 'от',
+        'tr': 'tarafından',
+        'el': 'από',
+        'ar': 'على يد',
+        'tl': 'ni',
+        'zh': '由',
+        'ko': '에 의해',
+        'ja': 'によって',
+        'pt': 'por'
+      },
+      'CONSECRATED_BISHOP_IN': {
+        'en': 'Consecrated Bishop in',
+        'de': 'Zum Bischof geweiht in',
+        'fr': 'Consacré Évêque en',
+        'it': 'Consacrato Vescovo in',
+        'es': 'Consagrado Obispo en',
+        'pl': 'Konsekrowany na Biskupa w',
+        'ro': 'Consacrat Episcop în',
+        'ru': 'Посвящен в епископы в',
+        'tr': 'Piskopos olarak kutsandı',
+        'el': 'Χειροτονήθηκε Επίσκοπος σε',
+        'ar': 'كُرّس أسقفاً في',
+        'tl': 'Itinalaga bilang Obispo sa',
+        'zh': '主教祝圣于',
+        'ko': '주교 서임',
+        'ja': '司教叙階',
+        'pt': 'Consagrado Bispo em'
+      },
+      'BISHOP_LINE': {
+        'en': 'Bishop line',
+        'de': 'Bischofslinie',
+        'fr': 'Lignée épiscopale',
+        'it': 'Linea episcopale',
+        'es': 'Línea episcopal',
+        'pl': 'Linia biskupia',
+        'ro': 'Linia episcopală',
+        'ru': 'Епископская линия',
+        'tr': 'Piskopos hattı',
+        'el': 'Επισκοπική γραμμή',
+        'ar': 'سلسلة الأساقفة',
+        'tl': 'Linya ng Obispo',
+        'zh': '主教传承',
+        'ko': '주교 계보',
+        'ja': '司教系譜',
+        'pt': 'Linhagem episcopal'
+      },
+      'OPERATES_IN': {
+        'en': 'Operates in',
+        'de': 'Tätig in',
+        'fr': 'Opère en',
+        'it': 'Opera in',
+        'es': 'Opera en',
+        'pl': 'Działa w',
+        'ro': 'Operează în',
+        'ru': 'Служит в',
+        'tr': 'Hizmet bölgesi',
+        'el': 'Λειτουργεί σε',
+        'ar': 'يعمل في',
+        'tl': 'Naglilingkod sa',
+        'zh': '服务于',
+        'ko': '활동 지역',
+        'ja': '活動地域',
+        'pt': 'Atua em'
+      },
+      'ASSOCIATES_WITH': {
+        'en': 'associates with',
+        'de': 'verbunden mit',
+        'fr': 'associé à',
+        'it': 'associato a',
+        'es': 'asociado con',
+        'pl': 'stowarzyszony z',
+        'ro': 'asociat cu',
+        'ru': 'связан с',
+        'tr': 'ile ilişkili',
+        'el': 'συνδέεται με',
+        'ar': 'متحالف مع',
+        'tl': 'kaakibat ng',
+        'zh': '隶属于',
+        'ko': '관련 단체',
+        'ja': '所属',
+        'pt': 'associado com'
+      },
+      'HOLDS_BELIEFS': {
+        'en': 'holds',
+        'de': 'vertritt',
+        'fr': 'défend des croyances',
+        'it': 'sostiene credenze',
+        'es': 'mantiene creencias',
+        'pl': 'wyznaje',
+        'ro': 'susține credințe',
+        'ru': 'придерживается взглядов',
+        'tr': 'inançları',
+        'el': 'υποστηρίζει',
+        'ar': 'يتبنى معتقدات',
+        'tl': 'may paniniwala',
+        'zh': '持有信仰',
+        'ko': '신념',
+        'ja': '信条',
+        'pt': 'mantém crenças'
+      },
+      'BELIEFS': {
+        'en': 'beliefs',
+        'de': 'Überzeugungen',
+        'fr': 'de',
+        'it': 'di',
+        'es': 'de',
+        'pl': 'poglądy',
+        'ro': 'de',
+        'ru': 'типа',
+        'tr': 'var',
+        'el': 'πεποιθήσεις',
+        'ar': 'من نوع',
+        'tl': 'na',
+        'zh': '为',
+        'ko': '을 가짐',
+        'ja': 'の',
+        'pt': 'de'
+      },
+      'PARISHES_SERVED': {
+        'en': 'Parishes Served',
+        'de': 'Betreute Gemeinden',
+        'fr': 'Paroisses Desservies',
+        'it': 'Parrocchie Servite',
+        'es': 'Parroquias Atendidas',
+        'pl': 'Obsługiwane Parafie',
+        'ro': 'Parohii Deservite',
+        'ru': 'Обслуживаемые Приходы',
+        'tr': 'Hizmet Verilen Cemaatler',
+        'el': 'Ενορίες Εξυπηρέτησης',
+        'ar': 'الرعايا المخدومة',
+        'tl': 'Mga Parokyang Pinaglilingkuran',
+        'zh': '服务堂区',
+        'ko': '담당 본당',
+        'ja': '奉仕小教区',
+        'pt': 'Paróquias Atendidas'
+      }
+    };
+
+    // Track the current language
+    let currentLanguage = 'en';
+
+    // Detect user's preferred language
+    function detectUserLanguage() {
+      const browserLangs = getBrowserLanguages();
+      
+      if (browserLangs.some(lang => lang.toLowerCase() === 'pt-br')) {
+        console.log("Detected Brazilian Portuguese (pt-BR)");
+        return 'pt';
+      }
+
+      // Check if any of the browser's languages match our supported languages
+      for (const lang of browserLangs) {
+        const langCode = getLanguageCode(lang);
+        if (LANGUAGES[langCode]) {
+          return langCode;
+        }
+      }
+      
+      // Default to English if no match
+      return 'en';
+    }
+
+    // Get translated text
+    function getTranslatedText(key, fallbackLanguage = 'en') {
+      if (TRANSLATIONS[key] && TRANSLATIONS[key][currentLanguage]) {
+        return TRANSLATIONS[key][currentLanguage];
+      }
+      
+      // Fallback to English if translation not available
+      if (TRANSLATIONS[key] && TRANSLATIONS[key][fallbackLanguage]) {
+        return TRANSLATIONS[key][fallbackLanguage];
+      }
+      
+      // Return the key as a last resort
+      return key;
+    }
+
+    function updateNavigationURLs() {
+      // Get navigation configuration for current language
+      const navConfig = NAV_CONFIG[currentLanguage] || NAV_CONFIG['en']; // Fallback to English
+      
+      if (!navConfig) return; // Safety check
+      
+      // Get all navigation links
+      const navLinks = document.querySelectorAll('#sidebar .sidebar-links a');
+      
+      // Match links with configuration and update URLs
+      navLinks.forEach(link => {
+        const key = link.getAttribute('data-i18n');
+        if (!key) return; // Skip if no key
+        
+        // Find matching nav config
+        const navItem = navConfig.find(item => item.key === key);
+        if (navItem) {
+          link.href = navItem.url;
+        }
+      });
+    }
+
+    // Apply translations to the UI
+    function applyTranslations() {
+      // Set the document language for proper RTL display
+      document.documentElement.lang = currentLanguage;
+      
+      // Update title
+      document.title = getTranslatedText('CATHOLIC_RESISTANCE_GLOBE');
+      
+      // Update text elements with data-i18n attributes
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        element.textContent = getTranslatedText(key);
+      });
+      
+      // Update placeholder attributes
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        element.placeholder = getTranslatedText(key);
+      });
+      
+      // Special handling for RTL languages
+      if (currentLanguage === 'ar' || currentLanguage === 'he') {
+        document.body.classList.add('rtl');
+      } else {
+        document.body.classList.remove('rtl');
+      }
+      
+      updateNavigationURLs();
+
+      resetSearchResultsContainer();
+
+      // Update language selector
+      const languageSelect = document.getElementById('language-select');
+      if (languageSelect) {
+        const options = languageSelect.querySelectorAll('option');
+        options.forEach(option => {
+          if (option.value === currentLanguage) {
+            option.selected = true;
+          }
+        });
+      }
+    }
+
+    // Initialize language settings
+    function initLanguage() {
+      // Check if user has a saved preference
+      const savedLanguage = localStorage.getItem('preferredLanguage');
+      
+      if (savedLanguage && LANGUAGES[savedLanguage]) {
+        currentLanguage = savedLanguage;
+      } else {
+        // Detect language from browser
+        currentLanguage = detectUserLanguage();
+        localStorage.setItem('preferredLanguage', currentLanguage);
+      }
+      
+      // Apply translations
+      applyTranslations();
+      
+      // Set up language selector change event
+      const languageSelect = document.getElementById('language-select');
+      if (languageSelect) {
+        languageSelect.addEventListener('change', function() {
+          currentLanguage = this.value;
+          localStorage.setItem('preferredLanguage', currentLanguage);
+          applyTranslations();
+        });
+      }
+    }
+
+    // Call this function when DOM is loaded
+    document.addEventListener('DOMContentLoaded', initLanguage);
+
+// First-time user tutorial system
+
+// Check if this is the first visit
+function checkFirstTimeUser() {
+  // Check if this is the first visit
+  const hasVisited = localStorage.getItem('hasVisitedClergyMap');
+  
+  if (!hasVisited) {
+    // Set the flag to prevent showing the tutorial again
+    localStorage.setItem('hasVisitedClergyMap', 'true');
+    
+    // Wait for the map to be fully loaded before showing tutorial
+    window.addEventListener('cities-loaded', () => {
+      // Start the tutorial
+      showTutorial();
+    });
+  }
+}
+
+// Show tutorial
+function showTutorial() {
+  console.log('Starting first-time user tutorial');
+  
+  // Show the first step after a delay
+  setTimeout(() => {
+    showTutorialStep(1);
+  }, 2000);
+}
+
+// Show tutorial steps
+function showTutorialStep(step) {
+  // Clear any existing tutorial labels
+  const existingLabels = document.querySelectorAll('.tutorial-label');
+  existingLabels.forEach(label => label.remove());
+  
+  // Create label element
+  const label = document.createElement('div');
+  label.className = 'tutorial-label';
+  document.body.appendChild(label);
+  
+  let target, text;
+  
+  switch (step) {
+    case 1:
+      // Show user location label
+      target = scene.getObjectByName('user-location');
+      text = getTranslatedText('YOUR_LOCATION');
+      break;
+      
+    case 2:
+      // Find nearest priest and show label
+      const nearestPriest = findNearestPriest();
+      target = nearestPriest ? scene.getObjectByName(nearestPriest.markerName) : null;
+      text = nearestPriest ? 
+          `${getTranslatedText('NEAREST_PRIEST')}: ${nearestPriest.name}` : 
+          getTranslatedText('NO_PRIESTS_FOUND');
+      break;
+      
+    case 3:
+      // Find nearest parish and show label
+      const nearestParish = findNearestParish();
+      target = nearestParish ? scene.getObjectByName(nearestParish.markerName) : null;
+      text = nearestParish ? 
+          `${getTranslatedText('NEAREST_PARISH')}: ${nearestParish.name}` : 
+          getTranslatedText('NO_PARISHES_FOUND');
+      break;
+      
+    default:
+      // End tutorial
+      return;
+  }
+  
+  if (target) {
+    // Position label near the target
+    positionLabelAtObject(label, target, text);
+    
+    // Move to next step after delay
+    setTimeout(() => {
+      showTutorialStep(step + 1);
+    }, 4000);
+  } else {
+    // Skip to next step if target not found
+    setTimeout(() => {
+      showTutorialStep(step + 1);
+    }, 1000);
+  }
+}
+
+// Position label at 3D object
+function positionLabelAtObject(label, object, text) {
+  // Set label text
+  label.textContent = text;
+  
+  // Function to update label position each frame
+  function updatePosition() {
+    // Convert 3D position to screen coordinates
+    const vector = object.position.clone();
+    vector.project(camera);
+    
+    const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+    const y = (-(vector.y * 0.5) + 0.5) * window.innerHeight;
+    
+    // Only show label if object is in front of the camera (z < 1)
+    if (vector.z < 1) {
+      label.style.display = 'block';
+      label.style.transform = `translate(-50%, -100%) translate(${x}px, ${y - 20}px)`;
+    } else {
+      label.style.display = 'none';
+    }
+    
+    // Continue updating until label is removed
+    if (document.body.contains(label)) {
+      requestAnimationFrame(updatePosition);
+    }
+  }
+  
+  // Start updating
+  updatePosition();
+}
+
+// Find nearest priest to user location
+function findNearestPriest() {
+  const userLocation = scene.getObjectByName('user-location');
+  if (!userLocation) return null;
+  
+  let nearestPriest = null;
+  let minDistance = Infinity;
+  
+  // Search all priest markers
+  scene.children
+    .filter(obj => obj.name === 'priest-marker')
+    .forEach(marker => {
+      const distance = userLocation.position.distanceTo(marker.position);
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestPriest = {
+          markerName: marker.name,
+          name: marker.priestData.Name,
+          position: marker.position,
+          data: marker.priestData
+        };
+      }
+    });
+  
+  return nearestPriest;
+}
+
+// Find nearest parish (excluding home parishes)
+function findNearestParish() {
+  const userLocation = scene.getObjectByName('user-location');
+  if (!userLocation) return null;
+  
+  let nearestParish = null;
+  let minDistance = Infinity;
+  
+  // Search all parish markers (excluding home parishes)
+  scene.children
+    .filter(obj => obj.name === 'parish-marker' && obj.parishData && !obj.parishData.IsHomePriest)
+    .forEach(marker => {
+      const distance = userLocation.position.distanceTo(marker.position);
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestParish = {
+          markerName: marker.name,
+          name: marker.parishData.ParishName,
+          position: marker.position,
+          data: marker.parishData
+        };
+      }
+    });
+  
+  return nearestParish;
+}
+
+// Enhanced priest marker creation with better shading
+function createEnhancedPriestMarker(lat, lng, priest) {
+  // Create marker geometry with higher detail for better shading
+  const markerGeometry = new THREE.SphereGeometry(CONFIG.markerSize, 32, 32);
+  
+  // Create shiny material for the marker
+  const markerMaterial = new THREE.MeshPhongMaterial({ 
+    color: CONFIG.markerColor,
+    shininess: 80,
+    specular: 0x881111, // Adding a reddish specular highlight
+    emissive: 0x330000,
+    emissiveIntensity: 0.2
+  });
+  
+  const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+  
+  // Set marker position
+  const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
+  marker.position.set(position.x, position.y, position.z);
+  marker.name = 'priest-marker';
+  marker.priestData = priest;
+  
+  return marker;
+}
+
+// Enhanced parish marker creation with better shading
+function createEnhancedParishMarker(lat, lng, parish) {
+  // Create marker geometry with higher detail for better shading
+  const markerGeometry = new THREE.SphereGeometry(CONFIG.parishMarkerSize, 32, 32);
+  
+  // Create shiny material for the marker
+  const markerMaterial = new THREE.MeshPhongMaterial({ 
+    color: CONFIG.parishMarkerColor,
+    shininess: 80,
+    specular: 0x881111, // Adding a reddish specular highlight
+    emissive: 0x330000,
+    emissiveIntensity: 0.1
+  });
+  
+  const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+  
+  // Set marker position
+  const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
+  marker.position.set(position.x, position.y, position.z);
+  marker.name = 'parish-marker';
+  marker.parishData = parish;
+  
+  return marker;
+}
+
+// Replace the original marker creation with enhanced versions
+// This function should be called during initialization
+function enhanceExistingMarkers() {
+  // Replace existing priest markers
+  scene.children
+    .filter(obj => obj.name === 'priest-marker')
+    .forEach(marker => {
+      const priestData = marker.priestData;
+      const position = marker.position.clone();
+      
+      // Calculate lat/lng from position
+      const lat = priestData.Latitude;
+      const lng = priestData.Longitude;
+      
+      // Remove old marker
+      scene.remove(marker);
+      
+      // Create enhanced marker
+      const enhancedMarker = createEnhancedPriestMarker(lat, lng, priestData);
+      scene.add(enhancedMarker);
+    });
+  
+  // Replace existing parish markers
+  scene.children
+    .filter(obj => obj.name === 'parish-marker')
+    .forEach(marker => {
+      const parishData = marker.parishData;
+      const position = marker.position.clone();
+      
+      // Calculate lat/lng from position
+      const lat = parishData.Latitude;
+      const lng = parishData.Longitude;
+      
+      // Remove old marker
+      scene.remove(marker);
+      
+      // Create enhanced marker
+      const enhancedMarker = createEnhancedParishMarker(lat, lng, parishData);
+      scene.add(enhancedMarker);
+    });
+}
+
+// Override the populateGlobeWithMarkers function to use enhanced markers
+function populateGlobeWithMarkers(data) {
+  if (!globe) return;
+  
+  // Clear any existing markers
+  const existingMarkers = scene.children.filter(obj => 
+    obj.name === 'priest-marker' || obj.name === 'priest-pulse' || obj.name === 'priest-marker-invisible'
+  );
+  existingMarkers.forEach(marker => scene.remove(marker));
+  
+  // Clear pulse meshes array
+  pulseMeshes = [];
+  
+  // Create markers for each priest
+  data.forEach(priest => {
+    // Get coordinates
+    const lat = priest.Latitude;
+    const lng = priest.Longitude;
+    
+    // Create enhanced marker
+    const marker = createEnhancedPriestMarker(lat, lng, priest);
+    
+    // Add to scene
+    scene.add(marker);
+    
+    // Create pulsing ring effect
+    const pulse = createPulseEffect(lat, lng, priest);
+    scene.add(pulse);
+    
+    // Add invisible larger detection sphere for better interaction
+    const invisibleSphere = createInvisibleSphere(lat, lng, priest);
+    scene.add(invisibleSphere);
+  });
+}
+
+// Create pulsing effect for markers
+function createPulseEffect(lat, lng, priest) {
+  // Create a group for the pulse effect
+  const pulse = new THREE.Group();
+  pulse.name = 'priest-pulse';
+  pulse.priestData = priest;
+  
+  // Set position
+  const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
+  pulse.position.set(position.x, position.y, position.z);
+  
+  // Create squished sphere for the pulse effect
+  const pulseGeometry = new THREE.SphereGeometry(CONFIG.markerRingSize, 32, 32);
+  const pulseMaterial = new THREE.MeshBasicMaterial({
+    color: CONFIG.markerPulseColor,
+    transparent: true,
+    opacity: 0.9,
+    side: THREE.DoubleSide
+  });
+  
+  const pulseMesh = new THREE.Mesh(pulseGeometry, pulseMaterial);
+  // Make it a squished sphere by scaling down the y-axis
+  pulseMesh.scale.y = 0.25; // Adjust this value to control how squished it is
+  
+  // Add random offset for animation
+  pulseMesh.pulseOffset = Math.random() * Math.PI * 2;
+  
+  // Add to pulse group
+  pulse.add(pulseMesh);
+  
+  // Add to pulse meshes array for animation
+  pulseMeshes.push(pulseMesh);
+  
+  // Orient pulse toward center
+  pulse.lookAt(0, 0, 0);
+  
+  return pulse;
+}
+
+// Create invisible sphere for better interaction
+function createInvisibleSphere(lat, lng, priest) {
+  // Create geometry for invisible detection sphere
+  const invisibleSphereGeometry = new THREE.SphereGeometry(CONFIG.markerRingSize * 1.5, 16, 16);
+  const invisibleSphereMaterial = new THREE.MeshBasicMaterial({
+    transparent: true,
+    opacity: 0.0,
+  });
+  
+  const invisibleSphere = new THREE.Mesh(invisibleSphereGeometry, invisibleSphereMaterial);
+  
+  // Set position
+  const position = getPointOnGlobe(lat, lng, CONFIG.labelAltitude);
+  invisibleSphere.position.set(position.x, position.y, position.z);
+  invisibleSphere.name = 'priest-marker-invisible';
+  invisibleSphere.priestData = priest;
+  
+  return invisibleSphere;
+}
 
     // Global variables
     let renderer, scene, camera, controls, globe;
@@ -538,7 +2279,9 @@
       "zu": -29.0, // Zulu
       "xh": -33.0, // Xhosa
       "he": 31.0, // Hebrew
-      "tl": 14.6  // Tagalog
+      "tl": 14.6,  // Tagalog
+      "pt": -15.0, // Updated specifically for Brazil (more central)
+      "pt-BR": -15.0 // Explicitly add pt-BR code
     };
 
     function languageLongitudeRanges() {
@@ -589,116 +2332,223 @@
         ],
         "pl": [
           { min: 14, max: 24, lat: 52.0 }        // Poland
-        ]
+        ],
+        "pt": [
+          { min: -75, max: -30, lat: -15.0 },    // Brazil (wider range)
+          { min: -10, max: 0, lat: 39.0 }        // Portugal
+        ],
+        "pt-BR": [
+          { min: -75, max: -30, lat: -15.0 }     // Brazil specific entry
+        ],
       };
     }
 
     // Language-based latitude estimation with geographical consistency check
     function estimateLatitude(longitude) {
       const languages = getBrowserLanguages();
-    const llr = languageLongitudeRanges();
-    
-    // 1. First try non-English languages for geographical consistency
-    const nonEnglishLangs = languages.filter(lang => !getLanguageCode(lang).startsWith('en'));
-    
-    // Try non-English languages first
-    for (const language of nonEnglishLangs) {
-      const langCode = getLanguageCode(language);
-      
-      // Check if this language has specific longitude ranges defined
-      if (llr[langCode]) {
-        for (const range of llr[langCode]) {
-          // Check if the detected longitude falls within this language's expected range
-          if (longitude >= range.min && longitude <= range.max) {
-            console.log(`Found matching non-English language ${langCode} for longitude ${longitude}, using latitude ${range.lat}`);
-            return range.lat;
+      const llr = languageLongitudeRanges();
+        
+        // 1. First try non-English languages for geographical consistency
+        const nonEnglishLangs = languages.filter(lang => !getLanguageCode(lang).startsWith('en'));
+        
+        // Try non-English languages first
+        for (const language of nonEnglishLangs) {
+          const langCode = getLanguageCode(language);
+          
+          // Check if this language has specific longitude ranges defined
+          if (llr[langCode]) {
+            for (const range of llr[langCode]) {
+              // Check if the detected longitude falls within this language's expected range
+              if (longitude >= range.min && longitude <= range.max) {
+                console.log(`Found matching non-English language ${langCode} for longitude ${longitude}, using latitude ${range.lat}`);
+                return range.lat;
+              }
+            }
           }
         }
-      }
-    }
-    
-    // 2. If no non-English match, try all languages
-    for (const language of languages) {
-      const langCode = getLanguageCode(language);
-      
-      if (llr[langCode]) {
-        for (const range of llr[langCode]) {
-          if (longitude >= range.min && longitude <= range.max) {
-            console.log(`Found matching language ${langCode} for longitude ${longitude}, using latitude ${range.lat}`);
-            return range.lat;
+        
+        // 2. If no non-English match, try all languages
+        for (const language of languages) {
+          const langCode = getLanguageCode(language);
+          
+          if (llr[langCode]) {
+            for (const range of llr[langCode]) {
+              if (longitude >= range.min && longitude <= range.max) {
+                console.log(`Found matching language ${langCode} for longitude ${longitude}, using latitude ${range.lat}`);
+                return range.lat;
+              }
+            }
           }
         }
+        
+        // 3. If no geographically consistent language found, try the general language map
+        // Prioritize non-English languages first
+        for (const language of nonEnglishLangs) {
+          const langCode = getLanguageCode(language);
+          if (languageLatitudeMap[langCode]) {
+            return languageLatitudeMap[langCode];
+          }
+        }
+      
+      // Then try any language
+      for (const language of languages) {
+        const langCode = getLanguageCode(language);
+        if (languageLatitudeMap[langCode]) {
+          return languageLatitudeMap[langCode];
+        }
       }
-    }
-    
-    // 3. If no geographically consistent language found, try the general language map
-    // Prioritize non-English languages first
-    for (const language of nonEnglishLangs) {
-      const langCode = getLanguageCode(language);
-      if (languageLatitudeMap[langCode]) {
-        return languageLatitudeMap[langCode];
+      
+      // 4. Regional longitude-based fallback
+      if (longitude > 10 && longitude < 40) {
+        // Eastern Europe
+        return 50.0;
+      } else if (longitude >= 40 && longitude < 60) {
+        // Western Russia
+        return 55.0;
+      } else if (longitude >= 60 && longitude < 90) {
+        // Central Asia
+        return 45.0;
+      } else if (longitude >= 90 && longitude < 120) {
+        // East Asia
+        return 35.0;
+      } else if (longitude >= 120 && longitude < 150) {
+        // Far East Asia
+        return 35.0;
+      } else if (longitude > -10 && longitude <= 10) {
+        // Western Europe
+        return 48.0;
+      } else if (longitude > -30 && longitude <= -10) {
+        // Atlantic/Western Europe
+        return 45.0;
+      } else if (longitude > -60 && longitude <= -30) {
+        // Eastern Americas
+        return 40.0;
+      } else if (longitude > -120 && longitude <= -60) {
+        // Americas
+        return 35.0;
+      } else if (longitude > -180 && longitude <= -120) {
+        // Western Americas/Pacific
+        return 45.0;
+      } else if (longitude > 150 || longitude <= -150) {
+        // Pacific region
+        return 0.0;
       }
+      
+      // Final fallback - estimate hemisphere based on longitude
+      return (longitude > -120 && longitude < -30) || (longitude > 100 && longitude < 180) ? -20.0 : 20.0;
     }
-  
-  // Then try any language
-  for (const language of languages) {
-    const langCode = getLanguageCode(language);
-    if (languageLatitudeMap[langCode]) {
-      return languageLatitudeMap[langCode];
-    }
-  }
-  
-  // 4. Regional longitude-based fallback
-  if (longitude > 10 && longitude < 40) {
-    // Eastern Europe
-    return 50.0;
-  } else if (longitude >= 40 && longitude < 60) {
-    // Western Russia
-    return 55.0;
-  } else if (longitude >= 60 && longitude < 90) {
-    // Central Asia
-    return 45.0;
-  } else if (longitude >= 90 && longitude < 120) {
-    // East Asia
-    return 35.0;
-  } else if (longitude >= 120 && longitude < 150) {
-    // Far East Asia
-    return 35.0;
-  } else if (longitude > -10 && longitude <= 10) {
-    // Western Europe
-    return 48.0;
-  } else if (longitude > -30 && longitude <= -10) {
-    // Atlantic/Western Europe
-    return 45.0;
-  } else if (longitude > -60 && longitude <= -30) {
-    // Eastern Americas
-    return 40.0;
-  } else if (longitude > -120 && longitude <= -60) {
-    // Americas
-    return 35.0;
-  } else if (longitude > -180 && longitude <= -120) {
-    // Western Americas/Pacific
-    return 45.0;
-  } else if (longitude > 150 || longitude <= -150) {
-    // Pacific region
-    return 0.0;
-  }
-  
-  // Final fallback - estimate hemisphere based on longitude
-  return (longitude > -120 && longitude < -30) || (longitude > 100 && longitude < 180) ? -20.0 : 20.0;
-}
 
     // Get all browser languages
     function getBrowserLanguages() {
+      const languages = [];
+      
       if (navigator.languages && navigator.languages.length) {
-        return Array.from(navigator.languages);
+        // Copy all languages
+        for (let i = 0; i < navigator.languages.length; i++) {
+          languages.push(navigator.languages[i]);
+        }
+        
+        // Check specifically for pt-BR
+        if (navigator.languages.some(lang => lang.toLowerCase() === 'pt-br')) {
+          languages.unshift('pt-BR'); // Add at beginning for priority
+        }
+      } else {
+        // Fallback to navigator.language
+        const lang = navigator.language || navigator.userLanguage || 'en';
+        languages.push(lang);
+        
+        // Special case for pt-BR
+        if (lang.toLowerCase() === 'pt-br') {
+          languages.unshift('pt-BR');
+        }
       }
-      return [navigator.language || navigator.userLanguage || 'en'];
+      
+      return languages;
     }
 
     // Extract language code from full locale string
     function getLanguageCode(locale) { 
-      return locale.split('-')[0].toLowerCase(); 
+      const code = locale.split('-')[0].toLowerCase();
+      
+      // Special case for Brazilian Portuguese
+      if (locale.toLowerCase() === 'pt-br') {
+        return 'pt-BR';
+      }
+      
+      return code;
+    }
+
+    function calculateLookAtTarget(distance) {
+      // Calculate normalized zoom factor (0 = fully zoomed in, 1 = fully zoomed out)
+      const zoomRange = CONFIG.maxDistance - CONFIG.minDistance;
+      const zoomFactor = Math.min(1, Math.max(0, (distance - CONFIG.minDistance) / zoomRange));
+      
+      // Apply quadratic easing for smoother transition (use zoomFactor^2 for quadratic)
+      const easedFactor = zoomFactor * zoomFactor;
+      
+      // Calculate y-offset based on zoom
+      const yOffset = easedFactor * CONFIG.cameraYOffset;
+      
+      // Return lookAt target vector
+      return new THREE.Vector3(0, -yOffset, 0); // Negative because we want to look down
+    }
+
+    function zoomIn() {
+      console.log('Zoom in');
+      
+      // Get current camera distance
+      const currentDistance = camera.position.distanceTo(controls.target);
+      
+      // Calculate new distance (closer)
+      const newDistance = Math.max(CONFIG.minDistance, currentDistance * 0.8);
+      
+      // Create normalized direction vector from camera to target
+      const direction = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
+      
+      // Set new camera position
+      camera.position.copy(controls.target).add(direction.multiplyScalar(newDistance));
+      
+      // Update controls and camera
+      controls.update();
+      
+      // Update CONFIG.currentZoomLevel for future operations
+      CONFIG.currentZoomLevel = newDistance;
+      
+      // Update the lookAt target
+      const newTarget = calculateLookAtTarget(newDistance);
+      controls.target.copy(newTarget);
+      
+      // Adjust rotation speed based on new zoom level
+      adjustRotationSpeed();
+    }
+
+    function zoomOut() {
+      console.log('Zoom out');
+      
+      // Get current camera distance
+      const currentDistance = camera.position.distanceTo(controls.target);
+      
+      // Calculate new distance (farther)
+      const newDistance = Math.min(CONFIG.maxDistance, currentDistance * 1.2);
+      
+      // Create normalized direction vector from camera to target
+      const direction = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
+      
+      // Set new camera position
+      camera.position.copy(controls.target).add(direction.multiplyScalar(newDistance));
+      
+      // Update controls and camera
+      controls.update();
+      
+      // Update CONFIG.currentZoomLevel for future operations
+      CONFIG.currentZoomLevel = newDistance;
+      
+      // Update the lookAt target
+      const newTarget = calculateLookAtTarget(newDistance);
+      controls.target.copy(newTarget);
+      
+      // Adjust rotation speed based on new zoom level
+      adjustRotationSpeed();
     }
 
     // Load parishes data
@@ -974,8 +2824,8 @@ function getTimezoneCoordinates(timezone) {
     // Adjust rotation speed based on zoom level - slower when zoomed in
     function adjustRotationSpeed() {
       const distance = camera.position.distanceTo(new THREE.Vector3(0, 0, 0));
-      const zoomRange = controls.maxDistance - controls.minDistance;
-      const zoomFactor = (distance - controls.minDistance) / zoomRange;
+      const zoomRange = CONFIG.maxDistance - CONFIG.minDistance;
+      const zoomFactor = (distance - CONFIG.minDistance) / zoomRange;
       
       const minSpeed = 0.2; // Min rotation speed when fully zoomed in
       const maxSpeed = 1.0; // Max rotation speed when zoomed out
@@ -1018,6 +2868,9 @@ function getTimezoneCoordinates(timezone) {
 
     // Main initialization function
     function init() {
+
+      initLanguage();
+
       resetSearchResultsContainer();
 
       // Initialize Three.js scene
@@ -1088,9 +2941,12 @@ function getTimezoneCoordinates(timezone) {
       camera.add(dLight2);
       
       camera.position.z = CONFIG.currentZoomLevel;
-      camera.position.x = 0;
-      camera.position.y = 0;
+      camera.position.x = 0.0;
+      camera.position.y = 0.0;
       
+      const initialTarget = calculateLookAtTarget(CONFIG.currentZoomLevel);
+      camera.lookAt(initialTarget);
+
       scene.add(camera);
       
       // Add fog for atmospheric effect
@@ -1099,18 +2955,19 @@ function getTimezoneCoordinates(timezone) {
       
       // Initialize orbit controls
       controls = new THREE.OrbitControls(camera, renderer.domElement);
+      // controls.target.copy(initialTarget); // Set initial control target
       controls.enableDamping = true;
       controls.dynamicDampingFactor = 0.01;
       controls.enablePan = false;
-      controls.minDistance = 150;
-      controls.maxDistance = 400;
+      controls.minDistance = CONFIG.minDistance;
+      controls.maxDistance = CONFIG.maxDistance;
       controls.rotateSpeed = 0.8;
       controls.zoomSpeed = 1;
       controls.autoRotate = CONFIG.autoRotate;
       controls.autoRotateSpeed = CONFIG.autoRotateSpeed;
          
       controls.minPolarAngle = 5 * (Math.PI / 180);  // 5 degrees from north pole
-      controls.maxPolarAngle = 175 * (Math.PI / 180); // 5 degrees from south pole
+      controls.maxPolarAngle = 175 * (Math.PI / 180); // 5 degrees from south pole  
     }
     
     // Texture cache using IndexedDB
@@ -2103,43 +3960,82 @@ function getTimezoneCoordinates(timezone) {
         });
 
         document.body.addEventListener('keydown', (e) => {
-    const searchResults = document.getElementById('searchResults');
-    
-    // Only handle arrow keys when search results are visible
-    if (searchResults.style.display === 'block' && 
-        (e.key === 'ArrowDown' || e.key === 'ArrowUp' || 
-         e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
-        
-        e.preventDefault();
-        
-        // Get all focusable elements
-        const focusableElements = getKeyboardFocusableElements();
-        
-        // Get current element's position in the tab order
-        const currentElement = document.activeElement;
-        const currentIndex = focusableElements.indexOf(currentElement);
-        
-        if (currentIndex !== -1) {
-            // Determine next position based on arrow key
-            let nextIndex;
-            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-                nextIndex = Math.min(currentIndex + 1, focusableElements.length - 1);
-            } else {
-                nextIndex = Math.max(currentIndex - 1, 0);
-            }
+
+            // Check if we should ignore keyboard shortcuts
+            const activeElement = document.activeElement;
+            const tagName = activeElement.tagName.toLowerCase();
             
-            // Focus the next element
-            if (nextIndex !== currentIndex) {
-                focusableElements[nextIndex].focus();
+            // Ignore keyboard shortcuts if an input field is focused
+            const isInputFocused = tagName === 'input' || 
+                                  tagName === 'textarea' || 
+                                  tagName === 'select' ||
+                                  activeElement.isContentEditable ||
+                                  activeElement.getAttribute('role') === 'textbox';
+            
+            if (!isInputFocused) {
+              if (e.key === '+' || e.key === '=') {
+                zoomIn();
+              } else if (e.key === '-' || e.key === '_') {
+                zoomOut();
+              }
+            }
+          
+            const searchResults = document.getElementById('searchResults');
+    
+            // Only handle arrow keys when search results are visible
+            if (searchResults.style.display === 'block' && 
+                (e.key === 'ArrowDown' || e.key === 'ArrowUp' || 
+                e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
                 
-                // If it's a search result item, ensure it's visible
-                if (focusableElements[nextIndex].classList.contains('search-result-item')) {
-                    focusableElements[nextIndex].scrollIntoView({ block: 'nearest' });
+                e.preventDefault();
+                
+                // Get all focusable elements
+                const focusableElements = getKeyboardFocusableElements();
+                
+                // Get current element's position in the tab order
+                const currentElement = document.activeElement;
+                const currentIndex = focusableElements.indexOf(currentElement);
+                
+                if (currentIndex !== -1) {
+                    // Determine next position based on arrow key
+                    let nextIndex;
+                    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                        nextIndex = Math.min(currentIndex + 1, focusableElements.length - 1);
+                    } else {
+                        nextIndex = Math.max(currentIndex - 1, 0);
+                    }
+                    
+                    // Focus the next element
+                    if (nextIndex !== currentIndex) {
+                        focusableElements[nextIndex].focus();
+                        
+                        // If it's a search result item, ensure it's visible
+                        if (focusableElements[nextIndex].classList.contains('search-result-item')) {
+                            focusableElements[nextIndex].scrollIntoView({ block: 'nearest' });
+                        }
+                    }
                 }
             }
+        });
+
+        const zoomInButton = document.querySelector('.zoom-button.zoom-in');
+        const zoomOutButton = document.querySelector('.zoom-button.zoom-out');
+        
+        if (zoomInButton) {
+          zoomInButton.addEventListener('click', () => {
+            zoomIn();
+          });
+        } else {
+          console.error('Zoom in button not found');
         }
-    }
-});
+        
+        if (zoomOutButton) {
+          zoomOutButton.addEventListener('click', () => {
+            zoomOut();
+          });
+        } else {
+          console.error('Zoom out button not found');
+        }
 
         // Simplified searchInput event listener - just for Enter and Escape
         searchInput.addEventListener('keydown', (e) => {
@@ -2191,6 +4087,10 @@ function getTimezoneCoordinates(timezone) {
     function onCameraChange() {
       // Adjust rotation speed based on zoom level
       adjustRotationSpeed();
+      // Update camera lookAt target based on current distance
+      const distance = camera.position.length();
+      const target = calculateLookAtTarget(distance);
+      controls.target.copy(target);
     }
     
     // Update theme visuals
@@ -2322,7 +4222,7 @@ function getTimezoneCoordinates(timezone) {
             const priest = searchResults[selectedSearchIndex];
             if (!priest) return;
             showPriestInfo(priest);
-            focusOnPoint(priest.Latitude, priest.Longitude, 200.0);
+            focusOnPoint(priest.Latitude, priest.Longitude, CONFIG.minDistance);
             highlightSelectedPriest(priest);
             
             // Hide search results and clear input
@@ -2478,7 +4378,7 @@ function getTimezoneCoordinates(timezone) {
         let firstInitial = priest.Name.charAt(0);
         
         const priestParagraph2 = document.createElement('p');
-        priestParagraph2.textContent = `This parish is ${parish.IsHomePriest ? 'the home parish of' : 'served by'} `;
+        priestParagraph2.textContent = `${parish.IsHomePriest ? getTranslatedText('HOME_PARISH_OF') : getTranslatedText('SERVED_BY')} `;
         priestParagraph2.style.display = 'inline';
 
         // Add a link to show priest info
@@ -2509,7 +4409,7 @@ function getTimezoneCoordinates(timezone) {
         notesSection.className = 'notes-section';
         
         const notesTitle = document.createElement('strong');
-        notesTitle.textContent = 'Notes:';
+        notesTitle.textContent = getTranslatedText('NOTES');
         notesSection.appendChild(notesTitle);
         
         const notesContent = document.createElement('p');
@@ -2525,7 +4425,7 @@ function getTimezoneCoordinates(timezone) {
         massTimesSection.className = 'mass-times-section';
         
         const massTimesTitle = document.createElement('strong');
-        massTimesTitle.textContent = 'Mass Times:';
+        massTimesTitle.textContent = getTranslatedText('MASS_TIMES');
         massTimesSection.appendChild(massTimesTitle);
         
         const massTimesList = document.createElement('p');
@@ -2538,16 +4438,18 @@ function getTimezoneCoordinates(timezone) {
       // Add Google Maps link
       const mapsRow = document.createElement('div');
       mapsRow.className = 'info-row';
-      mapsRow.innerHTML = `<a href="${parish.GoogleMaps}" target="_blank" class="info-link maps">View on Google Maps</a>`;
+      mapsRow.innerHTML = `<a href="${parish.GoogleMaps}" target="_blank" class="info-link maps">${getTranslatedText('VIEW_ON_MAPS')}</a>`;
       priestInfo.appendChild(mapsRow);
       
       // Show the info panel
       infoPanel.style.display = 'block';
     }
 
-    // Highlight selected parish
-    function highlightSelectedParish(parish) {
-  // First reset all markers
+
+  // Highlight selected parish
+  function highlightSelectedParish(parish) {
+
+    // First reset all markers
   resetAllMarkers();
   
   // Clean IDs
@@ -2633,10 +4535,17 @@ function getTimezoneCoordinates(timezone) {
   }
 }
 
-  function resetSearchResultsContainer() {
-    let searchResultsContainer = document.getElementById('searchResults');
-    searchResultsContainer.innerHTML = '<div class="links"><div style="padding-top:10px;padding-left:5px;margin-right:10px;"><a class="outbound-link"href="https://github.com/fschutt/dubiacc/issues">report error</a><a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">request mass</a><a style="color:white;" class="outbound-link" href="https://dubia.cc">back to dubia.cc</a>';
-  }
+    function resetSearchResultsContainer() {
+      let searchResultsContainer = document.getElementById('searchResults');
+      searchResultsContainer.innerHTML = `
+        <div class="links">
+          <div style="padding-top:10px;z-index:5;">
+            <a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">${getTranslatedText('REPORT_ERROR')}</a>
+            <a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">${getTranslatedText('REQUEST_MASS')}</a>
+            <a style="color:white;" class="outbound-link" href="https://dubia.cc">${getTranslatedText('BACK_TO_SITE')}</a>
+          </div>
+        </div>`;
+    }
 
     // Function to display search results when multiple priests are selected
     function showProximitySearchResults(results) {
@@ -3285,31 +5194,33 @@ function getTimezoneCoordinates(timezone) {
       const priestName = document.getElementById('priestName');
       const priestInfo = document.getElementById('priestInfo');
       
-      // Set priest name with title abbreviation and last name
+      // Get translated title based on priest type
       let title;
       switch(priest.Type) {
         case "Bishop":
-          title = "Bp.";
+          title = getTranslatedText('TITLE_BISHOP');
           break;
         case "Father":
-          title = "Fr.";
+          title = getTranslatedText('TITLE_FATHER');
           break;
         case "Sister":
-          title = "Sr.";
+          title = getTranslatedText('TITLE_SISTER');
           break;
         case "Mother":
-          title = "M.";
+          title = getTranslatedText('TITLE_MOTHER');
           break;
         case "Brother":
-          title = "Br.";
+          title = getTranslatedText('TITLE_BROTHER');
           break;
         default:
           title = "";
       }
       
+      // Get name parts for formatted display
       let lastName = priest.Name.split(' ').pop();
       let firstInitial = priest.Name.charAt(0);
       
+      // Set priest name with title
       priestName.textContent = `${title} ${firstInitial}. ${lastName}`;
       
       // Clear previous info
@@ -3322,17 +5233,17 @@ function getTimezoneCoordinates(timezone) {
       
       // Born year
       if (priest['Born Year']) {
-        bioText += `Born ${priest['Born Year']}, `;
+        bioText += `${getTranslatedText('BORN')} ${priest['Born Year']}, `;
       }
       
       // Ordination info
       if (priest['Ordained in Rite'] || priest['Ordained By']) {
-        bioText += 'Ordained priest in ';
+        bioText += `${getTranslatedText('ORDAINED_PRIEST_IN')} `;
         if (priest['Ordained in Rite']) {
           bioText += priest['Ordained in Rite'] + ' ';
         }
         if (priest['Ordained By']) {
-          bioText += 'by ' + priest['Ordained By'] + ', ';
+          bioText += `${getTranslatedText('BY')} ${priest['Ordained By']}, `;
         } else {
           bioText += ', ';
         }
@@ -3340,17 +5251,17 @@ function getTimezoneCoordinates(timezone) {
       
       // Consecration info (for bishops)
       if (priest.Type === "Bishop" && (priest['Consecrated in Rite'] || priest['Consecrated By'])) {
-        bioText += 'Consecrated Bishop in ';
+        bioText += `${getTranslatedText('CONSECRATED_BISHOP_IN')} `;
         if (priest['Consecrated in Rite']) {
           bioText += priest['Consecrated in Rite'] + ' ';
         }
         if (priest['Consecrated By']) {
-          bioText += 'by ' + priest['Consecrated By'] + ' ';
+          bioText += `${getTranslatedText('BY')} ${priest['Consecrated By']} `;
         }
         
         // Bishop line
         if (priest['Bishop Line']) {
-          bioText += `(Bishop line: ${priest['Bishop Line']})`;
+          bioText += `(${getTranslatedText('BISHOP_LINE')}: ${priest['Bishop Line']})`;
         }
         bioText += '. ';
       } else if (bioText) {
@@ -3360,24 +5271,23 @@ function getTimezoneCoordinates(timezone) {
       
       // Location
       if (priest['Location/Area']) {
-        bioText += `Operates in ${priest['Location/Area']}`;
+        bioText += `${getTranslatedText('OPERATES_IN')} ${priest['Location/Area']}`;
       }
       
       // Associates With
       if (priest['Associates With']) {
         if (bioText) bioText += ', ';
-        bioText += `associates with ${priest['Associates With']}`;
+        bioText += `${getTranslatedText('ASSOCIATES_WITH')} ${priest['Associates With']}`;
       }
       
       // Beliefs
       if (priest['Beliefs']) {
         if (bioText) bioText += ', ';
-        bioText += `holds ${priest['Beliefs']} beliefs`;
+        bioText += `${getTranslatedText('HOLDS_BELIEFS')} ${priest['Beliefs']} ${getTranslatedText('BELIEFS')}`;
       }
 
-      // Notes section (kept separate as requested)
+      // Notes section
       if (priest['Notes']) {
-        
         if (bioText) {
           // End the sentence if it's not empty
           bioText += ".\n";
@@ -3400,9 +5310,9 @@ function getTimezoneCoordinates(timezone) {
         
         if (priest['Contact/Website'].startsWith('http')) {
           let niceurl = priest['Contact/Website'].replace(/^https?:\/\//, "");
-          contactRow.innerHTML = `Website: <a href="${priest['Contact/Website']}" target="_blank" class="info-link">${niceurl}</a>`;
+          contactRow.innerHTML = `${getTranslatedText('WEBSITE')}: <a href="${priest['Contact/Website']}" target="_blank" class="info-link">${niceurl}</a>`;
         } else {
-          contactRow.innerHTML = `Contact: ${priest['Contact/Website']}`;
+          contactRow.innerHTML = `${getTranslatedText('CONTACT')}: ${priest['Contact/Website']}`;
         }
         
         priestInfo.appendChild(contactRow);
@@ -3420,6 +5330,11 @@ function getTimezoneCoordinates(timezone) {
         const parishesSection = document.createElement('div');
         parishesSection.className = 'parishes-section';
         
+        // Add section title
+        const parishesTitle = document.createElement('h3');
+        parishesTitle.textContent = getTranslatedText('PARISHES_SERVED');
+        parishesSection.appendChild(parishesTitle);
+        
         const parishesList = document.createElement('ul');
         parishesList.className = 'parishes-list';
         
@@ -3434,8 +5349,8 @@ function getTimezoneCoordinates(timezone) {
           const parishitem = document.createElement('li');
           parishitem.className = 'parish-item';
           
-          const homeIndicator = parish.IsHomePriest ? ' (Home)' : '';
-          parishitem.innerHTML = `<strong>${parish.ParishName}${homeIndicator}:</strong> ${parish.MassTimes || 'No scheduled Masses'}`;
+          const homeIndicator = parish.IsHomePriest ? getTranslatedText('HOME_PARISH') : '';
+          parishitem.innerHTML = `<strong>${parish.ParishName}${homeIndicator}:</strong> ${parish.MassTimes || getTranslatedText('NO_SCHEDULED_MASSES')}`;
           
           // Add click handler to highlight this parish
           parishitem.style.cursor = 'pointer';
@@ -3455,7 +5370,7 @@ function getTimezoneCoordinates(timezone) {
       // Add Google Maps link
       const mapsRow = document.createElement('div');
       mapsRow.className = 'info-row';
-      mapsRow.innerHTML = `<a href="${priest.GoogleMaps}" target="_blank" class="info-link maps">View on Google Maps</a>`;
+      mapsRow.innerHTML = `<a href="${priest.GoogleMaps}" target="_blank" class="info-link maps">${getTranslatedText('VIEW_ON_MAPS')}</a>`;
       priestInfo.appendChild(mapsRow);
       
       // Show the info panel
@@ -3580,8 +5495,8 @@ function getTimezoneCoordinates(timezone) {
     }
 
     // Focus camera on a specific point
-    function focusOnPoint(lat, lng, zoomLevel = 200.0) {
-      // Calculate target position with Earth radius and adjusted coordinates
+    function focusOnPoint(lat, lng, zoomLevel = CONFIG.minDistance) {
+      // Calculate target position for the globe point
       const targetPosition = getPointOnGlobe(lat - 5, lng, 2);
       
       // Normalized direction vector
@@ -3593,7 +5508,7 @@ function getTimezoneCoordinates(timezone) {
       
       // Calculate target distance
       const targetDistance = Math.max(
-        controls.minDistance,
+        CONFIG.minDistance,
         Math.min(controls.maxDistance, currentDistance * (zoomLevel / CONFIG.currentZoomLevel))
       );
       CONFIG.currentZoomLevel = zoomLevel;
@@ -3601,8 +5516,12 @@ function getTimezoneCoordinates(timezone) {
       // Calculate new camera position
       const newPosition = direction.multiplyScalar(targetDistance);
       
+      // Calculate new lookAt target based on target distance
+      const newTarget = calculateLookAtTarget(targetDistance);
+      
       // Animate camera move
       const startPosition = camera.position.clone();
+      const startTarget = controls.target.clone();
       const startTime = Date.now();
       
       function animateCamera() {
@@ -3615,8 +5534,8 @@ function getTimezoneCoordinates(timezone) {
         // Interpolate position
         camera.position.lerpVectors(startPosition, newPosition, easeProgress);
         
-        // Look at center
-        camera.lookAt(0, 0, 0);
+        // Interpolate target
+        controls.target.lerpVectors(startTarget, newTarget, easeProgress);
         
         // Update controls
         controls.update();
@@ -3625,8 +5544,7 @@ function getTimezoneCoordinates(timezone) {
         if (progress < 1) {
           requestAnimationFrame(animateCamera);
         } else {
-          // Animation complete - update controls target
-          controls.target.set(0, 0, 0);
+          // Animation complete
           controls.update();
         }
       }
@@ -3635,8 +5553,9 @@ function getTimezoneCoordinates(timezone) {
       animateCamera();
     }
 
+
     // Initialize the application
     init();
-    </script>
+  </script>
 </body>
 </html>
