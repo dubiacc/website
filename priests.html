@@ -719,7 +719,7 @@
         maxZoom: 7,                // Decreased from 19 for testing
         tileSize: 256,              // Tile size in pixels
         opacity: 1.0,               // OSM tile opacity (increased from 0.8)
-        debugZLevel: 1,             // Force a specific z-level for debugging
+        debugZLevel: null,             // Force a specific z-level for debugging
         defaultProvider: 'osm',     // Default tile provider ('osm', 'carto', 'stamen')
         maxConcurrentRequests: 6,   // Maximum concurrent tile requests
         tileFadeInDuration: 200,    // Duration to fade in tiles in ms
@@ -727,21 +727,21 @@
         maxVisibleTiles: 200,       // Maximum number of visible tiles (for performance)
         // More conservative altitude to zoom mapping
         altitudeToZoomMap: [        
-          { altitude: 350, zoom: 2 },
-          { altitude: 280, zoom: 3 },
-          { altitude: 220, zoom: 4 },
-          { altitude: 190, zoom: 5 },
-          { altitude: 170, zoom: 6 },
-          { altitude: 160, zoom: 7 },
-          { altitude: 150, zoom: 7 },
-          { altitude: 140, zoom: 7 },
-          { altitude: 130, zoom: 7 },
-          { altitude: 125, zoom: 7 },
-          { altitude: 120, zoom: 7 }
+          { altitude: 350, zoom: 1 },
+          { altitude: 280, zoom: 2 },
+          { altitude: 220, zoom: 3 },
+          { altitude: 190, zoom: 4 },
+          { altitude: 170, zoom: 4 },
+          { altitude: 160, zoom: 5 },
+          { altitude: 150, zoom: 5 },
+          { altitude: 140, zoom: 6 },
+          { altitude: 130, zoom: 6 },
+          { altitude: 125, zoom: 6 },
+          { altitude: 120, zoom: 6 }
         ],
         providers: {
           osm: {
-            url: window.origin + '/tiledownload/tiles/{z}/{y}/{x}.avif',
+            url: window.origin + '/tiledownload/tiles/{z}/{x}/{y}.avif',
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           },
           carto: {
@@ -753,11 +753,11 @@
             attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>'
           },
           dark: {
-            url: 'https://cartodb-basemaps-a.global.ssl.fastly.net/dark_all/{z}/{y}/{x}.png',
+            url: 'https://cartodb-basemaps-a.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
             attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>'
           },
           satellite: {
-            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{x}/{y}',
             attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
           }
         }
@@ -3592,25 +3592,27 @@
         this.queue = [];
         this.maxConcurrent = maxConcurrent;
         this.activeRequests = 0;
-        this.retryCountMap = new Map(); // Track retry count for each tile
+        this.retryCountMap = new Map(); // Single source of truth for tracking attempts
         this.maxRetries = 2; // Maximum number of retry attempts
-        this.textureLoader = new THREE.TextureLoader();
+      }
+      
+      // Check if a tile has reached max retries based on the retryCountMap
+      isPermanentlyFailed(tileId) {
+        const retryCount = this.retryCountMap.get(tileId) || 0;
+        return retryCount >= this.maxRetries;
       }
       
       add(tileRequest) {
         const tileId = tileRequest.tileId;
         
-        // Check if this tile has exceeded retry limit
-        const retryCount = this.retryCountMap.get(tileId) || 0;
-        if (retryCount >= this.maxRetries) {
+        // Early return if tile has already reached max retries
+        if (this.isPermanentlyFailed(tileId)) {
           console.log(`Skipping tile ${tileId} - reached maximum retry limit (${this.maxRetries})`);
           return;
         }
         
         // Check if this tile is already in the queue
-        const existingIndex = this.queue.findIndex(req => 
-          req.tileId === tileId
-        );
+        const existingIndex = this.queue.findIndex(req => req.tileId === tileId);
         
         if (existingIndex !== -1) {
           // Update priority if this tile is already queued
@@ -3641,9 +3643,15 @@
         const tileId = request.tileId;
         this.activeRequests++;
         
-        // Update retry count
+        // Update retry count BEFORE processing the request
+        // This ensures the retry count is updated even if the request fails immediately
         const retryCount = this.retryCountMap.get(tileId) || 0;
         this.retryCountMap.set(tileId, retryCount + 1);
+        
+        // Log when a tile is being retried multiple times
+        if (retryCount > 0) {
+          console.log(`Retry #${retryCount + 1} for tile ${tileId}`);
+        }
         
         // Use XHR to fetch the image
         const xhr = new XMLHttpRequest();
@@ -3670,6 +3678,9 @@
               // Release blob URL
               URL.revokeObjectURL(url);
               
+              // Reset retry count only for successful loads
+              this.resetRetryCount(tileId);
+              
               // Continue processing queue
               this.activeRequests--;
               this.processQueue();
@@ -3677,41 +3688,55 @@
             
             img.onerror = () => {
               console.error(`Failed to load image for tile ${tileId}`);
-              if (request.onError) {
-                request.onError(new Error('Image loading failed'));
-              }
+              this.handleFailure(tileId, request, new Error('Image loading failed'));
               URL.revokeObjectURL(url);
-              this.activeRequests--;
-              this.processQueue();
             };
             
             img.src = url;
           } else {
             console.error(`XHR failed for tile ${tileId}: ${xhr.status}`);
-            if (request.onError) {
-              request.onError(new Error(`XHR failed: ${xhr.status}`));
-            }
-            this.activeRequests--;
-            this.processQueue();
+            this.handleFailure(tileId, request, new Error(`XHR failed: ${xhr.status}`));
           }
         };
         
         xhr.onerror = () => {
           console.error(`Network error for tile ${tileId}`);
-          if (request.onError) {
-            request.onError(new Error('Network error'));
-          }
-          this.activeRequests--;
-          this.processQueue();
+          this.handleFailure(tileId, request, new Error('Network error'));
+        };
+        
+        xhr.timeout = 10000; // 10 second timeout
+        xhr.ontimeout = () => {
+          console.error(`Request timeout for tile ${tileId}`);
+          this.handleFailure(tileId, request, new Error('Request timeout'));
         };
         
         xhr.send();
+      }
+      
+      // Centralized failure handling
+      handleFailure(tileId, request, error) {
+        // Check if we've reached max retries (retry count was already incremented)
+        const currentRetryCount = this.retryCountMap.get(tileId) || 0;
+        
+        // Log if this is the final retry
+        if (currentRetryCount >= this.maxRetries) {
+          console.log(`Tile ${tileId} has reached retry limit (${this.maxRetries}), marked as permanently failed`);
+        }
+        
+        // Call the original error callback
+        if (request.onError) {
+          request.onError(error);
+        }
+        
+        // Continue processing queue
+        this.activeRequests--;
+        this.processQueue();
       }
 
       // Clear all pending requests (e.g. when changing zoom levels)
       clear() {
         this.queue = [];
-        // Don't clear retry counts - we want to keep track of these
+        // We're keeping the retry counts intentionally
       }
       
       // Reset retry count for a specific tile (e.g. after successful load)
@@ -3723,6 +3748,407 @@
       get pendingCount() {
         return this.queue.length;
       }
+      
+      // Count the number of permanently failed tiles
+      get failedCount() {
+        return Array.from(this.retryCountMap.entries())
+          .filter(([_, count]) => count >= this.maxRetries)
+          .length;
+      }
+      
+      // Get a list of all permanently failed tile IDs (for debugging)
+      getFailedTileIds() {
+        return Array.from(this.retryCountMap.entries())
+          .filter(([_, count]) => count >= this.maxRetries)
+          .map(([tileId, _]) => tileId);
+      }
+    }
+
+    /**
+     * Converts a Cartesian point on the globe to latitude and longitude
+     */
+    function cartesianToLatLong(point, radius) {
+      // Normalize the point to the unit sphere
+      const normalized = point.clone().divideScalar(radius);
+      
+      // Calculate latitude (90° at North Pole, -90° at South Pole)
+      const lat = 90 - Math.acos(normalized.y) * 180 / Math.PI;
+      
+      // Calculate longitude (-180° to 180°)
+      let lng = Math.atan2(normalized.z, normalized.x) * 180 / Math.PI;
+      
+      return { lat, lng };
+    }
+
+    /**
+     * Convert latitude to tile Y coordinate
+     */
+    function latitudeToTileY(lat, zoom) {
+      const latRad = lat * Math.PI / 180;
+      return Math.floor((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2 * Math.pow(2, zoom));
+    }
+
+    /**
+     * Convert longitude to tile X coordinate
+     */
+    function longitudeToTileX(lng, zoom) {
+      return Math.floor((lng + 180) / 360 * Math.pow(2, zoom));
+    }
+
+
+    /**
+     * Helper to create a range of integers
+     */
+    function range(start, end) {
+      return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    }
+
+    /**
+     * Converts latitude/longitude bounds to tile coordinates
+     */
+     function latLongBoundsToTiles(bounds, zoomLevel) {
+        const tiles = [];
+        const { minLat, maxLat, minLng, maxLng } = bounds;
+        
+        // Calculate tile coordinates for the corners
+        // NOTE: In OSM, y=0 is at the top (north pole), so maxLat maps to minTileY
+        const minTileX = longitudeToTileX(minLng, zoomLevel);
+        const maxTileX = longitudeToTileX(maxLng, zoomLevel);
+        const minTileY = latitudeToTileY(maxLat, zoomLevel); // Note: y is inverted in tile coordinates
+        const maxTileY = latitudeToTileY(minLat, zoomLevel);
+        
+        // Handle cases where minLng > maxLng (crossing 180° meridian)
+        let xRange;
+        if (minLng > maxLng) {
+          // We need to split into two ranges: [minTileX, maxTile] and [0, maxTileX]
+          xRange = [];
+          const tilesAtZoom = Math.pow(2, zoomLevel);
+          
+          // First range: from minTileX to end of the world
+          for (let x = minTileX; x < tilesAtZoom; x++) {
+            xRange.push(x);
+          }
+          
+          // Second range: from beginning of the world to maxTileX
+          for (let x = 0; x <= maxTileX; x++) {
+            xRange.push(x);
+          }
+        } else {
+          // Normal case
+          xRange = range(minTileX, maxTileX);
+        }
+        
+        // Create all combinations of x and y
+        for (const x of xRange) {
+          for (let y = minTileY; y <= maxTileY; y++) {
+            tiles.push({ x, y, z: zoomLevel });
+          }
+        }
+        
+        return tiles;
+      }
+
+    /**
+     * Sort tiles by distance from a center point for priority loading
+     */
+    function sortTilesByPriority(tiles, centerLatLong) {
+      // Convert tiles to their center latitude/longitude
+      const tilesWithCenters = tiles.map(tile => {
+        const centerLat = tileYToLatitude(tile.y + 0.5, tile.z);
+        const centerLng = tileXToLongitude(tile.x + 0.5, tile.z);
+        
+        // Calculate distance to center point (squared to avoid square root)
+        const latDiff = centerLat - centerLatLong.lat;
+        const lngDiff = centerLng - centerLatLong.lng;
+        const distanceSquared = latDiff * latDiff + lngDiff * lngDiff;
+        
+        return { ...tile, distanceSquared };
+      });
+      
+      // Sort by distance
+      tilesWithCenters.sort((a, b) => a.distanceSquared - b.distanceSquared);
+      
+      // Update the original array with sorted order
+      for (let i = 0; i < tiles.length; i++) {
+        tiles[i] = { x: tilesWithCenters[i].x, y: tilesWithCenters[i].y, z: tilesWithCenters[i].z };
+      }
+    }
+
+    /**
+     * Convert tile Y coordinate to latitude
+     */
+    function tileYToLatitude(y, zoom) {
+      const n = Math.PI - 2 * Math.PI * y / Math.pow(2, zoom);
+      return Math.atan(Math.sinh(n)) * 180 / Math.PI;
+    }
+
+    /**
+     * Convert tile X coordinate to longitude
+     */
+    function tileXToLongitude(x, zoom) {
+      return x / Math.pow(2, zoom) * 360 - 180;
+    }
+
+    /**
+     * Determine the maximum number of tiles to load based on zoom level and distance
+     */
+    function determineMaxTilesForZoomLevel(zoomLevel, distance) {
+      // Base number of tiles - more for closer distances
+      let baseTiles = 64;
+      
+      // Distance factor - load fewer tiles when further away
+      const distanceFactor = Math.max(0.2, Math.min(1.0, 400 / distance));
+      
+      // Zoom factor - higher zoom levels need more tiles
+      const zoomFactor = Math.pow(1.5, zoomLevel - 2);
+      
+      // Calculate total tiles, with a reasonable maximum
+      const recommendedTiles = Math.round(baseTiles * distanceFactor * zoomFactor);
+      
+      // Set hard limits based on zoom to prevent excessive loads
+      const zoomBasedLimit = Math.min(
+        256,               // Absolute maximum 
+        Math.pow(4, Math.max(1, zoomLevel)) // Grows with zoom level
+      );
+      
+      return Math.min(recommendedTiles, zoomBasedLimit);
+    }
+
+    /**
+     * Calculate a fallback set of tiles when camera isn't directly pointing at the globe
+     */
+    function calculateFallbackTiles(camera, viewDirection, zoomLevel) {
+      // Project the view direction onto the globe's surface
+      // and use a small set of tiles around that point
+      const distance = 500; // arbitrary distance
+      const pointOnGlobe = new THREE.Vector3()
+        .copy(camera.position)
+        .add(viewDirection.clone().multiplyScalar(distance))
+        .normalize()
+        .multiplyScalar(100); // globe radius
+      
+      const latLong = cartesianToLatLong(pointOnGlobe, 100);
+      
+      // Create a small bounds around this point
+      const bounds = {
+        minLat: latLong.lat - 20,
+        maxLat: latLong.lat + 20,
+        minLng: latLong.lng - 20,
+        maxLng: latLong.lng + 20
+      };
+      
+      // Constrain latitude to valid range
+      bounds.minLat = Math.max(bounds.minLat, -85);
+      bounds.maxLat = Math.min(bounds.maxLat, 85);
+      
+      // Fix longitude to wrap around correctly
+      if (bounds.minLng < -180) bounds.minLng += 360;
+      if (bounds.maxLng > 180) bounds.maxLng -= 360;
+      
+      // Only use low zoom level for fallback
+      const fallbackZoom = Math.min(zoomLevel, 2);
+      
+      const tiles = latLongBoundsToTiles(bounds, fallbackZoom);
+      return tiles.slice(0, 16); // Limit to a small number of tiles
+    }
+
+    /**
+     * Filter out tiles that are on the back side of the globe
+     * 
+     * @param {Array} tiles - Array of tile objects with x, y, and z coordinates
+     * @param {THREE.Camera} camera - The camera object
+     * @param {THREE.Vector3} globeCenter - The center of the globe
+     * @param {number} globeRadius - The radius of the globe
+     * @param {number} zoomLevel - The current zoom level
+     * @returns {Array} Filtered array of tiles on the front face only
+     */
+     function filterTilesOnFrontFace(tiles, camera, globeCenter, globeRadius, zoomLevel) {
+        // Get camera position and direction to globe center
+        const cameraPos = camera.position.clone();
+        const cameraToCenter = new THREE.Vector3().subVectors(globeCenter, cameraPos).normalize();
+        
+        // Create a plane perpendicular to the camera-to-center vector that passes through the globe center
+        const cutPlane = new THREE.Plane().setFromNormalAndCoplanarPoint(cameraToCenter, globeCenter);
+        
+        // Filter tiles that are on the front side of the plane
+        return tiles.filter(tile => {
+          // Convert tile to its center point in lat/lng
+          const centerLat = tileYToLatitude(tile.y + 0.5, zoomLevel);
+          const centerLng = tileXToLongitude(tile.x + 0.5, zoomLevel);
+          
+          // Convert to 3D point on the globe's surface
+          const tilePos = latLngTo3DPoint(centerLat, centerLng, globeRadius);
+          
+          // Check if this point is on the front side of the cutting plane
+          // (negative distance means in front of the plane, toward the camera)
+          const distanceToPlane = cutPlane.distanceToPoint(tilePos);
+          
+          // Add a small margin to account for tiles that might be on the edge
+          return distanceToPlane < (globeRadius * 0.1); // Small positive margin to include tiles right at the edge
+        });
+      }
+
+    /**
+     * Converts lat/lng coordinates to a 3D point on the globe surface
+     * 
+     * @param {number} lat - Latitude in degrees
+     * @param {number} lng - Longitude in degrees
+     * @param {number} radius - Radius of the globe
+     * @returns {THREE.Vector3} 3D point on the globe surface
+     */
+     function latLngTo3DPoint(lat, lng, radius) {
+        // Convert to radians
+        const phi = (90 - lat) * Math.PI / 180;
+        const theta = (lng + 180) * Math.PI / 180;
+        
+        // Calculate point on sphere surface
+        const x = -radius * Math.sin(phi) * Math.cos(theta);
+        const y = radius * Math.cos(phi);
+        const z = radius * Math.sin(phi) * Math.sin(theta);
+        
+        return new THREE.Vector3(x, y, z);
+      }
+    
+    /**
+     * Determines which map tiles should be visible based on sphere geometry and camera parameters
+     * with improved back-face culling to reduce unnecessary tile loading
+     * 
+     * @param {number} globeRadius - Radius of the globe in the same units as distance
+     * @param {number} distance - Distance from camera to center of globe
+     * @param {number} fovDegrees - Camera field of view in degrees
+     * @param {number} zoomLevel - Current OSM zoom level
+     * @param {THREE.Camera} camera - The THREE.js camera object
+     * @param {THREE.Vector3} globeCenter - The position of the globe center (usually origin)
+     * @returns {Array} Array of tile objects with x, y, and z coordinates
+     */
+    function determineVisibleTiles(globeRadius, distance, fovDegrees, zoomLevel, camera, globeCenter = new THREE.Vector3(0, 0, 0)) {
+      // Early exit if we're too far from the globe
+      if (distance > 500) {
+        console.log("Camera too far from globe, no detailed tiles needed");
+        return [];
+      }
+      
+      // Convert FOV from degrees to radians
+      const fovRadians = fovDegrees * (Math.PI / 180);
+      
+      // Calculate camera direction and up vector
+      const viewDirection = new THREE.Vector3();
+      camera.getWorldDirection(viewDirection);
+      
+      // Calculate the unit vector from camera to globe center
+      const cameraToCenter = new THREE.Vector3().subVectors(globeCenter, camera.position).normalize();
+      
+      // Calculate dot product between view direction and camera-to-center
+      // If positive, we're looking away from the globe
+      if (viewDirection.dot(cameraToCenter) < 0) {
+        console.log("Camera looking away from globe, no tiles needed");
+        return [];
+      }
+      
+      // Create a sphere for intersection testing
+      const globeSphere = new THREE.Sphere(globeCenter, globeRadius);
+      
+      // Set up ray from camera position in view direction
+      const raycaster = new THREE.Raycaster(camera.position, viewDirection);
+      
+      // Check if the ray intersects the sphere
+      const intersects = raycaster.ray.intersectSphere(globeSphere, new THREE.Vector3());
+      
+      // If we don't intersect the globe, return a conservative set of tiles around the camera's forward point
+      if (!intersects) {
+        console.log("Camera not pointing at globe, using fallback tiles");
+        return calculateFallbackTiles(camera, viewDirection, zoomLevel);
+      }
+      
+      // The intersection point on the globe surface
+      const intersectionPoint = intersects.clone();
+      
+      // Convert intersection point to lat/long
+      const latLong = cartesianToLatLong(intersectionPoint, globeRadius);
+      console.log(`Camera looking at: lat ${latLong.lat.toFixed(2)}, long ${latLong.lng.toFixed(2)}`);
+      
+      // 1. Calculate visible fraction of globe based on distance
+      const visibleFraction = (distance - globeRadius) / (2 * distance);
+      
+      // 2. Calculate the angular size of the visible cap
+      const capAngle = Math.acos(globeRadius / distance);
+      
+      // 3. Determine if the globe fills the view or is partially visible
+      const apparentAngularSize = 2 * Math.asin(globeRadius / distance);
+      const globeFillsFOV = apparentAngularSize > fovRadians;
+      
+      // Calculate the visible radius in lat/long space
+      let effectiveVisibleRadius;
+      if (globeFillsFOV) {
+        // If the globe fills the view, use the smaller of the FOV/2 and cap angle
+        effectiveVisibleRadius = Math.min(fovRadians / 2, capAngle);
+      } else {
+        // If the globe is smaller than the view, just use the cap angle
+        // but constrained by what's actually visible in the FOV
+        const halfFOVAngle = fovRadians / 2;
+        const visibleGlobeEdgeAngle = Math.asin(Math.sin(apparentAngularSize / 2) / Math.sin(halfFOVAngle)) * halfFOVAngle;
+        effectiveVisibleRadius = Math.min(capAngle, visibleGlobeEdgeAngle);
+      }
+      
+      // Convert this angular radius to approximate lat/long deltas
+      const latRadius = (effectiveVisibleRadius * 180 / Math.PI);
+      const lngRadius = latRadius / Math.cos(latLong.lat * Math.PI / 180);
+      
+      // Calculate the bounds with some safety margin
+      const safetyFactor = 1.2; // Add 20% to ensure we don't have gaps
+      const bounds = {
+        minLat: latLong.lat - latRadius * safetyFactor,
+        maxLat: latLong.lat + latRadius * safetyFactor,
+        minLng: latLong.lng - lngRadius * safetyFactor,
+        maxLng: latLong.lng + lngRadius * safetyFactor
+      };
+      
+      // Constrain latitude to valid range
+      bounds.minLat = Math.max(bounds.minLat, -85);
+      bounds.maxLat = Math.min(bounds.maxLat, 85);
+      
+      // Fix longitude to wrap around correctly
+      if (bounds.minLng < -180) bounds.minLng += 360;
+      if (bounds.maxLng > 180) bounds.maxLng -= 360;
+      
+      console.log(`Visible bounds: Lat [${bounds.minLat.toFixed(2)}, ${bounds.maxLat.toFixed(2)}], Lng [${bounds.minLng.toFixed(2)}, ${bounds.maxLng.toFixed(2)}]`);
+      
+      // Convert bounds to tile coordinates
+      let tiles = latLongBoundsToTiles(bounds, zoomLevel);
+      
+      // *** NEW: Add back-face culling to remove tiles on the far side of the globe ***
+      // tiles = filterTilesOnFrontFace(tiles, camera, globeCenter, globeRadius, zoomLevel);
+      
+      console.log(`After back-face culling: ${tiles.length} tiles remain`);
+      
+      // Sort tiles by distance from center point for priority loading
+      sortTilesByPriority(tiles, latLong);
+      
+      // Limit the number of tiles to a reasonable maximum
+      const maxTiles = determineMaxTilesForZoomLevel(zoomLevel, distance);
+      if (tiles.length > maxTiles) {
+        console.log(`Limiting from ${tiles.length} to ${maxTiles} tiles based on zoom level and distance`);
+        return tiles.slice(0, maxTiles);
+      }
+      
+      return tiles;
+    }
+
+    function invertNormals(geometry) {
+      if (!geometry || !geometry.attributes || !geometry.attributes.normal) return;
+      
+      // Get the normal attribute array
+      const normals = geometry.attributes.normal.array;
+      
+      // Invert each normal component
+      for (let i = 0; i < normals.length; i++) {
+        normals[i] = -normals[i];
+      }
+      
+      // Mark the normal attribute as needing an update
+      geometry.attributes.normal.needsUpdate = true;
+      
+      return geometry;
     }
 
     class OSMTileManager {
@@ -3746,7 +4172,7 @@
         this._lastCleanupTime = 0;
         
         // Create request queue for async loading with retry limit
-        this.requestQueue = new TileRequestQueue(4); // Reduced from 6 to 4 concurrent requests
+        this.requestQueue = new TileRequestQueue(16); // Reduced from 6 to 4 concurrent requests
         
         // Debug UI for z-level adjustment
         if (this.isEnabled) {
@@ -3901,7 +4327,7 @@
       // Update debug info with current stats
       updateDebugInfo() {
         if (!this.debugInfoElement) return;
-        
+  
         const distance = camera.position.length();
         const zLevel = this.calculateZoomLevel(distance);
         
@@ -3910,11 +4336,52 @@
           Current Z-Level: ${this.currentZLevel || 'none'}<br>
           Active Tiles: ${this.activeTiles.size}<br>
           Cached Tiles: ${this.tileCache.size}<br>
+          Failed Tiles: ${this.requestQueue.failedCount}<br>
           Pending Requests: ${this.requestQueue.pendingCount}<br>
           Stats: +${this.stats.lastUpdateTiles} (${this.stats.tilesCreated}/${this.stats.tilesLoaded}/${this.stats.tilesCached})
         `;
       }
       
+      toggleTilesVisibility(distance) {
+        // Show tiles only when close enough
+        if (distance < this.config.zoomThreshold && this.isEnabled) {
+          if (!this.tileGroup.visible) {
+            console.log('Showing OSM tiles, distance:', distance);
+            
+            // Force visibility of the tile group
+            this.tileGroup.visible = true;
+            
+            // Ensure all child tiles are also visible and have proper opacity
+            this.tileGroup.children.forEach(child => {
+              if (child.material) {
+                child.material.opacity = this.config.opacity;
+                child.visible = true;
+              }
+            });
+            
+            // ADDED: Hide the Earth mesh when showing tiles
+            if (enhancedEarth) {
+              enhancedEarth.toggleEarthVisibility(distance);
+            }
+            
+            console.log(`Made ${this.tileGroup.children.length} tiles visible with opacity ${this.config.opacity}`);
+          }
+        } else {
+          if (this.tileGroup.visible) {
+            console.log('Hiding OSM tiles, distance:', distance);
+            this.tileGroup.visible = false;
+            
+            // ADDED: Show the Earth mesh when hiding tiles
+            if (enhancedEarth) {
+              enhancedEarth.toggleEarthVisibility(distance);
+            }
+            
+            // IMPORTANT: Add a longer delay before next update attempt
+            this.lastUpdateTime = performance.now() + 1000;
+          }
+        }
+      }
+
       getTileGroup() {
         return this.tileGroup;
       }
@@ -4027,15 +4494,27 @@
       createTileMesh(x, y, z, priority = 0) {
         const tileId = `${x}-${y}-${z}`;
         
-        // Check if this tile ID is in our "failed attempts" map
-        if (this.requestQueue.retryCountMap.get(tileId) >= this.requestQueue.maxRetries) {
-          console.log(`Skipping tile ${tileId} - already reached maximum retry limit`);
+        // ALWAYS increment retry count when attempting to create a tile
+        // The counter is our ground truth for tracking tile loading attempts
+        const currentRetryCount = this.requestQueue.retryCountMap.get(tileId) || 0;
+        this.requestQueue.retryCountMap.set(tileId, currentRetryCount + 1);
+        
+        // Early return with null if retry limit reached - this is the definitive check
+        if (currentRetryCount >= this.requestQueue.maxRetries) {
+          console.log(`Tile ${tileId} has hit retry limit (${this.requestQueue.maxRetries}), permanently skipping`);
           return null;
         }
         
         // Check if we're already at the tile limit
         if (this.activeTiles.size >= this.config.maxVisibleTiles && !this.activeTiles.has(tileId)) {
-          // Skip creating new tiles if we're at the limit
+          // Revert the retry count since this isn't a failure, just a capacity issue
+          this.requestQueue.retryCountMap.set(tileId, currentRetryCount);
+          return null;
+        }
+        
+        // If tile is active, it's already being displayed - no need to create again
+        // But DON'T revert the retry count - we still tried to access this tile
+        if (this.activeTiles.has(tileId)) {
           return null;
         }
         
@@ -4043,21 +4522,18 @@
         if (this.tileCache.has(tileId) && this.tileCache.get(tileId).mesh) {
           const cachedTile = this.tileCache.get(tileId);
           
-          // If mesh exists and isn't in the scene, add it
-          if (!this.activeTiles.has(tileId)) {
-            // Ensure visibility and opacity are set correctly
-            if (cachedTile.mesh.material) {
-              cachedTile.mesh.material.opacity = this.config.opacity;
-              cachedTile.mesh.visible = true;
-            }
-            
-            this.tileGroup.add(cachedTile.mesh);
-            this.activeTiles.add(tileId);
-            this.stats.tilesCached++;
-            
-            // Reset retry count for this tile since we found it in cache
-            this.requestQueue.resetRetryCount(tileId);
+          // Ensure visibility and opacity are set correctly
+          if (cachedTile.mesh.material) {
+            cachedTile.mesh.material.opacity = this.config.opacity;
+            cachedTile.mesh.visible = true;
           }
+          
+          this.tileGroup.add(cachedTile.mesh);
+          this.activeTiles.add(tileId);
+          this.stats.tilesCached++;
+          
+          // Reset retry count only for successfully served tiles
+          this.requestQueue.resetRetryCount(tileId);
           
           return cachedTile.mesh;
         }
@@ -4140,15 +4616,20 @@
           },
           onError: (error) => {
             console.error(`Error loading tile ${tileId}:`, error);
+            
             // Keep red placeholder on error
             if (mesh.material) {
               mesh.material.color.set(0xff0000);
               mesh.material.opacity = 0.5;
             }
+            
             // Mark as loaded even if it failed
             if (this.tileCache.has(tileId)) {
               this.tileCache.get(tileId).loading = false;
             }
+            
+            // Note: We do NOT reset the retry count here since it failed
+            // This will allow the retryCountMap to track failures correctly
           }
         });
         
@@ -4159,6 +4640,9 @@
       positionTileOnGlobe(mesh, northLat, southLat, westLng, eastLng) {
         // Modify the plane geometry to conform to the sphere
         const positions = mesh.geometry.attributes.position.array;
+        
+        // ADDED: Small offset to place tiles slightly above Earth's surface
+        const radiusOffset = 0.1;  // Small offset to prevent z-fighting
         
         for (let i = 0; i < positions.length; i += 3) {
           // Normalized coordinates within the tile (0 to 1)
@@ -4173,17 +4657,19 @@
           const phi = (90 - lat) * Math.PI / 180;
           const theta = (lng + 180) * Math.PI / 180;
           
-          // Calculate point on sphere surface
-          positions[i] = -this.earthRadius * Math.sin(phi) * Math.cos(theta);     // x
-          positions[i + 1] = this.earthRadius * Math.cos(phi);                    // y
-          positions[i + 2] = this.earthRadius * Math.sin(phi) * Math.sin(theta);  // z
+          // Calculate point on sphere surface with a small offset
+          const radius = this.earthRadius + radiusOffset;
+          positions[i] = -radius * Math.sin(phi) * Math.cos(theta);     // x
+          positions[i + 1] = radius * Math.cos(phi);                    // y
+          positions[i + 2] = radius * Math.sin(phi) * Math.sin(theta);  // z
         }
         
         // Update the geometry
         mesh.geometry.attributes.position.needsUpdate = true;
         mesh.geometry.computeVertexNormals();
+        invertNormals(mesh.geometry);
       }
-      
+
       // Fix the intersectSphere method in the raycaster
       intersectSphere(raycaster, sphere) {
         // Extract the ray from the raycaster
@@ -4226,115 +4712,27 @@
       
       // Implement proper frustum culling to determine visible tiles
       getVisibleTilesInFrustum(camera, zLevel) {
-        // Create a frustum from the camera
-        const frustum = new THREE.Frustum();
-        const projScreenMatrix = new THREE.Matrix4();
+        console.log(`Getting visible tiles using sphere geometry method for z-level ${zLevel}`);
         
-        // Update the projection matrix
-        camera.updateMatrixWorld();
-        projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
-        frustum.setFromProjectionMatrix(projScreenMatrix);
+        // Calculate distance from camera to globe center
+        const distance = camera.position.length();
         
-        // Define a set of test points on the globe at different latitudes and longitudes
-        const visibleTiles = new Set();
-        const globe = this.earthRadius;
+        // Use our new function to determine which tiles to load
+        const visibleTiles = determineVisibleTiles(
+          this.earthRadius,      // Globe radius matches our Earth model
+          distance,              // Current camera distance from center
+          camera.fov,            // Camera field of view in degrees
+          zLevel,                // Current zoom level
+          camera,                // The THREE.js camera
+          new THREE.Vector3(0, 0, 0) // Globe center (usually at origin)
+        );
         
-        // Create a temporary bounding sphere for testing
-        const boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), globe * 1.02);
+        // Log the tile count for comparison with the old method
+        console.log(`New method determined ${visibleTiles.length} tiles at z-level ${zLevel}`);
         
-        // First test if the globe itself is visible
-        if (!frustum.intersectsSphere(boundingSphere)) {
-          console.log("Globe is not in frustum");
-          return []; // Empty set
-        }
-        
-        // Check view center
-        const viewCenter = this.getCameraViewCenter(camera);
-        const centerTile = this.latLngToTile(viewCenter.lat, viewCenter.lng, zLevel);
-        
-        // Add center tile to visible tiles
-        visibleTiles.add(`${centerTile.x},${centerTile.y}`);
-        
-        // Use a sampling approach - create a grid of sample points across the globe
-        // The number of samples depends on the zoom level - more samples at higher zoom
-        const sampleCount = Math.max(12, Math.min(24, zLevel * 2)); 
-        
-        // Sample visible points across the globe surface
-        const step = 360 / sampleCount;
-        
-        // First pass - create a coarse grid of test points
-        for (let lat = -80; lat <= 80; lat += step) {
-          for (let lng = -180; lng <= 180; lng += step) {
-            // Convert to 3D point
-            const point = this.latLngToPoint(lat, lng);
-            
-            // Test if point is in frustum
-            if (frustum.containsPoint(point)) {
-              // Convert to tile coordinates
-              const tile = this.latLngToTile(lat, lng, zLevel);
-              visibleTiles.add(`${tile.x},${tile.y}`);
-              
-              // Also add neighboring tiles for smoother loading
-              for (let dx = -1; dx <= 1; dx++) {
-                for (let dy = -1; dy <= 1; dy++) {
-                  const nx = tile.x + dx;
-                  const ny = tile.y + dy;
-                  
-                  // Ensure tile coordinates are valid
-                  if (nx >= 0 && nx < Math.pow(2, zLevel) && ny >= 0 && ny < Math.pow(2, zLevel)) {
-                    visibleTiles.add(`${nx},${ny}`);
-                  }
-                }
-              }
-            }
-          }
-        }
-        
-        // Additional test - check where camera is pointing directly
-        const raycaster = new THREE.Raycaster();
-        raycaster.set(camera.position, new THREE.Vector3(0, 0, 0).sub(camera.position).normalize());
-        
-        const intersection = this.intersectSphere(raycaster, boundingSphere);
-        if (intersection) {
-          // Convert to lat/lng
-          const point = intersection.clone().normalize().multiplyScalar(globe);
-          const lat = 90 - Math.acos(point.y / globe) * 180 / Math.PI;
-          const lng = Math.atan2(point.z, point.x) * 180 / Math.PI;
-          
-          // Get tile and surrounding area
-          const tile = this.latLngToTile(lat, lng, zLevel);
-          
-          // Add a larger region around the center point
-          const radius = Math.min(4, Math.floor(12 / zLevel) + 1);
-          for (let dx = -radius; dx <= radius; dx++) {
-            for (let dy = -radius; dy <= radius; dy++) {
-              const nx = tile.x + dx;
-              const ny = tile.y + dy;
-              
-              if (nx >= 0 && nx < Math.pow(2, zLevel) && ny >= 0 && ny < Math.pow(2, zLevel)) {
-                visibleTiles.add(`${nx},${ny}`);
-              }
-            }
-          }
-        }
-        
-        // Convert back to individual coordinates
-        const result = [];
-        visibleTiles.forEach(coordStr => {
-          const [x, y] = coordStr.split(',').map(Number);
-          result.push({ x, y });
-        });
-        
-        console.log(`Found ${result.length} visible tiles at z-level ${zLevel}`);
-                
-        // If we have too many tiles, prioritize those closest to view center
-        if (result.length > this.config.maxVisibleTiles * 0.7) {
-          return this.prioritizeTiles(result, centerTile, this.config.maxVisibleTiles * 0.7);
-        }
-        
-        return result;
+        return visibleTiles;
       }
-      
+
       // Helper to convert lat/lng to 3D point
       latLngToPoint(lat, lng) {
         const phi = (90 - lat) * Math.PI / 180;
@@ -4414,7 +4812,7 @@
           return;
         }
         
-        // MUCH more aggressive throttling to prevent endless loops
+        // Throttle updates to prevent excessive calls
         const now = performance.now();
         if (now - this.lastUpdateTime < this.updateThrottleMs) {
           return;
@@ -4446,11 +4844,11 @@
             // Clear existing tiles
             this.clearTiles();
             
-            // Clear tile request queue
+            // Clear tile request queue but DO NOT clear the retry counts
             this.requestQueue.clear();
           }
           
-          // IMPORTANT NEW CHECK: Skip update if zoom level isn't appropriate for OSM tiles
+          // Skip update if zoom level isn't appropriate for OSM tiles
           if (distance > this.config.zoomThreshold) {
             console.log(`Distance ${distance.toFixed(1)} > threshold ${this.config.zoomThreshold}, skipping OSM tile update`);
             this._updateInProgress = false;
@@ -4459,15 +4857,7 @@
           
           // Check if we need to clean up excess tiles
           if (this.activeTiles.size > this.config.maxVisibleTiles) {
-            // Run cleanup directly instead of scheduling it
             this.cleanupExcessTiles();
-            this._updateInProgress = false;
-            return;
-          }
-          
-          // Add a check to prevent processing if we already have enough tiles
-          if (this.activeTiles.size >= this.config.maxVisibleTiles * 0.9) {
-            console.log(`Already have ${this.activeTiles.size} tiles, skipping update`);
             this._updateInProgress = false;
             return;
           }
@@ -4475,64 +4865,59 @@
           // Reset stats for this update
           this.stats.lastUpdateTiles = 0;
           
-          // Use frustum culling to determine visible tiles
+          // Use our improved function to determine visible tiles
+          // This replaces the previous frustum-based calculation
           const visibleTiles = this.getVisibleTilesInFrustum(camera, zLevel);
           
-          // Exit early if no visible tiles (e.g., camera facing away from globe)
+          // Exit early if no visible tiles
           if (visibleTiles.length === 0) {
             console.log("No visible tiles found, skipping update");
             this._updateInProgress = false;
             return;
           }
           
-          // Calculate how many new tiles we would add
-          let newTileCount = 0;
-          visibleTiles.forEach(tile => {
+          // Filter for tiles we can actually load (not at retry limit and not already active)
+          const loadableTiles = [];
+          for (const tile of visibleTiles) {
             const tileId = `${tile.x}-${tile.y}-${zLevel}`;
-            if (!this.activeTiles.has(tileId)) {
-              newTileCount++;
+            
+            // Skip if already active
+            if (this.activeTiles.has(tileId)) {
+              continue;
             }
-          });
+            
+            // Skip if at retry limit
+            const retryCount = this.requestQueue.retryCountMap.get(tileId) || 0;
+            if (retryCount >= this.requestQueue.maxRetries) {
+              continue;
+            }
+            
+            loadableTiles.push(tile);
+          }
           
-          // IMPROVED FIX: If we're not adding any new tiles, don't continue processing
-          // AND record a timestamp to prevent immediate re-checking
-          if (newTileCount === 0) {
-            console.log(`No new tiles to add, skipping update and extending throttle time`);
-            // Extend throttle time significantly when we have no new tiles to add
-            this.lastUpdateTime = performance.now() + 2000; // Add 2 seconds to prevent checks
+          // If we're not adding any new tiles, don't continue processing
+          if (loadableTiles.length === 0) {
+            this.lastUpdateTime = performance.now() + 2000;
             this._updateInProgress = false;
             return;
           }
           
-          console.log(`Found ${visibleTiles.length} visible tiles, ${newTileCount} new to load`);
+          console.log(`Found ${visibleTiles.length} visible tiles, ${loadableTiles.length} new and loadable`);
           
-          // Sort tiles by priority (distance from view center)
-          const centerTile = this.latLngToTile(viewCenter.lat, viewCenter.lng, zLevel);
+          // Load the tiles - using our existing limits for batch size
+          const tileBatchSize = Math.min(5, loadableTiles.length);
+          const tilesToLoad = loadableTiles.slice(0, tileBatchSize);
           
-          // Calculate priority for each tile
-          const tilesWithPriority = visibleTiles.map(tile => {
-            const dx = tile.x - centerTile.x;
-            const dy = tile.y - centerTile.y;
-            const distanceSquared = dx * dx + dy * dy;
-            
-            // Priority decreases with distance from center (1.0 = highest, near 0 = lowest)
-            const priority = 1.0 / (1.0 + distanceSquared * 0.05);
-            
-            return { ...tile, priority };
-          });
-          
-          // Sort by priority (highest first)
-          tilesWithPriority.sort((a, b) => b.priority - a.priority);
-          
-          // EVEN MORE CONSERVATIVE LIMIT: load fewer tiles at once
-          const tileBatchSize = Math.min(5, newTileCount); // Reduced from 10 to 5
-          const tilesToLoad = tilesWithPriority.slice(0, tileBatchSize);
-          
-          // Load the highest priority tiles
+          // Load each tile
           tilesToLoad.forEach(tile => {
-            // Create the tile with priority
-            this.createTileMesh(tile.x, tile.y, zLevel, tile.priority);
-            this.stats.lastUpdateTiles++;
+            const mesh = this.createTileMesh(tile.x, tile.y, zLevel, tile.priority || 1.0);
+            
+            if (mesh) {
+              this.stats.lastUpdateTiles++;
+              console.log(`Successfully created tile ${tile.x}-${tile.y}-${zLevel}`);
+            } else {
+              // console.log(`Skipped creating tile ${tile.x}-${tile.y}-${zLevel}`);
+            }
           });
           
           // Update debug info if UI exists
@@ -4848,6 +5233,34 @@
         }
       }
 
+      toggleEarthVisibility(distance) {
+        // If we're showing tiles, hide the Earth mesh
+        if (distance < this.osmTileManager.config.zoomThreshold && 
+            this.osmTileManager.isEnabled && 
+            this.osmTileManager.tileGroup.visible) {
+          
+          // Hide the Earth, clouds, and atmosphere when showing tiles
+          if (this.earthMesh && this.earthMesh.visible) {
+            console.log('Hiding Earth mesh to show OSM tiles');
+            this.earthMesh.visible = false;
+            
+            // Optionally hide clouds but keep atmosphere for better visuals
+            if (this.cloudMesh) this.cloudMesh.visible = false;
+            
+            // Keep atmosphere visible for a nice edge glow
+            // if (this.atmosphereMesh) this.atmosphereMesh.visible = false;
+          }
+        } else {
+          // Show the Earth when tiles are hidden or disabled
+          if (this.earthMesh && !this.earthMesh.visible) {
+            console.log('Showing Earth mesh, hiding OSM tiles');
+            this.earthMesh.visible = true;
+            if (this.cloudMesh) this.cloudMesh.visible = true;
+            if (this.atmosphereMesh) this.atmosphereMesh.visible = true;
+          }
+        }
+      }
+
       initOSMTiles() {
         // Create tile manager
         this.osmTileManager = new OSMTileManager(this.earthRadius, CONFIG.osmTiles);
@@ -4905,10 +5318,13 @@
               if (this.osmTileManager.tileGroup.visible && distance < this.osmTileManager.config.zoomThreshold) {
                 this.osmTileManager.updateTiles(camera, distance);
               }
+              
+              // ADDED: Ensure Earth visibility is toggled properly even when not updating tiles
+              enhancedEarth.toggleEarthVisibility(distance);
             }
           };
         }
-        
+
         // Throttle event listener for camera changes
         if (camera) {
           let cameraUpdateTimer = null;
