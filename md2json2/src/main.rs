@@ -2876,11 +2876,13 @@ struct SearchIndexArticle {
     sha256: String,
 }
 
-fn generate_search_index(articles: &AnalyzedArticles) -> BTreeMap<Lang, SearchIndex> {
-    articles
-        .map
-        .iter()
-        .map(|(lang, a)| {
+fn generate_search_index(articles: &AnalyzedArticles, meta: &MetaJson) -> BTreeMap<Lang, SearchIndex> {
+    let def = BTreeMap::new();
+    meta
+        .strings
+        .keys()
+        .map(|lang| {
+            let a = articles.map.get(lang).unwrap_or(&def);
             let s = a
                 .values()
                 .map(|r| r.sha256.clone())
@@ -2913,10 +2915,10 @@ type SearchHtmlResult = BTreeMap<Lang, (String, String, String)>;
 
 // Lang => (SearchBarHtml, SearchJS)
 fn search_html(articles: &AnalyzedArticles, meta: &MetaJson) -> Result<SearchHtmlResult, String> {
-    articles
-        .map
-        .iter()
-        .map(|(lang, a)| {
+    let def = BTreeMap::new();
+    meta.strings.keys()
+        .map(|lang| {
+            let a = articles.map.get(lang).unwrap_or(&def);
             let s = a
                 .values()
                 .map(|r| r.sha256.clone())
@@ -3376,10 +3378,12 @@ fn render_other_index_sections(
     tags: &Tags,
     articles: &AnalyzedArticles,
 ) -> Result<String, String> {
+
+    let def = BTreeMap::new();
     let articles = articles
         .map
         .get(lang)
-        .ok_or_else(|| format!("render_other_index_sections: unknown language {lang}"))?;
+        .unwrap_or(&def);
 
     let s = tags
         .iwanttolearn
@@ -3618,18 +3622,21 @@ fn main() -> Result<(), String> {
     }
 
     // Generate search index
-    let si = generate_search_index(&analyzed);
+    let si = generate_search_index(&analyzed, &meta_map);
     for (lang, si) in si.iter() {
         let json = serde_json::to_string(&si).unwrap_or_default();
         let _ = std::fs::write(cwd.join(lang).join("index.json"), json);
     }
 
     // Write special pages
-    let langs = analyzed.map.keys().cloned().collect::<Vec<_>>();
+    let langs = meta_map.strings.keys().cloned().collect::<Vec<_>>();
     for l in langs.iter() {
         let sp = get_special_pages(&l, &meta_map, &articles_by_tag, &articles_by_date)?;
         for s in sp.iter() {
-            let (path, html) = special2html(&l, s, &meta_map)?;
+            let (mut path, html) = special2html(&l, s, &meta_map)?;
+            if !path.ends_with(".html") {
+                path = path + ".html";
+            }
             let _ = std::fs::write(cwd.join(l).join(path), &&html);
         }
     }
@@ -3637,6 +3644,7 @@ fn main() -> Result<(), String> {
     // Write index + /search pages
     let si = search_html(&analyzed, &meta_map)?;
     for (lang, (_searchbar_html, search_html, search_js)) in si.iter() {
+        let _ = std::fs::create_dir_all(cwd.join(lang));
         let _ = std::fs::write(cwd.join(lang).join("search.js"), search_js);
         let _ = std::fs::write(cwd.join(lang).join("search.html"), &minify(&search_html));
         let index_html = render_index_html(lang, &analyzed, &meta_map, &si)?;
