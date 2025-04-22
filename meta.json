@@ -2,14 +2,14 @@
     "owner": "github:fschutt",
     "strings": {
         "de": {
-            "resistance-title": "Katholisches Widerstandsnetzwerk",
+            "resistance-title": "Katholischer Widerstand",
             "resistance-desc": "Finden Sie traditionelle katholische Priester und Messen weltweit",
             "resistance-link": "resistance.html",
             "resistance-nav": "Widerstand",
             
             "nav-home": "Startseite",
             "nav-articles": "Artikel",
-            "nav-tools": "Werkzeuge",
+            "nav-tools": "Ressourcen",
             "nav-contact": "Kontakt",
             
             "search-placeholder": "Priester, Orte suchen...",

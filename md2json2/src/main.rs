@@ -1619,9 +1619,14 @@ fn gen_sw_paths(cwd: &Path, articles: &AnalyzedArticles, meta: &MetaJson) -> Str
     )
 }
 
-fn generate_gitignore(articles: &LoadedArticles) -> String {
+fn generate_gitignore(articles: &LoadedArticles, meta: &MetaJson) -> String {
     let mut filenames = BTreeSet::new();
     for lang in articles.langs.keys() {
+        filenames.insert(format!("/{lang}"));
+        filenames.insert(format!("/{lang}2"));
+        filenames.insert(format!("{lang}.html"));
+    }
+    for lang in meta.strings.keys() {
         filenames.insert(format!("/{lang}"));
         filenames.insert(format!("/{lang}2"));
         filenames.insert(format!("{lang}.html"));
@@ -3642,7 +3647,7 @@ fn main() -> Result<(), String> {
     resistance::generate_resistance_pages(&cwd, &meta_map)?;
 
     // Write gitignore
-    let _ = std::fs::write(cwd.join(".gitignore"), generate_gitignore(&articles));
+    let _ = std::fs::write(cwd.join(".gitignore"), generate_gitignore(&articles, &meta_map));
 
     // Write serviceworker
     let _ = std::fs::write(

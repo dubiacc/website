@@ -91,15 +91,14 @@
         position: absolute;
         height: 100%;
         width: 100%;
-        z-index: -1;
+        z-index: 1;
     }
     
     .search-container {
         display: flex;
         justify-content: space-between;
         flex-direction: column;
-        pointer-events: none;
-        z-index: 10;
+        z-index: 1000;
         flex-grow: 1;
         padding: 10px;
         padding-top: 0px;
@@ -116,12 +115,12 @@
     .search-input {
         font-family: 'UnifrakturMaguntia';
         font-weight: bold;
-        padding: 10px;
+        padding: 5px;
         font-style: italic;
         border: none;
         background: var(--search-bg);
         color: var(--search-text);
-        font-size: 1.5rem;
+        font-size: 1rem;
         outline: none;
         border: 3px solid var(--search-bg);
         pointer-events: all;
@@ -145,15 +144,16 @@
         z-index: 11;
         pointer-events: all;
         max-height: 200px;
+        flex-direction: column;
         overflow-y: scroll;
     }
     
     .search-result-item {
-      padding: 10px;
+      padding: 5px;
       cursor: pointer;
       transition: background-color 0.2s;
       border: 3px solid transparent;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
     }
     
     .search-result-item:focus {
@@ -171,13 +171,13 @@
         pointer-events: all;
         position: relative;
         background: white;
-        pointer-events: none;
         padding: 20px;
         max-height: 70vh;
         overflow-y: auto;
-        z-index: 10;
+        z-index: 1000;
         display: none;
-        flex-grow: 1;
+        flex-direction: column;
+        flex-grow: 0;
         background: var(--panel-bg);
         color: var(--panel-text);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -284,6 +284,8 @@
     list-style-type: none;
     padding-left: 0;
     margin-top: 5px;
+    max-height: 150px;
+    overflow-y: scroll;
   }
 
   .parish-item {
@@ -324,23 +326,15 @@
     }
 
     .links {
-      position: absolute;
-      bottom: 10px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      z-index: 5;
-    }
-    
-    .links > div {
       display: flex;
       flex-direction: row;
+      z-index: 1000;
+      padding: 10px 0px;
     }
 
     .outbound-link, .outbound-link:visited, .outbound-link:focus, .outbound-link:hover {
       color: white;
-      font-size: 1.5rem;
+      font-size: 1rem;
       background-color: black;
       margin-right: 10px;
       padding: 5px;
@@ -440,7 +434,7 @@
       padding: 10px 0;
       max-width: 500px;
       min-width: 500px;
-      z-index: 5;
+      z-index: 1000;
       height: 100%;
       position: absolute;
       pointer-events: none;
@@ -456,8 +450,7 @@
       width: 100%;
       text-align: center;
       font-family: 'UnifrakturMaguntia', serif;
-      z-index: 10;
-      pointer-events: none;
+      z-index: 1000;
       padding: 10px 0px;
       margin-bottom: 10px;
     }
@@ -576,6 +569,202 @@
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
       font-display: swap;
     }
+
+        .calendar-btn {
+      background: #437700;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      font-style: normal;
+      font-family: sans-serif;
+      margin-top: 0.5rem;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .calendar-btn:hover {
+      background: #5a9900;
+    }
+
+    .calendar-popup {
+      position: absolute;
+      flex-grow: 1;
+      max-width: 440px;
+      justify-content: center;
+      background: var(--panel-bg);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      padding: 20px;
+      overflow-y: auto;
+      flex-direction: column;
+      display: none;
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .calendar-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .calendar-close {
+      background: #cc0000;
+      color: var(--text-color);
+      font-weight: bold;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .calendar-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .calendar-nav button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-color);
+    }
+
+    .calendar-month-year {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      margin-bottom: 15px;
+    }
+
+    .calendar-day-header {
+      text-align: center;
+      font-weight: bold;
+      padding: 5px 0;
+    }
+
+    .calendar-day {
+      text-align: center;
+      padding: 10px 5px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .calendar-day:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .calendar-day.has-events::after {
+      content: "";
+      position: absolute;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #1e88e5;
+    }
+
+    .calendar-day.other-month {
+      color: rgba(128, 128, 128, 0.5);
+    }
+
+    .calendar-events {
+      margin-top: 15px;
+    }
+
+    .calendar-event {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .calendar-event.cancelled {
+      text-decoration: line-through;
+      color: gray;
+    }
+
+    .calendar-event-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .calendar-event-time {
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .calendar-event-location {
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .calendar-event-priest {
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .calendar-event-notes {
+      font-style: italic;
+      font-size: 0.9rem;
+    }
+
+    .calendar-event-cancelled {
+      color: #cc0000;
+      font-weight: bold;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    .donate-link {
+      background: #cc7700;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: inline-block;
+      margin-top: 5px;
+    }
+
+    .donate-link:hover {
+      background: #ff9900;
+    }
+
+    .show-more-btn {
+      background: #004970;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      font-style: normal;
+      font-family: sans-serif;
+      margin-top: 0.5rem;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .show-more-btn:hover {
+      background: #006699;
+    }
+
   </style>
 </head>
 <body>
@@ -594,7 +783,13 @@
     <div class="search-container">
       <div style="display: flex; flex-direction: column;">
         <input autofocus="true" type="text" class="search-input" placeholder="$$search-placeholder$$" id="searchInput">
-        <div class="search-results" id="searchResults"></div>
+        <div class="links">
+          <a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">$$report-error$$</a>
+          <a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">$$request-mass$$</a>
+          <a style="color:white;" class="outbound-link" href="https://dubia.cc">$$back-to-site$$</a>
+        </div>
+        <div class="search-results" id="searchResults">
+        </div>
       </div>
 
       <div class="info-panel" id="infoPanel">
@@ -606,14 +801,6 @@
   </header>
   
   <div id="mapContainer"></div>
-
-  <div class="links">
-    <div style="padding-top:10px;z-index:5;">
-      <a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">$$report-error$$</a>
-      <a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">$$request-mass$$</a>
-      <a style="color:white;" class="outbound-link" href="https://dubia.cc">$$back-to-site$$</a>
-    </div>
-  </div>
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -655,11 +842,15 @@
     let locations = [];
     let religious = [];
     let events = [];
-    
+    let fundingData = [];
+    let cancelledEvents = [];
+
     // Maps for quick lookup
     let locationMap = new Map();
     let religiousMap = new Map();
-    
+    let fundingMap = new Map();
+    let cancelledEventsMap = new Map();
+
     // Map and layers
     let map;
     let priestMarkers = L.layerGroup();
@@ -669,23 +860,35 @@
     
     // Default data (fallback)
     const defaultLocationsData = `LocationID,LocationType,Name,ReligiousIdMulti,Location,Website,GoogleMaps,ContactEmail,ContactPhone,Notes
-carmelites-hf-ireland,Convent,Carmelites of the Holy Face of Jesus,mother-irene,51.79025633971586 -9.112158704807591,https://carmelitesholyface.com/,https://maps.app.goo.gl/WaokWwYAmujka5Sr7,,,
+carmelites-hf-ireland,Convent,Carmelites of the Holy Face of Jesus,mother-irene sister-anne-marie,51.79025633971586 -9.112158704807591,https://carmelitesholyface.com/,https://maps.app.goo.gl/WaokWwYAmujka5Sr7,,,
 hjm-seminary,Seminary,Hearts of Jesus and Mary Seminary,fr-chazal,10.342421706935285 123.83294807185935,https://www.facebook.com/mariancorpsofst.piusx,https://maps.app.goo.gl/o8xmm2b5eQgNXDpy6,mariancorpsinformation@gmail.com,639991680637,
-discalced-carm-ph,Mission,Our Lady of Mt. Carmel Oratory,fr-chazal,14.185634883816563 121.23247682974647,https://discalcedcarmelites.org.ph/,https://maps.app.goo.gl/tXxyMGo6smjHdLW1A,,,"https://www.facebook.com/ScapularConfraternityPH/"
+discalced-carm-ph,Mission,Our Lady of Mt. Carmel Oratory,,14.185634883816563 121.23247682974647,https://discalcedcarmelites.org.ph/,https://maps.app.goo.gl/tXxyMGo6smjHdLW1A,,,"https://www.facebook.com/ScapularConfraternityPH/"
 carmel-stjosef-ger,Convent,Karmel St. Josef,,48.1881613609616 12.668123403146767,https://archive.is/FOkbD,https://maps.app.goo.gl/6uYEqhqvvmJskU2q9,,4986719289190,"mittwochs und donnerstags von 10.45 Uhr – 11.15 Uhr"
-mosteiro-santa-cruz,Convent,Mosteiro da Santa Cruz,bp-aquino,-22.188609036471846 -42.54923387378506,https://www.mosteirodasantacruz.org/,https://maps.app.goo.gl/fctDJNpysKvZGV7r9,mostsantacruz@gmail.com,552225401136,`;
+mosteiro-santa-cruz,Convent,Mosteiro da Santa Cruz,bp-aquino,-22.188609036471846 -42.54923387378506,https://www.mosteirodasantacruz.org/,https://maps.app.goo.gl/fctDJNpysKvZGV7r9,mostsantacruz@gmail.com,552225401136,
+sajm-seminary,Seminary,Séminaire Saint Louis Marie Grignion de Montfort,fr-picot,47.74520085682513 -0.41836116956105057,https://apotresdejesusetdemarie.fr/,https://maps.app.goo.gl/VEEQd6oNFp81vAa57,sajm.secretariat@gmail.com,330983597578,`;
 
-    const defaultReligiousData = `ReligiousID,Type,Name,Born Year,Associates With,Beliefs,Location/Area,Contact/Website,Ordained in Rite,Ordained By,Consecrated in Rite,Consecrated By,Bishop Line,Notes
-bp-williamson,Bishop,Richard Williamson,1940,SSPX (originally),Resistance,England,,Old Rite,Archbishop Lefebvre,Old Rite,Archbishop Lefebvre,Lefebvre,"Consecrated in 1988 by Archbishop Lefebvre; leads \"SSPX Resistance\""
-bp-zendejas,Bishop,Gerardo Zendejas,1961,Resistance,Non-sede,USA,https://thebluepaper.org/,Old Rite,Archbishop Lefebvre,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated bishop on May 11 2017 by Bp. Williamson
-bp-faure,Bishop,Jean-Michel Faure,1941,Resistance,Non-sede,France,,Old Rite,Archbishop Lefebvre,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated in 2015 by Bp. Williamson in Brazil
-bp-aquino,Bishop,Tomas de Aquino,1954,Resistance,Non-sede,Brazil,,Old Rite,,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated in 2016 by Bp. Williamson
-mother-irene,Mother,Mother Irene,1983,Carmelites of the Holy Face,Non-sede,Ireland,,,,,,,
-fr-chazal,Father,François Chazal,1968,Marian Corps,Non-sede,Philippines,,,,,,,`;
+const defaultReligiousData = `ReligiousID,Type,Name,BornYear,AssociatesWith,UsualLocationID,Beliefs,Country,Website,OrdainedInRite,OrdainedBy,ConsecratedInRite,ConsecratedBy,BishopLine,Notes
+bp-williamson,Bishop,Richard Williamson,1940,SSPX (originally),,Resistance,England,,Old Rite,Archbishop Lefebvre,Old Rite,Archbishop Lefebvre,Lefebvre,"Consecrated in 1988 by Archbishop Lefebvre; leads \"SSPX Resistance\""
+bp-zendejas,Bishop,Gerardo Zendejas,1961,Resistance,,Non-sede,USA,https://thebluepaper.org/,Old Rite,Archbishop Lefebvre,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated bishop on May 11 2017 by Bp. Williamson
+bp-faure,Bishop,Jean-Michel Faure,1941,Resistance,,Non-sede,France,,Old Rite,Archbishop Lefebvre,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated in 2015 by Bp. Williamson in Brazil
+bp-aquino,Bishop,Tomas de Aquino,1954,Resistance,mosteiro-santa-cruz,Non-sede,Brazil,,Old Rite,,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated in 2016 by Bp. Williamson
+mother-irene,Mother,Mother Irene,1983,Carmelites of the Holy Face,carmelites-hf-ireland,Non-sede,Ireland,,,,,,,
+fr-chazal,Father,François Chazal,1968,Marian Corps,hjm-seminary,Non-sede,Philippines,,,,,,,
+fr-picot,Priest,Rémi Picot,,SAJM,sajm-seminary,NonSede,France,,OldRite,Williamson,,,Lefebvre,"Fr. Picot serves Alsace & region"`;
 
-    const defaultEventsData = `EventID,LocationID,ReligiousID,EventType,StartDate,EndDate,Notes
+const defaultEventsData = `EventID,LocationID,ReligiousID,EventType,StartDate,EndDate,Notes
 mass-1,carmelites-hf-ireland,mother-irene,Mass,2023-11-26T07:30:00,2023-11-26T08:30:00,Sunday Mass
-mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunday High Mass`;
+mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunday High Mass
+sajm-alsace-1,sajm-seminary,fr-picot,Mass,2023-11-26T09:30:00,2023-11-26T10:30:00,Regular Mass in Alsace`;
+
+const defaultCancelledEventsData = `AffectsEventID,DateStart,TimeStart,DateEnd,TimeEnd,Reason
+sajm-alsace-1,2023-11-05,10:00:00,2023-11-05,11:00:00,Mass cancelled because Fr. Picot is sick`;
+
+const defaultFundingData = `CampaignID,ReligiousOrLocationOrEventID,FundingType,FundingGoal,FundingCurrency,CurrentAmount,DonationLinks,Notes
+discalced-carm-ongoing,discalced-carm-ph,BuildParish,5177,USD,750,paypal.me/StJosephCarmel,
+fr-hewko-ongoing,fr-hewko,FundAPriest,2000,EUR,200,paypal.me/frhewko,
+fr-picot-ongoing,fr-picot,FundAPriest,1000,EUR,500,paypal.me/remi-picot,
+sajm-building-fund,sajm-seminary,BuildParish,50000,EUR,12500,paypal.me/sajmseminary,Seminary building renovation`;
 
     // Initialize map when DOM is loaded
     document.addEventListener('DOMContentLoaded', init);
@@ -696,7 +899,7 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
       map = L.map('mapContainer', {
         minZoom: CONFIG.minZoom,
         maxZoom: CONFIG.maxZoom,
-        zoomControl: false // Disable default zoom control to use custom ones
+        zoomControl: 'bottom-right' // Disable default zoom control to use custom ones
       }).setView([CONFIG.defaultLat, CONFIG.defaultLng], CONFIG.defaultZoom);
       
       // Add OSM tile layer
@@ -730,7 +933,7 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
       
       searchInput.addEventListener('focus', () => {
         if (searchResults.children.length > 0) {
-          searchResults.style.display = 'block';
+          searchResults.style.display = 'flex';
         }
       });
       
@@ -769,79 +972,175 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
       parseLocationsData(defaultLocationsData);
       parseReligiousData(defaultReligiousData);
       parseEventsData(defaultEventsData);
-      
-      // Then try to fetch from Google Sheets
-      console.log("Fetching data from Google Sheets...");
+      parseCancelledEventsData(defaultCancelledEventsData);
+      parseFundingData(defaultFundingData);
+
+      // Then try to fetch from the live DB
       fetchSheetData();
     }
 
     // Parse locations CSV data
     function parseLocationsData(csvData) {
-      Papa.parse(csvData, {
-        header: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-          // Process locations
-          locations = results.data.map(location => {
-            // Clean location data
-            const [lat, lng] = location.Location ? location.Location.split(" ") : [0, 0];
-            
-            return {
-              ...location,
-              Latitude: parseFloat(lat),
-              Longitude: parseFloat(lng),
-              // Convert ReligiousIdMulti to array
-              ReligiousIdArray: location.ReligiousIdMulti ? location.ReligiousIdMulti.split(" ") : []
-            };
-          });
-          
-          // Update location map
-          locationMap.clear();
-          locations.forEach(location => {
-            locationMap.set(location.LocationID, location);
-          });
-          
-          // Update markers
-          updateMapMarkers();
+  Papa.parse(csvData, {
+    header: true,
+    skipEmptyLines: true,
+    transformHeader: function(header) {
+      // Extract column name from headers that might contain values
+      return header.split(" ")[0].replace(/"/g, '');
+    },
+    complete: function(results) {
+      // Process locations
+      locations = results.data.map(location => {
+        // First, fix any mangled values in the first row
+        Object.keys(location).forEach(key => {
+          // If the original header had value in it (like "LocationID carmelites-hf-ireland")
+          // Extract and properly set the value
+          const originalHeader = csvData.split('\n')[0].split(',').find(h => h.startsWith('"' + key));
+          if (originalHeader && originalHeader.includes(' ')) {
+            const headerParts = originalHeader.split(' ');
+            headerParts.shift(); // Remove the first part (column name)
+            const value = headerParts.join(' ').replace(/"/g, '');
+            if (value && location[key] === "") {
+              location[key] = value;
+            }
+          }
+        });
+        
+        // Fix location parsing (handling both comma and space separated coordinates)
+        let lat = 0, lng = 0;
+        if (location.Location) {
+          const coordMatch = location.Location.match(/(-?\d+\.?\d*)[,\s]+(-?\d+\.?\d*)/);
+          if (coordMatch) {
+            lat = parseFloat(coordMatch[1]);
+            lng = parseFloat(coordMatch[2]);
+          }
         }
+        
+        return {
+          ...location,
+          Latitude: lat,
+          Longitude: lng,
+          // Convert ReligiousIdMulti to array (handling both comma and space separated values)
+          ReligiousIdArray: location.ReligiousIdMulti ? 
+            location.ReligiousIdMulti.split(/[,\s]+/).filter(id => id.trim() !== "") : []
+        };
       });
+      
+      // Update location map
+      locationMap.clear();
+      locations.forEach(location => {
+        locationMap.set(location.LocationID, location);
+      });
+      
+      // Update markers
+      updateMapMarkers();
     }
+  });
+}
 
     // Parse religious CSV data
     function parseReligiousData(csvData) {
-      Papa.parse(csvData, {
-        header: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-          // Process religious data
-          religious = results.data;
-          
-          // Update religious map
-          religiousMap.clear();
-          religious.forEach(person => {
-            religiousMap.set(person.ReligiousID, person);
-          });
-          
-          // Update markers
-          updateMapMarkers();
-        }
+  Papa.parse(csvData, {
+    header: true,
+    skipEmptyLines: true,
+    transformHeader: function(header) {
+      // Extract column name from headers that might contain values
+      return header.split(" ")[0].replace(/"/g, '');
+    },
+    complete: function(results) {
+      // Process religious data
+      religious = results.data.map(person => {
+        // Fix any mangled values in the first row
+        Object.keys(person).forEach(key => {
+          const originalHeader = csvData.split('\n')[0].split(',').find(h => h.startsWith('"' + key));
+          if (originalHeader && originalHeader.includes(' ')) {
+            const headerParts = originalHeader.split(' ');
+            headerParts.shift(); // Remove column name
+            const value = headerParts.join(' ').replace(/"/g, '');
+            if (value && person[key] === "") {
+              person[key] = value;
+            }
+          }
+        });
+        
+        return person;
       });
+      
+      // Update religious map
+      religiousMap.clear();
+      religious.forEach(person => {
+        religiousMap.set(person.ReligiousID, person);
+      });
+      
+      // Update markers
+      updateMapMarkers();
     }
+  });
+}
+
 
     // Parse events CSV data
     function parseEventsData(csvData) {
-      Papa.parse(csvData, {
-        header: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-          // Process events data
-          events = results.data;
-          
-          // Update markers
-          updateMapMarkers();
+  Papa.parse(csvData, {
+    header: true,
+    skipEmptyLines: true,
+    transformHeader: function(header) {
+      return header.split(" ")[0].replace(/"/g, '');
+    },
+    complete: function(results) {
+      // Process events data
+      events = results.data;
+      
+      // Update markers
+      updateMapMarkers();
+    }
+  });
+}
+
+function parseCancelledEventsData(csvData) {
+  Papa.parse(csvData, {
+    header: true,
+    skipEmptyLines: true,
+    transformHeader: function(header) {
+      return header.split(" ")[0].replace(/"/g, '');
+    },
+    complete: function(results) {
+      // Process cancelled events data
+      cancelledEvents = results.data;
+      
+      // Create lookup map for faster access
+      cancelledEventsMap.clear();
+      cancelledEvents.forEach(cancelled => {
+        // Use eventID as key
+        const key = cancelled.AffectsEventID;
+        if (!cancelledEventsMap.has(key)) {
+          cancelledEventsMap.set(key, []);
         }
+        cancelledEventsMap.get(key).push(cancelled);
       });
     }
+  });
+}
+
+function parseFundingData(csvData) {
+  Papa.parse(csvData, {
+    header: true,
+    skipEmptyLines: true,
+    transformHeader: function(header) {
+      return header.split(" ")[0].replace(/"/g, '');
+    },
+    complete: function(results) {
+      // Process funding data
+      fundingData = results.data;
+      
+      // Create lookup map for faster access
+      fundingMap.clear();
+      fundingData.forEach(funding => {
+        fundingMap.set(funding.ReligiousOrLocationOrEventID, funding);
+      });
+    }
+  });
+}
 
     // Fetch data from Google Sheets
     function fetchSheetData() {
@@ -861,23 +1160,17 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
             return response.text();
           })
           .then(csvText => {
-            console.log(`Successfully fetched ${sheet} data`);
-            console.log(`original url was ${googleSheetUrl}`);
-            console.log(csvText);
-
             // Parse CSV based on sheet type
             if (sheet === "locations") {
               parseLocationsData(csvText);
-              console.log(`Loaded ${locations.length} locations from Google Sheets`);
-              console.table(locations);
             } else if (sheet === "religious") {
               parseReligiousData(csvText);
-              console.log(`Loaded ${religious.length} religious from Google Sheets`);
-              console.table(religious);
             } else if (sheet === "events") {
               parseEventsData(csvText);
-              console.log(`Loaded ${events.length} events from Google Sheets`);
-              console.table(events);
+            } else if (sheet === "cancelled-events") {
+              parseCancelledEventsData(csvText);
+            } else if (sheet === "funding") {
+              parseFundingData(csvText);
             }
           })
           .catch(error => {
@@ -1077,341 +1370,439 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
 
     // Show location info in the panel
     function showLocationInfo(location) {
-      const infoPanel = document.getElementById('infoPanel');
-      const priestName = document.getElementById('priestName');
-      const priestInfo = document.getElementById('priestInfo');
-      
-      // Set location name
-      priestName.textContent = location.Name;
-      
-      // Clear previous info
-      priestInfo.innerHTML = '';
-      
-      // Location type
-      const typeParagraph = document.createElement('p');
-      typeParagraph.className = 'info-paragraph';
-      typeParagraph.textContent = `${location.LocationType}`;
-      priestInfo.appendChild(typeParagraph);
-      
-      // Associated religious
-      if (location.ReligiousIdArray && location.ReligiousIdArray.length > 0) {
-        const religiousParagraph = document.createElement('p');
-        religiousParagraph.className = 'info-paragraph';
-        religiousParagraph.textContent = "$$served-by$$: ";
-        
-        // Add links for each religious person
-        location.ReligiousIdArray.forEach((id, index) => {
-          const person = religiousMap.get(id);
-          if (person) {
-            const priestLink = document.createElement('a');
-            priestLink.className = 'priest-link';
-            priestLink.textContent = `${person.Type} ${person.Name}`;
-            priestLink.href = '#';
-            priestLink.addEventListener('click', (e) => {
-              e.preventDefault();
-              showPriestInfo(person);
-            });
-            
-            religiousParagraph.appendChild(priestLink);
-            
-            // Add comma if not the last person
-            if (index < location.ReligiousIdArray.length - 1) {
-              religiousParagraph.appendChild(document.createTextNode(', '));
-            }
-          }
+  const infoPanel = document.getElementById('infoPanel');
+  const priestName = document.getElementById('priestName');
+  const priestInfo = document.getElementById('priestInfo');
+  
+  // Set location name
+  priestName.textContent = location.Name;
+  
+  // Clear previous info
+  priestInfo.innerHTML = '';
+  
+  // Location type
+  const typeParagraph = document.createElement('p');
+  typeParagraph.className = 'info-paragraph';
+  typeParagraph.textContent = `${location.LocationType}`;
+  priestInfo.appendChild(typeParagraph);
+  
+  // Associated religious
+  if (location.ReligiousIdArray && location.ReligiousIdArray.length > 0) {
+    const religiousParagraph = document.createElement('p');
+    religiousParagraph.className = 'info-paragraph';
+    religiousParagraph.textContent = "$$served-by$$: ";
+    
+    // Add links for each religious person
+    location.ReligiousIdArray.forEach((id, index) => {
+      const person = religiousMap.get(id);
+      if (person) {
+        const priestLink = document.createElement('a');
+        priestLink.className = 'priest-link';
+        priestLink.textContent = `${person.Type} ${person.Name}`;
+        priestLink.href = '#';
+        priestLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          showPriestInfo(person);
         });
         
-        priestInfo.appendChild(religiousParagraph);
-      }
-      
-      // Notes
-      if (location.Notes) {
-        const notesSection = document.createElement('div');
-        notesSection.className = 'notes-section';
+        religiousParagraph.appendChild(priestLink);
         
-        const notesTitle = document.createElement('strong');
-        notesTitle.textContent = "$$notes$$";
-        notesSection.appendChild(notesTitle);
-        
-        const notesContent = document.createElement('p');
-        notesContent.textContent = location.Notes;
-        notesSection.appendChild(notesContent);
-        
-        priestInfo.appendChild(notesSection);
-      }
-      
-      // Contact information
-      if (location.ContactEmail || location.ContactPhone) {
-        const contactParagraph = document.createElement('p');
-        contactParagraph.className = 'info-paragraph';
-        
-        if (location.ContactEmail) {
-          contactParagraph.innerHTML += `Email: <a href="mailto:${location.ContactEmail}">${location.ContactEmail}</a><br>`;
+        // Add comma if not the last person
+        if (index < location.ReligiousIdArray.length - 1) {
+          religiousParagraph.appendChild(document.createTextNode(', '));
         }
-        
-        if (location.ContactPhone) {
-          contactParagraph.innerHTML += `Phone: ${location.ContactPhone}<br>`;
-        }
-        
-        priestInfo.appendChild(contactParagraph);
       }
-      
-      // Website link
-      if (location.Website) {
-        const websiteParagraph = document.createElement('p');
-        websiteParagraph.className = 'info-paragraph';
-        
-        // Format website URL for display
-        let displayUrl = location.Website.replace(/^https?:\/\//, '');
-        displayUrl = displayUrl.split('/')[0]; // Just show the domain
-        
-        websiteParagraph.innerHTML = `$$website$$: <a href="${location.Website}" target="_blank" class="info-link">${displayUrl}</a>`;
-        priestInfo.appendChild(websiteParagraph);
-      }
-      
-      // Upcoming events at this location
-      const locationEvents = events.filter(event => event.LocationID === location.LocationID);
-      if (locationEvents.length > 0) {
-        const eventsSection = document.createElement('div');
-        eventsSection.className = 'mass-times-section';
-        
-        const eventsTitle = document.createElement('strong');
-        eventsTitle.textContent = "$$mass-times$$";
-        eventsSection.appendChild(eventsTitle);
-        
-        const eventsList = document.createElement('ul');
-        eventsList.className = 'events-list';
-        
-        // Sort events by date
-        locationEvents.sort((a, b) => {
-          return new Date(a.StartDate) - new Date(b.StartDate);
-        });
-        
-        locationEvents.forEach(event => {
-          const eventItem = document.createElement('li');
-          eventItem.className = 'event-item';
-          
-          // Format date and time
-          const startDate = new Date(event.StartDate);
-          const formattedDate = startDate.toLocaleDateString(CONFIG.currentLanguage);
-          const formattedTime = startDate.toLocaleTimeString(CONFIG.currentLanguage, { hour: '2-digit', minute: '2-digit' });
-          
-          // Get priest name
-          const priest = religiousMap.get(event.ReligiousID);
-          const priestName = priest ? `${priest.Type} ${priest.Name}` : 'Unknown';
-          
-          eventItem.innerHTML = `<strong>${event.EventType}</strong>: ${formattedDate} ${formattedTime} - ${priestName}`;
-          if (event.Notes) {
-            eventItem.innerHTML += `<br><em>${event.Notes}</em>`;
-          }
-          
-          eventsList.appendChild(eventItem);
-        });
-        
-        eventsSection.appendChild(eventsList);
-        priestInfo.appendChild(eventsSection);
-      }
-      
-      // Add Google Maps link
-      if (location.GoogleMaps) {
-        const mapsRow = document.createElement('div');
-        mapsRow.className = 'info-row';
-        mapsRow.innerHTML = `<a href="${location.GoogleMaps}" target="_blank" class="info-link maps">$$view-on-maps$$</a>`;
-        priestInfo.appendChild(mapsRow);
-      } else if (location.Latitude && location.Longitude) {
-        const mapsRow = document.createElement('div');
-        mapsRow.className = 'info-row';
-        const mapLink = `https://www.google.com/maps?q=${location.Latitude},${location.Longitude}`;
-        mapsRow.innerHTML = `<a href="${mapLink}" target="_blank" class="info-link maps">$$view-on-maps$$</a>`;
-        priestInfo.appendChild(mapsRow);
-      }
-      
-      // Show the info panel
-      infoPanel.style.display = 'block';
-      
-      // Fly to location
-      map.flyTo([location.Latitude, location.Longitude], 12, {
-        animate: true,
-        duration: 1.5
-      });
-      
-      // Highlight this location and connected locations
-      highlightLocation(location);
+    });
+    
+    priestInfo.appendChild(religiousParagraph);
+  }
+  
+  // Notes
+  if (location.Notes) {
+    const notesSection = document.createElement('div');
+    notesSection.className = 'notes-section';
+    
+    const notesTitle = document.createElement('strong');
+    notesTitle.textContent = "$$notes$$";
+    notesSection.appendChild(notesTitle);
+    
+    const notesContent = document.createElement('p');
+    notesContent.textContent = location.Notes;
+    notesSection.appendChild(notesContent);
+    
+    priestInfo.appendChild(notesSection);
+  }
+  
+  // Contact information
+  if (location.ContactEmail || location.ContactPhone) {
+    const contactParagraph = document.createElement('p');
+    contactParagraph.className = 'info-paragraph';
+    
+    if (location.ContactEmail) {
+      contactParagraph.innerHTML += `Email: <a href="mailto:${location.ContactEmail}">${location.ContactEmail}</a><br>`;
     }
     
+    if (location.ContactPhone) {
+      contactParagraph.innerHTML += `Phone: ${location.ContactPhone}<br>`;
+    }
+    
+    priestInfo.appendChild(contactParagraph);
+  }
+  
+  // Website link
+  if (location.Website) {
+    const websiteParagraph = document.createElement('p');
+    websiteParagraph.className = 'info-paragraph';
+    
+    // Format website URL for display
+    let displayUrl = location.Website.replace(/^https?:\/\//, '');
+    displayUrl = displayUrl.split('/')[0]; // Just show the domain
+    
+    websiteParagraph.innerHTML = `$$website$$: <a href="${location.Website}" target="_blank" class="info-link">${displayUrl}</a>`;
+    priestInfo.appendChild(websiteParagraph);
+  }
+  
+  // Upcoming events at this location
+  const locationEvents = events.filter(event => event.LocationID === location.LocationID);
+  if (locationEvents.length > 0) {
+    const eventsSection = document.createElement('div');
+    eventsSection.className = 'mass-times-section';
+    
+    const eventsTitle = document.createElement('strong');
+    eventsTitle.textContent = "$$mass-times$$";
+    eventsSection.appendChild(eventsTitle);
+    
+    const eventsList = document.createElement('ul');
+    eventsList.className = 'events-list';
+    
+    // Sort events by date
+    locationEvents.sort((a, b) => {
+      return new Date(a.StartDate) - new Date(b.StartDate);
+    });
+    
+    // Only show up to 3 upcoming events
+    let upcomingCount = 0;
+    const now = new Date();
+    
+    locationEvents.forEach(event => {
+      if (upcomingCount >= 3) return;
+      
+      const startDate = new Date(event.StartDate);
+      if (startDate < now) return; // Skip past events
+      
+      upcomingCount++;
+      
+      const eventItem = document.createElement('li');
+      eventItem.className = 'event-item';
+      
+      // Check if event is cancelled
+      const cancelled = isEventCancelled(event, startDate);
+      if (cancelled) {
+        eventItem.style.textDecoration = 'line-through';
+        eventItem.style.color = 'gray';
+      }
+      
+      // Format date and time
+      const formattedDate = startDate.toLocaleDateString(CONFIG.currentLanguage);
+      const formattedTime = startDate.toLocaleTimeString(CONFIG.currentLanguage, { hour: '2-digit', minute: '2-digit' });
+      
+      // Get priest name
+      const priest = religiousMap.get(event.ReligiousID);
+      const priestName = priest ? `${priest.Type} ${priest.Name}` : 'Unknown';
+      
+      eventItem.innerHTML = `<strong>${event.EventType}</strong>: ${formattedDate} ${formattedTime} - ${priestName}`;
+      if (event.Notes) {
+        eventItem.innerHTML += `<br><em>${event.Notes}</em>`;
+      }
+      
+      // Add cancellation reason if cancelled
+      if (cancelled) {
+        const reason = getCancellationReason(event, startDate);
+        if (reason) {
+          eventItem.innerHTML += `<br><strong style="color: #cc0000;">${reason}</strong>`;
+        }
+      }
+      
+      eventsList.appendChild(eventItem);
+    });
+    
+    eventsSection.appendChild(eventsList);
+    priestInfo.appendChild(eventsSection);
+    
+    // Add "See All Events" button if there are more than 3 events
+    if (locationEvents.length > 3) {
+      const seeAllBtn = document.createElement('button');
+      seeAllBtn.className = 'calendar-btn';
+      seeAllBtn.textContent = "$$see-all-events$$";
+      seeAllBtn.addEventListener('click', () => {
+        showLocationCalendar(location);
+      });
+      eventsSection.appendChild(seeAllBtn);
+    }
+  }
+  
+  // Add Calendar button regardless of whether there are events now
+  const calendarBtn = document.createElement('button');
+  calendarBtn.className = 'calendar-btn';
+  calendarBtn.textContent = "$$view-calendar$$";
+  calendarBtn.addEventListener('click', () => {
+    showLocationCalendar(location);
+  });
+  priestInfo.appendChild(calendarBtn);
+  
+  // Add Donate button if funding available
+  const fundingInfo = getFundingInfo(location.LocationID);
+  if (fundingInfo) {
+    const donateBtn = document.createElement('a');
+    donateBtn.className = 'calendar-btn';
+    donateBtn.style.background = '#cc7700';
+    donateBtn.href = fundingInfo.DonationLinks;
+    donateBtn.target = '_blank';
+    
+    // Calculate funding percentage if available
+    let donateText = '$$donate$$';
+    if (fundingInfo.FundingGoal && fundingInfo.CurrentAmount) {
+      const percentage = Math.round((fundingInfo.CurrentAmount / fundingInfo.FundingGoal) * 100);
+      donateText += ` [${percentage}% $$funded$$]`;
+    }
+    
+    donateBtn.textContent = donateText;
+    priestInfo.appendChild(donateBtn);
+  }
+  
+  // Add Google Maps link
+  if (location.GoogleMaps) {
+    const mapsRow = document.createElement('div');
+    mapsRow.className = 'info-row';
+    mapsRow.innerHTML = `<a href="${location.GoogleMaps}" target="_blank" class="info-link maps">$$view-on-maps$$</a>`;
+    priestInfo.appendChild(mapsRow);
+  } else if (location.Latitude && location.Longitude) {
+    const mapsRow = document.createElement('div');
+    mapsRow.className = 'info-row';
+    const mapLink = `https://www.google.com/maps?q=${location.Latitude},${location.Longitude}`;
+    mapsRow.innerHTML = `<a href="${mapLink}" target="_blank" class="info-link maps">$$view-on-maps$$</a>`;
+    priestInfo.appendChild(mapsRow);
+  }
+  
+  // Show the info panel
+  infoPanel.style.display = 'flex';
+  
+  // Fly to location
+  map.flyTo([location.Latitude, location.Longitude], 12, {
+    animate: true,
+    duration: 1.5
+  });
+  
+  // Highlight this location and connected locations
+  highlightLocation(location);
+}
+
     // Show priest info in the panel
     function showPriestInfo(priest) {
-      const infoPanel = document.getElementById('infoPanel');
-      const priestName = document.getElementById('priestName');
-      const priestInfo = document.getElementById('priestInfo');
-      
-      // Set priest name with title
-      priestName.textContent = `${priest.Type} ${priest.Name}`;
-      
-      // Clear previous info
-      priestInfo.innerHTML = '';
-      
-      // Create first paragraph: biographical info
-      const bioParagraph = document.createElement('p');
-      bioParagraph.className = 'info-paragraph';
-      let bioText = '';
-      
-      // Born year
-      if (priest['Born Year']) {
-        bioText += `$$born$$ ${priest['Born Year']}, `;
-      }
-      
-      // Ordination info
-      if (priest['Ordained in Rite'] || priest['Ordained By']) {
-        bioText += `$$ordained-priest-in$$ `;
-        if (priest['Ordained in Rite']) {
-          bioText += priest['Ordained in Rite'] + ' ';
-        }
-        if (priest['Ordained By']) {
-          bioText += `$$by$$ ${priest['Ordained By']}, `;
-        } else {
-          bioText += ', ';
-        }
-      }
-      
-      // Consecration info (for bishops)
-      if (priest.Type === "Bishop" && (priest['Consecrated in Rite'] || priest['Consecrated By'])) {
-        bioText += `$$consecrated-bishop-in$$ `;
-        if (priest['Consecrated in Rite']) {
-          bioText += priest['Consecrated in Rite'] + ' ';
-        }
-        if (priest['Consecrated By']) {
-          bioText += `$$by$$ ${priest['Consecrated By']} `;
-        }
-        
-        // Bishop line
-        if (priest['Bishop Line']) {
-          bioText += `($$bishop-line$$: ${priest['Bishop Line']})`;
-        }
-        bioText += '. ';
-      } else if (bioText) {
-        // End the sentence if it's not empty and not a bishop
-        bioText = bioText.replace(/, $/, '. ');
-      }
-      
-      // Location
-      if (priest['Location/Area']) {
-        bioText += `$$operates-in$$ ${priest['Location/Area']}`;
-      }
-      
-      // Associates With
-      if (priest['Associates With']) {
-        if (bioText) bioText += ', ';
-        bioText += `$$associates-with$$ ${priest['Associates With']}`;
-      }
-      
-      // Beliefs
-      if (priest['Beliefs']) {
-        if (bioText) bioText += ', ';
-        bioText += `${priest['Beliefs']}`;
-      }
-
-      // Notes
-      if (priest['Notes']) {
-        if (bioText) {
-          // End the sentence if it's not empty
-          bioText += ".";
-        }
-        
-        const notesSection = document.createElement('div');
-        notesSection.className = 'notes-section';
-        
-        const notesTitle = document.createElement('strong');
-        notesTitle.textContent = "$$notes$$";
-        notesSection.appendChild(notesTitle);
-        
-        const notesContent = document.createElement('p');
-        notesContent.textContent = priest['Notes'];
-        notesSection.appendChild(notesContent);
-        
-        bioParagraph.textContent = bioText;
-        priestInfo.appendChild(bioParagraph);
-        priestInfo.appendChild(notesSection);
-      } else {
-        // Only add the paragraph if we have bio info
-        if (bioText) {
-          bioText += '. ';
-          bioParagraph.textContent = bioText;
-          priestInfo.appendChild(bioParagraph);
-        }
-      }
-
-      // Contact/Website as a clickable link if present
-      if (priest['Contact/Website']) {
-        const contactRow = document.createElement('p');
-        contactRow.className = 'info-paragraph';
-        
-        if (priest['Contact/Website'].startsWith('http')) {
-          let niceurl = priest['Contact/Website'].replace(/^https?:\/\//, "");
-          contactRow.innerHTML = `$$website$$: <a href="${priest['Contact/Website']}" target="_blank" class="info-link">${niceurl}</a>`;
-        } else {
-          contactRow.innerHTML = `$$contact$$: ${priest['Contact/Website']}`;
-        }
-        
-        priestInfo.appendChild(contactRow);
-      }
-
-      // Add locations served section
-      const priestLocations = locations.filter(location => 
-        location.ReligiousIdArray && location.ReligiousIdArray.includes(priest.ReligiousID)
-      );
-      
-      if (priestLocations.length > 0) {
-        const locationsSection = document.createElement('div');
-        locationsSection.className = 'parishes-section';
-        
-        // Add section title
-        const locationsTitle = document.createElement('h3');
-        locationsTitle.textContent = "$$parishes-served$$";
-        locationsSection.appendChild(locationsTitle);
-        
-        const locationsList = document.createElement('ul');
-        locationsList.className = 'parishes-list';
-        
-        // Sort locations alphabetically
-        priestLocations.sort((a, b) => a.Name.localeCompare(b.Name));
-        
-        priestLocations.forEach(location => {
-          const locationItem = document.createElement('li');
-          locationItem.className = 'parish-item';
-          
-          locationItem.innerHTML = `<strong>${location.Name}:</strong> ${location.LocationType}`;
-          
-          // Add click handler to highlight this location
-          locationItem.style.cursor = 'pointer';
-          locationItem.addEventListener('click', () => {
-            showLocationInfo(location);
-          });
-          
-          locationsList.appendChild(locationItem);
-        });
-        
-        locationsSection.appendChild(locationsList);
-        priestInfo.appendChild(locationsSection);
-      }
-      
-      // Show the info panel
-      infoPanel.style.display = 'block';
-      
-      // Find primary location for this priest
-      let primaryLocation = priestLocations[0];
-      if (priestLocations.length > 0) {
-        // Fly to location
-        map.flyTo([primaryLocation.Latitude, primaryLocation.Longitude], 8, {
-          animate: true,
-          duration: 1.5
-        });
-      }
-      
-      // Highlight this priest's locations
-      highlightPriest(priest);
+  const infoPanel = document.getElementById('infoPanel');
+  const priestName = document.getElementById('priestName');
+  const priestInfo = document.getElementById('priestInfo');
+  
+  // Set priest name with title
+  priestName.textContent = `${priest.Type} ${priest.Name}`;
+  
+  // Clear previous info
+  priestInfo.innerHTML = '';
+  
+  // Create condensed info paragraph with essential info
+  const essentialParagraph = document.createElement('p');
+  essentialParagraph.className = 'info-paragraph';
+  let essentialText = '';
+  
+  // Location and Association
+  if (priest['Location/Area']) {
+    essentialText += `$$operates-in$$ ${priest['Location/Area']}`;
+  }
+  
+  // Associates With
+  if (priest['AssociatesWith']) {
+    if (essentialText) essentialText += ', ';
+    essentialText += `$$associates-with$$ ${priest['AssociatesWith']}`;
+  }
+  
+  // Beliefs
+  if (priest['Beliefs']) {
+    if (essentialText) essentialText += ', ';
+    essentialText += `${priest['Beliefs']}`;
+  }
+  
+  // Only add the paragraph if we have essential info
+  if (essentialText) {
+    essentialText += '.';
+    essentialParagraph.textContent = essentialText;
+    priestInfo.appendChild(essentialParagraph);
+  }
+  
+  // Contact/Website as a clickable link if present
+  if (priest['Website']) {
+    const contactRow = document.createElement('p');
+    contactRow.className = 'info-paragraph';
+    
+    let niceurl = priest['Website'].replace(/^https?:\/\//, "");
+    contactRow.innerHTML = `$$website$$: <a href="${priest['Website']}" target="_blank" class="info-link">${niceurl}</a>`;
+    
+    priestInfo.appendChild(contactRow);
+  }
+  
+  // "Show More" button to display detailed info
+  const showMoreBtn = document.createElement('button');
+  showMoreBtn.className = 'show-more-btn';
+  showMoreBtn.textContent = "$$show-more-info$$";
+  showMoreBtn.addEventListener('click', () => {
+    // Create detailed bio text
+    let bioText = `${priest.Type} ${priest.Name}\n\n`;
+    
+    // Born year
+    if (priest['BornYear']) {
+      bioText += `$$born$$ ${priest['BornYear']}\n`;
     }
     
+    // Ordination info
+    if (priest['OrdainedInRite'] || priest['OrdainedBy']) {
+      bioText += `$$ordained-priest-in$$ `;
+      if (priest['OrdainedInRite']) {
+        bioText += priest['OrdainedInRite'] + ' ';
+      }
+      if (priest['OrdainedBy']) {
+        bioText += `$$by$$ ${priest['OrdainedBy']}\n`;
+      } else {
+        bioText += '\n';
+      }
+    }
+    
+    // Consecration info (for bishops)
+    if (priest.Type === "Bishop" && (priest['ConsecratedInRite'] || priest['ConsecratedBy'])) {
+      bioText += `$$consecrated-bishop-in$$ `;
+      if (priest['ConsecratedInRite']) {
+        bioText += priest['ConsecratedInRite'] + ' ';
+      }
+      if (priest['ConsecratedBy']) {
+        bioText += `$$by$$ ${priest['ConsecratedBy']} `;
+      }
+      
+      // Bishop line
+      if (priest['BishopLine']) {
+        bioText += `($$bishop-line$$: ${priest['BishopLine']})\n`;
+      } else {
+        bioText += '\n';
+      }
+    }
+    
+    // Location
+    if (priest['Location/Area']) {
+      bioText += `$$operates-in$$ ${priest['Location/Area']}\n`;
+    }
+    
+    // Associates With
+    if (priest['AssociatesWith']) {
+      bioText += `$$associates-with$$ ${priest['AssociatesWith']}\n`;
+    }
+    
+    // Beliefs
+    if (priest['Beliefs']) {
+      bioText += `$$beliefs$$: ${priest['Beliefs']}\n`;
+    }
+    
+    // Notes
+    if (priest['Notes']) {
+      bioText += `\n$$notes$$: ${priest['Notes']}\n`;
+    }
+    
+    // Show in alert
+    alert(bioText);
+  });
+  priestInfo.appendChild(showMoreBtn);
+  
+  // Add Calendar button
+  const calendarBtn = document.createElement('button');
+  calendarBtn.className = 'calendar-btn';
+  calendarBtn.textContent = "$$view-calendar$$";
+  calendarBtn.addEventListener('click', () => {
+    showPriestCalendar(priest);
+  });
+  priestInfo.appendChild(calendarBtn);
+  
+  // Add Donate button if funding available
+  const fundingInfo = getFundingInfo(priest.ReligiousID);
+  if (fundingInfo) {
+    const donateBtn = document.createElement('a');
+    donateBtn.className = 'calendar-btn';
+    donateBtn.style.background = '#cc7700';
+    donateBtn.href = fundingInfo.DonationLinks;
+    donateBtn.target = '_blank';
+    
+    // Calculate funding percentage if available
+    let donateText = '$$donate$$';
+    if (fundingInfo.FundingGoal && fundingInfo.CurrentAmount) {
+      const percentage = Math.round((fundingInfo.CurrentAmount / fundingInfo.FundingGoal) * 100);
+      donateText += ` [${percentage}% $$funded$$]`;
+    }
+    
+    donateBtn.textContent = donateText;
+    priestInfo.appendChild(donateBtn);
+  }
+  
+  // Add locations served section
+  const priestLocations = locations.filter(location => 
+    location.ReligiousIdArray && location.ReligiousIdArray.includes(priest.ReligiousID)
+  );
+  
+  if (priestLocations.length > 0) {
+    const locationsSection = document.createElement('div');
+    locationsSection.className = 'parishes-section';
+    
+    // Add section title
+    const locationsTitle = document.createElement('h3');
+    locationsTitle.textContent = "$$parishes-served$$";
+    locationsSection.appendChild(locationsTitle);
+    
+    const locationsList = document.createElement('ul');
+    locationsList.className = 'parishes-list';
+    
+    // Sort locations alphabetically
+    priestLocations.sort((a, b) => a.Name.localeCompare(b.Name));
+    
+    priestLocations.forEach(location => {
+      const locationItem = document.createElement('li');
+      locationItem.className = 'parish-item';
+      
+      locationItem.innerHTML = `<strong>${location.Name}:</strong> ${location.LocationType}`;
+      
+      // Add click handler to highlight this location
+      locationItem.style.cursor = 'pointer';
+      locationItem.addEventListener('click', () => {
+        showLocationInfo(location);
+      });
+      
+      locationsList.appendChild(locationItem);
+    });
+    
+    locationsSection.appendChild(locationsList);
+    priestInfo.appendChild(locationsSection);
+  }
+  
+  // Show the info panel
+  infoPanel.style.display = 'flex';
+  
+  // Find primary location for this priest
+  let primaryLocation = priestLocations[0];
+  if (priestLocations.length > 0) {
+    // Fly to location
+    map.flyTo([primaryLocation.Latitude, primaryLocation.Longitude], 8, {
+      animate: true,
+      duration: 1.5
+    });
+  }
+  
+  // Highlight this priest's locations
+  highlightPriest(priest);
+}
+
     // Highlight location and its connections
     function highlightLocation(location) {
       // Reset all markers
@@ -1511,6 +1902,454 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
       });
     }
     
+    // Function to format date
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString(CONFIG.currentLanguage, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+
+// Function to format time
+function formatTime(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleTimeString(CONFIG.currentLanguage, {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+// Check if an event is cancelled
+function isEventCancelled(event, date) {
+  if (!cancelledEventsMap.has(event.EventID)) return false;
+  
+  const cancelled = cancelledEventsMap.get(event.EventID);
+  const eventDate = new Date(date);
+  
+  return cancelled.some(cancel => {
+    // Format may vary, handle different date formats
+    const cancelStartDate = new Date(cancel.DateStart);
+    
+    // If cancelStartDate is invalid, try different format (DD.MM.YYYY)
+    if (isNaN(cancelStartDate.getTime()) && cancel.DateStart) {
+      const parts = cancel.DateStart.split('.');
+      if (parts.length === 3) {
+        const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+        return new Date(formattedDate).toDateString() === eventDate.toDateString();
+      }
+    }
+    
+    return cancelStartDate.toDateString() === eventDate.toDateString();
+  });
+}
+
+// Get cancellation reason for an event
+function getCancellationReason(event, date) {
+  if (!cancelledEventsMap.has(event.EventID)) return null;
+  
+  const cancelled = cancelledEventsMap.get(event.EventID);
+  const eventDate = new Date(date);
+  
+  const cancelEntry = cancelled.find(cancel => {
+    const cancelStartDate = new Date(cancel.DateStart);
+    
+    // If cancelStartDate is invalid, try different format (DD.MM.YYYY)
+    if (isNaN(cancelStartDate.getTime()) && cancel.DateStart) {
+      const parts = cancel.DateStart.split('.');
+      if (parts.length === 3) {
+        const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+        return new Date(formattedDate).toDateString() === eventDate.toDateString();
+      }
+    }
+    
+    return cancelStartDate.toDateString() === eventDate.toDateString();
+  });
+  
+  return cancelEntry ? cancelEntry.Reason : null;
+}
+
+// Get funding info for an entity
+function getFundingInfo(entityId) {
+  return fundingMap.get(entityId) || null;
+}
+
+// Create HTML for the calendar popup
+function createCalendarHtml(entityId, isLocation = true) {
+  const entity = isLocation ? locationMap.get(entityId) : religiousMap.get(entityId);
+  const entityName = isLocation ? entity.Name : `${entity.Type} ${entity.Name}`;
+  
+  // Filter events for this entity
+  const entityEvents = events.filter(event => {
+    if (isLocation) {
+      return event.LocationID === entityId;
+    } else {
+      return event.ReligiousID === entityId;
+    }
+  });
+  
+  // Get current month and year
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+  
+  // Create calendar HTML
+  let html = `
+  <div class="calendar-popup" id="calendarPopup">
+    <div class="calendar-header">
+      <div class="calendar-title">${entityName} - $$calendar-title$$</div>
+      <button class="calendar-close" id="calendarClose">×</button>
+    </div>
+    <div class="calendar-nav">
+      <button id="prevMonth">&#8249;</button>
+      <div class="calendar-month-year" id="calendarMonthYear"></div>
+      <button id="nextMonth">&#8250;</button>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+    <div class="calendar-events" id="calendarEvents"></div>
+  </div>
+  `;
+  
+  return html;
+}
+
+// Generate calendar for a specific month
+function generateCalendar(entityId, month, year, isLocation = true) {
+  const grid = document.getElementById('calendarGrid');
+  const monthYearEl = document.getElementById('calendarMonthYear');
+  const eventsEl = document.getElementById('calendarEvents');
+  
+  // Clear previous content
+  grid.innerHTML = '';
+  eventsEl.innerHTML = '';
+  
+  // Set month and year display
+  const monthNames = [
+    '$$month-january$$', '$$month-february$$', '$$month-march$$', '$$month-april$$', 
+    '$$month-may$$', '$$month-june$$', '$$month-july$$', '$$month-august$$', 
+    '$$month-september$$', '$$month-october$$', '$$month-november$$', '$$month-december$$'
+  ];
+  monthYearEl.textContent = `${monthNames[month]} ${year}`;
+  
+  // Add day headers
+  const dayNames = ['$$day-sun$$', '$$day-mon$$', '$$day-tue$$', '$$day-wed$$', '$$day-thu$$', '$$day-fri$$', '$$day-sat$$'];
+  dayNames.forEach(day => {
+    const dayHeader = document.createElement('div');
+    dayHeader.className = 'calendar-day-header';
+    dayHeader.textContent = day;
+    grid.appendChild(dayHeader);
+  });
+  
+  // Get first day of the month
+  const firstDay = new Date(year, month, 1);
+  const startingDay = firstDay.getDay(); // 0 = Sunday
+  
+  // Get number of days in the month
+  const lastDay = new Date(year, month + 1, 0);
+  const totalDays = lastDay.getDate();
+  
+  // Get previous month days to display
+  const prevMonth = month === 0 ? 11 : month - 1;
+  const prevYear = month === 0 ? year - 1 : year;
+  const prevMonthLastDay = new Date(prevYear, prevMonth + 1, 0).getDate();
+  
+  // Filter events for this entity and month
+  const entityEvents = events.filter(event => {
+    if (!event.StartDate) return false;
+    
+    const eventDate = new Date(event.StartDate);
+    if (isNaN(eventDate.getTime())) return false;
+    
+    if (isLocation) {
+      return event.LocationID === entityId && 
+             eventDate.getMonth() === month && 
+             eventDate.getFullYear() === year;
+    } else {
+      return event.ReligiousID === entityId && 
+             eventDate.getMonth() === month && 
+             eventDate.getFullYear() === year;
+    }
+  });
+  
+  // Create map of dates with events
+  const datesWithEvents = new Map();
+  entityEvents.forEach(event => {
+    const eventDate = new Date(event.StartDate);
+    const dayKey = eventDate.getDate();
+    
+    if (!datesWithEvents.has(dayKey)) {
+      datesWithEvents.set(dayKey, []);
+    }
+    datesWithEvents.get(dayKey).push(event);
+  });
+  
+  // Add days from previous month
+  for (let i = 0; i < startingDay; i++) {
+    const day = prevMonthLastDay - startingDay + i + 1;
+    const dayEl = document.createElement('div');
+    dayEl.className = 'calendar-day other-month';
+    dayEl.textContent = day;
+    grid.appendChild(dayEl);
+  }
+  
+  // Add days of current month
+  for (let day = 1; day <= totalDays; day++) {
+    const dayEl = document.createElement('div');
+    dayEl.className = 'calendar-day';
+    dayEl.textContent = day;
+    
+    // Check if this day has events
+    if (datesWithEvents.has(day)) {
+      dayEl.classList.add('has-events');
+      
+      // Add click handler to show events for this day
+      dayEl.addEventListener('click', () => {
+        showEventsForDay(entityId, year, month, day, isLocation);
+      });
+    }
+    
+    grid.appendChild(dayEl);
+  }
+  
+  // Add days from next month to fill the grid
+  const totalCells = Math.ceil((startingDay + totalDays) / 7) * 7;
+  const nextMonthDays = totalCells - (startingDay + totalDays);
+  
+  for (let day = 1; day <= nextMonthDays; day++) {
+    const dayEl = document.createElement('div');
+    dayEl.className = 'calendar-day other-month';
+    dayEl.textContent = day;
+    grid.appendChild(dayEl);
+  }
+}
+
+// Show events for a specific day
+function showEventsForDay(entityId, year, month, day, isLocation = true) {
+  const eventsEl = document.getElementById('calendarEvents');
+  eventsEl.innerHTML = '';
+  
+  // Create date for this day
+  const date = new Date(year, month, day);
+  
+  // Add heading for this day
+  const dayHeading = document.createElement('h3');
+  dayHeading.textContent = formatDate(date);
+  eventsEl.appendChild(dayHeading);
+  
+  // Filter events for this entity and day
+  const dayEvents = events.filter(event => {
+    if (!event.StartDate) return false;
+    
+    const eventDate = new Date(event.StartDate);
+    if (isNaN(eventDate.getTime())) return false;
+    
+    const isSameDay = 
+      eventDate.getDate() === day && 
+      eventDate.getMonth() === month && 
+      eventDate.getFullYear() === year;
+    
+    if (isLocation) {
+      return event.LocationID === entityId && isSameDay;
+    } else {
+      return event.ReligiousID === entityId && isSameDay;
+    }
+  });
+  
+  // Sort events by time
+  dayEvents.sort((a, b) => {
+    return new Date(a.StartDate) - new Date(b.StartDate);
+  });
+  
+  // Add events
+  dayEvents.forEach(event => {
+    const eventEl = document.createElement('div');
+    eventEl.className = 'calendar-event';
+    
+    // Check if event is cancelled
+    const cancelled = isEventCancelled(event, date);
+    if (cancelled) {
+      eventEl.classList.add('cancelled');
+    }
+    
+    // Event title
+    const titleEl = document.createElement('div');
+    titleEl.className = 'calendar-event-title';
+    titleEl.textContent = event.EventType || 'Event';
+    eventEl.appendChild(titleEl);
+    
+    // Event time
+    if (event.StartDate) {
+      const timeEl = document.createElement('div');
+      timeEl.className = 'calendar-event-time';
+      timeEl.textContent = `$$event-time$$: ${formatTime(event.StartDate)}`;
+      if (event.EndDate) {
+        timeEl.textContent += ` - ${formatTime(event.EndDate)}`;
+      }
+      eventEl.appendChild(timeEl);
+    }
+    
+    // Location or Priest (depending on view)
+    if (isLocation) {
+      if (event.ReligiousID) {
+        const priest = religiousMap.get(event.ReligiousID);
+        if (priest) {
+          const priestEl = document.createElement('div');
+          priestEl.className = 'calendar-event-priest';
+          priestEl.textContent = `$$event-priest$$: ${priest.Type || ''} ${priest.Name || ''}`;
+          eventEl.appendChild(priestEl);
+        }
+      }
+    } else {
+      if (event.LocationID) {
+        const location = locationMap.get(event.LocationID);
+        if (location) {
+          const locationEl = document.createElement('div');
+          locationEl.className = 'calendar-event-location';
+          locationEl.textContent = `$$event-location$$: ${location.Name || ''}`;
+          eventEl.appendChild(locationEl);
+        }
+      }
+    }
+    
+    // Notes
+    if (event.Notes) {
+      const notesEl = document.createElement('div');
+      notesEl.className = 'calendar-event-notes';
+      notesEl.textContent = event.Notes;
+      eventEl.appendChild(notesEl);
+    }
+    
+    // Cancellation reason
+    if (cancelled) {
+      const reason = getCancellationReason(event, date);
+      if (reason) {
+        const cancelEl = document.createElement('div');
+        cancelEl.className = 'calendar-event-cancelled';
+        cancelEl.textContent = reason;
+        eventEl.appendChild(cancelEl);
+      }
+    }
+    
+    // Donation link
+    const fundingInfo = getFundingInfo(event.EventID);
+    if (fundingInfo) {
+      const donateEl = document.createElement('a');
+      donateEl.className = 'donate-link';
+      donateEl.href = fundingInfo.DonationLinks;
+      donateEl.target = '_blank';
+      
+      // Calculate funding percentage if available
+      let donateText = '$$donate$$';
+      if (fundingInfo.FundingGoal && fundingInfo.CurrentAmount) {
+        const percentage = Math.round((fundingInfo.CurrentAmount / fundingInfo.FundingGoal) * 100);
+        donateText += ` [${percentage}% $$funded$$]`;
+      }
+      
+      donateEl.textContent = donateText;
+      eventEl.appendChild(donateEl);
+    }
+    
+    eventsEl.appendChild(eventEl);
+  });
+  
+  // No events message
+  if (dayEvents.length === 0) {
+    const noEventsEl = document.createElement('p');
+    noEventsEl.textContent = '$$no-events$$';
+    eventsEl.appendChild(noEventsEl);
+  }
+}
+
+// Show calendar popup for a location
+function showLocationCalendar(location) {
+  // Add calendar popup to the DOM if it doesn't exist
+  if (!document.getElementById('calendarPopup')) {
+    const calendarHtml = createCalendarHtml(location.LocationID, true);
+    document.body.insertAdjacentHTML('beforeend', calendarHtml);
+    
+    // Set up event listeners
+    document.getElementById('calendarClose').addEventListener('click', () => {
+      document.getElementById('calendarPopup').style.display = 'none';
+    });
+    
+    // Previous and next month navigation
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    
+    document.getElementById('prevMonth').addEventListener('click', () => {
+      currentMonth--;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      generateCalendar(location.LocationID, currentMonth, currentYear, true);
+    });
+    
+    document.getElementById('nextMonth').addEventListener('click', () => {
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      generateCalendar(location.LocationID, currentMonth, currentYear, true);
+    });
+  }
+  
+  // Show popup
+  const popup = document.getElementById('calendarPopup');
+  popup.style.display = 'flex';
+  
+  // Generate calendar
+  const now = new Date();
+  generateCalendar(location.LocationID, now.getMonth(), now.getFullYear(), true);
+}
+
+// Show calendar popup for a priest
+function showPriestCalendar(priest) {
+  // Add calendar popup to the DOM if it doesn't exist
+  if (!document.getElementById('calendarPopup')) {
+    const calendarHtml = createCalendarHtml(priest.ReligiousID, false);
+    document.body.insertAdjacentHTML('beforeend', calendarHtml);
+    
+    // Set up event listeners
+    document.getElementById('calendarClose').addEventListener('click', () => {
+      document.getElementById('calendarPopup').style.display = 'none';
+    });
+    
+    // Previous and next month navigation
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    
+    document.getElementById('prevMonth').addEventListener('click', () => {
+      currentMonth--;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      generateCalendar(priest.ReligiousID, currentMonth, currentYear, false);
+    });
+    
+    document.getElementById('nextMonth').addEventListener('click', () => {
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      generateCalendar(priest.ReligiousID, currentMonth, currentYear, false);
+    });
+  }
+  
+  // Show popup
+  const popup = document.getElementById('calendarPopup');
+  popup.style.display = 'flex';
+  
+  // Generate calendar
+  const now = new Date();
+  generateCalendar(priest.ReligiousID, now.getMonth(), now.getFullYear(), false);
+}
+
     // Reset all markers to their default style
     function resetAllMarkers() {
       // Reset parish markers
@@ -1561,15 +2400,15 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
         return;
       }
       
-      // Filter locations and religious based on search term
+      // Filter locations and religious based on search term with proper null checks
       const matchingLocations = locations.filter(location => 
-        location.Name.toLowerCase().includes(searchTerm) || 
+        (location.Name && location.Name.toLowerCase().includes(searchTerm)) || 
         (location.LocationType && location.LocationType.toLowerCase().includes(searchTerm)) ||
         (location.Notes && location.Notes.toLowerCase().includes(searchTerm))
       );
       
       const matchingReligious = religious.filter(person => 
-        person.Name.toLowerCase().includes(searchTerm) || 
+        (person.Name && person.Name.toLowerCase().includes(searchTerm)) || 
         (person.Type && person.Type.toLowerCase().includes(searchTerm)) ||
         (person['Location/Area'] && person['Location/Area'].toLowerCase().includes(searchTerm)) ||
         (person.Notes && person.Notes.toLowerCase().includes(searchTerm))
@@ -1615,12 +2454,12 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
         ...matchingReligious.map(person => ({ 
           type: 'religious', 
           data: person, 
-          title: `${person.Type} ${person.Name}`
+          title: `${person.Type || ''} ${person.Name || ''}`
         })),
         ...matchingLocations.map(location => ({ 
           type: 'location', 
           data: location, 
-          title: `${location.Name} (${location.LocationType})`
+          title: `${location.Name || ''} ${location.LocationType ? '(' + location.LocationType + ')' : ''}`
         }))
       ];
       
@@ -1646,7 +2485,7 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
           searchResultsContainer.appendChild(resultItem);
         });
         
-        searchResultsContainer.style.display = 'block';
+        searchResultsContainer.style.display = 'flex';
       } else {
         searchResultsContainer.style.display = 'none';
       }
@@ -1704,9 +2543,7 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
       userLocationMarker = L.marker([lat, lng], { icon: userIcon })
         .addTo(map)
         .bindPopup("$$your-location$$");
-        
-      console.log(`User location marker added at ${lat}, ${lng}`);
-    }
+      }
 
     // Get approximate location based on timezone and language
     function getApproximateLocation() {
