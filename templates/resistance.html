@@ -115,12 +115,12 @@
     .search-input {
         font-family: 'UnifrakturMaguntia';
         font-weight: bold;
-        padding: 5px;
+        padding: 10px 5px;
         font-style: italic;
         border: none;
         background: var(--search-bg);
         color: var(--search-text);
-        font-size: 1rem;
+        font-size: 1.2rem;
         outline: none;
         border: 3px solid var(--search-bg);
         pointer-events: all;
@@ -903,7 +903,7 @@ sajm-building-fund,sajm-seminary,BuildParish,50000,EUR,12500,paypal.me/sajmsemin
       }).setView([CONFIG.defaultLat, CONFIG.defaultLng], CONFIG.defaultZoom);
       
       // Add OSM tile layer
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      L.tileLayer('https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19
       }).addTo(map);
