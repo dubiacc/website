@@ -13,17 +13,22 @@ pub enum TrainLang {
 }
 
 impl TrainLang {
-
     pub fn get_initial_vocab(&self, lang: &str) -> Vec<VocabCsvRow> {
         match lang {
-            "en" => parse_vocab_csv(include_str!("../../articles/en/online-latin-trainer/latin.vocab.1.csv")).unwrap_or_default(),
+            "en" => parse_vocab_csv(include_str!(
+                "../../articles/en/online-latin-trainer/latin.vocab.1.csv"
+            ))
+            .unwrap_or_default(),
             _ => Vec::new(),
         }
     }
 
     pub fn get_grammar_lessons(&self, lang: &str) -> GrammarLessons {
         match lang {
-            "en" => parse_grammar_lessons(include_str!("../../articles/en/online-latin-trainer/latin.grammar.json")).unwrap_or_default(),
+            "en" => parse_grammar_lessons(include_str!(
+                "../../articles/en/online-latin-trainer/latin.grammar.json"
+            ))
+            .unwrap_or_default(),
             _ => GrammarLessons::default(),
         }
     }
@@ -58,7 +63,7 @@ pub struct GrammarTestSentence {
 #[serde(untagged)]
 pub enum GrammarTestSentenceItem {
     S(String),
-    I(GrammarTestSentencePlaceholder)
+    I(GrammarTestSentencePlaceholder),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
@@ -86,7 +91,6 @@ fn parse_grammar_lessons(s: &str) -> Option<GrammarLessons> {
 }
 
 fn parse_vocab_csv(input: &str) -> Option<Vec<VocabCsvRow>> {
-    
     let mut rdr = csv::ReaderBuilder::new()
         .has_headers(false)
         .from_reader(input.as_bytes());
@@ -109,15 +113,16 @@ fn parse_vocab_csv(input: &str) -> Option<Vec<VocabCsvRow>> {
     Some(vocab_rows)
 }
 
-
-pub fn generate_langtrain_content(lang: &str, train_lang: TrainLang, meta: &MetaJson) -> Result<String, String> {
-    
+pub fn generate_langtrain_content(
+    lang: &str,
+    train_lang: TrainLang,
+    meta: &MetaJson,
+) -> Result<String, String> {
     let mut content = String::new();
     content.push_str(&format!("<style>{LANGTRAIN_CSS}</style>"));
-    
+
     let initial_vocab = train_lang.get_initial_vocab(lang);
     let grammar_lessons = train_lang.get_grammar_lessons(lang);
-
 
     // TODO: render vocab test script
 
@@ -149,10 +154,16 @@ pub fn generate_langtrain_content(lang: &str, train_lang: TrainLang, meta: &Meta
     }
 
     // TODO: Generate lesson test script
-    let repl = format!("const courseData = JSON.parse(atob('{}'));", base64::encode(&serde_json::to_string_pretty(&grammar_lessons).unwrap_or_default()));
+    let repl = format!(
+        "const courseData = JSON.parse(atob('{}'));",
+        base64::encode(&serde_json::to_string_pretty(&grammar_lessons).unwrap_or_default())
+    );
     let langtrain_js = LANGTRAIN_JS
         .replace("const courseData = {};", &repl)
-        .replace("COURSE_DATA_LEN", &grammar_lessons.sections.len().to_string());
+        .replace(
+            "COURSE_DATA_LEN",
+            &grammar_lessons.sections.len().to_string(),
+        );
     content.push_str(&format!("<script>{langtrain_js}</script>"));
 
     Ok(content)

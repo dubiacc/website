@@ -2,6 +2,38 @@
     "owner": "github:fschutt",
     "strings": {
         "de": {
+            "resistance-title": "Katholisches Widerstandsnetzwerk",
+            "resistance-desc": "Finden Sie traditionelle katholische Priester und Messen weltweit",
+            "resistance-link": "resistance.html",
+            "resistance-nav": "Widerstand",
+            
+            "nav-home": "Startseite",
+            "nav-articles": "Artikel",
+            "nav-tools": "Werkzeuge",
+            "nav-contact": "Kontakt",
+            
+            "search-placeholder": "Priester, Orte suchen...",
+            "view-on-maps": "Auf Google Maps ansehen",
+            "notes": "Hinweise:",
+            "mass-times": "Messzeiten:",
+            "served-by": "Diese Gemeinde wird betreut von",
+            "home-parish-of": "Diese Gemeinde ist die Heimatgemeinde von",
+            "website": "Webseite",
+            "contact": "Kontakt",
+            "born": "Geboren",
+            "ordained-priest-in": "Zum Priester geweiht in",
+            "by": "durch",
+            "consecrated-bishop-in": "Zum Bischof geweiht in",
+            "bishop-line": "Bischofslinie",
+            "operates-in": "Tätig in",
+            "associates-with": "verbunden mit",
+            "beliefs": "Überzeugungen",
+            "parishes-served": "Betreute Gemeinden",
+            "report-error": "Fehler melden",
+            "request-mass": "Messe anfragen",
+            "back-to-site": "zurück zu dubia.cc",
+            "your-location": "Ihr Standort",
+
             "hailmary": "Gegrüßet seiest du Maria, voll der Gnaden, der Herr ist mit dir. Du bist gebenedeit unter den Weibern und gebenedeit ist die Frucht deines Leibes Jesus, $$SPECIAL$$. Heilige Maria, Mutter Gottes, bitte für uns Sünder, jetzt und in der Stunde unseres Todes. Amen.",
             "decade-start": "Anfang",
             "decade-end": "Ende",
@@ -100,6 +132,39 @@
             "go-to-top": "⬆ Anfang"
         },
         "en": {
+            
+            "resistance-title": "Catholic Resistance Network",
+            "resistance-desc": "Find traditional Catholic priests and Masses worldwide",
+            "resistance-link": "resistance.html",
+            "resistance-nav": "Resistance",
+            
+            "nav-home": "Home",
+            "nav-articles": "Articles",
+            "nav-tools": "Tools",
+            "nav-contact": "Contact",
+
+            "search-placeholder": "Search priests, locations...",
+            "view-on-maps": "View on Google Maps",
+            "notes": "Notes:",
+            "mass-times": "Mass Times:",
+            "served-by": "This parish is served by",
+            "home-parish-of": "This parish is the home parish of",
+            "website": "Website",
+            "contact": "Contact",
+            "born": "Born",
+            "ordained-priest-in": "Ordained priest in",
+            "by": "by",
+            "consecrated-bishop-in": "Consecrated Bishop in",
+            "bishop-line": "Bishop line",
+            "operates-in": "Operates in",
+            "associates-with": "associates with",
+            "beliefs": "beliefs",
+            "parishes-served": "Parishes Served",
+            "report-error": "report error",
+            "request-mass": "request mass", 
+            "back-to-site": "back to dubia.cc",
+            "your-location": "Your Location",
+
             "hailmary": "Hail, Mary, full of grace, the Lord is with thee. Blessed art thou amongst women and blessed is the fruit of thy womb, Jesus, $$SPECIAL$$. Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death. Amen.",
             "decade-start": "Start",
             "decade-end": "End",
@@ -702,9 +767,9 @@
                     "id": "messe",
                     "title": "Lateinischen Messen",
                     "links": [
-                        {"slug": "/priests", "title": "Karte von Resistance Messorten"},
-                        {"slug": "on-ecclesia-dei-groups", "title": "➽ Warum sollte man nicht zu Ecclesia-Dei Gruppen gehen?"},
-                        {"slug": "resistance-timeline", "title": "➽ Warum sollte man nicht (mehr) zur Piusbruderschaft gehen?"}
+                        {"slug": "resistance", "title": "Messorte der Resistance"},
+                        {"slug": "on-ecclesia-dei-groups", "title": "➽ Warum nicht zu FSSP / Ecclesia-Dei Gruppen gehen?"},
+                        {"slug": "resistance-timeline", "title": "➽ Warum nicht zur Piusbruderschaft gehen?"}
                     ]
                 },
                 {
@@ -936,9 +1001,9 @@
                     "id": "mass",
                     "title": "Latin Mass Locations",
                     "links": [
-                        {"slug": "/priests", "title": "Map of Resistance Mass Locations"},
-                        {"slug": "on-ecclesia-dei-groups", "title": "➽ Why not to attend FSSP Masses"},
-                        {"slug": "resistance-timeline", "title": "➽ Why not to attend SSPX Masses (anymore)"}
+                        {"slug": "resistance", "title": "Map of Resistance Masses"},
+                        {"slug": "on-ecclesia-dei-groups", "title": "➽ Why not attend FSSP Masses?"},
+                        {"slug": "resistance-timeline", "title": "➽ Why not attend SSPX Masses (anymore)?"}
                     ]
                 },
                 {

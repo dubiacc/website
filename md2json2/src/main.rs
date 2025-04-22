@@ -1,12 +1,13 @@
-use std::path::Path;
-use std::collections::BTreeMap;
-use std::collections::BTreeSet;
 use rosary::RosaryMysteries;
 use rosary::RosaryTemplates;
-use serde_derive::{Serialize, Deserialize};
+use serde_derive::{Deserialize, Serialize};
+use std::collections::BTreeMap;
+use std::collections::BTreeSet;
+use std::path::Path;
 
-mod rosary;
 mod langtrain;
+mod resistance;
+mod rosary;
 
 #[derive(Debug, Default)]
 struct LoadedArticles {
@@ -39,9 +40,10 @@ struct AnalyzedArticles {
 
 impl AnalyzedArticles {
     pub fn get_chars(&self) -> BTreeSet<char> {
-        self.map.values()
-        .flat_map(|v| v.values().flat_map(|p| p.get_chars()))
-        .collect()
+        self.map
+            .values()
+            .flat_map(|v| v.values().flat_map(|p| p.get_chars()))
+            .collect()
     }
 }
 
@@ -62,35 +64,42 @@ struct ParsedArticle {
 
 impl ParsedArticle {
     pub fn get_bibliography(&self) -> Vec<Link> {
-        let mut s = self.sections.iter().flat_map(|l| {
-            l.pars.iter().flat_map(|p| match p {
-                Paragraph::Sentence { s } => s.iter().filter_map(|s| match s {
-                    SentenceItem::Link { l } => Some(l.clone()),
-                    _ => None,
-                }).collect::<Vec<_>>(),
-                Paragraph::Quote { q } => {
-                    let mut links = q.get_links();
-                    for l in q.quote.iter() {
-                        match l {
-                            Paragraph::Sentence { s } => {
-                                for t in s.iter() {
-                                    if let SentenceItem::Link { l } = t {
-                                        // TODO: add titles to link!
-                                        links.push(l.clone());
+        let mut s = self
+            .sections
+            .iter()
+            .flat_map(|l| {
+                l.pars.iter().flat_map(|p| match p {
+                    Paragraph::Sentence { s } => s
+                        .iter()
+                        .filter_map(|s| match s {
+                            SentenceItem::Link { l } => Some(l.clone()),
+                            _ => None,
+                        })
+                        .collect::<Vec<_>>(),
+                    Paragraph::Quote { q } => {
+                        let mut links = q.get_links();
+                        for l in q.quote.iter() {
+                            match l {
+                                Paragraph::Sentence { s } => {
+                                    for t in s.iter() {
+                                        if let SentenceItem::Link { l } = t {
+                                            // TODO: add titles to link!
+                                            links.push(l.clone());
+                                        }
                                     }
                                 }
-                            },
-                            Paragraph::Quote { q } => {
-                                links.extend(q.get_links().into_iter());
-                            },
-                            _ => { },
+                                Paragraph::Quote { q } => {
+                                    links.extend(q.get_links().into_iter());
+                                }
+                                _ => {}
+                            }
                         }
+                        links
                     }
-                    links
-                }
-                Paragraph::Image { i } => Vec::new(),
+                    Paragraph::Image { i } => Vec::new(),
+                })
             })
-        }).collect::<Vec<_>>();
+            .collect::<Vec<_>>();
 
         s.sort();
         s.dedup();
@@ -102,53 +111,67 @@ impl ParsedArticle {
 impl VectorizedArticles {
     pub fn analyze(&self) -> AnalyzedArticles {
         AnalyzedArticles {
-            map: self.map.iter().map(|(lang, v)| {
-                (lang.clone(), v.iter().map(|(slug, vectorized)| {
-                    let similar = get_similar_articles(vectorized, slug, v);
-                    
-                    // gather all links of other sites that link here
-                    let backlinks = self.map.iter()
-                    .flat_map(|(lang2, v2)| {
-                        v2.iter().filter_map(move |(slug2, vectorized2)| {
-                            
-                            if lang2 != lang {
-                                return None;
-                            }
+            map: self
+                .map
+                .iter()
+                .map(|(lang, v)| {
+                    (
+                        lang.clone(),
+                        v.iter()
+                            .map(|(slug, vectorized)| {
+                                let similar = get_similar_articles(vectorized, slug, v);
 
-                            if slug2 == slug {
-                                return None; // don't self-link
-                            }
+                                // gather all links of other sites that link here
+                                let backlinks = self
+                                    .map
+                                    .iter()
+                                    .flat_map(|(lang2, v2)| {
+                                        v2.iter().filter_map(move |(slug2, vectorized2)| {
+                                            if lang2 != lang {
+                                                return None;
+                                            }
 
-                            let needle = format!("{lang2}/{slug2}");
-                            if vectorized2.parsed.src.contains(&needle) {
-                                Some(SectionLink {
-                                    title: vectorized2.parsed.title.clone(),
-                                    slug: slug2.clone(),
-                                    id: None,
-                                })
-                            } else {
-                                None
-                            }
-                        })
-                    }).collect();
+                                            if slug2 == slug {
+                                                return None; // don't self-link
+                                            }
 
-                    (slug.clone(), ParsedArticleAnalyzed {
-                        title: vectorized.parsed.title.clone(),
-                        date: vectorized.parsed.date.clone(),
-                        tags: vectorized.parsed.tags.clone(),
-                        authors: vectorized.parsed.authors.clone(),
-                        sha256: vectorized.parsed.sha256.clone(),
-                        img: vectorized.parsed.img.clone(),
-                        subtitle: vectorized.parsed.summary.clone(),
-                        summary: vectorized.parsed.article_abstract.clone(),
-                        sections: vectorized.parsed.sections.clone(),
-                        similar: similar,
-                        backlinks: backlinks,
-                        bibliography: vectorized.parsed.get_bibliography(),
-                        footnotes: vectorized.parsed.footnotes.clone(),
-                    })
-                }).collect())
-            }).collect()
+                                            let needle = format!("{lang2}/{slug2}");
+                                            if vectorized2.parsed.src.contains(&needle) {
+                                                Some(SectionLink {
+                                                    title: vectorized2.parsed.title.clone(),
+                                                    slug: slug2.clone(),
+                                                    id: None,
+                                                })
+                                            } else {
+                                                None
+                                            }
+                                        })
+                                    })
+                                    .collect();
+
+                                (
+                                    slug.clone(),
+                                    ParsedArticleAnalyzed {
+                                        title: vectorized.parsed.title.clone(),
+                                        date: vectorized.parsed.date.clone(),
+                                        tags: vectorized.parsed.tags.clone(),
+                                        authors: vectorized.parsed.authors.clone(),
+                                        sha256: vectorized.parsed.sha256.clone(),
+                                        img: vectorized.parsed.img.clone(),
+                                        subtitle: vectorized.parsed.summary.clone(),
+                                        summary: vectorized.parsed.article_abstract.clone(),
+                                        sections: vectorized.parsed.sections.clone(),
+                                        similar: similar,
+                                        backlinks: backlinks,
+                                        bibliography: vectorized.parsed.get_bibliography(),
+                                        footnotes: vectorized.parsed.footnotes.clone(),
+                                    },
+                                )
+                            })
+                            .collect(),
+                    )
+                })
+                .collect(),
         }
     }
 }
@@ -210,30 +233,41 @@ fn parse_footnote(s: &str) -> Option<Footnote> {
 
 #[test]
 fn test_parse_footnote() {
-
     let s = "[^1]: Some text";
-    assert_eq!(parse_footnote(s).unwrap(), Footnote {
-        id: "1".to_string(), 
-        text: vec![
-            SentenceItem::Text { text: "Some text".to_string() },
-        ]
-    });
+    assert_eq!(
+        parse_footnote(s).unwrap(),
+        Footnote {
+            id: "1".to_string(),
+            text: vec![SentenceItem::Text {
+                text: "Some text".to_string()
+            },]
+        }
+    );
 
     let s = "[^ref]: Some text with [a link](https://example.com).";
     let p = parse_footnote(s).unwrap();
-    assert_eq!(p, Footnote {
-        id: "ref".to_string(), 
-        text: vec![
-            SentenceItem::Text { text: "Some text with ".to_string() },
-            SentenceItem::Link { l: Link { 
-                text: "a link".to_string(), 
-                href: "https://example.com".to_string(),
-                title: "a link".to_string(),
-                id: uuid("https://example.com"),
-            } },
-            SentenceItem::Text { text: ".".to_string() },
-        ]
-    });
+    assert_eq!(
+        p,
+        Footnote {
+            id: "ref".to_string(),
+            text: vec![
+                SentenceItem::Text {
+                    text: "Some text with ".to_string()
+                },
+                SentenceItem::Link {
+                    l: Link {
+                        text: "a link".to_string(),
+                        href: "https://example.com".to_string(),
+                        title: "a link".to_string(),
+                        id: uuid("https://example.com"),
+                    }
+                },
+                SentenceItem::Text {
+                    text: ".".to_string()
+                },
+            ]
+        }
+    );
 }
 
 impl ParsedArticleAnalyzed {
@@ -247,7 +281,11 @@ impl ParsedArticleAnalyzed {
         c.extend(self.subtitle.iter().flat_map(|s| s.get_chars()));
         c.extend(self.summary.iter().flat_map(|s| s.get_chars()));
         c.extend(self.sections.iter().flat_map(|s| s.title.chars()));
-        c.extend(self.sections.iter().flat_map(|s| s.pars.iter().flat_map(|r| r.get_chars())));
+        c.extend(
+            self.sections
+                .iter()
+                .flat_map(|s| s.pars.iter().flat_map(|r| r.get_chars())),
+        );
         c.extend(self.footnotes.iter().flat_map(|s| s.get_chars()));
         c
     }
@@ -270,7 +308,6 @@ struct Config {
     authors: Vec<String>,
 }
 
-
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
 struct ArticleSection {
     title: String,
@@ -283,11 +320,10 @@ struct ArticleSection {
 enum Paragraph {
     Sentence { s: Vec<SentenceItem> },
     Quote { q: Quote },
-    Image { i: Image }
+    Image { i: Image },
 }
 
 impl Paragraph {
-
     pub fn as_sentence(&self) -> Option<&[SentenceItem]> {
         if let Paragraph::Sentence { s } = self {
             Some(s)
@@ -298,27 +334,35 @@ impl Paragraph {
 
     pub fn word_count(&self) -> usize {
         match self {
-            Paragraph::Sentence { s } => s.iter().map(|z| match z {
-                SentenceItem::Text { text } => text.split_whitespace().count() + 1,
-                SentenceItem::Link { l } => l.text.split_whitespace().count() + 1,
-                SentenceItem::Footnote { .. } => 0,
-            }).sum(),
-            Paragraph::Quote { q } => {
-                q.quote.iter().map(|p| p.word_count()).sum()
-            }
+            Paragraph::Sentence { s } => s
+                .iter()
+                .map(|z| match z {
+                    SentenceItem::Text { text } => text.split_whitespace().count() + 1,
+                    SentenceItem::Link { l } => l.text.split_whitespace().count() + 1,
+                    SentenceItem::Footnote { .. } => 0,
+                })
+                .sum(),
+            Paragraph::Quote { q } => q.quote.iter().map(|p| p.word_count()).sum(),
             Paragraph::Image { i } => 0,
         }
     }
 
     pub fn get_chars(&self) -> Vec<char> {
         match self {
-            Paragraph::Sentence { s } => s.iter().flat_map(|z| match z {
-                SentenceItem::Text { text } => text.chars().collect::<Vec<_>>(),
-                SentenceItem::Link { l } => l.text.chars().collect::<Vec<_>>(),
-                SentenceItem::Footnote { id } => id.chars().collect::<Vec<_>>(),
-            }).collect::<Vec<_>>(),
+            Paragraph::Sentence { s } => s
+                .iter()
+                .flat_map(|z| match z {
+                    SentenceItem::Text { text } => text.chars().collect::<Vec<_>>(),
+                    SentenceItem::Link { l } => l.text.chars().collect::<Vec<_>>(),
+                    SentenceItem::Footnote { id } => id.chars().collect::<Vec<_>>(),
+                })
+                .collect::<Vec<_>>(),
             Paragraph::Quote { q } => {
-                let mut p = q.quote.iter().flat_map(|p| p.get_chars()).collect::<Vec<_>>();
+                let mut p = q
+                    .quote
+                    .iter()
+                    .flat_map(|p| p.get_chars())
+                    .collect::<Vec<_>>();
                 p.extend(q.title.chars());
                 p.extend(q.author.clone().unwrap_or_default().text.chars());
                 p.extend(q.source.clone().unwrap_or_default().text.chars());
@@ -331,25 +375,18 @@ impl Paragraph {
 
 #[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
 struct Sentence {
-    items: Vec<SentenceItem>
+    items: Vec<SentenceItem>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(tag = "t", content = "d", rename_all = "lowercase")]
 enum SentenceItem {
-    Text {
-        text: String,
-    },
-    Link {
-        l: Link,
-    },
-    Footnote {
-        id: String,
-    }
+    Text { text: String },
+    Link { l: Link },
+    Footnote { id: String },
 }
 
 impl SentenceItem {
-
     pub fn text(&self) -> Option<&String> {
         if let SentenceItem::Text { text } = self {
             Some(text)
@@ -407,7 +444,7 @@ struct Link {
 
 #[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
 struct Image {
-    href: String, 
+    href: String,
     alt: String,
     title: String,
     inline: Option<ImageAlignment>,
@@ -429,24 +466,28 @@ impl Default for ImageAlignment {
 fn parse_image_align(s: &str) -> Option<ImageAlignment> {
     let al = "align-left(";
     let ar = "align-right(";
-    
+
     if s.contains("full-width") {
         Some(ImageAlignment::FullWidth)
     } else if s.trim().starts_with(al) {
-
-        let chars = s.trim().chars().skip(ar.len())
+        let chars = s
+            .trim()
+            .chars()
+            .skip(ar.len())
             .take_while(|c| c.is_ascii_alphanumeric() && c.is_numeric())
             .collect::<String>();
-        
+
         let width = chars.parse::<usize>().ok()?;
 
         Some(ImageAlignment::Right(width))
     } else if s.trim().starts_with(ar) {
-
-        let chars = s.trim().chars().skip(ar.len())
+        let chars = s
+            .trim()
+            .chars()
+            .skip(ar.len())
             .take_while(|c| c.is_ascii_alphanumeric() && c.is_numeric())
             .collect::<String>();
-        
+
         let width = chars.parse::<usize>().ok()?;
 
         Some(ImageAlignment::Right(width))
@@ -469,19 +510,20 @@ fn parse_paragraph(s: &str) -> Paragraph {
 
 fn parse_paragraphs(s: &str) -> Vec<Paragraph> {
     let lines = s.lines().map(|q| q.trim()).collect::<Vec<_>>();
-    lines.split(|s| s.is_empty())
-    .map(|q| q.to_vec())
-    .collect::<Vec<Vec<_>>>()
-    .iter()
-    .filter(|s| !s.is_empty())
-    .map(|sp| parse_paragraph(&sp.join("\r\n")))
-    .collect()
+    lines
+        .split(|s| s.is_empty())
+        .map(|q| q.to_vec())
+        .collect::<Vec<Vec<_>>>()
+        .iter()
+        .filter(|s| !s.is_empty())
+        .map(|sp| parse_paragraph(&sp.join("\r\n")))
+        .collect()
 }
 
 #[cfg(feature = "external")]
 fn sha256(s: &str) -> String {
-    use sha2::{Sha256, Digest};
     use base64::Engine;
+    use sha2::{Digest, Sha256};
     let mut hasher = Sha256::new();
     hasher.update(s.as_bytes());
     let result = hasher.finalize();
@@ -521,17 +563,16 @@ fn extract_config(l: &[&str]) -> (Config, BTreeSet<usize>) {
         }
     }
 
-    let config = serde_json::from_str::<Config>(
-        &codeblock.join("\r\n")
-    ).unwrap_or_default();
+    let config = serde_json::from_str::<Config>(&codeblock.join("\r\n")).unwrap_or_default();
 
     (config, to_ignore)
 }
 
 fn parse_article(s: &str) -> ParsedArticle {
-    
     let lines = s.lines().collect::<Vec<_>>();
-    let (title_line, title) = lines.iter().enumerate()
+    let (title_line, title) = lines
+        .iter()
+        .enumerate()
         .filter(|(_, s)| s.starts_with("# "))
         .map(|(i, q)| (i, q.replace("# ", "").trim().to_string()))
         .next()
@@ -542,13 +583,27 @@ fn parse_article(s: &str) -> ParsedArticle {
     let (config, lines_to_ignore) = extract_config(&lines);
 
     let lines_before_heading = lines
-        .iter().enumerate()
-        .filter_map(|(i, l)| if lines_to_ignore.contains(&i) || i >= title_line { None } else { Some(*l) })
+        .iter()
+        .enumerate()
+        .filter_map(|(i, l)| {
+            if lines_to_ignore.contains(&i) || i >= title_line {
+                None
+            } else {
+                Some(*l)
+            }
+        })
         .collect::<Vec<_>>();
 
     let lines_after_heading = lines
-        .iter().enumerate()
-        .filter_map(|(i, l)| if lines_to_ignore.contains(&i) || i <= title_line { None } else { Some(*l) })
+        .iter()
+        .enumerate()
+        .filter_map(|(i, l)| {
+            if lines_to_ignore.contains(&i) || i <= title_line {
+                None
+            } else {
+                Some(*l)
+            }
+        })
         .collect::<Vec<_>>();
 
     let article_abstract = lines_after_heading
@@ -559,49 +614,51 @@ fn parse_article(s: &str) -> ParsedArticle {
 
     let lines_after_heading = lines_after_heading[article_abstract.len()..].to_vec();
     let (footnotes, footnote_lines) = gather_footnotes(&lines_after_heading);
-    let lines_after_heading = lines_after_heading.iter().enumerate().filter_map(|(i, s)| {
-        if footnote_lines.contains(&i) {
-            None
-        } else {
-            Some(s)
-        }
-    }).collect::<Vec<_>>();
+    let lines_after_heading = lines_after_heading
+        .iter()
+        .enumerate()
+        .filter_map(|(i, s)| {
+            if footnote_lines.contains(&i) {
+                None
+            } else {
+                Some(s)
+            }
+        })
+        .collect::<Vec<_>>();
 
     let mut sections = lines_after_heading
-    .iter().enumerate()
-    .filter_map(|(i, s)| {
-        if s.contains("# ") {
-            Some(i)
-        } else {
-            None
-        }
-    }).collect::<Vec<_>>();
+        .iter()
+        .enumerate()
+        .filter_map(|(i, s)| if s.contains("# ") { Some(i) } else { None })
+        .collect::<Vec<_>>();
     sections.push(lines_after_heading.len());
 
-    let sections = sections.windows(2).filter_map(|s| {
-        
-        let (start_line, end_line) = match s {
-            [s, e] => (*s, *e),
-            _ => return None,
-        };
+    let sections = sections
+        .windows(2)
+        .filter_map(|s| {
+            let (start_line, end_line) = match s {
+                [s, e] => (*s, *e),
+                _ => return None,
+            };
 
-        let l = lines_after_heading.get(start_line)?;
-        let indent = l.chars().filter(|c| *c == '#').count();
-        let title = l.replace("#", "").trim().to_string();
+            let l = lines_after_heading.get(start_line)?;
+            let indent = l.chars().filter(|c| *c == '#').count();
+            let title = l.replace("#", "").trim().to_string();
 
-        let lines = ((start_line + 1)..end_line)
-            .filter_map(|i| lines_after_heading.get(i))
-            .map(|s| **s)
-            .collect::<Vec<_>>();
+            let lines = ((start_line + 1)..end_line)
+                .filter_map(|i| lines_after_heading.get(i))
+                .map(|s| **s)
+                .collect::<Vec<_>>();
 
-        let pars = parse_paragraphs(&lines.join("\r\n"));
+            let pars = parse_paragraphs(&lines.join("\r\n"));
 
-        Some(ArticleSection {
-            title,
-            indent,
-            pars,
+            Some(ArticleSection {
+                title,
+                indent,
+                pars,
+            })
         })
-    }).collect::<Vec<_>>();
+        .collect::<Vec<_>>();
 
     ParsedArticle {
         src: s.to_string(),
@@ -621,8 +678,13 @@ fn parse_article(s: &str) -> ParsedArticle {
 impl ArticleType {
     /// Returns the type of article based on text content heuristics
     pub fn new(s: &str) -> ArticleType {
-        let is_question = s.lines().filter(|q| q.starts_with("# ")).any(|q| q.trim().ends_with("?"));
-        let is_prayer = s.lines().any(|q| q.trim() == "Amen.") || s.lines().any(|s| s.contains("tags") && (s.contains("gebet") || s.contains("prayer")));
+        let is_question = s
+            .lines()
+            .filter(|q| q.starts_with("# "))
+            .any(|q| q.trim().ends_with("?"));
+        let is_prayer = s.lines().any(|q| q.trim() == "Amen.")
+            || s.lines()
+                .any(|s| s.contains("tags") && (s.contains("gebet") || s.contains("prayer")));
         if is_prayer {
             ArticleType::Prayer
         } else if is_question {
@@ -635,7 +697,6 @@ impl ArticleType {
 
 #[test]
 fn test_parse_quote() {
-    
     let s = "
         > Test
         >
@@ -643,34 +704,53 @@ fn test_parse_quote() {
         > > IndentLine2
         >
         > Continued
-    ".lines().map(|s| s.trim())
-    .collect::<Vec<_>>().join("\r\n");
+    "
+    .lines()
+    .map(|s| s.trim())
+    .collect::<Vec<_>>()
+    .join("\r\n");
 
     let q = Quote::new(&s).unwrap();
 
-    assert_eq!(q, Quote {
-        title: String::new(),
-        quote: vec![
-            Paragraph::Sentence { s: vec![SentenceItem::Text { text: "Test".to_string() }] },
-            Paragraph::Quote { q: Quote { 
-                title: String::new(), 
-                quote: vec![
-                    Paragraph::Sentence { s: vec![SentenceItem::Text { text: "Indent IndentLine2".to_string() }] },
-                ],
-                author: None, 
-                source: None,
-            }},
-            Paragraph::Sentence { s: vec![SentenceItem::Text { text: "Continued".to_string() }] },
-        ],
-        author: None,
-        source: None,
-    });
+    assert_eq!(
+        q,
+        Quote {
+            title: String::new(),
+            quote: vec![
+                Paragraph::Sentence {
+                    s: vec![SentenceItem::Text {
+                        text: "Test".to_string()
+                    }]
+                },
+                Paragraph::Quote {
+                    q: Quote {
+                        title: String::new(),
+                        quote: vec![Paragraph::Sentence {
+                            s: vec![SentenceItem::Text {
+                                text: "Indent IndentLine2".to_string()
+                            }]
+                        },],
+                        author: None,
+                        source: None,
+                    }
+                },
+                Paragraph::Sentence {
+                    s: vec![SentenceItem::Text {
+                        text: "Continued".to_string()
+                    }]
+                },
+            ],
+            author: None,
+            source: None,
+        }
+    );
 }
 
 impl Quote {
     fn new(s: &str) -> Option<Self> {
-
-        let mut lines = s.trim().lines()
+        let mut lines = s
+            .trim()
+            .lines()
             .map(|l| l.trim())
             .filter(|l| l.trim().starts_with(">"))
             .map(|l| l.replacen(">", "", 1).trim().to_string())
@@ -680,28 +760,30 @@ impl Quote {
             return None;
         }
 
-        let title = lines.iter()
-            .find(|s| s.starts_with("**"))
-            .cloned();
+        let title = lines.iter().find(|s| s.starts_with("**")).cloned();
 
         if let Some(t) = title.as_deref() {
             lines.retain(|l| l.as_str() != t);
         }
 
-        let title = title
-            .map(|l| l.replace("**", ""))
-            .unwrap_or_default();
+        let title = title.map(|l| l.replace("**", "")).unwrap_or_default();
 
-        let author_line = lines.iter()
+        let author_line = lines
+            .iter()
             .find(|s| s.trim().starts_with("--") || s.trim().starts_with("—-"))
             .cloned();
-        
+
         if let Some(t) = author_line.as_deref() {
             lines.retain(|l| l.as_str() != t);
         }
-        
+
         let author_line = author_line
-            .map(|s| s.replacen("--", "", 1).replacen("—-", "", 1).trim().to_string())
+            .map(|s| {
+                s.replacen("--", "", 1)
+                    .replacen("—-", "", 1)
+                    .trim()
+                    .to_string()
+            })
             .unwrap_or_default();
 
         let mut author = None;
@@ -713,9 +795,10 @@ impl Quote {
             author_line = &author_line[to_delete..];
         }
 
-        let next_link_start = author_line
-        .char_indices()
-        .find_map(|(idx, c)| if c == '[' { Some(idx) } else { None });
+        let next_link_start =
+            author_line
+                .char_indices()
+                .find_map(|(idx, c)| if c == '[' { Some(idx) } else { None });
 
         if let Some(nls) = next_link_start {
             author_line = &author_line[nls..];
@@ -725,7 +808,8 @@ impl Quote {
             source = Some(next_link);
         }
 
-        let lines = lines.iter()
+        let lines = lines
+            .iter()
             .filter(|s| !s.starts_with("**"))
             .filter(|s| !s.starts_with("--"))
             .cloned()
@@ -737,7 +821,6 @@ impl Quote {
             .filter(|s| !s.iter().all(|q| q.is_empty()))
             .collect::<Vec<Vec<String>>>();
 
-
         if let Some(fl) = quote.first_mut().and_then(|s| s.first_mut()) {
             if fl.trim().starts_with("\"") {
                 *fl = fl.replacen("\"", "", 1);
@@ -745,22 +828,26 @@ impl Quote {
                 *fl = fl.replacen("'", "", 1);
             } else if fl.trim().starts_with("`") {
                 *fl = fl.replacen("`", "", 1);
-            } 
+            }
         }
 
-        if let Some(fl) = quote.last_mut().and_then(|s: &mut Vec<String>| s.last_mut()) {
+        if let Some(fl) = quote
+            .last_mut()
+            .and_then(|s: &mut Vec<String>| s.last_mut())
+        {
             if fl.trim().ends_with("\"") {
                 *fl = fl.replacen("\"", "", 1);
             } else if fl.trim().ends_with("'") {
                 *fl = fl.replacen("'", "", 1);
             } else if fl.trim().ends_with("`") {
                 *fl = fl.replacen("`", "", 1);
-            } 
+            }
         }
 
-        let quote = quote.iter()
-        .map(|q| parse_paragraph(&q.join("\r\n")))
-        .collect::<Vec<_>>();
+        let quote = quote
+            .iter()
+            .map(|q| parse_paragraph(&q.join("\r\n")))
+            .collect::<Vec<_>>();
 
         let q = Quote {
             title,
@@ -775,7 +862,6 @@ impl Quote {
 
 // Given a string, returns the extracted link + number of bytes to be consumed
 fn take_next_link(s: &str) -> Option<(Link, usize)> {
-
     let s = s.trim();
     if !s.starts_with("[") {
         return None;
@@ -795,11 +881,10 @@ fn take_next_link(s: &str) -> Option<(Link, usize)> {
 
     let id = it_str.into_iter().collect::<String>();
     let s = s.replacen(&("[".to_string() + &id + "]("), "", 1);
-    
+
     let mut open_br_count = 1;
     let mut link = Vec::new();
     for c in s.chars() {
-
         if c == '(' {
             open_br_count += 1;
         } else if c == ')' {
@@ -829,7 +914,7 @@ fn take_next_link(s: &str) -> Option<(Link, usize)> {
     if href.starts_with("/") {
         href = get_root_href().to_string() + &href;
     }
-    
+
     let l = Link {
         text,
         href: href.clone(),
@@ -840,11 +925,14 @@ fn take_next_link(s: &str) -> Option<(Link, usize)> {
 }
 
 fn uuid(seed: &str) -> String {
-    use sha1::{Sha1, Digest};
+    use sha1::{Digest, Sha1};
     let mut hasher = Sha1::new();
     hasher.update(seed.as_bytes());
     let f = hasher.finalize();
-    let b = [f[0], f[1], f[2], f[3], f[4], f[5], f[6], f[7], f[8], f[9], f[10], f[11], f[12], f[13], f[14], f[15]];
+    let b = [
+        f[0], f[1], f[2], f[3], f[4], f[5], f[6], f[7], f[8], f[9], f[10], f[11], f[12], f[13],
+        f[14], f[15],
+    ];
     let uuid = uuid::Builder::from_sha1_bytes(b).into_uuid();
     short_uuid::ShortUuid::from_uuid(&uuid).to_string()
 }
@@ -857,29 +945,27 @@ fn test_quote_2() {
         > —- [5. Mose 22,28-29](https://k-bibel.de/ARN/Deuteronomium22#28-29)
     ";
 
-    assert_eq!(Quote::new(s), Some(Quote {
-        title: "".to_string(),
-        quote: vec![
-            Paragraph::Sentence { 
-                s: vec![
-                    SentenceItem::Text { 
-                        text: "Wenn ein Mann eine Jungfrau trifft, die nicht verlobt ist".to_string() 
-                    }
-                ]
-            },
-        ],
-        author: Some(Link { 
-            text: "5. Mose 22,28-29".to_string(), 
-            href: "https://k-bibel.de/ARN/Deuteronomium22#28-29".to_string(),
-            title: "5. Mose 22,28-29".to_string(),
-            id: uuid("https://k-bibel.de/ARN/Deuteronomium22#28-29"),
-        }),
-        source: None,
-    }))
+    assert_eq!(
+        Quote::new(s),
+        Some(Quote {
+            title: "".to_string(),
+            quote: vec![Paragraph::Sentence {
+                s: vec![SentenceItem::Text {
+                    text: "Wenn ein Mann eine Jungfrau trifft, die nicht verlobt ist".to_string()
+                }]
+            },],
+            author: Some(Link {
+                text: "5. Mose 22,28-29".to_string(),
+                href: "https://k-bibel.de/ARN/Deuteronomium22#28-29".to_string(),
+                title: "5. Mose 22,28-29".to_string(),
+                id: uuid("https://k-bibel.de/ARN/Deuteronomium22#28-29"),
+            }),
+            source: None,
+        })
+    )
 }
 #[test]
 fn test_quote() {
-
     let s = "
         > **Heading**
         >
@@ -894,41 +980,47 @@ fn test_quote() {
     ";
 
     let q = Quote::new(s).unwrap();
-    assert_eq!(q, Quote {
-        title: "Heading".to_string(),
-        quote: vec![
-            Paragraph::Sentence {  s: vec![SentenceItem::Text { text: "LineA LineB LineC".to_string() }] },
-            Paragraph::Sentence {  s: vec![SentenceItem::Text { text: "LineD LineE".to_string() }] },
-        ],
-        author: Some(Link { 
-            text: "Test".to_string(),
-            href: "https://wikipedia.org/Test".to_string(), 
-            title: "Test".to_string(), 
-            id: q.author.clone().unwrap().id,
-        }),
-        source: Some(Link { 
-            text: "de juiribus".to_string(),
-            href: "test.pdf".to_string(), 
-            title: "de juiribus".to_string(), 
-            id: q.source.clone().unwrap().id,
-        }),
-    })
+    assert_eq!(
+        q,
+        Quote {
+            title: "Heading".to_string(),
+            quote: vec![
+                Paragraph::Sentence {
+                    s: vec![SentenceItem::Text {
+                        text: "LineA LineB LineC".to_string()
+                    }]
+                },
+                Paragraph::Sentence {
+                    s: vec![SentenceItem::Text {
+                        text: "LineD LineE".to_string()
+                    }]
+                },
+            ],
+            author: Some(Link {
+                text: "Test".to_string(),
+                href: "https://wikipedia.org/Test".to_string(),
+                title: "Test".to_string(),
+                id: q.author.clone().unwrap().id,
+            }),
+            source: Some(Link {
+                text: "de juiribus".to_string(),
+                href: "test.pdf".to_string(),
+                title: "de juiribus".to_string(),
+                id: q.source.clone().unwrap().id,
+            }),
+        }
+    )
 }
 
 // parses the footnote from a "[^note]" text
 fn parse_footnote_maintext(s: &str) -> Option<(String, usize)> {
-    
     if !s.trim().starts_with("[^") {
         return None;
     }
 
-    let end = s.char_indices().find_map(|(idx, c)| {
-        if c == ']' {
-            Some(idx)
-        } else {
-            None
-        }
-    })?;
+    let end = s
+        .char_indices()
+        .find_map(|(idx, c)| if c == ']' { Some(idx) } else { None })?;
 
     let substring = s[2..end].to_string();
     Some((substring, end + 1))
@@ -936,7 +1028,6 @@ fn parse_footnote_maintext(s: &str) -> Option<(String, usize)> {
 
 impl Sentence {
     fn new(s: &str) -> Self {
-
         let mut items = Vec::new();
         let mut cur_sentence = Vec::new();
         let mut iter = s.char_indices().peekable();
@@ -947,8 +1038,14 @@ impl Sentence {
                 ('[', Some('^')) => match parse_footnote_maintext(&s[idx..]) {
                     Some((footnote_id, chars_to_skip)) => {
                         if !cur_sentence.is_empty() {
-                            items.push(SentenceItem::Text { 
-                                text: cur_sentence.iter().cloned().collect::<String>().lines().collect::<Vec<_>>().join(" ") 
+                            items.push(SentenceItem::Text {
+                                text: cur_sentence
+                                    .iter()
+                                    .cloned()
+                                    .collect::<String>()
+                                    .lines()
+                                    .collect::<Vec<_>>()
+                                    .join(" "),
                             });
                         }
                         items.push(SentenceItem::Footnote { id: footnote_id });
@@ -956,7 +1053,7 @@ impl Sentence {
                         for _ in 0..chars_to_skip.saturating_sub(1) {
                             let _ = iter.next();
                         }
-                    },
+                    }
                     None => {
                         cur_sentence.push(c);
                     }
@@ -964,8 +1061,14 @@ impl Sentence {
                 ('[', _) => match take_next_link(&s[idx..]) {
                     Some((link, chars_to_skip)) => {
                         if !cur_sentence.is_empty() {
-                            items.push(SentenceItem::Text { 
-                                text: cur_sentence.iter().cloned().collect::<String>().lines().collect::<Vec<_>>().join(" ") 
+                            items.push(SentenceItem::Text {
+                                text: cur_sentence
+                                    .iter()
+                                    .cloned()
+                                    .collect::<String>()
+                                    .lines()
+                                    .collect::<Vec<_>>()
+                                    .join(" "),
                             });
                         }
                         items.push(SentenceItem::Link { l: link });
@@ -973,18 +1076,26 @@ impl Sentence {
                         for _ in 0..chars_to_skip.saturating_sub(1) {
                             let _ = iter.next();
                         }
-                    },
+                    }
                     None => {
                         cur_sentence.push(c);
                     }
                 },
-                _ => { cur_sentence.push(c); },
+                _ => {
+                    cur_sentence.push(c);
+                }
             }
         }
 
         if !cur_sentence.is_empty() {
-            items.push(SentenceItem::Text { 
-                text: cur_sentence.iter().cloned().collect::<String>().lines().collect::<Vec<_>>().join(" ") 
+            items.push(SentenceItem::Text {
+                text: cur_sentence
+                    .iter()
+                    .cloned()
+                    .collect::<String>()
+                    .lines()
+                    .collect::<Vec<_>>()
+                    .join(" "),
             });
         }
 
@@ -995,25 +1106,37 @@ impl Sentence {
 #[test]
 fn test_sentence() {
     let s = "This is a sentence with a footnote[^15] and a [link](url).";
-    assert_eq!(Sentence::new(s), Sentence {
-        items: vec![
-            SentenceItem::Text { text: "This is a sentence with a footnote".to_string() },
-            SentenceItem::Footnote { id: "15".to_string() },
-            SentenceItem::Text { text: " and a ".to_string() },
-            SentenceItem::Link { l: Link { 
-                text: "link".to_string(), 
-                href: "url".to_string(),
-                title: "link".to_string(),
-                id: uuid("url"),
-            } },
-            SentenceItem::Text { text: ".".to_string() },
-        ]
-    })
+    assert_eq!(
+        Sentence::new(s),
+        Sentence {
+            items: vec![
+                SentenceItem::Text {
+                    text: "This is a sentence with a footnote".to_string()
+                },
+                SentenceItem::Footnote {
+                    id: "15".to_string()
+                },
+                SentenceItem::Text {
+                    text: " and a ".to_string()
+                },
+                SentenceItem::Link {
+                    l: Link {
+                        text: "link".to_string(),
+                        href: "url".to_string(),
+                        title: "link".to_string(),
+                        id: uuid("url"),
+                    }
+                },
+                SentenceItem::Text {
+                    text: ".".to_string()
+                },
+            ]
+        }
+    )
 }
 
 impl Image {
     pub fn new(s: &str) -> Option<Self> {
-
         let mut s = s.trim().to_string();
         if s.starts_with("![") {
             s = s.replacen("![", "", 1);
@@ -1037,7 +1160,9 @@ impl Image {
         };
 
         let href = rest.split_whitespace().nth(0)?.to_string();
-        let title = rest.split_whitespace().nth(1)
+        let title = rest
+            .split_whitespace()
+            .nth(1)
             .map(|s| s.trim().replace("\"", "").replace("'", "").replace("`", ""))
             .unwrap_or(alt.clone());
 
@@ -1053,20 +1178,26 @@ impl Image {
 #[test]
 fn test_image() {
     let s = "![alt text](Isolated.png \"Title\")";
-    assert_eq!(Image::new(s), Some(Image {
-        href: "Isolated.png".to_string(),
-        alt: "alt text".to_string(),
-        title: "Title".to_string(),
-        inline: None,
-    }));
+    assert_eq!(
+        Image::new(s),
+        Some(Image {
+            href: "Isolated.png".to_string(),
+            alt: "alt text".to_string(),
+            title: "Title".to_string(),
+            inline: None,
+        })
+    );
 
     let s = "![alt text](Isolated.png)";
-    assert_eq!(Image::new(s), Some(Image {
-        href: "Isolated.png".to_string(),
-        alt: "alt text".to_string(),
-        title: "alt text".to_string(),
-        inline: None,
-    }));
+    assert_eq!(
+        Image::new(s),
+        Some(Image {
+            href: "Isolated.png".to_string(),
+            alt: "alt text".to_string(),
+            title: "alt text".to_string(),
+            inline: None,
+        })
+    );
 
     let s = "![Test)";
     assert_eq!(Image::new(s), None);
@@ -1074,34 +1205,57 @@ fn test_image() {
 
 impl LoadedArticles {
     pub fn vectorize(&self) -> VectorizedArticles {
-    
         fn get_words_of_article(s: &str) -> Vec<&str> {
             s.split_whitespace()
-            .filter_map(|s| if s.contains("[") || s.contains("]") || s.len() < 3 { None } else { Some(s) })
-            .collect()
+                .filter_map(|s| {
+                    if s.contains("[") || s.contains("]") || s.len() < 3 {
+                        None
+                    } else {
+                        Some(s)
+                    }
+                })
+                .collect()
         }
 
         VectorizedArticles {
-            map: self.langs.iter().map(|(k, v)| {
+            map: self
+                .langs
+                .iter()
+                .map(|(k, v)| {
+                    let all_words = v
+                        .values()
+                        .flat_map(|c| get_words_of_article(c))
+                        .collect::<BTreeSet<_>>();
+                    let all_words_indexed = all_words
+                        .iter()
+                        .enumerate()
+                        .map(|(i, s)| (*s, i))
+                        .collect::<BTreeMap<_, _>>();
 
-                let all_words = v.values().flat_map(|c| get_words_of_article(c)).collect::<BTreeSet<_>>();
-                let all_words_indexed = all_words.iter().enumerate().map(|(i, s)| (*s, i)).collect::<BTreeMap<_, _>>();
+                    (
+                        k.clone(),
+                        v.iter()
+                            .map(|(k, v2)| {
+                                let embedding = get_words_of_article(v2)
+                                    .into_iter()
+                                    .filter_map(|q| all_words_indexed.get(q).copied())
+                                    .collect();
 
-                (k.clone(), v.iter().map(|(k, v2)| {
+                                let atype = ArticleType::new(v2);
 
-                    let embedding = get_words_of_article(v2)
-                    .into_iter()
-                    .filter_map(|q| all_words_indexed.get(q).copied()).collect();
-                    
-                    let atype = ArticleType::new(v2);
-                    
-                    (k.clone(), VectorizedArticle {
-                        words: embedding,
-                        atype: atype,
-                        parsed: parse_article(v2),
-                    })
-                }).collect())
-            }).collect()
+                                (
+                                    k.clone(),
+                                    VectorizedArticle {
+                                        words: embedding,
+                                        atype: atype,
+                                        parsed: parse_article(v2),
+                                    },
+                                )
+                            })
+                            .collect(),
+                    )
+                })
+                .collect(),
         }
     }
 }
@@ -1109,57 +1263,51 @@ impl LoadedArticles {
 /// return similar articles based on string distance for article N
 #[cfg(feature = "external")]
 fn get_similar_articles(
-    s: &VectorizedArticle, 
-    id: &str, 
-    map: &BTreeMap<String, VectorizedArticle>
+    s: &VectorizedArticle,
+    id: &str,
+    map: &BTreeMap<String, VectorizedArticle>,
 ) -> Vec<SectionLink> {
-    
     let (article_src, article_type) = (&s.words, s.atype);
 
     let mut target = Vec::new();
     for (other_key, other) in map.iter() {
-        
         if other_key == id {
             continue;
         }
 
         let penalty = match (article_type, other.atype) {
-            (ArticleType::Prayer, ArticleType::Prayer) |
-            (ArticleType::Tract, ArticleType::Tract) |
-            (ArticleType::Question, ArticleType::Question)  => 0,
+            (ArticleType::Prayer, ArticleType::Prayer)
+            | (ArticleType::Tract, ArticleType::Tract)
+            | (ArticleType::Question, ArticleType::Question) => 0,
 
-            (ArticleType::Prayer, _) | 
-            (_, ArticleType::Prayer) => continue,
-            
+            (ArticleType::Prayer, _) | (_, ArticleType::Prayer) => continue,
+
             _ => 10000,
         };
 
-        let dst = strsim::generic_damerau_levenshtein(
-            article_src, 
-            &other.words
-        ) + penalty;
+        let dst = strsim::generic_damerau_levenshtein(article_src, &other.words) + penalty;
 
         target.push((dst, other_key));
     }
 
     target.sort_by(|a, b| ((a.0) as usize).cmp(&((b.0) as usize)));
-    
+
     target
-    .into_iter()
-    .filter_map(|s| Some(SectionLink {
-        slug: s.1.clone(),
-        title: map.get(s.1)?.parsed.title.clone(),
-        id: None,
-    }))
-    .take(10)
-    .collect()
+        .into_iter()
+        .filter_map(|s| {
+            Some(SectionLink {
+                slug: s.1.clone(),
+                title: map.get(s.1)?.parsed.title.clone(),
+                id: None,
+            })
+        })
+        .take(10)
+        .collect()
 }
 
 #[cfg(feature = "external")]
 fn load_articles(dir: &Path) -> Result<LoadedArticles, String> {
-
-    let entries = 
-        walkdir::WalkDir::new(dir)
+    let entries = walkdir::WalkDir::new(dir)
         .max_depth(5)
         .into_iter()
         .filter_map(|entry| {
@@ -1170,17 +1318,23 @@ fn load_articles(dir: &Path) -> Result<LoadedArticles, String> {
                 let lang = name.parent()?;
                 let contents = std::fs::read_to_string(&entry).ok()?;
 
-                Some((lang.file_name()?.to_str()?.to_string(), name.file_name()?.to_str()?.to_string(), contents))
+                Some((
+                    lang.file_name()?.to_str()?.to_string(),
+                    name.file_name()?.to_str()?.to_string(),
+                    contents,
+                ))
             } else {
                 None
             }
-        }).collect::<Vec<_>>();
+        })
+        .collect::<Vec<_>>();
 
     let mut langs = BTreeMap::new();
     for (lang, id, contents) in entries {
-        langs.entry(lang)
-        .or_insert_with(|| BTreeMap::default())
-        .insert(id, contents);
+        langs
+            .entry(lang)
+            .or_insert_with(|| BTreeMap::default())
+            .insert(id, contents);
     }
 
     Ok(LoadedArticles { langs })
@@ -1202,7 +1356,8 @@ type Day = String;
 
 // type Articles = BTreeMap<Lang, BTreeMap<Slug, VectorizedArticle>>;
 type ArticlesByTag = BTreeMap<Lang, BTreeMap<Tag, Vec<SectionLink>>>;
-type ArticlesByDate = BTreeMap<Lang, BTreeMap<Year, BTreeMap<Month, BTreeMap<Day, Vec<SectionLink>>>>>;
+type ArticlesByDate =
+    BTreeMap<Lang, BTreeMap<Year, BTreeMap<Month, BTreeMap<Day, Vec<SectionLink>>>>>;
 
 fn is_prod() -> bool {
     std::env::args().any(|a| a.contains("production"))
@@ -1218,131 +1373,250 @@ fn get_root_href() -> &'static str {
 
 fn gen_serviceworker_js(cwd: &Path, articles: &AnalyzedArticles, meta: &MetaJson) -> String {
     let mut s = include_str!("../../templates/sw.js").to_string();
-    s = s.replace("workbox.precaching.precacheAndRoute([]);", &gen_sw_paths(cwd, articles, meta));
-    s = s.replace("importScripts('/static/js/workbox-sw.js');", include_str!("../../static/js/workbox-sw.js"));
+    s = s.replace(
+        "workbox.precaching.precacheAndRoute([]);",
+        &gen_sw_paths(cwd, articles, meta),
+    );
+    s = s.replace(
+        "importScripts('/static/js/workbox-sw.js');",
+        include_str!("../../static/js/workbox-sw.js"),
+    );
     s
 }
 
 fn gen_sw_paths(cwd: &Path, articles: &AnalyzedArticles, meta: &MetaJson) -> String {
-    
     let mut site_revision = Vec::new();
-    let mut a = articles.map.iter().flat_map(|(lang, v)| {
-        
-        let mut q = v.iter().map(move |(slug, a)| {
-            format!("    {{ url: '/{lang}/{slug}.html', revision: '{}' }}", a.sha256)
-        }).collect::<Vec<_>>();
+    let mut a = articles
+        .map
+        .iter()
+        .flat_map(|(lang, v)| {
+            let mut q = v
+                .iter()
+                .map(move |(slug, a)| {
+                    format!(
+                        "    {{ url: '/{lang}/{slug}.html', revision: '{}' }}",
+                        a.sha256
+                    )
+                })
+                .collect::<Vec<_>>();
 
-        q.extend(v.iter().map(|(slug, a)| {
-            site_revision.push(a.sha256.clone());
-            format!("    {{ url: '/articles/{lang}/{slug}/index.md', revision: '{}' }}", a.sha256)
-        }));
+            q.extend(v.iter().map(|(slug, a)| {
+                site_revision.push(a.sha256.clone());
+                format!(
+                    "    {{ url: '/articles/{lang}/{slug}/index.md', revision: '{}' }}",
+                    a.sha256
+                )
+            }));
 
-        q
-    }).collect::<Vec<_>>();
+            q
+        })
+        .collect::<Vec<_>>();
 
     let site_revision = sha256(&site_revision.join(" "));
     for l in articles.map.keys() {
-        a.push(format!("    {{ url: '/{l}.html', revision: '{site_revision}' }}"));
-        a.push(format!("    {{ url: '/{l}/search.js', revision: '{site_revision}' }}"));
-        a.push(format!("    {{ url: '/{l}/search.html', revision: '{site_revision}' }}"));
-        a.push(format!("    {{ url: '/{l}/index.json', revision: '{site_revision}' }}"));
+        a.push(format!(
+            "    {{ url: '/{l}.html', revision: '{site_revision}' }}"
+        ));
+        a.push(format!(
+            "    {{ url: '/{l}/search.js', revision: '{site_revision}' }}"
+        ));
+        a.push(format!(
+            "    {{ url: '/{l}/search.html', revision: '{site_revision}' }}"
+        ));
+        a.push(format!(
+            "    {{ url: '/{l}/index.json', revision: '{site_revision}' }}"
+        ));
     }
 
     for author in meta.authors.keys() {
         for lang in articles.map.keys() {
             let q = author.replace(":", "-");
             let meta_v = sha256(&serde_json::to_string(&meta).unwrap_or_default());
-            a.push(format!("    {{ url: '/{lang}/author/{q}.html', revision: '{meta_v}' }}"));
+            a.push(format!(
+                "    {{ url: '/{lang}/author/{q}.html', revision: '{meta_v}' }}"
+            ));
         }
     }
 
     for lang in articles.map.keys() {
-        for sp in get_special_pages(lang, meta, &ArticlesByTag::default(), &ArticlesByDate::default()).unwrap_or_default() {
-            a.push(format!("    {{ url: '/{lang}/{}', revision: '{site_revision}' }}", sp.filepath));
+        for sp in get_special_pages(
+            lang,
+            meta,
+            &ArticlesByTag::default(),
+            &ArticlesByDate::default(),
+        )
+        .unwrap_or_default()
+        {
+            a.push(format!(
+                "    {{ url: '/{lang}/{}', revision: '{site_revision}' }}",
+                sp.filepath
+            ));
         }
     }
 
     // add all images from articles
-    let l = walkdir::WalkDir::new(cwd.join("articles"),)
-    .max_depth(5)
-    .into_iter()
-    .filter_map(|entry| {
-        let entry = entry.map_err(|e| e.to_string()).ok()?;
-        let entry = entry.path();
-        let ext = entry.extension().and_then(|s| s.to_str());
-        let fname = entry.file_name()?.to_str()?.to_string();
-        let last_modified = format!("{:?}", entry.metadata().ok()?.modified().ok()?)
-        .chars().filter(|c| c.is_numeric()).collect::<String>();
+    let l = walkdir::WalkDir::new(cwd.join("articles"))
+        .max_depth(5)
+        .into_iter()
+        .filter_map(|entry| {
+            let entry = entry.map_err(|e| e.to_string()).ok()?;
+            let entry = entry.path();
+            let ext = entry.extension().and_then(|s| s.to_str());
+            let fname = entry.file_name()?.to_str()?.to_string();
+            let last_modified = format!("{:?}", entry.metadata().ok()?.modified().ok()?)
+                .chars()
+                .filter(|c| c.is_numeric())
+                .collect::<String>();
 
-        if ext == Some(".avif") || ext == Some("avif") {
-            let slug = entry.parent()?;
-            let lang = slug.parent()?;
-            let slug = slug.file_name()?.to_str()?.to_string();
-            let lang = lang.file_name()?.to_str()?.to_string();
-            Some((lang, slug, fname, last_modified))
-        } else {
-            None
-        }
-    }).collect::<Vec<_>>();
+            if ext == Some(".avif") || ext == Some("avif") {
+                let slug = entry.parent()?;
+                let lang = slug.parent()?;
+                let slug = slug.file_name()?.to_str()?.to_string();
+                let lang = lang.file_name()?.to_str()?.to_string();
+                Some((lang, slug, fname, last_modified))
+            } else {
+                None
+            }
+        })
+        .collect::<Vec<_>>();
 
     // /index.html
-    a.push(format!("    {{ url: '/index.html', revision: '{}' }}", sha256(include_str!("../../index.html"))));
+    a.push(format!(
+        "    {{ url: '/index.html', revision: '{}' }}",
+        sha256(include_str!("../../index.html"))
+    ));
 
-    a.push(format!("    {{ url: '/static/js/head2.js', revision: '{}' }}", sha256(include_str!("../../static/js/head2.js"))));
+    a.push(format!(
+        "    {{ url: '/static/js/head2.js', revision: '{}' }}",
+        sha256(include_str!("../../static/js/head2.js"))
+    ));
 
     // author pages
     // special pages
 
     // fonts
-    a.push(format!("    {{ url: '/static/font/ssp/SourceSansPro-BASIC-Semibold.woff2', revision: '1' }}"));
-    a.push(format!("    {{ url: '/static/font/ssp/SourceSansPro-BASIC-Bold.woff2', revision: '1' }}"));
-    a.push(format!("    {{ url: '/static/font/ssp/SourceSansPro-BASIC-RegularItalic.woff2', revision: '1' }}"));
-    a.push(format!("    {{ url: '/static/font/ssp/SourceSansPro-BASIC-Regular.woff2', revision: '1' }}"));
-    a.push(format!("    {{ url: '/static/font/ssp/SourceSansPro-BASIC-BoldItalic.woff2', revision: '1' }}"));
-    a.push(format!("    {{ url: '/static/font/ssp/SourceSansPro-BASIC-SemiboldItalic.woff2', revision: '1' }}"));
-    a.push(format!("    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-Regular.woff2', revision: '1' }}"));
+    a.push(format!(
+        "    {{ url: '/static/font/ssp/SourceSansPro-BASIC-Semibold.woff2', revision: '1' }}"
+    ));
+    a.push(format!(
+        "    {{ url: '/static/font/ssp/SourceSansPro-BASIC-Bold.woff2', revision: '1' }}"
+    ));
+    a.push(format!(
+        "    {{ url: '/static/font/ssp/SourceSansPro-BASIC-RegularItalic.woff2', revision: '1' }}"
+    ));
+    a.push(format!(
+        "    {{ url: '/static/font/ssp/SourceSansPro-BASIC-Regular.woff2', revision: '1' }}"
+    ));
+    a.push(format!(
+        "    {{ url: '/static/font/ssp/SourceSansPro-BASIC-BoldItalic.woff2', revision: '1' }}"
+    ));
+    a.push(format!(
+        "    {{ url: '/static/font/ssp/SourceSansPro-BASIC-SemiboldItalic.woff2', revision: '1' }}"
+    ));
+    a.push(format!(
+        "    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-Regular.woff2', revision: '1' }}"
+    ));
     a.push(format!("    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-RegularItalic.woff2', revision: '1' }}"));
-    a.push(format!("    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-Bold.woff2', revision: '1' }}"));
+    a.push(format!(
+        "    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-Bold.woff2', revision: '1' }}"
+    ));
     a.push(format!("    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-SemiboldItalic.woff2', revision: '1' }}"));
-    a.push(format!("    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-Semibold.woff2', revision: '1' }}"));
-    a.push(format!("    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-BoldItalic.woff2', revision: '1' }}"));
+    a.push(format!(
+        "    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-Semibold.woff2', revision: '1' }}"
+    ));
+    a.push(format!(
+        "    {{ url: '/static/font/ssfp/SourceSerifPro-BASIC-BoldItalic.woff2', revision: '1' }}"
+    ));
 
     for i in 'A'..'Z' {
-        a.push(format!("    {{ url: '/static/font/kanzlei/Kanzlei-Initialen-{i}.ttf', revision: '1' }}", )); // never changes
+        a.push(format!(
+            "    {{ url: '/static/font/kanzlei/Kanzlei-Initialen-{i}.ttf', revision: '1' }}",
+        )); // never changes
     }
 
-    a.push(format!("    {{ url: '/static/js/search.js', revision: '{}' }}", sha256(include_str!("../../static/js/search.js"))));
-    a.push(format!("    {{ url: '/static/js/head.js', revision: '{}' }}", sha256(include_str!("../../static/js/head.js"))));
-    a.push(format!("    {{ url: '/static/css/head.css', revision: '{}' }}", sha256(include_str!("../../static/css/head.css"))));
-    a.push(format!("    {{ url: '/static/css/style.css', revision: '{}' }}", sha256(include_str!("../../static/css/style.css"))));
-    
-    a.push(format!("    {{ url: '/static/img/logo/logo-smooth.svg', revision: '1' }}"));
-    a.push(format!("    {{ url: '/static/img/watercolor.avif', revision: '1' }}", )); // never changes
-    a.push(format!("    {{ url: '/static/img/death.avif', revision: '1' }}", )); // never changes
-    a.push(format!("    {{ url: '/static/img/icon/icons.svg', revision: '1' }}", )); // never changes
-    a.push(format!("    {{ url: '/static/img/shop/books.avif', revision: '1' }}", )); // never changes
-    a.push(format!("    {{ url: '/static/img/shop/donation.avif', revision: '1' }}", )); // never changes
-    a.push(format!("    {{ url: '/static/img/shop/mensfashion.avif', revision: '1' }}", )); // never changes
-    a.push(format!("    {{ url: '/static/img/shop/womansfashion.avif', revision: '1' }}", )); // never changes
-    a.push(format!("    {{ url: '/static/img/shop/rosary.avif', revision: '1' }}", )); // never changes
-    a.push(format!("    {{ url: '/static/img/ornament/asterism-triplewhitestar.svg', revision: '1' }}", )); // never changes
-    a.push(format!("    {{ url: '/static/img/ornament/sun-verginasun-black.svg', revision: '1' }}", )); // never changes
-    a.push(format!("    {{ url: '/static/img/ornament/japanesecrest-tsukinihoshi-dottedmoon.svg', revision: '1' }}", )); // never changes
-    a.push(format!("    {{ url: '/static/img/ornament/sequential-nav-icons-arabesque.svg', revision: '1' }}", )); // never changes
-    a.push(format!("    {{ url: '/static/img/ornament/three-wavy-lines-ornament-right.svg', revision: '1' }}", )); // never changes
-    a.push(format!("    {{ url: '/static/img/ornament/three-wavy-lines-ornament-left.svg', revision: '1' }}", )); // never changes
-    a.push(format!("    {{ url: '/static/img/shop/rosary.avif', revision: '1' }}", )); // never changes
+    a.push(format!(
+        "    {{ url: '/static/js/search.js', revision: '{}' }}",
+        sha256(include_str!("../../static/js/search.js"))
+    ));
+    a.push(format!(
+        "    {{ url: '/static/js/head.js', revision: '{}' }}",
+        sha256(include_str!("../../static/js/head.js"))
+    ));
+    a.push(format!(
+        "    {{ url: '/static/css/head.css', revision: '{}' }}",
+        sha256(include_str!("../../static/css/head.css"))
+    ));
+    a.push(format!(
+        "    {{ url: '/static/css/style.css', revision: '{}' }}",
+        sha256(include_str!("../../static/css/style.css"))
+    ));
 
-    a.push(format!("    {{ url: '/static/img/logo/logo-sm-32.avif', revision: '1' }}"));
-    a.push(format!("    {{ url: '/static/img/logo/logo-sm-dark-32.avif', revision: '1' }}"));
+    a.push(format!(
+        "    {{ url: '/static/img/logo/logo-smooth.svg', revision: '1' }}"
+    ));
+    a.push(format!(
+        "    {{ url: '/static/img/watercolor.avif', revision: '1' }}",
+    )); // never changes
+    a.push(format!(
+        "    {{ url: '/static/img/death.avif', revision: '1' }}",
+    )); // never changes
+    a.push(format!(
+        "    {{ url: '/static/img/icon/icons.svg', revision: '1' }}",
+    )); // never changes
+    a.push(format!(
+        "    {{ url: '/static/img/shop/books.avif', revision: '1' }}",
+    )); // never changes
+    a.push(format!(
+        "    {{ url: '/static/img/shop/donation.avif', revision: '1' }}",
+    )); // never changes
+    a.push(format!(
+        "    {{ url: '/static/img/shop/mensfashion.avif', revision: '1' }}",
+    )); // never changes
+    a.push(format!(
+        "    {{ url: '/static/img/shop/womansfashion.avif', revision: '1' }}",
+    )); // never changes
+    a.push(format!(
+        "    {{ url: '/static/img/shop/rosary.avif', revision: '1' }}",
+    )); // never changes
+    a.push(format!(
+        "    {{ url: '/static/img/ornament/asterism-triplewhitestar.svg', revision: '1' }}",
+    )); // never changes
+    a.push(format!(
+        "    {{ url: '/static/img/ornament/sun-verginasun-black.svg', revision: '1' }}",
+    )); // never changes
+    a.push(format!("    {{ url: '/static/img/ornament/japanesecrest-tsukinihoshi-dottedmoon.svg', revision: '1' }}", )); // never changes
+    a.push(format!(
+        "    {{ url: '/static/img/ornament/sequential-nav-icons-arabesque.svg', revision: '1' }}",
+    )); // never changes
+    a.push(format!(
+        "    {{ url: '/static/img/ornament/three-wavy-lines-ornament-right.svg', revision: '1' }}",
+    )); // never changes
+    a.push(format!(
+        "    {{ url: '/static/img/ornament/three-wavy-lines-ornament-left.svg', revision: '1' }}",
+    )); // never changes
+    a.push(format!(
+        "    {{ url: '/static/img/shop/rosary.avif', revision: '1' }}",
+    )); // never changes
+
+    a.push(format!(
+        "    {{ url: '/static/img/logo/logo-sm-32.avif', revision: '1' }}"
+    ));
+    a.push(format!(
+        "    {{ url: '/static/img/logo/logo-sm-dark-32.avif', revision: '1' }}"
+    ));
     a.push(format!("    {{ url: '/death.html', revision: '1' }}"));
     a.push(format!("    {{ url: '/manifest.json', revision: '1' }}"));
 
     for (lang, slug, image, rev) in l {
-        a.push(format!("    {{ url: '/{lang}/{slug}/{image}', revision: '{rev}' }}"));
+        a.push(format!(
+            "    {{ url: '/{lang}/{slug}/{image}', revision: '{rev}' }}"
+        ));
     }
 
-    format!("workbox.precaching.precacheAndRoute([\r\n{}\r\n]);", a.join(",\r\n"))
+    format!(
+        "workbox.precaching.precacheAndRoute([\r\n{}\r\n]);",
+        a.join(",\r\n")
+    )
 }
 
 fn generate_gitignore(articles: &LoadedArticles) -> String {
@@ -1376,22 +1650,30 @@ fn get_title(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<S
 }
 
 fn si2text(si: &[SentenceItem]) -> String {
-    si.iter().map(|s| match s {
-        SentenceItem::Footnote { .. } => String::new(),
-        SentenceItem::Link { l } => l.text.clone(),
-        SentenceItem::Text { text } => text.clone(),
-    }).collect::<Vec<_>>().join("")
+    si.iter()
+        .map(|s| match s {
+            SentenceItem::Footnote { .. } => String::new(),
+            SentenceItem::Link { l } => l.text.clone(),
+            SentenceItem::Text { text } => text.clone(),
+        })
+        .collect::<Vec<_>>()
+        .join("")
 }
 
 fn rv() -> (String, String) {
     let s = "display:inline;color:red;width: 25px;height: 25px;position: relative;top: 7px;margin-right: 10px;";
-    let r = format!("<div style='{s}'>{}</div>", include_str!("../../templates/response.svg"));
-    let v = format!("<div style='{s}'>{}</div>", include_str!("../../templates/versicle.svg"));
+    let r = format!(
+        "<div style='{s}'>{}</div>",
+        include_str!("../../templates/response.svg")
+    );
+    let v = format!(
+        "<div style='{s}'>{}</div>",
+        include_str!("../../templates/versicle.svg")
+    );
     (r, v)
 }
 
 fn si2html(si: &[SentenceItem]) -> String {
-
     let (r, v) = rv();
 
     let s = si.iter().map(|s| match s {
@@ -1399,7 +1681,7 @@ fn si2html(si: &[SentenceItem]) -> String {
         SentenceItem::Link { l } => format!("<a href='{}'>{}</a>", l.href, l.text),
         SentenceItem::Text { text } => text.replace("[R]: ", &r).replace("[V]: ", &v),
     }).collect::<Vec<_>>().join("");
-    
+
     format!("<p class='first-graf'>{s}</p>")
 }
 
@@ -1418,7 +1700,11 @@ fn par2html(p: &Paragraph) -> String {
 }
 
 // Returns the description for the <head> tag
-fn get_description(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
+fn get_description(
+    lang: &str,
+    a: &ParsedArticleAnalyzed,
+    meta: &MetaJson,
+) -> Result<String, String> {
     let try1 = a.subtitle.get(0).map(|s| par2html(s)).unwrap_or_default();
     if !try1.trim().is_empty() {
         return Ok(try1.trim().to_string());
@@ -1427,7 +1713,12 @@ fn get_description(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Re
     if !try1.trim().is_empty() {
         return Ok(try1.trim().to_string());
     }
-    let sec1 = a.sections.get(0).and_then(|s| s.pars.get(0)).map(par2html).unwrap_or_default();
+    let sec1 = a
+        .sections
+        .get(0)
+        .and_then(|s| s.pars.get(0))
+        .map(par2html)
+        .unwrap_or_default();
     if !sec1.trim().is_empty() {
         return Ok(sec1.trim().to_string());
     }
@@ -1436,13 +1727,17 @@ fn get_description(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Re
 }
 
 fn generate_dropcap_css(a: &ParsedArticleAnalyzed) -> String {
-    
     if a.is_prayer() {
         return String::new();
     }
 
     let try1 = a.summary.get(0).map(par2text).unwrap_or_default();
-    let sec1 = a.sections.get(0).and_then(|s| s.pars.get(0)).map(par2text).unwrap_or_default();
+    let sec1 = a
+        .sections
+        .get(0)
+        .and_then(|s| s.pars.get(0))
+        .map(par2text)
+        .unwrap_or_default();
     let mut c = None;
     if !try1.trim().is_empty() {
         c = try1.trim().chars().next()
@@ -1451,12 +1746,15 @@ fn generate_dropcap_css(a: &ParsedArticleAnalyzed) -> String {
     }
 
     let c = match c {
-        Some(s) => if s.is_ascii_alphabetic() { 
-            s.to_ascii_uppercase() 
-        } else { return String::new(); },
+        Some(s) => {
+            if s.is_ascii_alphabetic() {
+                s.to_ascii_uppercase()
+            } else {
+                return String::new();
+            }
+        }
         _ => return String::new(),
     };
-
 
     let dropcap_map = &[
         ('A', "U+0041"),
@@ -1495,7 +1793,9 @@ fn generate_dropcap_css(a: &ParsedArticleAnalyzed) -> String {
     let text = vec![
         "@font-face {".to_string(),
         "    font-family: 'Kanzlei Initialen';".to_string(),
-        format!("    src: url('/static/font/kanzlei/Kanzlei-Initialen-{c}.ttf') format('truetype');"),
+        format!(
+            "    src: url('/static/font/kanzlei/Kanzlei-Initialen-{c}.ttf') format('truetype');"
+        ),
         "    font-display: swap;".to_string(),
         format!("    unicode-range: {unicode_range};"),
         "}".to_string(),
@@ -1532,7 +1832,6 @@ fn strip_comments(s: &str) -> String {
 }
 
 fn minify_css(s: &str) -> String {
-    
     let s = strip_comments(s);
     /*/
     use minifier::css;
@@ -1542,26 +1841,28 @@ fn minify_css(s: &str) -> String {
             println!("error cssmin: {e:?}");
             let _ = std::fs::write("./output.css", &s);
             s.to_string()
-        },  
+        },
     };
      */
     s
 }
 
 fn get_string(meta: &MetaJson, lang: &str, key: &str) -> Result<String, String> {
-    Ok(meta.strings.get(lang)
+    Ok(meta
+        .strings
+        .get(lang)
         .ok_or_else(|| format!("meta.json: strings: unknown lang {lang}"))?
         .get(key)
-        .ok_or_else(|| format!("meta.json: strings: {lang}: missing key {key}"))?.clone())
+        .ok_or_else(|| format!("meta.json: strings: {lang}: missing key {key}"))?
+        .clone())
 }
 
 fn head(
-    a: &ParsedArticleAnalyzed, 
+    a: &ParsedArticleAnalyzed,
     lang: &str,
     title_id: &str,
-    meta: &MetaJson
+    meta: &MetaJson,
 ) -> Result<String, String> {
-
     let darklight = include_str!("../../templates/darklight.html");
     let head_css = include_str!("../../static/css/head2.css").to_string();
     let toc = include_str!("../../static/css/TOC.css");
@@ -1578,7 +1879,7 @@ fn head(
     let final_css = head_css + page_toolbar + toc + img_css + floating_header + &footnotes;
     let critical_css = minify_css(&final_css);
     let critical_css_2 = "<style id='critical-css'>".to_string() + &critical_css + "    </style>";
-    
+
     let title = get_title(lang, a, meta)?;
     let description = get_description(lang, a, meta)?.replace("\"", "'");
     let drc = format!("<style>{}</style>", generate_dropcap_css(a));
@@ -1588,7 +1889,10 @@ fn head(
     head = head.replace("<!-- DARKLIGHT_STYLES -->", &darklight);
     head = head.replace("<!-- CRITICAL_CSS -->", &critical_css_2);
     head = head.replace("<!-- DROPCAP_CSS -->", &drc);
-    head = head.replace("<!-- NOSCRIPT -->", &format!("<style>{}</style>", noscript_style));
+    head = head.replace(
+        "<!-- NOSCRIPT -->",
+        &format!("<style>{}</style>", noscript_style),
+    );
 
     head = head.replace("$$TITLE$$", &title);
     head = head.replace("$$DESCRIPTION$$", &description);
@@ -1596,24 +1900,28 @@ fn head(
     head = head.replace("$$KEYWORDS$$", &a.tags.join(", "));
     head = head.replace("$$DATE$$", &a.date);
     head = head.replace("$$AUTHOR$$", &a.authors.join(", "));
-    head = head.replace("$$IMG$$", &a.img.as_ref().map(|s| s.href.clone()).unwrap_or_default());
-    head = head.replace("$$IMG_ALT$$", &a.img.as_ref().map(|s| s.title.clone()).unwrap_or_default());
+    head = head.replace(
+        "$$IMG$$",
+        &a.img.as_ref().map(|s| s.href.clone()).unwrap_or_default(),
+    );
+    head = head.replace(
+        "$$IMG_ALT$$",
+        &a.img.as_ref().map(|s| s.title.clone()).unwrap_or_default(),
+    );
     head = head.replace("$$LANG$$", lang);
     head = head.replace("$$ROOT_HREF$$", &get_root_href());
     head = head.replace("$$PAGE_HREF$$", &page_href);
-    head = head.replace("$$SKIP_TO_MAIN_CONTENT$$", &get_string(meta, lang, "page-smc")?);
+    head = head.replace(
+        "$$SKIP_TO_MAIN_CONTENT$$",
+        &get_string(meta, lang, "page-smc")?,
+    );
     head = head.replace("$$CONTACT_URL$$", &get_string(meta, lang, "link-about")?);
     head = head.replace("$$SLUG$$", title_id);
 
     Ok(head)
 }
 
-fn header_navigation(
-    lang: &str, 
-    display_logo: bool,
-    meta: &MetaJson,
-) -> Result<String, String> {
-
+fn header_navigation(lang: &str, display_logo: bool, meta: &MetaJson) -> Result<String, String> {
     let homepage_logo = include_str!("../../static/img/logo/logo-smooth-path.svg");
     let logo = if display_logo {
         let homepage_link = get_root_href().to_string() + "/" + lang;
@@ -1624,35 +1932,54 @@ fn header_navigation(
     } else {
         String::new()
     };
-    
+
     let mut header_nav = include_str!("../../templates/header-navigation.html").to_string();
-    
+
     header_nav = header_nav.replace("$$HOMEPAGE_LOGO$$", &logo);
     header_nav = header_nav.replace("$$TOOLS_DESC$$", &get_string(meta, lang, "nav-tools-desc")?);
-    header_nav = header_nav.replace("$$TOOLS_TITLE$$", &get_string(meta, lang, "nav-tools-title")?);
+    header_nav = header_nav.replace(
+        "$$TOOLS_TITLE$$",
+        &get_string(meta, lang, "nav-tools-title")?,
+    );
     header_nav = header_nav.replace("$$TOOLS_LINK$$", &get_string(meta, lang, "nav-tools-link")?);
     header_nav = header_nav.replace("$$ABOUT_DESC$$", &get_string(meta, lang, "nav-about-desc")?);
-    header_nav = header_nav.replace("$$ABOUT_TITLE$$", &get_string(meta, lang, "nav-about-title")?);
+    header_nav = header_nav.replace(
+        "$$ABOUT_TITLE$$",
+        &get_string(meta, lang, "nav-about-title")?,
+    );
     header_nav = header_nav.replace("$$ABOUT_LINK$$", &get_string(meta, lang, "nav-about-link")?);
-    header_nav = header_nav.replace("$$ALL_ARTICLES_TITLE$$", &get_string(meta, lang, "nav-articles-title")?);
-    header_nav = header_nav.replace("$$ALL_ARTICLES_DESC$$", &get_string(meta, lang, "nav-articles-desc")?);
-    header_nav = header_nav.replace("$$ALL_ARTICLES_LINK$$", &get_string(meta, lang, "nav-articles-link")?);
-    header_nav = header_nav.replace("$$NEWEST_DESC$$", &get_string(meta, lang, "nav-newest-desc")?);
-    header_nav = header_nav.replace("$$NEWEST_TITLE$$", &get_string(meta, lang, "nav-newest-title")?);
-    header_nav = header_nav.replace("$$NEWEST_LINK$$", &get_string(meta, lang, "nav-newest-link")?);
+    header_nav = header_nav.replace(
+        "$$ALL_ARTICLES_TITLE$$",
+        &get_string(meta, lang, "nav-articles-title")?,
+    );
+    header_nav = header_nav.replace(
+        "$$ALL_ARTICLES_DESC$$",
+        &get_string(meta, lang, "nav-articles-desc")?,
+    );
+    header_nav = header_nav.replace(
+        "$$ALL_ARTICLES_LINK$$",
+        &get_string(meta, lang, "nav-articles-link")?,
+    );
+    header_nav = header_nav.replace(
+        "$$NEWEST_DESC$$",
+        &get_string(meta, lang, "nav-newest-desc")?,
+    );
+    header_nav = header_nav.replace(
+        "$$NEWEST_TITLE$$",
+        &get_string(meta, lang, "nav-newest-title")?,
+    );
+    header_nav = header_nav.replace(
+        "$$NEWEST_LINK$$",
+        &get_string(meta, lang, "nav-newest-link")?,
+    );
     header_nav = header_nav.replace("$$SHOP_DESC$$", &get_string(meta, lang, "nav-shop-desc")?);
     header_nav = header_nav.replace("$$SHOP_TITLE$$", &get_string(meta, lang, "nav-shop-title")?);
     header_nav = header_nav.replace("$$SHOP_LINK$$", &get_string(meta, lang, "nav-shop-link")?);
-    
+
     Ok(header_nav)
 }
 
-fn link_tags(
-    lang: &str, 
-    tags: &[String],
-    meta: &MetaJson,
-) -> Result<String, String> {
-
+fn link_tags(lang: &str, tags: &[String], meta: &MetaJson) -> Result<String, String> {
     let root_href = get_root_href();
 
     let t_descr_string = get_string(meta, lang, "link-tags-descr")?;
@@ -1666,23 +1993,29 @@ fn link_tags(
         t1 + t2 + &t3
     }).collect::<Vec<_>>().join(", ");
 
-    Ok(format!("<div class='link-tags' style='margin: 10px 0px;'><p>{tags_str}</p></div>"))
+    Ok(format!(
+        "<div class='link-tags' style='margin: 10px 0px;'><p>{tags_str}</p></div>"
+    ))
 }
 
 fn gen_section_id(s: &str) -> String {
-    s.chars().filter_map(|c| if c.is_ascii_alphanumeric() {
-        Some(c.to_ascii_lowercase())
-    } else if c.is_whitespace() {
-        Some('-')
-    } else {
-        None
-    }).collect()
+    s.chars()
+        .filter_map(|c| {
+            if c.is_ascii_alphanumeric() {
+                Some(c.to_ascii_lowercase())
+            } else if c.is_whitespace() {
+                Some('-')
+            } else {
+                None
+            }
+        })
+        .collect()
 }
 
 fn table_of_contents(
-    lang: &str, 
+    lang: &str,
     a: &ParsedArticleAnalyzed,
-    meta: &MetaJson
+    meta: &MetaJson,
 ) -> Result<String, String> {
     if a.is_prayer() {
         return Ok(String::new());
@@ -1691,7 +2024,7 @@ fn table_of_contents(
     if a.sections.is_empty() {
         return Ok(String::new());
     }
-    
+
     let mut target = "<div id='TOC' class='TOC'>".to_string();
     target += "<ul class='list-level-1'>";
     let mut cur_level = a.sections[0].indent;
@@ -1738,7 +2071,9 @@ fn table_of_contents(
     let s = "class='link-self decorate-not has-content spawns-popup'";
 
     if !a.footnotes.is_empty() {
-        target += &format!("<li><a {s} id='toc-footnotes' href='#{footnotes_id}'>{footnotes_title}</a></li>");
+        target += &format!(
+            "<li><a {s} id='toc-footnotes' href='#{footnotes_id}'>{footnotes_title}</a></li>"
+        );
     }
 
     if !a.bibliography.is_empty() {
@@ -1746,11 +2081,14 @@ fn table_of_contents(
     }
 
     if !a.backlinks.is_empty() {
-        target += &format!("<li><a {s} id='toc-backlinks' href='#{backlinks_id}'>{backlinks_title}</a></li>");
+        target += &format!(
+            "<li><a {s} id='toc-backlinks' href='#{backlinks_id}'>{backlinks_title}</a></li>"
+        );
     }
 
     if !a.similar.is_empty() {
-        target += &format!("<li><a {s} id='toc-similar' href='#{similar_id}'>{similar_title}</a></li>");
+        target +=
+            &format!("<li><a {s} id='toc-similar' href='#{similar_id}'>{similar_title}</a></li>");
     }
 
     target += &format!("</ul>");
@@ -1761,7 +2099,7 @@ fn table_of_contents(
 }
 
 fn page_desciption(
-    lang: &str, 
+    lang: &str,
     a: &ParsedArticleAnalyzed,
     meta: &MetaJson,
 ) -> Result<String, String> {
@@ -1836,19 +2174,14 @@ struct Author {
     #[serde(default)]
     contact: Option<String>,
     #[serde(default)]
-    donate: BTreeMap<String, String>
+    donate: BTreeMap<String, String>,
 }
 
 fn read_meta_json(s: &str) -> MetaJson {
     serde_json::from_str(&s).unwrap_or_default()
 }
 
-fn page_metadata(
-    lang: &str, 
-    a: &ParsedArticleAnalyzed,
-    meta: &MetaJson,
-) -> Result<String, String> {
-
+fn page_metadata(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
     if a.is_prayer() {
         return Ok(String::new());
     }
@@ -1859,15 +2192,15 @@ fn page_metadata(
     let date_title = date.clone();
 
     let authors_link = a.authors.iter().map(|s| {
-        
+
         let id = s.replace(":", "-");
         let name = meta.authors.get(s).map(|q| &q.displayname)
         .ok_or_else(|| format!("author {s} not found for article {}", a.title))?;
-        
+
         let u = "/static/img/icon/icons.svg#info-circle-regular";
         let style = format!("data-link-icon='info-circle-regular' data-link-icon-type='svg' style=\"--link-icon-url: url('{u}');\"");
         let classes = "class='backlinks link-self has-icon has-content spawns-popup has-indicator-hook'";
-        
+
         let mut link = format!("<a href='/{lang}/author/{id}' data-attribute-title='{name}' {style} {classes}>");
         link += &format!("{name}<span class='link-icon-hook'>⁠</span></a>");
 
@@ -1906,17 +2239,11 @@ fn page_metadata(
     }
 
     page_meta = page_meta.replace("<!-- AUTHORS -->", &authors_link);
-    
+
     Ok(page_meta)
 }
 
-fn render_paragraph(
-    lang: &str,
-    par: &Paragraph, 
-    is_abstract: bool,
-    article_id: &str
-) -> String {
-
+fn render_paragraph(lang: &str, par: &Paragraph, is_abstract: bool, article_id: &str) -> String {
     let (r, v) = rv();
     let mut target = String::new();
     match par {
@@ -1939,7 +2266,7 @@ fn render_paragraph(
                 }
             }
             target += "</p>";
-        },
+        }
         Paragraph::Quote { q } => {
             let lv = if is_abstract { 2 } else { 1 };
             target += &format!("<blockquote class='blockquote-level-{lv}' style='margin-top:10px;margin-bottom: 10px;'>");
@@ -1964,13 +2291,25 @@ fn render_paragraph(
                 },
             }).collect::<Vec<_>>().join("");
 
-            if  q.author.is_some() || q.source.is_some() {
+            if q.author.is_some() || q.source.is_some() {
                 target += "<em style='padding-left:10px;'>";
-                if let Some(Link { text, href, title, id }) = q.author.as_ref() {
+                if let Some(Link {
+                    text,
+                    href,
+                    title,
+                    id,
+                }) = q.author.as_ref()
+                {
                     target += &format!("<a class='link-annotated link-page spawns-popup' id='{id}' title='{title}' href='{href}'>{text}</a> ");
                 }
-    
-                if let Some(Link { text, href, title, id }) = q.source.as_ref() {
+
+                if let Some(Link {
+                    text,
+                    href,
+                    title,
+                    id,
+                }) = q.source.as_ref()
+                {
                     if q.author.is_some() {
                         target += "&nbsp;—&nbsp;";
                     }
@@ -1980,30 +2319,27 @@ fn render_paragraph(
             }
 
             target += "</blockquote>"
-        },
+        }
         Paragraph::Image { i } => {
-
-            
             let href = if i.href.contains("://") {
                 i.href.clone()
             } else {
                 get_root_href().to_string() + "/articles/" + lang + "/" + article_id + "/" + &i.href
             };
 
-            target += &render_image(&Image { 
-                href: href, 
-                alt: i.alt.clone(), 
+            target += &render_image(&Image {
+                href: href,
+                alt: i.alt.clone(),
                 title: i.title.clone(),
                 inline: i.inline,
             });
-        },
+        }
     }
 
     target
 }
 
 fn render_image(i: &Image) -> String {
-
     // TODO: width="1400" height="1400" data-aspect-ratio="1 / 1" style="aspect-ratio: 1 / 1; width: 678px;"
     let float = include_str!("../../templates/figure.float.html");
     let template = match i.inline.unwrap_or_default() {
@@ -2017,18 +2353,12 @@ fn render_image(i: &Image) -> String {
     };
 
     template
-    .replace("$$IMG_ALT$$", &i.alt)
-    .replace("$$IMG_HREF$$", &i.href)
-    .replace("$$IMG_CAPTION$$", &i.title)
+        .replace("$$IMG_ALT$$", &i.alt)
+        .replace("$$IMG_HREF$$", &i.href)
+        .replace("$$IMG_CAPTION$$", &i.title)
 }
 
-fn body_abstract(
-    lang: &str,
-    article_id: &str,
-    is_prayer: bool,
-    summary: &[Paragraph],
-) -> String {
-    
+fn body_abstract(lang: &str, article_id: &str, is_prayer: bool, summary: &[Paragraph]) -> String {
     let mut target = String::new();
 
     if summary.is_empty() {
@@ -2065,24 +2395,32 @@ fn render_section(
     slug: &str,
     meta: &MetaJson,
 ) -> Result<String, String> {
-    
     let mut section = include_str!("../../templates/section.html").to_string();
 
-    let first_par = a.pars.get(0).map(|p| render_paragraph(lang, p, false, slug)).unwrap_or_default();
-    let other_pars = a.pars.iter().skip(1).map(|p| render_paragraph(lang, p, false, slug)).collect::<Vec<_>>().join("\r\n");
+    let first_par = a
+        .pars
+        .get(0)
+        .map(|p| render_paragraph(lang, p, false, slug))
+        .unwrap_or_default();
+    let other_pars = a
+        .pars
+        .iter()
+        .skip(1)
+        .map(|p| render_paragraph(lang, p, false, slug))
+        .collect::<Vec<_>>()
+        .join("\r\n");
 
     let header = &a.title;
     let level = a.indent;
     let section_id = gen_section_id(&header);
-    let section_descr = get_string(meta, lang, "section-link-to")?
-        .replace("$$HEADER$$", &header);
+    let section_descr = get_string(meta, lang, "section-link-to")?.replace("$$HEADER$$", &header);
 
     section = section.replace("$$LEVEL$$", &level.saturating_sub(1).to_string());
     section = section.replace("$$SECTION_ID$$", &section_id);
     section = section.replace("$$SECTION_DESCR$$", &section_descr);
     section = section.replace("$$SECTION_TITLE$$", &header);
     section = section.replace("<!-- FIRST_PARAGRAPH -->", &first_par);
-    
+
     section += &other_pars;
 
     Ok(section)
@@ -2094,10 +2432,11 @@ fn body_content(
     sections: &[ArticleSection],
     meta: &MetaJson,
 ) -> Result<String, String> {
-    Ok(sections.iter()
-    .map(|q| render_section(lang, q, slug, meta))
-    .collect::<Result<Vec<_>, _>>()?
-    .join("\r\n"))
+    Ok(sections
+        .iter()
+        .map(|q| render_section(lang, q, slug, meta))
+        .collect::<Result<Vec<_>, _>>()?
+        .join("\r\n"))
 }
 
 fn body_noscript() -> String {
@@ -2105,9 +2444,17 @@ fn body_noscript() -> String {
 }
 
 fn donate(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
-    
-    let wc = a.sections.iter().flat_map(|s| &s.pars).map(|s| s.word_count()).sum::<usize>();
-    let auth = a.authors.iter().filter_map(|a| meta.authors.get(a).map(|q| (a, q))).collect::<Vec<_>>();
+    let wc = a
+        .sections
+        .iter()
+        .flat_map(|s| &s.pars)
+        .map(|s| s.word_count())
+        .sum::<usize>();
+    let auth = a
+        .authors
+        .iter()
+        .filter_map(|a| meta.authors.get(a).map(|q| (a, q)))
+        .collect::<Vec<_>>();
     let donatable_author = auth.iter().find(|(_, s)| !s.donate.is_empty());
 
     if auth.is_empty() || a.is_prayer() || wc < 500 || donatable_author.is_none() {
@@ -2116,32 +2463,44 @@ fn donate(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<Stri
 
     let (_, donatable_author) = donatable_author.unwrap();
 
-    let all_authors = auth.iter().map(|(id, a)| {
-        format!("<a href='/{lang}/author/{}'>{}</a>", id.replace(":", "-"), a.displayname)
-    }).collect::<Vec<_>>().join(", ");
-    
-    let donate_1 = get_string(meta, lang, "donate-1")?
-        .replace("$$AUTHORS$$", &all_authors);
-    
+    let all_authors = auth
+        .iter()
+        .map(|(id, a)| {
+            format!(
+                "<a href='/{lang}/author/{}'>{}</a>",
+                id.replace(":", "-"),
+                a.displayname
+            )
+        })
+        .collect::<Vec<_>>()
+        .join(", ");
+
+    let donate_1 = get_string(meta, lang, "donate-1")?.replace("$$AUTHORS$$", &all_authors);
+
     render_donate_section_internal(lang, &donate_1, &donatable_author, meta)
 }
 fn render_donate_section_internal(
-    lang: &str, donate_1: &str, 
-    donatable_author: &Author, meta: &MetaJson
+    lang: &str,
+    donate_1: &str,
+    donatable_author: &Author,
+    meta: &MetaJson,
 ) -> Result<String, String> {
-    
-    let dn_methods = donatable_author.donate.iter().map(|(id, link)| {
-        let id = match id.as_str() {
-            "ko-fi" => "Ko-Fi",
-            "paypal" => "PayPal",
-            "github" => "GitHub Sponsors",
-            o => o,
-        };
-        format!("<a href='{link}'>{}</a>", id)
-    }).collect::<Vec<_>>().join(" / ");
-    
-    let donate_2 = get_string(meta, lang, "donate-2")?
-        .replace("$$DONATION_METHODS$$", &dn_methods);
+    let dn_methods = donatable_author
+        .donate
+        .iter()
+        .map(|(id, link)| {
+            let id = match id.as_str() {
+                "ko-fi" => "Ko-Fi",
+                "paypal" => "PayPal",
+                "github" => "GitHub Sponsors",
+                o => o,
+            };
+            format!("<a href='{link}'>{}</a>", id)
+        })
+        .collect::<Vec<_>>()
+        .join(" / ");
+
+    let donate_2 = get_string(meta, lang, "donate-2")?.replace("$$DONATION_METHODS$$", &dn_methods);
 
     let donate_svg = match lang {
         "de" => include_str!("../../static/img/donate/de.svg").to_string(),
@@ -2150,30 +2509,36 @@ fn render_donate_section_internal(
         "fr" => include_str!("../../static/img/donate/fr.svg").to_string(),
         "es" => include_str!("../../static/img/donate/es.svg").to_string(),
         _ => String::new(),
-    }.replace("<svg ", "<svg style='max-height:50px;' ");
+    }
+    .replace("<svg ", "<svg style='max-height:50px;' ");
     let mut donate = include_str!("../../templates/donate.html").to_string();
     donate = donate.replace("$$DONATE_SVG$$", &format!("/static/img/donate/{lang}.svg"));
-    donate = donate.replace("$$DONATE_TEXT$$", &(donate_1.to_string() + "&nbsp;" + &donate_2));
+    donate = donate.replace(
+        "$$DONATE_TEXT$$",
+        &(donate_1.to_string() + "&nbsp;" + &donate_2),
+    );
     donate = donate.replace("<!-- DONATE_SVG -->", &donate_svg);
     Ok(donate)
 }
 
 fn site_author_donation(lang: &str, meta: &MetaJson) -> Result<String, String> {
-    
-    let author_id = meta.owner.as_deref()
-    .ok_or_else(|| { format!("missing site owner in meta.json")})?;
+    let author_id = meta
+        .owner
+        .as_deref()
+        .ok_or_else(|| format!("missing site owner in meta.json"))?;
 
-    let dn_author = meta.authors.get(author_id)
-    .ok_or_else(|| { format!("missing site author {author_id}")})?;
+    let dn_author = meta
+        .authors
+        .get(author_id)
+        .ok_or_else(|| format!("missing site author {author_id}"))?;
 
     let all_authors = format!(
-        "<a href='/{lang}/author/{}'>{}</a>", 
-        author_id.replace(":", "-"), 
+        "<a href='/{lang}/author/{}'>{}</a>",
+        author_id.replace(":", "-"),
         dn_author.displayname
     );
-    
-    let donate_1 = get_string(meta, lang, "donate-3")?
-    .replace("$$AUTHORS$$", &all_authors);
+
+    let donate_1 = get_string(meta, lang, "donate-3")?.replace("$$AUTHORS$$", &all_authors);
 
     render_donate_section_internal(lang, &donate_1, dn_author, meta)
 }
@@ -2182,15 +2547,20 @@ fn footnotes(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<S
     if a.footnotes.is_empty() {
         return Ok(String::new());
     }
-    
+
     let q = get_string(meta, lang, "footnotes-title")?;
-    let content = a.footnotes.iter().map(|q| {
-        include_str!("../../templates/footnote.html")
-        .replace("$$FOOTNOTE_HTML_BACKLINK$$", &format!("fnref{}", q.id))
-        .replace("$$FOOTNOTE_TITLE$$", &q.id)
-        .replace("$$FOOTNOTE_HTML_ID$$", &format!("fn{}", q.id))
-        .replace("$$FOOTNOTE_CONTENT$$", &&si2html(&q.text))
-    }).collect::<Vec<_>>().join("\r\n");
+    let content = a
+        .footnotes
+        .iter()
+        .map(|q| {
+            include_str!("../../templates/footnote.html")
+                .replace("$$FOOTNOTE_HTML_BACKLINK$$", &format!("fnref{}", q.id))
+                .replace("$$FOOTNOTE_TITLE$$", &q.id)
+                .replace("$$FOOTNOTE_HTML_ID$$", &format!("fn{}", q.id))
+                .replace("$$FOOTNOTE_CONTENT$$", &&si2html(&q.text))
+        })
+        .collect::<Vec<_>>()
+        .join("\r\n");
 
     let mut s = include_str!("../../templates/footnotes.html").to_string();
     s = s.replace("$$FOOTNOTES_TITLE$$", &q);
@@ -2203,7 +2573,14 @@ fn backlinks(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<S
         return Ok(String::new());
     }
     let s = get_string(meta, lang, "backlinks-title")?;
-    Ok(render_index_section(lang, "backlinks", "", &s, &a.backlinks, false))
+    Ok(render_index_section(
+        lang,
+        "backlinks",
+        "",
+        &s,
+        &a.backlinks,
+        false,
+    ))
 }
 
 fn similars(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
@@ -2211,30 +2588,40 @@ fn similars(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<St
         return Ok(String::new());
     }
     let s = get_string(meta, lang, "similar-title")?;
-    Ok(render_index_section(lang, "similar", "", &s, &a.similar, true))
+    Ok(render_index_section(
+        lang, "similar", "", &s, &a.similar, true,
+    ))
 }
 
 fn bibliography(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
-    
     if a.bibliography.is_empty() {
         return Ok(String::new());
     }
 
-    let bib = a.bibliography.iter().map(|l| {
-        SectionLink {
+    let bib = a
+        .bibliography
+        .iter()
+        .map(|l| SectionLink {
             id: Some(l.id.clone()),
-            slug: l.href.clone(), 
-            title: if l.title.is_empty() { 
-                l.text.clone() 
-            } else { 
-                l.title.clone() 
+            slug: l.href.clone(),
+            title: if l.title.is_empty() {
+                l.text.clone()
+            } else {
+                l.title.clone()
             },
-        }
-    }).collect::<Vec<_>>();
+        })
+        .collect::<Vec<_>>();
 
     let s = get_string(meta, lang, "bibliography-title")?;
 
-    Ok(render_index_section(lang, "bibliography", "", &s, &bib, true))
+    Ok(render_index_section(
+        lang,
+        "bibliography",
+        "",
+        &s,
+        &bib,
+        true,
+    ))
 }
 
 fn body_footer(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
@@ -2255,20 +2642,24 @@ fn rosary_template(lang: &str) -> rosary::RosaryTemplates {
         "de" => rosary::RosaryTemplates {
             main_html: include_str!("../../templates/tools.rosary.de.html").to_string(),
             outro_html: include_str!("../../templates/tools.rosary.outro.de.html").to_string(),
-            ourfather_html: include_str!("../../templates/tools.rosary.ourfather.de.html").to_string(),
+            ourfather_html: include_str!("../../templates/tools.rosary.ourfather.de.html")
+                .to_string(),
             glorybe_html: include_str!("../../templates/tools.rosary.glorybe.de.html").to_string(),
             fatima_html: include_str!("../../templates/tools.rosary.fatima.de.html").to_string(),
             nav_html: include_str!("../../templates/tools.rosary.nav.de.html").to_string(),
-            mystery_section_html: include_str!("../../templates/tools.rosary.mystery.html").to_string(),
+            mystery_section_html: include_str!("../../templates/tools.rosary.mystery.html")
+                .to_string(),
         },
         "en" => rosary::RosaryTemplates {
             main_html: include_str!("../../templates/tools.rosary.en.html").to_string(),
             outro_html: include_str!("../../templates/tools.rosary.outro.en.html").to_string(),
-            ourfather_html: include_str!("../../templates/tools.rosary.ourfather.en.html").to_string(),
+            ourfather_html: include_str!("../../templates/tools.rosary.ourfather.en.html")
+                .to_string(),
             glorybe_html: include_str!("../../templates/tools.rosary.glorybe.en.html").to_string(),
             fatima_html: include_str!("../../templates/tools.rosary.fatima.en.html").to_string(),
             nav_html: include_str!("../../templates/tools.rosary.nav.en.html").to_string(),
-            mystery_section_html: include_str!("../../templates/tools.rosary.mystery.html").to_string(),
+            mystery_section_html: include_str!("../../templates/tools.rosary.mystery.html")
+                .to_string(),
         },
         _ => RosaryTemplates::default(),
     }
@@ -2285,14 +2676,13 @@ fn rosary_mysteries() -> rosary::RosaryMysteries {
 }
 
 fn article2html(
-    lang: &str, 
-    slug: &str, 
-    a: &ParsedArticleAnalyzed, 
+    lang: &str,
+    slug: &str,
+    a: &ParsedArticleAnalyzed,
     articles_by_tag: &mut ArticlesByTag,
     articles_by_date: &mut ArticlesByDate,
     meta: &MetaJson,
 ) -> Result<String, String> {
-    
     static HTML: &str = include_str!("../../templates/lorem.html");
 
     if a.tags.is_empty() {
@@ -2300,63 +2690,95 @@ fn article2html(
     }
 
     for t in a.tags.iter() {
-        articles_by_tag.entry(lang.to_string())
-        .or_insert_with(|| BTreeMap::new())
-        .entry(t.to_string())
-        .or_insert_with(|| Vec::new())
-        .push(SectionLink { slug: slug.to_string(), title: a.title.to_string(), id: None });
+        articles_by_tag
+            .entry(lang.to_string())
+            .or_insert_with(|| BTreeMap::new())
+            .entry(t.to_string())
+            .or_insert_with(|| Vec::new())
+            .push(SectionLink {
+                slug: slug.to_string(),
+                title: a.title.to_string(),
+                id: None,
+            });
     }
 
     if !a.is_prayer() {
         match a.get_date() {
             Some((y, m, d)) => {
                 articles_by_date
-                .entry(lang.to_string())
-                .or_insert_with(|| BTreeMap::new())
-                .entry(y.to_string())
-                .or_insert_with(|| BTreeMap::new())
-                .entry(m.to_string())
-                .or_insert_with(|| BTreeMap::new())
-                .entry(d.to_string())
-                .or_insert_with(|| Vec::new())
-                .push(SectionLink { slug: slug.to_string(), title: a.title.to_string(), id: None });
-            },
+                    .entry(lang.to_string())
+                    .or_insert_with(|| BTreeMap::new())
+                    .entry(y.to_string())
+                    .or_insert_with(|| BTreeMap::new())
+                    .entry(m.to_string())
+                    .or_insert_with(|| BTreeMap::new())
+                    .entry(d.to_string())
+                    .or_insert_with(|| Vec::new())
+                    .push(SectionLink {
+                        slug: slug.to_string(),
+                        title: a.title.to_string(),
+                        id: None,
+                    });
+            }
             None => {
                 println!("article {lang}/{slug} has no date");
             }
         };
-
     }
 
     let title_id = lang.to_string() + "-" + slug;
     let logo_svg = include_str!("../../static/img/logo/full.svg")
-    .replace("<svg ", "<svg style='max-height:50px;' ");
+        .replace("<svg ", "<svg style='max-height:50px;' ");
 
     let mut a = a.clone();
 
     let content = match (lang, slug) {
-        ("de", "rosenkranz") => rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries(), &meta),
-        ("en", "rosary") => rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries(), &meta),
+        ("de", "rosenkranz") => {
+            rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries(), &meta)
+        }
+        ("en", "rosary") => {
+            rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries(), &meta)
+        }
         ("en", "online-latin-trainer") => {
             let l = langtrain::TrainLang::Latin;
             let grammar_lessons = l.get_grammar_lessons(lang);
-            a.sections.push(ArticleSection { title: format!("V01: 1000 words"), indent: 2, pars: Vec::new() });
+            a.sections.push(ArticleSection {
+                title: format!("V01: 1000 words"),
+                indent: 2,
+                pars: Vec::new(),
+            });
             for gl in grammar_lessons.sections.iter() {
-                a.sections.push(ArticleSection { title: gl.title.clone(), indent: 2, pars: Vec::new() });
+                a.sections.push(ArticleSection {
+                    title: gl.title.clone(),
+                    indent: 2,
+                    pars: Vec::new(),
+                });
             }
             langtrain::generate_langtrain_content(lang, l, &meta)?
-        },
+        }
         _ => body_content(lang, &slug, &a.sections, meta)?,
     };
 
-    let a = &a; 
-    let html = HTML.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(a, lang, title_id.as_str(), meta)?);
-    let html = html.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true, meta)?);
+    let a = &a;
+    let html = HTML.replace(
+        "<!-- HEAD_TEMPLATE_HTML -->",
+        &head(a, lang, title_id.as_str(), meta)?,
+    );
+    let html = html.replace(
+        "<!-- HEADER_NAVIGATION -->",
+        &header_navigation(lang, true, meta)?,
+    );
     let html = html.replace("<!-- LINK_TAGS -->", &link_tags(lang, &a.tags, meta)?);
     let html = html.replace("<!-- TOC -->", &table_of_contents(lang, &a, meta)?);
-    let html = html.replace("<!-- PAGE_DESCRIPTION -->", &page_desciption(lang, &a, meta)?);
+    let html = html.replace(
+        "<!-- PAGE_DESCRIPTION -->",
+        &page_desciption(lang, &a, meta)?,
+    );
     let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a, meta)?);
-    let html = html.replace("<!-- BODY_ABSTRACT -->", &body_abstract(lang, slug, a.is_prayer(), &a.summary));
+    let html = html.replace(
+        "<!-- BODY_ABSTRACT -->",
+        &body_abstract(lang, slug, a.is_prayer(), &a.summary),
+    );
     let html = html.replace("<!-- BODY_CONTENT -->", &content);
     let html = html.replace("<!-- DONATE -->", &donate(lang, &a, meta)?);
     let html = html.replace("<!-- BODY_NOSCRIPT -->", &body_noscript());
@@ -2378,38 +2800,42 @@ fn article2html(
     let html = html.replace("$$LANG$$", &lang);
     let html = html.replace("$$SLUG$$", slug);
     let html = html.replace("$$ROOT_HREF$$", &root_href);
-    let html = html.replace("$$PAGE_HREF$$", &(root_href.to_string() + "/" + lang + "/" + slug));
+    let html = html.replace(
+        "$$PAGE_HREF$$",
+        &(root_href.to_string() + "/" + lang + "/" + slug),
+    );
 
     Ok(html)
 }
 
 fn render_page_author_pages(
     articles: &AnalyzedArticles,
-    meta: &MetaJson
+    meta: &MetaJson,
 ) -> Result<BTreeMap<String, Vec<(String, String)>>, String> {
-    
     let mut finalmap = BTreeMap::new();
     for lang in articles.map.keys() {
-        
         let contact_str = get_string(meta, lang, "author-contact")?;
         let donate_str = get_string(meta, lang, "author-donate")?;
-        
+
         for (id, v) in meta.authors.iter() {
             let name = &v.displayname;
             let contact_url = v.contact.as_deref();
             let mut dn = String::new();
             for (platform, link) in v.donate.iter() {
-                
                 let s = match platform.as_str() {
                     "paypal" => format!("<p><a href='{link}'>PayPal</a></p>"),
                     "github" => format!("<p><a href='{link}'>GitHub Sponsors</a></p>"),
                     "ko-fi" => format!("<p><a href='{link}'>Ko-Fi</a></p>"),
-                    _ => return Err(format!("unknown platform {platform} for user {id} in authors.json")),
+                    _ => {
+                        return Err(format!(
+                            "unknown platform {platform} for user {id} in authors.json"
+                        ))
+                    }
                 };
-            
+
                 dn.push_str(&s);
             }
-            
+
             let mut t = format!("<!doctype html><html><head><title>{name}</title></head><body>");
             t += &format!("<h1>{name}</h1>");
             if let Some(contact_url) = contact_url {
@@ -2423,9 +2849,10 @@ fn render_page_author_pages(
             }
             t += &format!("</body></html>");
 
-            finalmap.entry(lang.clone())
-            .or_insert_with(|| Vec::new())
-            .push((id.to_lowercase().replace(":", "-"), t));
+            finalmap
+                .entry(lang.clone())
+                .or_insert_with(|| Vec::new())
+                .push((id.to_lowercase().replace(":", "-"), t));
         }
     }
 
@@ -2435,7 +2862,7 @@ fn render_page_author_pages(
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 struct SearchIndex {
     git: String,
-    articles: BTreeMap<Slug, SearchIndexArticle>
+    articles: BTreeMap<Slug, SearchIndexArticle>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -2444,69 +2871,98 @@ struct SearchIndexArticle {
     sha256: String,
 }
 
-fn generate_search_index(articles: &AnalyzedArticles) -> BTreeMap<Lang, SearchIndex>{
+fn generate_search_index(articles: &AnalyzedArticles) -> BTreeMap<Lang, SearchIndex> {
+    articles
+        .map
+        .iter()
+        .map(|(lang, a)| {
+            let s = a
+                .values()
+                .map(|r| r.sha256.clone())
+                .collect::<Vec<_>>()
+                .join(" ");
+            let version = sha256(&s);
+            let articles = a
+                .iter()
+                .map(|(slug, readme)| {
+                    let sia = SearchIndexArticle {
+                        title: readme.title.clone(),
+                        sha256: readme.sha256.clone(),
+                    };
+                    (slug.clone(), sia)
+                })
+                .collect();
 
-    articles.map.iter().map(|(lang, a)| {
-
-        let s = a.values().map(|r| r.sha256.clone()).collect::<Vec<_>>().join(" ");
-        let version = sha256(&s);
-        let articles = a.iter()
-        .map(|(slug, readme)| {
-            let sia = SearchIndexArticle {
-                title: readme.title.clone(),
-                sha256: readme.sha256.clone(),
-            };
-            (slug.clone(), sia)
-        }).collect();
-
-        (lang.clone(), SearchIndex {
-            git: version,
-            articles,
+            (
+                lang.clone(),
+                SearchIndex {
+                    git: version,
+                    articles,
+                },
+            )
         })
-    }).collect()
+        .collect()
 }
 
 type SearchHtmlResult = BTreeMap<Lang, (String, String, String)>;
 
 // Lang => (SearchBarHtml, SearchJS)
 fn search_html(articles: &AnalyzedArticles, meta: &MetaJson) -> Result<SearchHtmlResult, String> {
-    articles.map.iter().map(|(lang, a)| {
+    articles
+        .map
+        .iter()
+        .map(|(lang, a)| {
+            let s = a
+                .values()
+                .map(|r| r.sha256.clone())
+                .collect::<Vec<_>>()
+                .join(" ");
+            let version = sha256(&s);
 
-        let s = a.values().map(|r| r.sha256.clone()).collect::<Vec<_>>().join(" ");
-        let version = sha256(&s);
+            let searchbar_placeholder = get_string(meta, lang, "searchbar-placeholder")?;
+            let searchbar = get_string(meta, lang, "searchbar-text")?;
+            let no_results = get_string(meta, lang, "search-no-results")?;
+            let searchpage_title = get_string(meta, lang, "searchpage-title")?;
+            let searchpage_desc = get_string(meta, lang, "searchpage-desc")?;
 
-        let searchbar_placeholder = get_string(meta, lang, "searchbar-placeholder")?;
-        let searchbar = get_string(meta, lang, "searchbar-text")?;
-        let no_results = get_string(meta, lang, "search-no-results")?;
-        let searchpage_title = get_string(meta, lang, "searchpage-title")?;
-        let searchpage_desc = get_string(meta, lang, "searchpage-desc")?;
+            let mut searchbar_html = include_str!("../../templates/searchbar.html").to_string();
+            searchbar_html = searchbar_html.replace("$$VERSION$$", &version);
+            searchbar_html =
+                searchbar_html.replace("$$SEARCHBAR_PLACEHOLDER$$", &searchbar_placeholder);
+            searchbar_html = searchbar_html.replace("$$SEARCH$$", &searchbar);
 
-        let mut searchbar_html = include_str!("../../templates/searchbar.html").to_string();
-        searchbar_html = searchbar_html.replace("$$VERSION$$", &version);
-        searchbar_html = searchbar_html.replace("$$SEARCHBAR_PLACEHOLDER$$", &searchbar_placeholder);
-        searchbar_html = searchbar_html.replace("$$SEARCH$$", &searchbar);
-        
-        let mut search_html = include_str!("../../templates/search.html").to_string();
-        search_html = search_html.replace("<!-- SEARCH -->", &searchbar_html);
-        search_html = search_html.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true, meta)?);
-        search_html = search_html.replace("$$LANG$$", lang);
-        search_html = search_html.replace("$$ROOT_HREF$$", &get_root_href());
+            let mut search_html = include_str!("../../templates/search.html").to_string();
+            search_html = search_html.replace("<!-- SEARCH -->", &searchbar_html);
+            search_html = search_html.replace(
+                "<!-- HEADER_NAVIGATION -->",
+                &header_navigation(lang, true, meta)?,
+            );
+            search_html = search_html.replace("$$LANG$$", lang);
+            search_html = search_html.replace("$$ROOT_HREF$$", &get_root_href());
 
-        let parsed = ParsedArticleAnalyzed {
-            title: searchpage_title.to_string() + " - dubia.cc",
-            summary: vec![Paragraph::Sentence { s: vec![SentenceItem::Text { text: searchpage_desc.to_string() }] }],
-            .. Default::default()
-        };
-        search_html = search_html.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(&parsed, lang, &format!("{lang}-search"), meta)?);
-        search_html = search_html.replace("$$TITLE$$", &searchpage_title);
+            let parsed = ParsedArticleAnalyzed {
+                title: searchpage_title.to_string() + " - dubia.cc",
+                summary: vec![Paragraph::Sentence {
+                    s: vec![SentenceItem::Text {
+                        text: searchpage_desc.to_string(),
+                    }],
+                }],
+                ..Default::default()
+            };
+            search_html = search_html.replace(
+                "<!-- HEAD_TEMPLATE_HTML -->",
+                &head(&parsed, lang, &format!("{lang}-search"), meta)?,
+            );
+            search_html = search_html.replace("$$TITLE$$", &searchpage_title);
 
-        let mut search_js = include_str!("../../static/js/search.js").to_string();
-        search_js = search_js.replace("$$LANG$$", lang);
-        search_js = search_js.replace("$$VERSION$$", &version);
-        search_js = search_js.replace("$$NO_RESULTS$$", &no_results);
+            let mut search_js = include_str!("../../static/js/search.js").to_string();
+            search_js = search_js.replace("$$LANG$$", lang);
+            search_js = search_js.replace("$$VERSION$$", &version);
+            search_js = search_js.replace("$$NO_RESULTS$$", &no_results);
 
-        Ok((lang.clone(), (searchbar_html, search_html, search_js)))
-    }).collect()
+            Ok((lang.clone(), (searchbar_html, search_html, search_js)))
+        })
+        .collect()
 }
 
 struct SpecialPage {
@@ -2524,39 +2980,60 @@ fn get_special_pages(
     by_tag: &ArticlesByTag,
     by_date: &ArticlesByDate,
 ) -> Result<Vec<SpecialPage>, String> {
-
-    let tags = meta.tags.get(lang)
-    .ok_or_else(|| format!("unknown language {lang} not found in tags.json"))?;
+    let tags = meta
+        .tags
+        .get(lang)
+        .ok_or_else(|| format!("unknown language {lang} not found in tags.json"))?;
 
     let default = BTreeMap::new();
     let default2 = BTreeMap::new();
-    
+
     let topics_content = render_index_sections(
-        lang, 
-        by_tag.get(lang).unwrap_or(&default).iter().filter_map(|(k, v)| {
-            let id = k.clone();
-            let title = tags.tags.get(&id)?;
-            Some(((id.to_string(), title.to_string()), v.clone()))
-        }).collect()
+        lang,
+        by_tag
+            .get(lang)
+            .unwrap_or(&default)
+            .iter()
+            .filter_map(|(k, v)| {
+                let id = k.clone();
+                let title = tags.tags.get(&id)?;
+                Some(((id.to_string(), title.to_string()), v.clone()))
+            })
+            .collect(),
     );
 
-    let newest_content = render_index_sections(lang, by_date.get(lang).unwrap_or(&default2).iter().rev().map(|(year, months)| {
-        ((format!("y{year}"), year.clone()), months.iter().flat_map(|(m, days)| {
-            days.iter().flat_map(move |(d, a)| a.iter().map(move |a| {
-                SectionLink {
-                    slug: a.slug.to_string(),
-                    title: format!("{m}-{d}: {}", a.title),
-                    id: None,
-                }
-            }))
-        }).collect())
-    }).collect());
+    let newest_content = render_index_sections(
+        lang,
+        by_date
+            .get(lang)
+            .unwrap_or(&default2)
+            .iter()
+            .rev()
+            .map(|(year, months)| {
+                (
+                    (format!("y{year}"), year.clone()),
+                    months
+                        .iter()
+                        .flat_map(|(m, days)| {
+                            days.iter().flat_map(move |(d, a)| {
+                                a.iter().map(move |a| SectionLink {
+                                    slug: a.slug.to_string(),
+                                    title: format!("{m}-{d}: {}", a.title),
+                                    id: None,
+                                })
+                            })
+                        })
+                        .collect(),
+                )
+            })
+            .collect(),
+    );
 
     let topics_title = get_string(meta, lang, "special-topics-title")?;
     let topics_html = get_string(meta, lang, "special-topics-path")?;
     let topics_id = get_string(meta, lang, "special-topics-id")?;
     let topics_desc = get_string(meta, lang, "special-topics-desc")?;
-    
+
     let newest_title = get_string(meta, lang, "special-newest-title")?;
     let newest_html = get_string(meta, lang, "special-newest-path")?;
     let newest_id = get_string(meta, lang, "special-newest-id")?;
@@ -2571,12 +3048,12 @@ fn get_special_pages(
     let shop_html = get_string(meta, lang, "special-shop-path")?;
     let shop_id = get_string(meta, lang, "special-shop-id")?;
     let shop_desc = get_string(meta, lang, "special-shop-desc")?;
-    
+
     let about_title = get_string(meta, lang, "special-about-title")?;
     let about_html = get_string(meta, lang, "special-about-path")?;
     let about_id = get_string(meta, lang, "special-about-id")?;
     let about_desc = get_string(meta, lang, "special-about-desc")?;
-    
+
     Ok(vec![
         SpecialPage {
             title: topics_title,
@@ -2621,38 +3098,60 @@ fn get_special_pages(
     ])
 }
 
-fn special2html(lang: &str, page: &SpecialPage, meta: &MetaJson) -> Result<(String, String), String> {
+fn special2html(
+    lang: &str,
+    page: &SpecialPage,
+    meta: &MetaJson,
+) -> Result<(String, String), String> {
     let mut special = include_str!("../../templates/special.html").to_string();
     let a = ParsedArticleAnalyzed {
         title: page.title.to_string(),
-        summary: vec![Paragraph::Sentence { s: vec![SentenceItem::Text { text: page.description.to_string() } ] }],
-        .. Default::default()
+        summary: vec![Paragraph::Sentence {
+            s: vec![SentenceItem::Text {
+                text: page.description.to_string(),
+            }],
+        }],
+        ..Default::default()
     };
-    special = special.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(&a, lang, &page.id, meta)?);
+    special = special.replace(
+        "<!-- HEAD_TEMPLATE_HTML -->",
+        &head(&a, lang, &page.id, meta)?,
+    );
     special = special.replace("<!-- BODY_NOSCRIPT -->", &page.special_content);
     special = special.replace("<!-- BODY_ABSTRACT -->", &page.content);
-    special = special.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, true, meta)?);
+    special = special.replace(
+        "<!-- HEADER_NAVIGATION -->",
+        &header_navigation(lang, true, meta)?,
+    );
     special = special.replace("$$TITLE$$", &page.title);
     special = special.replace("$$LANG$$", lang);
     special = special.replace("$$ROOT_HREF$$", &get_root_href());
-    special = special.replace("$$PAGE_HREF$$", &(get_root_href().to_string() + "/" + lang + "/" + &page.filepath.replace(".html", "")));
+    special = special.replace(
+        "$$PAGE_HREF$$",
+        &(get_root_href().to_string() + "/" + lang + "/" + &page.filepath.replace(".html", "")),
+    );
     Ok((page.filepath.to_string(), special))
 }
 
 fn render_section_items_texts(texts: &[String]) -> String {
-    texts.iter().map(|s| {
-        if s.trim().is_empty() {
-            "<br/>".to_string()
-        } else if !s.trim().starts_with("<") {
-            format!("<p style='text-indent: 0px;'>{s}</p>")
-        } else {
-            s.clone()
-        }
-    }).collect::<Vec<_>>().join("\r\n")
+    texts
+        .iter()
+        .map(|s| {
+            if s.trim().is_empty() {
+                "<br/>".to_string()
+            } else if !s.trim().starts_with("<") {
+                format!("<p style='text-indent: 0px;'>{s}</p>")
+            } else {
+                s.clone()
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("\r\n")
 }
 
 fn render_section_items_img(link: &str, img: &str, title: &str) -> String {
-    let s1 = "justify-content: flex-end;margin-top:10px;width: 100%;min-height: 440px;display: flex;";
+    let s1 =
+        "justify-content: flex-end;margin-top:10px;width: 100%;min-height: 440px;display: flex;";
     let s2 = "flex-direction:column;height: 100%;background-size: cover;";
     let style = format!("{s1}{s2}background-image: url({img});");
 
@@ -2671,8 +3170,8 @@ fn render_section_items(lang: &str, links: &[SectionLink]) -> String {
         let section_title = &l.title;
         let bsm = if !first { "0" } else { "4" };
         let final_link = if slug.starts_with("http") { 
-            slug.clone() 
-        } else { 
+            slug.clone()
+        } else {
             get_root_href().to_string() + "/" + lang + "/" + slug 
         };
 
@@ -2695,7 +3194,14 @@ fn render_section_items(lang: &str, links: &[SectionLink]) -> String {
     }).collect::<Vec<_>>().join("\r\n")
 }
 
-fn render_index_section(lang: &str, id: &str, classes: &str, title: &str, links: &[SectionLink], two_column: bool) -> String {
+fn render_index_section(
+    lang: &str,
+    id: &str,
+    classes: &str,
+    title: &str,
+    links: &[SectionLink],
+    two_column: bool,
+) -> String {
     let mut section_html = include_str!("../../templates/index.section.html").to_string();
     section_html = section_html.replace("$$SECTION_ID$$", id);
     section_html = section_html.replace("$$SECTION_CLASSES$$", classes);
@@ -2703,13 +3209,17 @@ fn render_index_section(lang: &str, id: &str, classes: &str, title: &str, links:
     section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title);
 
     let section_items = if two_column {
-        let col1 = links.iter().enumerate()
-        .filter_map(|(i, l)| if i % 2 == 0 { Some(l.clone()) } else { None })
-        .collect::<Vec<_>>();
+        let col1 = links
+            .iter()
+            .enumerate()
+            .filter_map(|(i, l)| if i % 2 == 0 { Some(l.clone()) } else { None })
+            .collect::<Vec<_>>();
         let col1 = render_section_items(lang, &col1);
-        let col2 = links.iter().enumerate()
-        .filter_map(|(i, l)| if i % 2 != 0 { Some(l.clone()) } else { None })
-        .collect::<Vec<_>>();
+        let col2 = links
+            .iter()
+            .enumerate()
+            .filter_map(|(i, l)| if i % 2 != 0 { Some(l.clone()) } else { None })
+            .collect::<Vec<_>>();
         let col2 = render_section_items(lang, &col2);
         let cont = format!("<div class='col'>{col1}</div><div class='col'>{col2}</div>");
         format!("<div class='index-section-grid-container'>{cont}</div>")
@@ -2727,52 +3237,76 @@ fn render_index_section_texts(id: &str, classes: &str, title: &str, txts: &[Stri
     section_html = section_html.replace("$$SECTION_CLASSES$$", classes);
     section_html = section_html.replace("$$SECTION_NAME$$", title);
     section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title);
-    section_html = section_html.replace("<!-- SECTION_ITEMS -->", &&render_section_items_texts(txts));
+    section_html =
+        section_html.replace("<!-- SECTION_ITEMS -->", &&render_section_items_texts(txts));
     section_html
 }
 
-fn render_index_section_img(lang: &str, id: &str, title: &str, link: &str, img: &str, t: &str, meta: &MetaJson) -> String {
+fn render_index_section_img(
+    lang: &str,
+    id: &str,
+    title: &str,
+    link: &str,
+    img: &str,
+    t: &str,
+    meta: &MetaJson,
+) -> String {
     let mut section_html = include_str!("../../templates/index.section.html").to_string();
     section_html = section_html.replace("$$SECTION_ID$$", id);
     let nav_shop_link = get_string(meta, lang, "nav-shop-link").unwrap_or_default();
     section_html = section_html.replace("$$LANG$$", &nav_shop_link);
-    section_html = section_html.replace("$$PAGE_HREF$$", &(get_root_href().to_string() + "/" + lang));
+    section_html =
+        section_html.replace("$$PAGE_HREF$$", &(get_root_href().to_string() + "/" + lang));
     section_html = section_html.replace("$$SECTION_CLASSES$$", "");
     section_html = section_html.replace("$$SECTION_NAME$$", title);
     section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title);
-    section_html = section_html.replace("<!-- SECTION_ITEMS -->", &&render_section_items_img(link, img, t));
+    section_html = section_html.replace(
+        "<!-- SECTION_ITEMS -->",
+        &&render_section_items_img(link, img, t),
+    );
     section_html
 }
 
 fn render_index_sections(lang: &str, s: Vec<((String, String), Vec<SectionLink>)>) -> String {
-    s.iter().map(|((id, title), links)| {
-        render_index_section(lang, id, "", title, links, false)
-    }).collect::<Vec<_>>().join("\r\n")
+    s.iter()
+        .map(|((id, title), links)| render_index_section(lang, id, "", title, links, false))
+        .collect::<Vec<_>>()
+        .join("\r\n")
 }
 
 fn render_resources_sections(lang: &str, s: &Vec<TagSection1>) -> String {
-    s.iter().map(|s| {
-        let section_id = &s.id;
-        let section_title = &s.title;
-        render_index_section(lang, section_id, "", section_title, &s.links, false)
-    }).collect::<Vec<_>>().join("\r\n")
+    s.iter()
+        .map(|s| {
+            let section_id = &s.id;
+            let section_title = &s.title;
+            render_index_section(lang, section_id, "", section_title, &s.links, false)
+        })
+        .collect::<Vec<_>>()
+        .join("\r\n")
 }
 
 fn render_shop_sections(lang: &str, s: &Vec<TagSection2>, meta: &MetaJson) -> String {
-    s.iter().map(|s| {
-        render_index_section_img(
-            lang, &s.id, 
-            &s.title, &s.link.slug, 
-            &s.img, &s.link.title, 
-            meta
-        )
-    }).collect::<Vec<_>>().join("\r\n")
+    s.iter()
+        .map(|s| {
+            render_index_section_img(
+                lang,
+                &s.id,
+                &s.title,
+                &s.link.slug,
+                &s.img,
+                &s.link.title,
+                meta,
+            )
+        })
+        .collect::<Vec<_>>()
+        .join("\r\n")
 }
 
 fn render_about_sections(s: &Vec<TagSection3>) -> String {
-    s.iter().map(|s| {
-        render_index_section_texts(&s.id, "", &s.title, &s.texts)
-    }).collect::<Vec<_>>().join("\r\n")
+    s.iter()
+        .map(|s| render_index_section_texts(&s.id, "", &s.title, &s.texts))
+        .collect::<Vec<_>>()
+        .join("\r\n")
 }
 
 fn render_index_first_section(
@@ -2781,7 +3315,6 @@ fn render_index_first_section(
     articles: &AnalyzedArticles,
     meta: &MetaJson,
 ) -> Result<String, String> {
-
     let mut first_section = include_str!("../../templates/index.first-section.html").to_string();
 
     let dropdown_svg = r#"
@@ -2795,19 +3328,22 @@ fn render_index_first_section(
     let mut os = String::new();
 
     for (i, t) in tags.ibelievein.iter().enumerate() {
-        
         options += &format!("<option value='{}'>{}</option>", t.tag, t.option);
 
-        let featured = t.featured.iter().filter_map(|id| {
-            Some(SectionLink {
-                title: articles.map.get(lang)?.get(id)?.title.clone(),
-                slug: id.to_string(),
-                id: None,
+        let featured = t
+            .featured
+            .iter()
+            .filter_map(|id| {
+                Some(SectionLink {
+                    title: articles.map.get(lang)?.get(id)?.title.clone(),
+                    slug: id.to_string(),
+                    id: None,
+                })
             })
-        }).collect::<Vec<_>>();
-        
+            .collect::<Vec<_>>();
+
         let classes = "list list-level-1";
-        let s = render_index_section(lang, &t.tag,  &classes, &t.title, &featured, true);
+        let s = render_index_section(lang, &t.tag, &classes, &t.title, &featured, true);
 
         if i == 0 {
             fs = s;
@@ -2835,43 +3371,54 @@ fn render_other_index_sections(
     tags: &Tags,
     articles: &AnalyzedArticles,
 ) -> Result<String, String> {
+    let articles = articles
+        .map
+        .get(lang)
+        .ok_or_else(|| format!("render_other_index_sections: unknown language {lang}"))?;
 
-    let articles = articles.map.get(lang)
-    .ok_or_else(|| format!("render_other_index_sections: unknown language {lang}"))?;
+    let s = tags
+        .iwanttolearn
+        .iter()
+        .map(|(id, v)| {
+            let featured = v
+                .featured
+                .iter()
+                .filter_map(|f_id| {
+                    let featured_title = articles.get(f_id)?.title.clone();
+                    Some(SectionLink {
+                        slug: f_id.to_string(),
+                        title: featured_title,
+                        id: None,
+                    })
+                })
+                .collect::<Vec<_>>();
 
-    let s = tags.iwanttolearn.iter().map(|(id, v)| {
-
-        let featured = v.featured.iter().filter_map(|f_id| {
-            let featured_title = articles.get(f_id)?.title.clone();
-            Some(SectionLink {
-                slug: f_id.to_string(),
-                title: featured_title,
-                id: None,
-            })
-        }).collect::<Vec<_>>();
-
-        render_index_section(lang, id, "", &v.title, &featured, false)
-    }).collect::<Vec<_>>().join("");
+            render_index_section(lang, id, "", &v.title, &featured, false)
+        })
+        .collect::<Vec<_>>()
+        .join("");
 
     Ok(format!("<div id='i-want-to-learn-about'>{s}</div>"))
 }
 
 fn render_index_html(
-    lang: &str, 
-    articles: &AnalyzedArticles, 
+    lang: &str,
+    articles: &AnalyzedArticles,
     meta: &MetaJson,
     search_html: &SearchHtmlResult,
 ) -> Result<String, String> {
-    
-    let tags = meta.tags.get(lang)
-    .ok_or_else(|| format!("render_index_html: unknown language {lang}"))?;
+    let tags = meta
+        .tags
+        .get(lang)
+        .ok_or_else(|| format!("render_index_html: unknown language {lang}"))?;
 
-    let (searchbar_html, _, _) = search_html.get(lang)
-    .ok_or_else(|| format!("render_index_html (searchbar_html): unknown language {lang}"))?;
+    let (searchbar_html, _, _) = search_html
+        .get(lang)
+        .ok_or_else(|| format!("render_index_html (searchbar_html): unknown language {lang}"))?;
 
     let multilang = include_str!("../../templates/multilang.tags.html");
     let logo_svg = include_str!("../../static/img/logo/full.svg");
-    
+
     let title = get_title(lang, &ParsedArticleAnalyzed::default(), meta)?;
     let description = get_description(lang, &ParsedArticleAnalyzed::default(), meta)?;
     let keywords = get_string(meta, lang, "index-keywords")?
@@ -2881,9 +3428,13 @@ fn render_index_html(
 
     let a = ParsedArticleAnalyzed {
         title: title.clone(),
-        summary: vec![Paragraph::Sentence { s: vec![SentenceItem::Text { text: description.clone() }] }],
+        summary: vec![Paragraph::Sentence {
+            s: vec![SentenceItem::Text {
+                text: description.clone(),
+            }],
+        }],
         tags: keywords,
-        .. Default::default()
+        ..Default::default()
     };
 
     let select_faith = get_string(meta, lang, "index-select-faith")?;
@@ -2896,7 +3447,8 @@ fn render_index_html(
         get_string(meta, lang, "index-help-5")?,
         get_string(meta, lang, "index-help-6")?,
         get_string(meta, lang, "index-help-7")?,
-    ].join("");
+    ]
+    .join("");
 
     let ims = r#"
     <svg style='position: relative;top: 4px;margin-left:1px;' version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="37778.048 -16 544 544" preserveAspectRatio="xMinYMin" >
@@ -2932,20 +3484,29 @@ fn render_index_html(
     ];
 
     let mut page_help = include_str!("../../templates/navigation-help.html")
-    .replace("$$PAGE_HELP$$", &page_help_content);
+        .replace("$$PAGE_HELP$$", &page_help_content);
 
     for (k, v) in icons {
         page_help = page_help.replace(k, v);
     }
 
     let page_descr = get_string(meta, lang, "index-subtitle")?;
-    let page_description = include_str!("../../templates/page-description.html")
-        .replace("$$DESCR$$", &page_descr);
+    let page_description =
+        include_str!("../../templates/page-description.html").replace("$$DESCR$$", &page_descr);
 
     let mut index_body_html = include_str!("../../templates/index-body.html").to_string();
-    index_body_html = index_body_html.replace("<!-- SECTIONS -->", &render_index_first_section(lang, tags, articles, meta)?);
-    index_body_html = index_body_html.replace("$$I_WANT_TO_LEARN_MORE_ABOUT$$", &get_string(meta, lang, "i-want-to-learn-more")?);
-    index_body_html = index_body_html.replace("<!-- SECTION_EXTRA -->", &render_other_index_sections(lang, tags, articles)?);
+    index_body_html = index_body_html.replace(
+        "<!-- SECTIONS -->",
+        &render_index_first_section(lang, tags, articles, meta)?,
+    );
+    index_body_html = index_body_html.replace(
+        "$$I_WANT_TO_LEARN_MORE_ABOUT$$",
+        &get_string(meta, lang, "i-want-to-learn-more")?,
+    );
+    index_body_html = index_body_html.replace(
+        "<!-- SECTION_EXTRA -->",
+        &render_other_index_sections(lang, tags, articles)?,
+    );
     index_body_html = index_body_html.replace("<!-- SEARCHBAR -->", &searchbar_html);
 
     let title_id = format!("{lang}-index");
@@ -2953,9 +3514,15 @@ fn render_index_html(
     index_html = index_html.replace("<!-- BODY_ABSTRACT -->", &index_body_html);
     index_html = index_html.replace("<!-- PAGE_DESCRIPTION -->", &page_description);
     index_html = index_html.replace("<!-- SVG_LOGO_INLINE -->", logo_svg);
-    index_html = index_html.replace("<!-- HEAD_TEMPLATE_HTML -->", &head(&a, lang, &title_id, meta)?);
+    index_html = index_html.replace(
+        "<!-- HEAD_TEMPLATE_HTML -->",
+        &head(&a, lang, &title_id, meta)?,
+    );
     index_html = index_html.replace("<!-- PAGE_HELP -->", &page_help);
-    index_html = index_html.replace("<!-- HEADER_NAVIGATION -->", &header_navigation(lang, false, meta)?);
+    index_html = index_html.replace(
+        "<!-- HEADER_NAVIGATION -->",
+        &header_navigation(lang, false, meta)?,
+    );
     index_html = index_html.replace("<!-- MULTILANG_TAGS -->", multilang);
     index_html = index_html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content");
     index_html = index_html.replace("$$TITLE$$", &title);
@@ -2966,13 +3533,16 @@ fn render_index_html(
     index_html = index_html.replace("$$SELECT_FAITH$$", &select_faith);
     index_html = index_html.replace("$$ROOT_HREF$$", get_root_href());
     index_html = index_html.replace("$$PAGE_HREF$$", &(get_root_href().to_string() + "/" + lang));
-    index_html = index_html.replace("<link rel=\"preload\" href=\"/static/img/logo/logo-smooth.svg\" as=\"image\">", "");
+    index_html = index_html.replace(
+        "<link rel=\"preload\" href=\"/static/img/logo/logo-smooth.svg\" as=\"image\">",
+        "",
+    );
     index_html = index_html.replace("<link rel=\"preload\" href=\"/static/font/ssfp/ssp/SourceSansPro-BASIC-Regular.subset.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>", "");
 
     Ok(index_html)
 }
 
-fn minify(input: &str) -> Vec<u8> {
+pub fn minify(input: &str) -> Vec<u8> {
     let s = include_str!("../../templates/sw-inject.js");
     // let input = input.replace("<!-- INJECT_SW -->", &format!("<script>{s}</script>"));
     let mut minified = vec![];
@@ -2983,17 +3553,17 @@ fn minify(input: &str) -> Vec<u8> {
 }
 
 fn main() -> Result<(), String> {
+    // Setup
+    let mut cwd = std::env::current_dir().map_err(|e| e.to_string())?;
 
-    // Setup 
-    let mut cwd = std::env::current_dir()
-        .map_err(|e| e.to_string())?;
-    
     while !cwd.join("articles").is_dir() {
-        cwd = cwd.parent().ok_or("cannot find /articles dir in current path")?.to_path_buf();
+        cwd = cwd
+            .parent()
+            .ok_or("cannot find /articles dir in current path")?
+            .to_path_buf();
     }
 
-    let meta = std::fs::read_to_string(&cwd.join("meta.json"))
-    .map_err(|e| e.to_string())?;
+    let meta = std::fs::read_to_string(&cwd.join("meta.json")).map_err(|e| e.to_string())?;
     let meta_map = read_meta_json(&meta);
 
     let dir = cwd.join("articles");
@@ -3009,12 +3579,11 @@ fn main() -> Result<(), String> {
 
     for (lang, articles) in analyzed.map.iter() {
         for (slug, a) in articles {
-            
             let s = article2html(
-                &lang, 
-                &slug, 
-                &a, 
-                &mut articles_by_tag, 
+                &lang,
+                &slug,
+                &a,
+                &mut articles_by_tag,
                 &mut articles_by_date,
                 &meta_map,
             );
@@ -3024,8 +3593,8 @@ fn main() -> Result<(), String> {
                     let path = cwd.join(lang);
                     let _ = std::fs::create_dir_all(&path);
                     let _ = std::fs::write(path.join(slug.to_string() + ".html"), &minify(&s));
-                },
-                Err(e) if e.is_empty() => { },
+                }
+                Err(e) if e.is_empty() => {}
                 Err(q) => return Err(q),
             }
         }
@@ -3036,7 +3605,10 @@ fn main() -> Result<(), String> {
     for (lang, authors) in author_pages.iter() {
         let _ = std::fs::create_dir_all(cwd.join(&lang).join("author"));
         for (a, v) in authors {
-            let _ = std::fs::write(cwd.join(&lang).join("author").join(&format!("{a}.html")), &minify(&v));
+            let _ = std::fs::write(
+                cwd.join(&lang).join("author").join(&format!("{a}.html")),
+                &minify(&v),
+            );
         }
     }
 
@@ -3066,11 +3638,17 @@ fn main() -> Result<(), String> {
         let _ = std::fs::write(cwd.join(&format!("{lang}.html")), &minify(&index_html));
     }
 
+    // Generate map pages
+    resistance::generate_resistance_pages(&cwd, &meta_map)?;
+
     // Write gitignore
     let _ = std::fs::write(cwd.join(".gitignore"), generate_gitignore(&articles));
 
     // Write serviceworker
-    let _ = std::fs::write(cwd.join("sw.js"), gen_serviceworker_js(&cwd, &analyzed, &meta_map));
+    let _ = std::fs::write(
+        cwd.join("sw.js"),
+        gen_serviceworker_js(&cwd, &analyzed, &meta_map),
+    );
 
     Ok(())
 }
