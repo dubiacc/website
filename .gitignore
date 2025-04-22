@@ -26,6 +26,8 @@
 /md2json2/target
 /pl
 /pl2
+/pt
+/pt2
 /ro
 /ro2
 /ru
@@ -52,6 +54,7 @@ ja.html
 ko.html
 md2json-bin
 pl.html
+pt.html
 ro.html
 ru.html
 sw.js
