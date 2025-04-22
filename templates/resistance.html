@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="$$LANG$$">
 <head>
-  <title>$$TITLE$$</title>
-  <meta name="description" content="$$DESCRIPTION$$">
+  <title>$$resistance-title$$</title>
+  <meta name="description" content="$$resistance-desc$$">
   <link rel="alternate" hreflang="en" href="$$ROOT_HREF$$/en/resistance.html">
   <link rel="alternate" hreflang="de" href="$$ROOT_HREF$$/de/resistance.html">
   <link rel="alternate" hreflang="fr" href="$$ROOT_HREF$$/fr/resistance.html">
@@ -32,6 +32,7 @@
       --text-color: #333;
       --panel-bg: rgba(255, 255, 255, 0.95);
       --panel-text: #333;
+      --atmospheric-color: #ccc;
       --search-bg: white;
       --search-text: #333;
       --search-placeholder: #999;
@@ -47,6 +48,7 @@
         --text-color: #f5f5f5;
         --panel-bg: rgba(33, 33, 33, 0.95);
         --panel-text: #f5f5f5;
+        --atmospheric-color: #3a228a;
         --search-bg: #333;
         --search-text: #f5f5f5;
         --search-placeholder: #777;
@@ -61,63 +63,72 @@
         padding: 0px;
     }
 
-    html, body {
-      height: 100%;
+    html {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
       margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: var(--background-color);
+      font-family: Arial, sans-serif;
+      color: var(--text-color);
       display: flex;
       flex-direction: column;
-      background-color: var(--background-color);
-      font-family: 'Source Serif Pro', serif;
-      color: var(--text-color);
+      flex-grow: 1;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 100%;
     }
     
-    #map {
-      flex-grow: 1;
-      width: 100%;
-      z-index: 1;
+    #mapContainer {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        z-index: -1;
     }
     
     .search-container {
-      position: absolute;
-      top: 80px;
-      left: 10px;
-      z-index: 1000;
-      width: 300px;
-      max-width: 90vw;
-      pointer-events: none;
-    }
-
-    @media (max-width: 600px) {
-      .search-container {
-        top: 10px;
-        width: calc(100% - 20px);
-      }
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        pointer-events: none;
+        z-index: 10;
+        flex-grow: 1;
+        padding: 10px;
+        padding-top: 0px;
+        top: 80px;
+        left: 10px;
     }
 
     #priestInfo {
-      display: flex;
-      flex-direction: column;
-      margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
     }
 
     .search-input {
-      font-family: 'UnifrakturMaguntia';
-      font-weight: bold;
-      padding: 10px;
-      font-style: italic;
-      border: none;
-      background: var(--search-bg);
-      color: var(--search-text);
-      font-size: 1.5rem;
-      outline: none;
-      border: 3px solid var(--search-bg);
-      pointer-events: all;
-      width: 100%;
-      box-sizing: border-box;
+        font-family: 'UnifrakturMaguntia';
+        font-weight: bold;
+        padding: 10px;
+        font-style: italic;
+        border: none;
+        background: var(--search-bg);
+        color: var(--search-text);
+        font-size: 1.5rem;
+        outline: none;
+        border: 3px solid var(--search-bg);
+        pointer-events: all;
     }
     
     .search-input:focus {
-      border: 3px solid var(--focus-col);
+        border: 3px solid var(--focus-col);
     }
 
     .search-input::placeholder {
@@ -125,17 +136,16 @@
     }
     
     .search-results {
-      display: none;
-      font-family: 'UnifrakturMaguntia';
-      font-weight: bold;
-      font-style: italic;
-      overflow-y: scroll;
-      background: var(--search-results-bg);
-      border-radius: 0 0 5px 5px;
-      z-index: 11;
-      pointer-events: all;
-      max-height: 200px;
-      overflow-y: scroll;
+        font-family: 'UnifrakturMaguntia';
+        font-weight: bold;
+        font-style: italic;
+        overflow-y: scroll;
+        background: var(--search-results-bg);
+        border-radius: 0 0 5px 5px;
+        z-index: 11;
+        pointer-events: all;
+        max-height: 200px;
+        overflow-y: scroll;
     }
     
     .search-result-item {
@@ -143,54 +153,53 @@
       cursor: pointer;
       transition: background-color 0.2s;
       border: 3px solid transparent;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
     }
     
     .search-result-item:focus {
-      border: 3px solid var(--focus-col);
-      background-color: var(--search-results-hover);
+        border: 3px solid var(--focus-col);
+        background-color: var(--search-results-hover);
     }
-
+    
     .search-result-item:hover {
       background-color: var(--search-results-hover);
     }
 
     .info-panel {
-      margin-bottom: 10px;
-      box-shadow: 2.5px 2.5px 5px black;
-      pointer-events: all;
-      position: absolute;
-      background: white;
-      padding: 20px;
-      max-height: 70vh;
-      overflow-y: auto;
-      z-index: 1000;
-      display: none;
-      background: var(--panel-bg);
-      color: var(--panel-text);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      font-family: 'Source Serif Pro', serif;
-      font-style: italic;
-      font-size: 1.2rem;
-      top: 10px;
-      right: 10px;
-      width: 300px;
-      max-width: 90vw;
+        margin-bottom: 10px;
+        box-shadow: 2.5px 2.5px 5px black;
+        pointer-events: all;
+        position: relative;
+        background: white;
+        pointer-events: none;
+        padding: 20px;
+        max-height: 70vh;
+        overflow-y: auto;
+        z-index: 10;
+        display: none;
+        flex-grow: 1;
+        background: var(--panel-bg);
+        color: var(--panel-text);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        font-family: 'Times';
+        font-style: italic;
+        font-size: 1.2rem;
     }
     
     .info-panel h2 {
-      margin-top: 0;
-      font-size: 2rem;
-      font-weight: bold;
+        margin-top: 0;
+        font-size: 2rem;
+        font-weight: bold;
     }
     
     .info-row {
-      margin-bottom: 4px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+        margin-bottom: 4px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
     }
     
+    /* Add these styles to your existing CSS */
     .notes-section, .mass-times-section {
       padding-top: 8px;
     }
@@ -221,75 +230,74 @@
       }
     }
 
+    /* Make title more prominent */
     #priestName {
       font-family: 'UnifrakturMaguntia', serif;
-      font-size: 2rem;
+      font-size: 2.5rem;
     }
 
     .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: none;
-      border: none;
-      color: white;
-      background: #cc0000;
-      font-size: 1.2rem;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: white;
+        background: #cc0000;
+        font-size: 2rem;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
     }
-    
     .info-link {
       background: #004970;
       color: white;
       font-weight: bold;
       text-decoration: underline;
     }
-    
     .info-link.maps {
-      background: #700000;
-      color: white;
-      padding: 10px;
-      font-weight: bold;
-      font-style: normal;
-      font-family: sans-serif;
-      margin-top: 1rem;
-      text-decoration: none;
-      display: block;
-      text-align: center;
+        background: #700000;
+        color: white;
+        padding: 10px;
+        font-weight: bold;
+        font-style: normal;
+        font-family: sans-serif;
+        margin-top: 1rem;
+        text-decoration: none;
+        display: block;
+        text-align: center;
     }
     
     .info-link.maps:hover {
       text-decoration: underline;
     }
 
-    .parishes-section h3 {
-      margin-top: 8px;
-      font-size: 1.3rem;
-    }
+  .parishes-section h3 {
+    margin-top: 0;
+    font-size: 1.3rem;
+  }
 
-    .parishes-list {
-      list-style-type: none;
-      padding-left: 0;
-      margin-top: 5px;
-    }
+  .parishes-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 5px;
+  }
 
-    .parish-item {
-      margin-bottom: 8px;
-      line-height: 1.4;
-    }
+  .parish-item {
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
 
-    @media (prefers-color-scheme: dark) {
-      .parishes-section {
-        border-top: 1px solid rgba(255,255,255,0.1);
-      }
+  @media (prefers-color-scheme: dark) {
+    .parishes-section {
+      border-top: 1px solid rgba(255,255,255,0.1);
     }
+  }
 
-    .priest-link {
+  .priest-link {
       color: var(--link-color);
       text-decoration: underline;
       cursor: pointer;
@@ -309,7 +317,6 @@
     .parish-item strong {
       text-decoration: underline;
     }
-    
     .parish-item:hover {
       background-color: rgba(128, 128, 128, 0.1);
       border-radius: 3px;
@@ -323,7 +330,7 @@
       width: 100%;
       display: flex;
       justify-content: center;
-      z-index: 2;
+      z-index: 5;
     }
     
     .links > div {
@@ -333,7 +340,7 @@
 
     .outbound-link, .outbound-link:visited, .outbound-link:focus, .outbound-link:hover {
       color: white;
-      font-size: 1rem;
+      font-size: 1.5rem;
       background-color: black;
       margin-right: 10px;
       padding: 5px;
@@ -351,13 +358,11 @@
         display: flex;
         flex-grow: 1;
       }
-      
       .links > div {
         flex-direction: row;
         display: flex;
         flex-grow: 0;
       }
-      
       .links > div > a {
         margin-top: 5px;
         flex-grow: 1;
@@ -368,88 +373,151 @@
         max-height: 60vh;
         font-size: 0.9rem;
       }
-      
       #priestName {
         font-size: 1.4rem;
       }
-      
       .search-input {
         font-size: 1.2rem;
       }
-      
       .search-results, .search-result-item {
         font-size: 1.2rem;
       }
-      
       .outbound-link, .outbound-link:visited, .outbound-link:focus, .outbound-link:hover {
         font-size: 1rem;
       }
-      
       #priestInfo {
         font-size: 1rem;
       }
     }
 
+    /* Import the same fonts as dubia.cc */
+    @font-face {
+      font-family: 'Source Serif Pro';
+      font-weight: 400;
+      font-style: normal;
+      src: url('/static/font/ssfp/SourceSerifPro-BASIC-Regular.woff2') format('woff2');
+      font-display: swap;
+      unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
+    }
+
+    @font-face {
+      font-family: 'Source Serif Pro';
+      font-weight: 400;
+      font-style: italic;
+      src: url('/static/font/ssfp/SourceSerifPro-BASIC-RegularItalic.woff2') format('woff2');
+      font-display: swap;
+      unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
+    }
+
+    @font-face {
+      font-family: 'Source Serif Pro';
+      font-weight: 600;
+      font-style: normal;
+      src: url('/static/font/ssfp/SourceSerifPro-BASIC-Semibold.woff2') format('woff2');
+      font-display: swap;
+      unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
+    }
+
+    @font-face {
+      font-family: 'Kanzlei Initialen';
+      src: url('/static/font/kanzlei/Kanzlei-Initialen-D.ttf') format('truetype');
+      font-display: swap;
+      unicode-range: U+0044;
+    }
+
+    :root {
+      --GW-serif-font-stack: "Source Serif Pro", "Apple Garamond", "Baskerville", "Libre Baskerville", "Droid Serif", "Times New Roman", "Times", serif;
+      --GW-sans-serif-font-stack: "Lucida Sans Unicode", "Helvetica", "Trebuchet MS", sans-serif;
+      --GW-monospaced-font-stack: "IBM Plex Mono", "Liberation Mono", "Consolas", "Courier", monospace;
+    }
+
+    /* Compact header styles */
     #header {
-      position: relative;
-      z-index: 2;
-      background-color: var(--background-color);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+      padding: 10px 0;
+      max-width: 500px;
+      min-width: 500px;
+      z-index: 5;
+      height: 100%;
+      position: absolute;
+      pointer-events: none;
     }
 
     .title {
       font-family: 'UnifrakturMaguntia', serif;
-      font-size: 2rem;
-      color: var(--text-color);
+      font-size: 2.5rem;
+      color: var(--background-color);
       text-align: center;
-      padding: 10px 0;
       background: var(--text-color);
       mix-blend-mode: difference;
-      color: var(--background-color);
+      width: 100%;
+      text-align: center;
+      font-family: 'UnifrakturMaguntia', serif;
+      z-index: 10;
+      pointer-events: none;
+      padding: 10px 0px;
+      margin-bottom: 10px;
     }
 
     #sidebar {
       display: flex;
       justify-content: center;
       flex-direction: column;
+      padding: 10px;
+    }
+
+    #sidebar a {
+      display: block;
+      border: 1px dotted currentColor;
+      text-align: center;
+      margin: 0 2px;
+      color: var(--text-color);
+      text-decoration: none;
+      font-family: var(--GW-serif-font-stack);
+    }
+
+    #sidebar a.logo {
+      display: flex;
+      align-items: center;
+      margin: 1px 0;
+      background-color: var(--background-color);
     }
 
     #sidebar .sidebar-links {
+      flex: 1 1 100%;
       display: flex;
       flex-flow: row wrap;
-      justify-content: center;
-      padding: 0 10px 10px;
+      pointer-events: initial;
     }
 
     #sidebar .sidebar-links > a {
-      font-variant-caps: small-caps;
-      padding: 5px 10px;
-      margin: 0 5px;
-      color: var(--text-color);
-      text-decoration: none;
-      border-bottom: 2px solid transparent;
-      font-family: 'Source Serif Pro', serif;
-      transition: border-color 0.3s;
-      cursor: pointer;
+        pointer-events: initial;
     }
 
-    #sidebar .sidebar-links > a:hover {
-      border-color: var(--text-color);
-    }
-    
-    .language-selector {
-      margin-left: 10px;
-    }
-
-    #language-select {
-      border: none;
-      background-color: var(--background-color);
-      color: var(--text-color);
-      font-size: 14px;
-      cursor: pointer;
-      font-family: 'Source Serif Pro', serif;
+    #sidebar .sidebar-links > * {
       font-variant-caps: small-caps;
+      background: var(--background-color);
+      align-content: center;
+      justify-content: center;
+      flex: 1;
       padding: 5px;
+      pointer-events: initial;
+      cursor: pointer;
+    }
+
+    /* Make the header more compact on mobile */
+    @media all and (max-width: 649px) {
+      .title {
+        font-size: 1.8rem;
+      }
+      
+      #sidebar .sidebar-links a {
+        padding: 3px 5px;
+        font-size: 0.9rem;
+      }
     }
 
     /* Map-specific styles */
@@ -499,99 +567,51 @@
     .dark-map .leaflet-container {
       background: #303030;
     }
-      
-    @font-face {
-      font-family: 'Source Serif Pro';
-      font-weight: 400;
-      font-style: normal;
-      src: url('/static/font/ssfp/SourceSerifPro-BASIC-Regular.woff2') format('woff2');
-      font-display: swap;
-      unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
-    }
-
-    @font-face {
-      font-family: 'Source Serif Pro';
-      font-weight: 400;
-      font-style: italic;
-      src: url('/static/font/ssfp/SourceSerifPro-BASIC-RegularItalic.woff2') format('woff2');
-      font-display: swap;
-      unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
-    }
-
-    @font-face {
-      font-family: 'Source Serif Pro';
-      font-weight: 600;
-      font-style: normal;
-      src: url('/static/font/ssfp/SourceSerifPro-BASIC-Semibold.woff2') format('woff2');
-      font-display: swap;
-      unicode-range: U+0020-007E, U+00A0-00FF, U+2010, U+2013-2014, U+2018-2019, U+201C-201D, U+2212;
-    }
     
     @font-face {
       font-family: 'UnifrakturMaguntia';
       font-style: normal;
       font-weight: 400;
-      src: url('https://fonts.gstatic.com/s/unifrakturmaguntia/v16/WWXPlieVYwiGNomYU-ciRLRvEmK7oaHRHi-2fDU.woff2') format('woff2');
+      src: url('/static/font/unifraktur/UnifrakturMaguntia-Regular.ttf') format('ttf');
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
       font-display: swap;
     }
   </style>
 </head>
 <body>
+
   <header id="header">
     <nav id="sidebar">
-      <h1 class="title">$$RESISTANCE_TITLE$$</h1>
+      <h1 class="title">$$resistance-title$$</h1>
       <div class="sidebar-links">
-        <a href="/$$LANG$$">$$NAV_HOME$$</a>
-        <a href="/$$LANG$$/topics">$$NAV_ARTICLES$$</a>
-        <a href="/$$LANG$$/tools">$$NAV_TOOLS$$</a>
-        <a href="/$$LANG$$/contact">$$NAV_CONTACT$$</a>
-        <!-- Language selector -->
-        <div class="language-selector">
-          <select id="language-select">
-            <option value="en">English</option>
-            <option value="de">Deutsch</option>
-            <option value="fr">Français</option>
-            <option value="it">Italiano</option>
-            <option value="es">Español</option>
-            <option value="pl">Polski</option>
-            <option value="ro">Română</option>
-            <option value="ru">Русский</option>
-            <option value="tr">Türkçe</option>
-            <option value="el">Ελληνικά</option>
-            <option value="ar">العربية</option>
-            <option value="tl">Filipino</option>
-            <option value="zh">中文</option>
-            <option value="ko">한국어</option>
-            <option value="ja">日本語</option>
-            <option value="pt">Português</option>
-          </select>
-        </div>
+        <a href="/$$LANG$$">$$nav-home$$</a>
+        <a href="/$$LANG$$/$$special-topics-path$$">$$nav-articles$$</a>
+        <a href="/$$LANG$$/$$special-tools-path$$">$$nav-tools$$</a>
+        <a href="/$$LANG$$/$$special-about-path$$">$$nav-contact$$</a>
       </div>
     </nav>
-  </header>
 
-  <div class="search-container">
-    <div style="display: flex; flex-direction: column;">
-      <input type="text" class="search-input" placeholder="$$SEARCH_PLACEHOLDER$$" id="searchInput">
-      <div class="search-results" id="searchResults"></div>
+    <div class="search-container">
+      <div style="display: flex; flex-direction: column;">
+        <input autofocus="true" type="text" class="search-input" placeholder="$$search-placeholder$$" id="searchInput">
+        <div class="search-results" id="searchResults"></div>
+      </div>
+
+      <div class="info-panel" id="infoPanel">
+          <button class="close-btn" id="closeBtn">×</button>
+          <h2 id="priestName"></h2>
+          <div id="priestInfo"></div>
+        </div>
     </div>
-  </div>
-
-  <div class="info-panel" id="infoPanel">
-    <button class="close-btn" id="closeBtn">×</button>
-    <h2 id="priestName"></h2>
-    <div id="priestInfo"></div>
-  </div>
-
-  <!-- Map container -->
-  <div id="map"></div>
+  </header>
+  
+  <div id="mapContainer"></div>
 
   <div class="links">
     <div style="padding-top:10px;z-index:5;">
-      <a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">$$REPORT_ERROR$$</a>
-      <a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">$$REQUEST_MASS$$</a>
-      <a style="color:white;" class="outbound-link" href="https://dubia.cc">$$BACK_TO_SITE$$</a>
+      <a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">$$report-error$$</a>
+      <a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">$$request-mass$$</a>
+      <a style="color:white;" class="outbound-link" href="https://dubia.cc">$$back-to-site$$</a>
     </div>
   </div>
 
@@ -622,16 +642,19 @@
       
       // Google Sheet ID
       sheetId: "16wO1gTdilEcdqsWfJ0mZn-hgYD2MRJ1SCKSAHzcDj18",
+      
+      // Current language
+      currentLanguage: "$$LANG$$",
+      
+      // Min/max zoom for map controls
+      minZoom: 2,
+      maxZoom: 18,
     };
-    
-    // Current language
-    let currentLanguage = "$$LANG$$";
     
     // Data storage
     let locations = [];
     let religious = [];
     let events = [];
-    let parishes = [];
     
     // Maps for quick lookup
     let locationMap = new Map();
@@ -642,6 +665,7 @@
     let priestMarkers = L.layerGroup();
     let parishMarkers = L.layerGroup();
     let connectionLines = L.layerGroup();
+    let userLocationMarker = null;
     
     // Default data (fallback)
     const defaultLocationsData = `LocationID,LocationType,Name,ReligiousIdMulti,Location,Website,GoogleMaps,ContactEmail,ContactPhone,Notes
@@ -669,7 +693,11 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
     // Initialize the application
     function init() {
       // Create map
-      map = L.map('map').setView([CONFIG.defaultLat, CONFIG.defaultLng], CONFIG.defaultZoom);
+      map = L.map('mapContainer', {
+        minZoom: CONFIG.minZoom,
+        maxZoom: CONFIG.maxZoom,
+        zoomControl: false // Disable default zoom control to use custom ones
+      }).setView([CONFIG.defaultLat, CONFIG.defaultLng], CONFIG.defaultZoom);
       
       // Add OSM tile layer
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -690,9 +718,6 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
       
       // Try to get user's location
       getUserLocation();
-      
-      // Set current language in dropdown
-      document.getElementById('language-select').value = currentLanguage;
     }
 
     // Set up event listeners
@@ -719,12 +744,6 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
         if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
           searchResults.style.display = 'none';
         }
-      });
-      
-      // Language selector
-      document.getElementById('language-select').addEventListener('change', function() {
-        const lang = this.value;
-        window.location.href = `/$$LANG$$/resistance.html`.replace('$$LANG$$', lang);
       });
       
       // Handle light/dark mode
@@ -827,11 +846,11 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
     // Fetch data from Google Sheets
     function fetchSheetData() {
       const sheetId = CONFIG.sheetId;
-      const sheets = ["locations", "religious", "events"];
+      const sheets = ["locations", "religious", "events", "cancelled-events", "funding"];
       
       sheets.forEach(sheet => {
         const encodedSheetName = encodeURIComponent(sheet);
-        const googleSheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodedSheetName}`;
+        const googleSheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodedSheetName}&query=rows`;
         const corsProxyUrl = `https://corsproxy.io/?${encodeURIComponent(googleSheetUrl)}`;
         
         fetch(corsProxyUrl)
@@ -843,14 +862,22 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
           })
           .then(csvText => {
             console.log(`Successfully fetched ${sheet} data`);
-            
+            console.log(`original url was ${googleSheetUrl}`);
+            console.log(csvText);
+
             // Parse CSV based on sheet type
             if (sheet === "locations") {
               parseLocationsData(csvText);
+              console.log(`Loaded ${locations.length} locations from Google Sheets`);
+              console.table(locations);
             } else if (sheet === "religious") {
               parseReligiousData(csvText);
+              console.log(`Loaded ${religious.length} religious from Google Sheets`);
+              console.table(religious);
             } else if (sheet === "events") {
               parseEventsData(csvText);
+              console.log(`Loaded ${events.length} events from Google Sheets`);
+              console.table(events);
             }
           })
           .catch(error => {
@@ -882,7 +909,7 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
           location.ReligiousIdArray.includes(person.ReligiousID)
         );
         
-        if (!hasLocation && person.Location) {
+        if (!hasLocation && person['Location/Area']) {
           // Extract coordinates from Location field if available
           const geoMatch = person['Location/Area']?.match(/(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)/);
           if (geoMatch) {
@@ -981,7 +1008,7 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
           if (otherLocation.LocationID === location.LocationID) return; // Skip self
           
           if (otherLocation.ReligiousIdArray.includes(religiousId)) {
-            // Create a curved line between locations
+            // Create a line between locations
             const latlngs = [
               [location.Latitude, location.Longitude],
               [otherLocation.Latitude, otherLocation.Longitude]
@@ -1070,7 +1097,7 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
       if (location.ReligiousIdArray && location.ReligiousIdArray.length > 0) {
         const religiousParagraph = document.createElement('p');
         religiousParagraph.className = 'info-paragraph';
-        religiousParagraph.textContent = "$$SERVED_BY$$: ";
+        religiousParagraph.textContent = "$$served-by$$: ";
         
         // Add links for each religious person
         location.ReligiousIdArray.forEach((id, index) => {
@@ -1103,7 +1130,7 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
         notesSection.className = 'notes-section';
         
         const notesTitle = document.createElement('strong');
-        notesTitle.textContent = "$$NOTES$$";
+        notesTitle.textContent = "$$notes$$";
         notesSection.appendChild(notesTitle);
         
         const notesContent = document.createElement('p');
@@ -1138,7 +1165,7 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
         let displayUrl = location.Website.replace(/^https?:\/\//, '');
         displayUrl = displayUrl.split('/')[0]; // Just show the domain
         
-        websiteParagraph.innerHTML = `$$WEBSITE$$: <a href="${location.Website}" target="_blank" class="info-link">${displayUrl}</a>`;
+        websiteParagraph.innerHTML = `$$website$$: <a href="${location.Website}" target="_blank" class="info-link">${displayUrl}</a>`;
         priestInfo.appendChild(websiteParagraph);
       }
       
@@ -1149,7 +1176,7 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
         eventsSection.className = 'mass-times-section';
         
         const eventsTitle = document.createElement('strong');
-        eventsTitle.textContent = "$$MASS_TIMES$$";
+        eventsTitle.textContent = "$$mass-times$$";
         eventsSection.appendChild(eventsTitle);
         
         const eventsList = document.createElement('ul');
@@ -1166,8 +1193,8 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
           
           // Format date and time
           const startDate = new Date(event.StartDate);
-          const formattedDate = startDate.toLocaleDateString(currentLanguage);
-          const formattedTime = startDate.toLocaleTimeString(currentLanguage, { hour: '2-digit', minute: '2-digit' });
+          const formattedDate = startDate.toLocaleDateString(CONFIG.currentLanguage);
+          const formattedTime = startDate.toLocaleTimeString(CONFIG.currentLanguage, { hour: '2-digit', minute: '2-digit' });
           
           // Get priest name
           const priest = religiousMap.get(event.ReligiousID);
@@ -1189,13 +1216,13 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
       if (location.GoogleMaps) {
         const mapsRow = document.createElement('div');
         mapsRow.className = 'info-row';
-        mapsRow.innerHTML = `<a href="${location.GoogleMaps}" target="_blank" class="info-link maps">$$VIEW_ON_MAPS$$</a>`;
+        mapsRow.innerHTML = `<a href="${location.GoogleMaps}" target="_blank" class="info-link maps">$$view-on-maps$$</a>`;
         priestInfo.appendChild(mapsRow);
       } else if (location.Latitude && location.Longitude) {
         const mapsRow = document.createElement('div');
         mapsRow.className = 'info-row';
         const mapLink = `https://www.google.com/maps?q=${location.Latitude},${location.Longitude}`;
-        mapsRow.innerHTML = `<a href="${mapLink}" target="_blank" class="info-link maps">$$VIEW_ON_MAPS$$</a>`;
+        mapsRow.innerHTML = `<a href="${mapLink}" target="_blank" class="info-link maps">$$view-on-maps$$</a>`;
         priestInfo.appendChild(mapsRow);
       }
       
@@ -1231,17 +1258,17 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
       
       // Born year
       if (priest['Born Year']) {
-        bioText += `$$BORN$$ ${priest['Born Year']}, `;
+        bioText += `$$born$$ ${priest['Born Year']}, `;
       }
       
       // Ordination info
       if (priest['Ordained in Rite'] || priest['Ordained By']) {
-        bioText += `$$ORDAINED_PRIEST_IN$$ `;
+        bioText += `$$ordained-priest-in$$ `;
         if (priest['Ordained in Rite']) {
           bioText += priest['Ordained in Rite'] + ' ';
         }
         if (priest['Ordained By']) {
-          bioText += `$$BY$$ ${priest['Ordained By']}, `;
+          bioText += `$$by$$ ${priest['Ordained By']}, `;
         } else {
           bioText += ', ';
         }
@@ -1249,17 +1276,17 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
       
       // Consecration info (for bishops)
       if (priest.Type === "Bishop" && (priest['Consecrated in Rite'] || priest['Consecrated By'])) {
-        bioText += `$$CONSECRATED_BISHOP_IN$$ `;
+        bioText += `$$consecrated-bishop-in$$ `;
         if (priest['Consecrated in Rite']) {
           bioText += priest['Consecrated in Rite'] + ' ';
         }
         if (priest['Consecrated By']) {
-          bioText += `$$BY$$ ${priest['Consecrated By']} `;
+          bioText += `$$by$$ ${priest['Consecrated By']} `;
         }
         
         // Bishop line
         if (priest['Bishop Line']) {
-          bioText += `($$BISHOP_LINE$$: ${priest['Bishop Line']})`;
+          bioText += `($$bishop-line$$: ${priest['Bishop Line']})`;
         }
         bioText += '. ';
       } else if (bioText) {
@@ -1269,13 +1296,13 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
       
       // Location
       if (priest['Location/Area']) {
-        bioText += `$$OPERATES_IN$$ ${priest['Location/Area']}`;
+        bioText += `$$operates-in$$ ${priest['Location/Area']}`;
       }
       
       // Associates With
       if (priest['Associates With']) {
         if (bioText) bioText += ', ';
-        bioText += `$$ASSOCIATES_WITH$$ ${priest['Associates With']}`;
+        bioText += `$$associates-with$$ ${priest['Associates With']}`;
       }
       
       // Beliefs
@@ -1295,7 +1322,7 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
         notesSection.className = 'notes-section';
         
         const notesTitle = document.createElement('strong');
-        notesTitle.textContent = "$$NOTES$$";
+        notesTitle.textContent = "$$notes$$";
         notesSection.appendChild(notesTitle);
         
         const notesContent = document.createElement('p');
@@ -1321,9 +1348,9 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
         
         if (priest['Contact/Website'].startsWith('http')) {
           let niceurl = priest['Contact/Website'].replace(/^https?:\/\//, "");
-          contactRow.innerHTML = `$$WEBSITE$$: <a href="${priest['Contact/Website']}" target="_blank" class="info-link">${niceurl}</a>`;
+          contactRow.innerHTML = `$$website$$: <a href="${priest['Contact/Website']}" target="_blank" class="info-link">${niceurl}</a>`;
         } else {
-          contactRow.innerHTML = `$$CONTACT$$: ${priest['Contact/Website']}`;
+          contactRow.innerHTML = `$$contact$$: ${priest['Contact/Website']}`;
         }
         
         priestInfo.appendChild(contactRow);
@@ -1340,7 +1367,7 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
         
         // Add section title
         const locationsTitle = document.createElement('h3');
-        locationsTitle.textContent = "$$PARISHES_SERVED$$";
+        locationsTitle.textContent = "$$parishes-served$$";
         locationsSection.appendChild(locationsTitle);
         
         const locationsList = document.createElement('ul');
@@ -1537,13 +1564,13 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
       // Filter locations and religious based on search term
       const matchingLocations = locations.filter(location => 
         location.Name.toLowerCase().includes(searchTerm) || 
-        location.LocationType.toLowerCase().includes(searchTerm) ||
+        (location.LocationType && location.LocationType.toLowerCase().includes(searchTerm)) ||
         (location.Notes && location.Notes.toLowerCase().includes(searchTerm))
       );
       
       const matchingReligious = religious.filter(person => 
         person.Name.toLowerCase().includes(searchTerm) || 
-        person.Type.toLowerCase().includes(searchTerm) ||
+        (person.Type && person.Type.toLowerCase().includes(searchTerm)) ||
         (person['Location/Area'] && person['Location/Area'].toLowerCase().includes(searchTerm)) ||
         (person.Notes && person.Notes.toLowerCase().includes(searchTerm))
       );
@@ -1638,54 +1665,143 @@ mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunda
             map.setView([lat, lng], 8);
             
             // Add a marker for user's location
-            const userIcon = L.divIcon({
-              className: 'user-marker',
-              html: `<div style="width:12px; height:12px; background-color: blue; border-radius: 50%; border: 2px solid white;"></div>`,
-              iconSize: [12, 12],
-              iconAnchor: [6, 6]
-            });
-            
-            L.marker([lat, lng], { icon: userIcon })
-              .addTo(map)
-              .bindPopup("$$YOUR_LOCATION$$");
+            addUserLocationMarker(lat, lng);
           },
           // Error
           (error) => {
             console.warn(`Geolocation error: ${error.message}`);
-            // Use default location
-            centerOnLanguage();
+            // Use approximate location
+            getApproximateLocation();
+          },
+          // Options
+          {
+            timeout: 5000,  // Wait just 5 seconds for the geolocation
+            maximumAge: 0   // Don't use a cached position
           }
         );
       } else {
         console.warn("Geolocation not supported by this browser");
-        // Use default location
-        centerOnLanguage();
+        // Use approximate location
+        getApproximateLocation();
       }
     }
 
-    // Center map based on language
-    function centerOnLanguage() {
-      const languageMap = {
-        'en': { lat: 51.5074, lng: -0.1278, zoom: 5 },  // London
-        'de': { lat: 51.1657, lng: 10.4515, zoom: 5 },  // Germany
-        'fr': { lat: 46.2276, lng: 2.2137, zoom: 5 },   // France
-        'it': { lat: 41.8719, lng: 12.5674, zoom: 5 },  // Italy
-        'es': { lat: 40.4168, lng: -3.7038, zoom: 5 },  // Spain
-        'pl': { lat: 51.9194, lng: 19.1451, zoom: 5 },  // Poland
-        'pt': { lat: -14.2350, lng: -51.9253, zoom: 4 }, // Brazil
-        'ro': { lat: 45.9443, lng: 25.0094, zoom: 5 },  // Romania
-        'ru': { lat: 55.7558, lng: 37.6173, zoom: 4 },  // Russia
-        'tr': { lat: 38.9637, lng: 35.2433, zoom: 5 },  // Turkey
-        'el': { lat: 37.9838, lng: 23.7275, zoom: 5 },  // Greece
-        'ar': { lat: 23.8859, lng: 45.0792, zoom: 4 },  // Saudi Arabia
-        'tl': { lat: 12.8797, lng: 121.7740, zoom: 5 }, // Philippines
-        'zh': { lat: 35.8617, lng: 104.1954, zoom: 4 }, // China
-        'ko': { lat: 35.9078, lng: 127.7669, zoom: 6 }, // South Korea
-        'ja': { lat: 36.2048, lng: 138.2529, zoom: 5 }  // Japan
+    // Add a marker for the user's location
+    function addUserLocationMarker(lat, lng) {
+      // Remove existing marker if any
+      if (userLocationMarker) {
+        map.removeLayer(userLocationMarker);
+      }
+      
+      // Create a blue user location marker
+      const userIcon = L.divIcon({
+        className: 'user-marker',
+        html: `<div style="width:12px; height:12px; background-color: blue; border-radius: 50%; border: 2px solid white;"></div>`,
+        iconSize: [12, 12],
+        iconAnchor: [6, 6]
+      });
+      
+      userLocationMarker = L.marker([lat, lng], { icon: userIcon })
+        .addTo(map)
+        .bindPopup("$$your-location$$");
+        
+      console.log(`User location marker added at ${lat}, ${lng}`);
+    }
+
+    // Get approximate location based on timezone and language
+    function getApproximateLocation() {
+      // Get timezone offset
+      const timezoneOffsetMinutes = new Date().getTimezoneOffset();
+      const timezoneOffsetHours = -timezoneOffsetMinutes / 60;
+      
+      // Approximate longitude based on timezone
+      const approximateLongitude = timezoneOffsetHours * 15;
+      
+      // Approximate latitude based on language
+      const approximateLatitude = estimateLatitude(approximateLongitude);
+      
+      console.log(`Estimated location based on timezone and language: ${approximateLatitude}, ${approximateLongitude}`);
+      
+      // Center map and add marker
+      map.setView([approximateLatitude, approximateLongitude], 5);
+      addUserLocationMarker(approximateLatitude, approximateLongitude);
+    }
+
+    // Estimate latitude based on language and longitude
+    function estimateLatitude(longitude) {
+      // Language-based latitude map
+      const languageLatitudeMap = {
+        "de": 51.0, // Germany
+        "en": 51.0, // UK
+        "fr": 46.0, // France
+        "es": 40.0, // Spain
+        "it": 42.0, // Italy
+        "pl": 52.0, // Poland
+        "ro": 46.0, // Romania
+        "ru": 55.0, // Russia
+        "tr": 39.0, // Turkey
+        "el": 38.0, // Greece
+        "ar": 25.0, // Arabian Peninsula
+        "tl": 14.0, // Philippines
+        "zh": 35.0, // China
+        "ko": 37.5, // Korea
+        "ja": 36.0, // Japan
+        "pt": -15.0 // Brazil
       };
       
-      const center = languageMap[currentLanguage] || languageMap['en'];
-      map.setView([center.lat, center.lng], center.zoom);
+      // Longitude ranges for adjusting latitude
+      const longitudeRanges = {
+        "en": [
+          { min: -170, max: -30, lat: 40.0 },    // North America
+          { min: -10, max: 2, lat: 51.0 },       // UK
+          { min: 65, max: 90, lat: 20.0 },       // South Asia
+          { min: 110, max: 155, lat: -25.0 }     // Australia/NZ
+        ],
+        "es": [
+          { min: -120, max: -30, lat: 15.0 },    // Latin America
+          { min: -10, max: 5, lat: 40.0 }        // Spain
+        ],
+        "pt": [
+          { min: -75, max: -30, lat: -15.0 },    // Brazil
+          { min: -10, max: 0, lat: 39.0 }        // Portugal
+        ]
+      };
+      
+      // If we have longitude range data for this language, check it
+      if (longitudeRanges[CONFIG.currentLanguage]) {
+        for (const range of longitudeRanges[CONFIG.currentLanguage]) {
+          if (longitude >= range.min && longitude <= range.max) {
+            return range.lat;
+          }
+        }
+      }
+      
+      // Otherwise use the general language map
+      if (languageLatitudeMap[CONFIG.currentLanguage]) {
+        return languageLatitudeMap[CONFIG.currentLanguage];
+      }
+      
+      // Regional fallback based on longitude
+      if (longitude > 10 && longitude < 40) {
+        return 50.0; // Eastern Europe
+      } else if (longitude >= 40 && longitude < 60) {
+        return 55.0; // Western Russia
+      } else if (longitude >= 60 && longitude < 90) {
+        return 45.0; // Central Asia
+      } else if (longitude >= 90 && longitude < 120) {
+        return 35.0; // East Asia
+      } else if (longitude >= 120 && longitude < 150) {
+        return 35.0; // Far East Asia
+      } else if (longitude > -10 && longitude <= 10) {
+        return 48.0; // Western Europe
+      } else if (longitude > -60 && longitude <= -10) {
+        return 45.0; // Atlantic/Western Europe
+      } else if (longitude > -120 && longitude <= -60) {
+        return 35.0; // Americas
+      }
+      
+      // Default fallback
+      return 20.0;
     }
   </script>
 </body>

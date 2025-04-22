@@ -43,7 +43,7 @@ fn generate_resistance_html(lang: &str, meta: &MetaJson) -> Result<String, Strin
 
     // Add specific titles and descriptions
     let title = crate::get_string(meta, lang, "resistance-title")
-        .unwrap_or_else(|_| "Catholic Resistance Network".to_string());
+        .unwrap_or_else(|_| "Catholic Resistance".to_string());
     let desc = crate::get_string(meta, lang, "resistance-desc")
         .unwrap_or_else(|_| "Find traditional Catholic priests and Masses worldwide".to_string());
 
