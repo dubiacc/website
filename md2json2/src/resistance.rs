@@ -15,7 +15,6 @@ pub fn generate_resistance_pages(cwd: &Path, meta: &MetaJson) -> Result<(), Stri
 
         // Write the file
         let _ = std::fs::write(output_path, &crate::minify(&content));
-        println!("Generated resistance page for language: {}", lang);
     }
 
     Ok(())

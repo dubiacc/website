@@ -959,6 +959,106 @@
   font-weight: bold;
   color: #700000;
 }
+
+/* Improved action buttons container */
+.actions-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+  width: 100%;
+}
+
+/* Action button styles */
+.action-btn {
+  background: #700000;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  font-style: normal;
+  font-family: sans-serif;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.action-btn:hover {
+  background: #900000;
+}
+
+/* Donate button specific styling */
+.donate-btn {
+  background: #cc7700;
+}
+
+.donate-btn:hover {
+  background: #ff9900;
+}
+
+/* Improved search results */
+.search-results {
+  max-height: 250px;
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  background: var(--search-results-bg);
+  border-radius: 0 0 5px 5px;
+  z-index: 11;
+  pointer-events: all;
+  flex-direction: column;
+}
+
+.search-result-item {
+  padding: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 1rem;
+}
+
+.search-result-item small {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.search-result-item:focus {
+  border: 3px solid var(--focus-col);
+  background-color: var(--search-results-hover);
+  outline: none;
+}
+
+.search-result-item:hover {
+  background-color: var(--search-results-hover);
+}
+
+/* Connected result styles */
+.search-result-item.connected {
+  border-left: 3px solid #00cc00;
+  padding-left: 9px;
+}
+
+/* Make sure priest name displays correctly */
+#priestName {
+  font-size: 1.8rem;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+/* Improve mobile display */
+@media (max-width: 800px) {
+  .actions-container {
+    grid-template-columns: 1fr;
+  }
+  
+  #priestName {
+    font-size: 1.5rem;
+  }
+}
   </style>
 </head>
 <body>
@@ -1723,35 +1823,56 @@ function parseFundingData(csvData) {
         }
       }
       
-      // Create action buttons container
       const actionsContainer = document.createElement('div');
       actionsContainer.className = 'actions-container';
+      actionsContainer.style.display = 'grid';
+      actionsContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
+      actionsContainer.style.gap = '8px';
       
-      // Add action buttons in consistent order
+      // Create an array to hold all button elements
+      const buttons = [];
       
       // Google Maps link
       if (location.GoogleMaps || (location.Latitude && location.Longitude)) {
         const mapLink = location.GoogleMaps || `https://www.google.com/maps?q=${location.Latitude},${location.Longitude}`;
-        addActionButton(actionsContainer, "$$view-on-maps$$", mapLink, true);
+        const btn = document.createElement('a');
+        btn.className = 'action-btn';
+        btn.textContent = "$$view-on-maps$$";
+        btn.href = mapLink;
+        btn.target = "_blank";
+        buttons.push(btn);
       }
       
       // Website link (just text, not actual URL)
-      if (location.Website) {
-        addActionButton(actionsContainer, "$$website$$", location.Website, true);
+      if (location.Website && location.Website.trim() !== '') {
+        const btn = document.createElement('a');
+        btn.className = 'action-btn';
+        btn.textContent = "$$website$$";
+        btn.href = location.Website;
+        btn.target = "_blank";
+        buttons.push(btn);
       }
       
       // Contact Email
-      if (location.ContactEmail) {
-        addActionButton(actionsContainer, "Email", `mailto:${location.ContactEmail}`, true);
+      if (location.ContactEmail && location.ContactEmail.trim() !== '') {
+        const btn = document.createElement('a');
+        btn.className = 'action-btn';
+        btn.textContent = "Email";
+        btn.href = `mailto:${location.ContactEmail}`;
+        buttons.push(btn);
       }
       
       // Contact Phone
-      if (location.ContactPhone) {
-        addActionButton(actionsContainer, "Phone", `tel:${location.ContactPhone}`, true);
+      if (location.ContactPhone && location.ContactPhone.trim() !== '') {
+        const btn = document.createElement('a');
+        btn.className = 'action-btn';
+        btn.textContent = "Phone";
+        btn.href = `tel:${location.ContactPhone}`;
+        buttons.push(btn);
       }
       
       // Notes (Only show "More..." button if notes exist)
-      if (location.Notes) {
+      if (location.Notes && location.Notes.trim() !== '') {
         const moreBtn = document.createElement('button');
         moreBtn.className = 'action-btn';
         moreBtn.textContent = "$$show-more-info$$";
@@ -1759,7 +1880,7 @@ function parseFundingData(csvData) {
           const noteText = `${location.Name} (${location.LocationType})\n\n$$notes$$: ${location.Notes}`;
           alert(noteText);
         });
-        actionsContainer.appendChild(moreBtn);
+        buttons.push(moreBtn);
       }
       
       // Calendar button
@@ -1769,7 +1890,7 @@ function parseFundingData(csvData) {
       calendarBtn.addEventListener('click', () => {
         showLocationCalendar(location);
       });
-      actionsContainer.appendChild(calendarBtn);
+      buttons.push(calendarBtn);
       
       // Add Donate button if funding available
       const fundingInfo = getFundingInfo(location.LocationID);
@@ -1787,19 +1908,29 @@ function parseFundingData(csvData) {
         }
         
         donateBtn.textContent = donateText;
-        actionsContainer.appendChild(donateBtn);
+        buttons.push(donateBtn);
       }
+      
+      // If there's an odd number of buttons, make the first one span the full width
+      if (buttons.length % 2 !== 0 && buttons.length > 0) {
+        buttons[0].style.gridColumn = "1 / span 2";
+      }
+      
+      // Add all buttons to container
+      buttons.forEach(btn => {
+        actionsContainer.appendChild(btn);
+      });
       
       // Add actions container to info panel
       priestInfo.appendChild(actionsContainer);
-      
+
       // Show the info panel
       infoPanel.style.display = 'flex';
       
       // Fly to location
       map.flyTo([location.Latitude, location.Longitude], 12, {
         animate: true,
-        duration: 1.5
+        duration: 0.5
       });
       
       // Highlight this location and connected locations
@@ -1819,7 +1950,7 @@ function parseFundingData(csvData) {
       closeCalendarPopup();
       
       // Set priest name with title
-      priestName.textContent = `${priest.Type} ${priest.Name}`;
+      priestName.textContent = `${priest.Type || 'Fr.'} ${priest.Name || ''}`;
       
       // Clear previous info
       priestInfo.innerHTML = '';
@@ -1866,22 +1997,39 @@ function parseFundingData(csvData) {
       // Create action buttons container
       const actionsContainer = document.createElement('div');
       actionsContainer.className = 'actions-container';
+      actionsContainer.style.display = 'grid';
+      actionsContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
+      actionsContainer.style.gap = '8px';
       
-      // Add action buttons in consistent order
+      // Create an array to hold all button elements
+      const buttons = [];
       
-      // Website link (just text, not actual URL)
-      if (priest['Website']) {
-        addActionButton(actionsContainer, "$$website$$", priest['Website'], true);
+      // Website link
+      if (priest['Website'] && priest['Website'].trim() !== '') {
+        const btn = document.createElement('a');
+        btn.className = 'action-btn';
+        btn.textContent = "$$website$$";
+        btn.href = priest['Website'];
+        btn.target = "_blank";
+        buttons.push(btn);
       }
       
       // Contact Email
       if (priest['Email']) {
-        addActionButton(actionsContainer, "Email", `mailto:${priest['Email']}`, true);
+        const btn = document.createElement('a');
+        btn.className = 'action-btn';
+        btn.textContent = "Email";
+        btn.href = `mailto:${priest['Email']}`;
+        buttons.push(btn);
       }
       
       // Contact Phone
       if (priest['Phone']) {
-        addActionButton(actionsContainer, "Phone", `tel:${priest['Phone']}`, true);
+        const btn = document.createElement('a');
+        btn.className = 'action-btn';
+        btn.textContent = "Phone";
+        btn.href = `tel:${priest['Phone']}`;
+        buttons.push(btn);
       }
       
       // More info button
@@ -1889,9 +2037,8 @@ function parseFundingData(csvData) {
       moreBtn.className = 'action-btn';
       moreBtn.textContent = "$$show-more-info$$";
       moreBtn.addEventListener('click', () => {
-        // Create detailed bio text with proper formatting
         let bioText = `${priest.Type} ${priest.Name}\n`;
-        
+            
         // Born year
         if (priest['BornYear']) {
           bioText += `\n$$born$$: ${priest['BornYear']}`;
@@ -1947,7 +2094,7 @@ function parseFundingData(csvData) {
         // Show in alert
         alert(bioText);
       });
-      actionsContainer.appendChild(moreBtn);
+      buttons.push(moreBtn);
       
       // Calendar button
       const calendarBtn = document.createElement('button');
@@ -1956,8 +2103,8 @@ function parseFundingData(csvData) {
       calendarBtn.addEventListener('click', () => {
         showPriestCalendar(priest);
       });
-      actionsContainer.appendChild(calendarBtn);
-      
+      buttons.push(calendarBtn);
+
       // Add Donate button if funding available
       const fundingInfo = getFundingInfo(priest.ReligiousID);
       if (fundingInfo) {
@@ -1974,12 +2121,22 @@ function parseFundingData(csvData) {
         }
         
         donateBtn.textContent = donateText;
-        actionsContainer.appendChild(donateBtn);
+        buttons.push(donateBtn);
       }
+      
+      // If there's an odd number of buttons, make the first one span the full width
+      if (buttons.length % 2 !== 0 && buttons.length > 0) {
+        buttons[0].style.gridColumn = "1 / span 2";
+      }
+      
+      // Add all buttons to container
+      buttons.forEach(btn => {
+        actionsContainer.appendChild(btn);
+      });
       
       // Add actions container to info panel
       priestInfo.appendChild(actionsContainer);
-      
+
       // Show the info panel
       infoPanel.style.display = 'flex';
       
@@ -1989,7 +2146,7 @@ function parseFundingData(csvData) {
         // Fly to location (use less zoom than parish view)
         map.flyTo([primaryLocation.Latitude, primaryLocation.Longitude], 8, {
           animate: true,
-          duration: 1.5
+          duration: 0.5
         });
       }
       
@@ -2580,6 +2737,34 @@ function showPriestCalendar(priest) {
   });
 }
 
+function levenshteinDistance(a, b) {
+  if (a.length === 0) return b.length;
+  if (b.length === 0) return a.length;
+
+  const matrix = Array(a.length + 1).fill().map(() => Array(b.length + 1).fill(0));
+
+  for (let i = 0; i <= a.length; i++) {
+    matrix[i][0] = i;
+  }
+  for (let j = 0; j <= b.length; j++) {
+    matrix[0][j] = j;
+  }
+
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,      // deletion
+        matrix[i][j - 1] + 1,      // insertion
+        matrix[i - 1][j - 1] + cost // substitution
+      );
+    }
+  }
+
+  return matrix[a.length][b.length];
+}
+
+
     // Handle search input
     function handleSearch(event) {
   const searchTerm = event.target.value.toLowerCase();
@@ -2599,75 +2784,235 @@ function showPriestCalendar(priest) {
   // Hide outbound links when showing search results to save space
   outboundLinks.style.display = 'none';
   
-  // Filter locations and religious based on search term with proper null checks
-  const matchingLocations = locations.filter(location => 
-    (location.Name && location.Name.toLowerCase().includes(searchTerm)) || 
-    (location.LocationType && location.LocationType.toLowerCase().includes(searchTerm)) ||
-    (location.Notes && location.Notes.toLowerCase().includes(searchTerm))
-  );
+  // Search results with scores for ranking
+  const searchResults = [];
   
-  const matchingReligious = religious.filter(person => 
-    (person.Name && person.Name.toLowerCase().includes(searchTerm)) || 
-    (person.Type && person.Type.toLowerCase().includes(searchTerm)) ||
-    (person['Location/Area'] && person['Location/Area'].toLowerCase().includes(searchTerm)) ||
-    (person.Notes && person.Notes.toLowerCase().includes(searchTerm))
-  );
+  // Filter locations with fuzzy search
+  locations.forEach(location => {
+    let bestScore = Infinity;
+    let matchField = '';
+    
+    // Check various fields for matches
+    const fieldsToCheck = [
+      { field: 'Name', value: location.Name, weight: 1 },
+      { field: 'LocationType', value: location.LocationType, weight: 1.2 },
+      { field: 'Notes', value: location.Notes, weight: 1.5 },
+      { field: 'Website', value: location.Website, weight: 1.3 },
+      { field: 'ContactEmail', value: location.ContactEmail, weight: 1.3 },
+      { field: 'ContactPhone', value: location.ContactPhone, weight: 1.3 }
+    ];
+    
+    fieldsToCheck.forEach(({ field, value, weight }) => {
+      if (value) {
+        const valueStr = String(value).toLowerCase();
+        
+        // Exact match gets highest priority
+        if (valueStr.includes(searchTerm)) {
+          const score = 0 * weight; // Perfect match
+          if (score < bestScore) {
+            bestScore = score;
+            matchField = field;
+          }
+        } else {
+          // Fuzzy match
+          const score = levenshteinDistance(searchTerm, valueStr) * weight;
+          if (score < bestScore && score <= searchTerm.length * 2) { // Threshold for relevance
+            bestScore = score;
+            matchField = field;
+          }
+        }
+      }
+    });
+    
+    // Add to results if we found a match
+    if (bestScore < Infinity && bestScore <= searchTerm.length * 2) {
+      searchResults.push({
+        type: 'location',
+        data: location,
+        score: bestScore,
+        matchField: matchField
+      });
+    }
+  });
+  
+  // Filter religious with fuzzy search
+  religious.forEach(person => {
+    let bestScore = Infinity;
+    let matchField = '';
+    
+    // Check various fields for matches
+    const fieldsToCheck = [
+      { field: 'Name', value: person.Name, weight: 1 },
+      { field: 'Type', value: person.Type, weight: 1.2 },
+      { field: 'Location/Area', value: person['Location/Area'], weight: 1.5 },
+      { field: 'Notes', value: person.Notes, weight: 1.5 },
+      { field: 'Website', value: person.Website, weight: 1.3 },
+      { field: 'Email', value: person.Email, weight: 1.3 },
+      { field: 'Phone', value: person.Phone, weight: 1.3 },
+      { field: 'AssociatesWith', value: person.AssociatesWith, weight: 1.4 },
+      { field: 'Beliefs', value: person.Beliefs, weight: 1.4 }
+    ];
+    
+    fieldsToCheck.forEach(({ field, value, weight }) => {
+      if (value) {
+        const valueStr = String(value).toLowerCase();
+        
+        // Exact match gets highest priority
+        if (valueStr.includes(searchTerm)) {
+          const score = 0 * weight; // Perfect match
+          if (score < bestScore) {
+            bestScore = score;
+            matchField = field;
+          }
+        } else {
+          // Fuzzy match
+          const score = levenshteinDistance(searchTerm, valueStr) * weight;
+          if (score < bestScore && score <= searchTerm.length * 2) { // Threshold for relevance
+            bestScore = score;
+            matchField = field;
+          }
+        }
+      }
+    });
+    
+    // Add to results if we found a match
+    if (bestScore < Infinity && bestScore <= searchTerm.length * 2) {
+      searchResults.push({
+        type: 'religious',
+        data: person,
+        score: bestScore,
+        matchField: matchField
+      });
+    }
+  });
+  
+  // Sort results by score (closest match first)
+  searchResults.sort((a, b) => a.score - b.score);
+  
+  // Find connected entities and add them to results
+  const connectedResults = new Set();
+  
+  searchResults.forEach(result => {
+    if (result.type === 'location') {
+      // Find priests connected to this location
+      const location = result.data;
+      if (location.ReligiousIdArray && location.ReligiousIdArray.length > 0) {
+        location.ReligiousIdArray.forEach(religiousId => {
+          const person = religiousMap.get(religiousId);
+          if (person) {
+            const connectedResult = {
+              type: 'religious',
+              data: person,
+              score: result.score + 0.1, // Slightly worse score than the main result
+              matchField: 'Connected to ' + location.Name,
+              connected: true
+            };
+            connectedResults.add(JSON.stringify(connectedResult));
+          }
+        });
+      }
+    } else if (result.type === 'religious') {
+      // Find locations connected to this priest
+      const person = result.data;
+      locations.forEach(location => {
+        if (location.ReligiousIdArray && location.ReligiousIdArray.includes(person.ReligiousID)) {
+          const connectedResult = {
+            type: 'location',
+            data: location,
+            score: result.score + 0.1, // Slightly worse score than the main result
+            matchField: 'Connected to ' + person.Name,
+            connected: true
+          };
+          connectedResults.add(JSON.stringify(connectedResult));
+        }
+      });
+    }
+  });
+  
+  // Add connected results to main results
+  connectedResults.forEach(resultStr => {
+    const result = JSON.parse(resultStr);
+    // Check if this connected result already exists in the main results
+    const exists = searchResults.some(r => 
+      (r.type === result.type) && 
+      ((r.type === 'location' && r.data.LocationID === result.data.LocationID) ||
+       (r.type === 'religious' && r.data.ReligiousID === result.data.ReligiousID))
+    );
+    
+    if (!exists) {
+      searchResults.push(result);
+    }
+  });
+  
+  // Re-sort after adding connected results
+  searchResults.sort((a, b) => a.score - b.score);
   
   // Highlight matching markers
   resetAllMarkers();
   
-  // Highlight matching locations
-  matchingLocations.forEach(location => {
-    parishMarkers.eachLayer(marker => {
-      if (marker.locationData && marker.locationData.LocationID === location.LocationID) {
-        const markerSize = CONFIG.parishMarkerSize * 1.5;
-        const icon = L.divIcon({
-          className: 'parish-marker',
-          html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color: yellow;"></div>`,
-          iconSize: [markerSize, markerSize],
-          iconAnchor: [markerSize/2, markerSize/2]
-        });
-        marker.setIcon(icon);
-      }
-    });
-  });
-  
-  // Highlight matching religious
-  matchingReligious.forEach(person => {
-    priestMarkers.eachLayer(marker => {
-      if (marker.priestData && marker.priestData.ReligiousID === person.ReligiousID) {
-        const markerSize = CONFIG.priestMarkerSize * 1.5;
-        const icon = L.divIcon({
-          className: 'priest-marker pulse',
-          html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color: yellow;"></div>`,
-          iconSize: [markerSize, markerSize],
-          iconAnchor: [markerSize/2, markerSize/2]
-        });
-        marker.setIcon(icon);
-      }
-    });
-  });
-  
-  // Create combined results
-  const combinedResults = [
-    ...matchingReligious.map(person => ({ 
-      type: 'religious', 
-      data: person, 
-      title: `${person.Type} ${person.Name}`
-    })),
-    ...matchingLocations.map(location => ({ 
-      type: 'location', 
-      data: location, 
-      title: location.Name
-    }))
-  ];
-  
   // Display search results
-  if (combinedResults.length > 0) {
-    combinedResults.forEach(result => {
+  if (searchResults.length > 0) {
+    // Highlight matching entities on the map
+    searchResults.forEach(result => {
+      if (result.type === 'location') {
+        // Highlight location
+        parishMarkers.eachLayer(marker => {
+          if (marker.locationData && marker.locationData.LocationID === result.data.LocationID) {
+            const markerSize = CONFIG.parishMarkerSize * 1.5;
+            const icon = L.divIcon({
+              className: 'parish-marker',
+              html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color: ${result.connected ? '#00cc00' : 'yellow'};"></div>`,
+              iconSize: [markerSize, markerSize],
+              iconAnchor: [markerSize/2, markerSize/2]
+            });
+            marker.setIcon(icon);
+          }
+        });
+      } else if (result.type === 'religious') {
+        // Highlight priest
+        priestMarkers.eachLayer(marker => {
+          if (marker.priestData && marker.priestData.ReligiousID === result.data.ReligiousID) {
+            const markerSize = CONFIG.priestMarkerSize * 1.5;
+            const icon = L.divIcon({
+              className: 'priest-marker pulse',
+              html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color: ${result.connected ? '#00cc00' : 'yellow'};"></div>`,
+              iconSize: [markerSize, markerSize],
+              iconAnchor: [markerSize/2, markerSize/2]
+            });
+            marker.setIcon(icon);
+          }
+        });
+      }
+    });
+    
+    // Create result items in the UI
+    searchResults.forEach(result => {
       const resultItem = document.createElement('div');
       resultItem.className = 'search-result-item';
-      resultItem.textContent = result.title;
+      
+      let label = '';
+      if (result.type === 'religious') {
+        const person = result.data;
+        label = `${person.Type || 'Clergy'} ${person.Name || ''}`;
+      } else {
+        label = result.data.Name || 'Location';
+      }
+      
+      // Add matched field indicator for non-connected results
+      if (!result.connected) {
+        resultItem.innerHTML = `<strong>${label}</strong>`;
+        if (result.matchField) {
+          const fieldDisplay = result.matchField.startsWith('Connected to') 
+            ? result.matchField 
+            : `Match in: ${result.matchField}`;
+          resultItem.innerHTML += `<br><small>${fieldDisplay}</small>`;
+        }
+      } else {
+        // Connected items are shown differently
+        resultItem.innerHTML = `<strong>${label}</strong><br><small>${result.matchField}</small>`;
+        resultItem.style.borderLeft = '3px solid #00cc00';
+      }
+      
       resultItem.tabIndex = 0;
       
       resultItem.addEventListener('click', () => {
