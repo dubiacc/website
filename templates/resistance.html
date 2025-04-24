@@ -20,24 +20,18 @@
   <link crossorigin="anonymous" rel="preload" href="/static/font/ssfp/SourceSerifPro-BASIC-Semibold.woff2" as="font" type="font/woff2">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="/static/css/leaflet.css" rel="stylesheet" type="text/css"/>
+  <script src="/static/js/leaflet.js" type="application/javascript"></script>
+  <link href="/static/css/maplibre-gl.css" rel="stylesheet" type="text/css"/>
+  <script src="/static/js/maplibre-gl.js" type="application/javascript"></script>
+  <script src="/static/js/leaflet-maplibre-gl.js" type="application/javascript"></script>
+  <script src="/static/js/geotz.js" type="application/javascript"></script>
 
-  <!-- Maplibre GL -->
-  <link href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" rel="stylesheet" />
-  <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
-
-  <!-- Maplibre GL Leaflet  -->
-  <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js"></script>
-
-  <!-- PapaParse for CSV processing -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-  
   <style>
     :root {
       --background-color: #f5f5f5;
       --text-color: #333;
-      --panel-bg: rgba(255, 255, 255, 0.95);
+      --panel-bg: rgba(255, 255, 255);
       --panel-text: #333;
       --atmospheric-color: #ccc;
       --search-bg: white;
@@ -53,7 +47,7 @@
       :root {
         --background-color: #121212;
         --text-color: #f5f5f5;
-        --panel-bg: rgba(33, 33, 33, 0.95);
+        --panel-bg: rgba(33, 33, 33);
         --panel-text: #f5f5f5;
         --atmospheric-color: #3a228a;
         --search-bg: #333;
@@ -102,21 +96,16 @@
     }
     
     .search-container {
-        display: flex;
-        justify-content: space-between;
-        flex-direction: column;
-        z-index: 1000;
-        flex-grow: 1;
-        padding: 10px;
-        padding-top: 0px;
-        top: 80px;
-        left: 10px;
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      z-index: 1;
+      flex-grow: 1;
     }
 
     #priestInfo {
         display: flex;
         flex-direction: column;
-        margin-top: 10px;
     }
 
     .search-input {
@@ -131,6 +120,7 @@
         outline: none;
         border: 3px solid var(--search-bg);
         pointer-events: all;
+        margin-top: 10px;
     }
     
     .search-input:focus {
@@ -295,11 +285,6 @@
     overflow-y: scroll;
   }
 
-  .parish-item {
-    margin-bottom: 8px;
-    line-height: 1.4;
-  }
-
   @media (prefers-color-scheme: dark) {
     .parishes-section {
       border-top: 1px solid rgba(255,255,255,0.1);
@@ -321,22 +306,24 @@
     .parish-item {
       cursor: pointer;
       transition: background-color 0.2s;
+      padding: 4px;
+      margin-bottom: 2px;
     }
     
     .parish-item strong {
       text-decoration: underline;
     }
+
     .parish-item:hover {
       background-color: rgba(128, 128, 128, 0.1);
       border-radius: 3px;
-      padding-left: 5px;
     }
 
     .links {
       display: flex;
       flex-direction: row;
       z-index: 1000;
-      padding: 10px 0px;
+      margin-top: 10px;
     }
 
     .outbound-link, .outbound-link:visited, .outbound-link:focus, .outbound-link:hover {
@@ -438,13 +425,15 @@
       flex-direction: column;
       flex-grow: 1;
       justify-content: space-between;
-      padding: 10px 0;
-      max-width: 500px;
-      min-width: 500px;
+      max-width: 450px;
       z-index: 1000;
-      height: 100%;
-      position: absolute;
       pointer-events: none;
+    }
+
+    @media screen and (min-width: 450px) {
+        #header {
+          min-width: 450px;
+        }
     }
 
     .title {
@@ -466,7 +455,6 @@
       display: flex;
       justify-content: center;
       flex-direction: column;
-      padding: 10px;
     }
 
     #sidebar a {
@@ -603,17 +591,33 @@
       background: var(--panel-bg);
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
       z-index: 1000;
-      padding: 20px;
       overflow-y: auto;
       flex-direction: column;
       display: none;
+      min-height: 100%;
+      padding: 0px 20px;
+      justify-content: space-between;
+    }
+
+    .calendar-top {
+      display: flex;
+      flex: 0;
+      flex-direction: column;
+      padding: 20px 0px;
+    }
+
+    .calendar-bottom {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      justify-content: flex-start;
     }
 
     .calendar-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
+      align-items: start;
+      margin-bottom: 5px;
     }
 
     .calendar-title {
@@ -623,10 +627,11 @@
 
     .calendar-close {
       background: #cc0000;
-      color: var(--text-color);
+      color: white;
+      width: 2.5rem;
       font-weight: bold;
       border: none;
-      font-size: 1.5rem;
+      font-size: 2rem;
       cursor: pointer;
     }
 
@@ -671,6 +676,12 @@
       cursor: pointer;
     }
 
+    .calendar-day.has-events {
+      position: relative;
+      z-index: 1000;
+      pointer-events: all !important;
+    }
+
     .calendar-day:hover {
       background-color: rgba(0, 0, 0, 0.05);
     }
@@ -689,10 +700,6 @@
 
     .calendar-day.other-month {
       color: rgba(128, 128, 128, 0.5);
-    }
-
-    .calendar-events {
-      margin-top: 15px;
     }
 
     .calendar-event {
@@ -817,8 +824,7 @@
 
 /* Improve info panel */
 .info-panel {
-  max-width: 90%;
-  width: 450px;
+  max-width: 450px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 6px;
   overflow: hidden;
@@ -844,7 +850,6 @@
 
 /* Parishes section formatting */
 .parishes-section {
-  margin-top: 12px;
   padding-top: 8px;
 }
 
@@ -852,14 +857,6 @@
   max-height: 180px;
   overflow-y: auto;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  padding: 4px;
-  margin-top: 8px;
-}
-
-.parish-item {
-  padding: 8px;
-  margin-bottom: 4px;
   border-radius: 4px;
 }
 
@@ -871,7 +868,6 @@
 #priestName {
   font-family: 'Source Serif Pro', serif;
   font-size: 1.8rem;
-  margin-bottom: 16px;
   font-weight: bold;
 }
 
@@ -889,27 +885,21 @@
 
 /* Calendar popup improvements */
 .calendar-popup {
-  width: 90%;
   max-width: 450px;
   border-radius: 6px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  max-height: 80vh;
 }
 
 /* Improve for mobile */
 @media (max-width: 800px) {
   .info-panel {
     max-height: 70vh;
-    width: 90%;
   }
   
-  .search-container {
-    width: 90%;
+  .calendar-popup {
+    max-width: none;
   }
-  
+
   .action-btn {
     font-size: 0.85rem;
     padding: 8px;
@@ -1044,7 +1034,6 @@
 /* Make sure priest name displays correctly */
 #priestName {
   font-size: 1.8rem;
-  margin-bottom: 16px;
   font-weight: bold;
   line-height: 1.2;
 }
@@ -1098,7 +1087,7 @@
 
   <script>
     // Configuration
-    const CONFIG = {
+    window.CONFIG = {
       // Default center of the map (will be overridden by geolocation if available)
       defaultLat: 48.8566,
       defaultLng: 2.3522,
@@ -1107,7 +1096,7 @@
       // Styling
       priestMarkerColor: '#cc0000',
       parishMarkerColor: '#003399',
-      lineColor: '#8b0000',
+      lineColor: '#ccc',
       lineWeight: 2,
       lineOpacity: 0.7,
       
@@ -1127,17 +1116,17 @@
     };
     
     // Data storage
-    let locations = [];
-    let religious = [];
-    let events = [];
-    let fundingData = [];
-    let cancelledEvents = [];
+    window.locations = [];
+    window.religious = [];
+    window.events = [];
+    window.fundingData = [];
+    window.cancelledEvents = [];
 
     // Maps for quick lookup
-    let locationMap = new Map();
-    let religiousMap = new Map();
-    let fundingMap = new Map();
-    let cancelledEventsMap = new Map();
+    window.locationMap = new Map();
+    window.religiousMap = new Map();
+    window.fundingMap = new Map();
+    window.cancelledEventsMap = new Map();
 
     // Map and layers
     let map;
@@ -1147,50 +1136,101 @@
     let userLocationMarker = null;
     
     // Default data (fallback)
-    const defaultLocationsData = `LocationID,LocationType,Name,ReligiousIdMulti,Location,Website,GoogleMaps,ContactEmail,ContactPhone,Notes
-carmelites-hf-ireland,Convent,Carmelites of the Holy Face of Jesus,mother-irene sister-anne-marie,51.79025633971586 -9.112158704807591,https://carmelitesholyface.com/,https://maps.app.goo.gl/WaokWwYAmujka5Sr7,,,
-hjm-seminary,Seminary,Hearts of Jesus and Mary Seminary,fr-chazal,10.342421706935285 123.83294807185935,https://www.facebook.com/mariancorpsofst.piusx,https://maps.app.goo.gl/o8xmm2b5eQgNXDpy6,mariancorpsinformation@gmail.com,639991680637,
-discalced-carm-ph,Mission,Our Lady of Mt. Carmel Oratory,,14.185634883816563 121.23247682974647,https://discalcedcarmelites.org.ph/,https://maps.app.goo.gl/tXxyMGo6smjHdLW1A,,,"https://www.facebook.com/ScapularConfraternityPH/"
-carmel-stjosef-ger,Convent,Karmel St. Josef,,48.1881613609616 12.668123403146767,https://archive.is/FOkbD,https://maps.app.goo.gl/6uYEqhqvvmJskU2q9,,4986719289190,"mittwochs und donnerstags von 10.45 Uhr – 11.15 Uhr"
-mosteiro-santa-cruz,Convent,Mosteiro da Santa Cruz,bp-aquino,-22.188609036471846 -42.54923387378506,https://www.mosteirodasantacruz.org/,https://maps.app.goo.gl/fctDJNpysKvZGV7r9,mostsantacruz@gmail.com,552225401136,
-sajm-seminary,Seminary,Séminaire Saint Louis Marie Grignion de Montfort,fr-picot,47.74520085682513 -0.41836116956105057,https://apotresdejesusetdemarie.fr/,https://maps.app.goo.gl/VEEQd6oNFp81vAa57,sajm.secretariat@gmail.com,330983597578,`;
+    const defaultLocationsData = `"LocationID carmelites-hf-ireland","LocationType Convent","Name Carmelites of the Holy Face of Jesus","ReligiousIdMulti mother-irene, sister-anne-marie","Location 51.79025633971586, -9.112158704807591","Website https://carmelitesholyface.com/","GoogleMaps https://maps.app.goo.gl/WaokWwYAmujka5Sr7","ContactEmail ","ContactPhone ","Notes ",,,,,,,,,,,,,,,,
+"hjm-seminary","Seminary","Hearts of Jesus and Mary Seminary","fr-chazal","10.342421706935285, 123.83294807185935","https://www.facebook.com/mariancorpsofst.piusx","https://maps.app.goo.gl/o8xmm2b5eQgNXDpy6",,,,,,,,,,,,,,,,,,,
+"discalced-carm-ph","Mission","Our Lady of Mt. Carmel Oratory",,"14.185634883816563, 121.23247682974647","https://discalcedcarmelites.org.ph/","https://maps.app.goo.gl/tXxyMGo6smjHdLW1A",,,"https://www.facebook.com/ScapularConfraternityPH/",,,,,,,,,,,,,,,,
+"carmel-stjosef-ger","Convent","Karmel St. Josef",,"48.1881613609616, 12.668123403146767","https://archive.is/FOkbD","https://maps.app.goo.gl/6uYEqhqvvmJskU2q9",,,"mittwochs und donnerstags von 10.45 Uhr – 11.15 Uhr",,,,,,,,,,,,,,,,
+"mosteiro-santa-cruz","Convent","Mosteiro da Santa Cruz","bp-aquino","-22.188609036471846, -42.54923387378506","https://www.mosteirodasantacruz.org/","https://maps.app.goo.gl/fctDJNpysKvZGV7r9",,,,,,,,,,,,,,,,,,,
+"nd-de-bellaigue","Convent","Monastery of Notre-Dame de Bellaigue","fr-placide","46.159681204461975, 2.7036650318380326",,"https://maps.app.goo.gl/aTsGWQcpfW6sUds99",,,,,,,,,,,,,,,,,,,
+"sajm-seminary","Seminary","Séminaire Saint Louis Marie Grignion de Montfort",,"47.74520085682513, -0.41836116956105057","https://apotresdejesusetdemarie.fr/","https://maps.app.goo.gl/VEEQd6oNFp81vAa57",,,,,,,,,,,,,,,,,,,
+"dominicans-avrille","Seminary","Couvent de la Haye-aux-Bonshommes","bp-faure","47.48959520825813, -0.5991638769394454","https://www.dominicainsavrille.fr/","https://maps.app.goo.gl/W9JSLZMaT2mRxRuN7",,,"Dominicans of Avrillé",,,,,,,,,,,,,,,,
+"fbmv-monastery-br","Convent","Familia Beatae Mariae Virginis","fr-de-souza","-12.647034043093072, -38.454641870627555","fbmv.org","https://maps.app.goo.gl/QnUzGvGnKJqhCS7t5",,,,,,,,,,,,,,,,,,,
+"escravas-de-maria","Convent","Escravas de Maria Rainha da Paz",,"-20.49268829846052, -54.588381673599734","https://escravasdemaria.blogspot.com/","https://maps.app.goo.gl/2A6QdLkDAtdPqGjL7",,,,,,,,,,,,,,,,,,,
+"couvent-st-francois","Convent","Couvent Saint-François","fr-antoine","46.14674140135561, 4.674146280722483",,"https://maps.app.goo.gl/MvWE3PUgDHEmEM387",,,,,,,,,,,,,,,,,,,
+"iglesia-san-jose-mx","Parish","Iglesia San José",,"25.413769408984333, -101.01484650357327","https://archive.is/wip/hSBrt","https://maps.app.goo.gl/JNjkwjnAYyzrcE3y6",,,,,,,,,,,,,,,,,,,
+"sisters-of-cenacle-it","Convent","Discepole Del Cenacolo",,"41.686852501833265, 12.76151038779575","https://doncurzionitoglia.wordpress.com/","https://maps.app.goo.gl/KQmP2WbXb3euGsEb7",,,,,,,,,,,,,,,,,,,
+"insituto-sen-do-rosario","Convent","Instituto Nossa Senhora do Rosário",,"-16.18156528170096, -49.025071755269636","https://archive.ph/wip/0J7iG","https://maps.app.goo.gl/x3TEJvMg4wWeytGm9",,,,,,,,,,,,,,,,,,,
+"two-hearts-ny","Parish","Two Hearts Chapel","fr-voigt","45.44632838772738, -94.19997944646171","https://www.olhcutica.com/contact-us/","https://maps.app.goo.gl/mXU9QbHxmbTEhaCd7",,,,,,,,,,,,,,,,,,,
+"korea-1","Home","K2 Building 870 Tongil-ro","fr-chazal","37.62066477428733, 126.92046529600468","http://mcspx.kr/","https://maps.app.goo.gl/kQjuF4DcLfTeL2277",,,"4th Floor",,,,,,,,,,,,,,,,
+"brazil-1","Parish","Capela Ns. Senhora Auxiliadora","bp-aquino","-25.486584295509132, -54.51657041329986","https://linktr.ee/fronteiracatolica","https://maps.app.goo.gl/wBW5vW7Yek9aMjGs8",,,,,,,,,,,,,,,,,,,
+"france-1","Parish","Resistance Lyon","bp-morgan","45.75765253947298, 4.833849821208268","https://archive.is/wip/AT1ci","https://maps.app.goo.gl/GZxKd7uwh4BTWz2X8",,,,,,,,,,,,,,,,,,,
+"france-2","Parish","Resistance Vesoul","pr005","47.6302961028553, 6.1518852013996606","https://archive.is/wip/0P4F0","https://maps.app.goo.gl/KzsbiRKeWSA8ye1S7",,,"Messes: dimanche (sundays)",,,,,,,,,,,,,,,,
+"france-3","Parish","Chapelle funéraire de Chantemerle","pr005","46.67380685692015, -0.6222973967898845","https://archive.is/wip/F85IR","https://maps.app.goo.gl/zRSjMHUpYHBwc5rCA",,,"Près Les Moutiers-sous-Chantemerle",,,,,,,,,,,,,,,,
+"st-dominics-texas","Parish","St. Dominic's Chapel","fr-brocard, fr-voigt","29.561801447715514, -98.08086831544996","https://latinmasstexas.wordpress.com/","https://maps.app.goo.gl/qrok5TjTm4X3jtsB8",,,"Mass times are available by E-Mail only (privacy)",,,,,,,,,,,,,,,,
+"france-1","Parish","Notre-Dame Gardienne de la Foi","fr-merode","43.11601384000813, -0.07281460031554028","https://notredamegardiennedelafoi.fr/poueyferre-agenda-des-messes/","https://maps.app.goo.gl/KyqYcgM63NkZqNfi9",,,,,,,,,,,,,,,,,,,
+"france-4","Parish","Chapelle Sainte Cécile","pr018","44.7951732651947, -0.2649078805026371","https://archive.is/5UynZ","https://maps.app.goo.gl/z4z9vTiFoBxSHv3z6",,,,,,,,,,,,,,,,,,,
+"france-5","Parish","Prieuré Notre-Dame du Christ-Roi","fr-pivert","46.6872639919537, 1.768072490512093","https://abbe-pivert.com/ministere-dominical/","https://maps.app.goo.gl/RMRd9NZu7g3fQNKi8",,,,,,,,,,,,,,,,,,,
+"germany-1","Parish","Kloster Reichenstein","fr-lang","50.53938053457885, 6.200905050750951","https://archive.is/wip/t7ci0","https://maps.app.goo.gl/CSmSZxZzkLPpTcNC9",,,"Monastery itself is anti-Resistance, but they host Fr. Lang ",,,,,,,,,,,,,,,,
+"france-6","Mission","Resistance Bootzheim","pr017","48.18820799140211, 7.572019137184236","https://archive.is/wip/fMTKy","https://maps.app.goo.gl/NnQowpQDU4L1sHe57",,,,,,,,,,,,,,,,,,,
+"france-7","Mission","Prieuré du Coeur Immaculé","pr019","50.93784402582978, 2.541926369489603","https://archive.is/VAi3J","https://maps.app.goo.gl/6SjTNvedJvXDhFnt5",,,,,,,,,,,,,,,,,,,
+"usa-oratory-sfheart-mary","Parish","Oratory of the Sorrowful Heart of Mary","fr-hewko, fr-ruiz","43.85315057363545, -71.90903296681068","https://www.stmaryskssspxmc.com","https://maps.app.goo.gl/dgFqaduxkLxLhDRa6",,,,,,,,,,,,,,,,,,,
+"anaku-nigeria","Parish","Maria Virgo Fidelis Tridentine Priory Anaku","fr-chigbata","6.482843616569607, 6.93305980830839",,"https://maps.app.goo.gl/NH8izi9kb5uw22kq7",,,,,,,,,,,,,,,,,,,
+"gabon-1","Home","gabon","fr-ondo","???","???","???",,,,,,,,,,,,,,,,,,,
+"ireland-1-salthill","Home","Salthill, Galway, Ireland","fr-bufe","???","https://archive.is/8OH7m","???",,,,,,,,,,,,,,,,,,,
+"ireland-2-kesh","Home","Kesh, Newry, and Dublin","fr-bufe","???","https://archive.is/8OH7m","???",,,,,,,,,,,,,,,,,,,
+"ireland-3-newry","Home","Newry, Ireland","fr-bufe","???","https://archive.is/8OH7m","???",,,,,,,,,,,,,,,,,,,
+"ireland-4-athlone","Home","Athlone, Ireland","fr-bufe","???","https://archive.is/8OH7m","???",,,,,,,,,,,,,,,,,,,
+"ireland-5-dublin","Home","Dublin, Ireland","fr-bufe","???","https://archive.is/8OH7m","???",,,,,,,,,,,,,,,,,,,
+"bruehwiler-st-gallen-ch","Home","Oratorium Heiliger Bruder Klaus Hüter des Vaterlandes","fr-bruhwiler","47.40894072384693, 9.331886481300096","https://abbe-pivert.com/wp-content/uploads/2019/05/Oratorium-St.-Gallen-GO-Nr.-1-2019.pdf","https://maps.app.goo.gl/W9vP4EwzmJkX4QYh9",,,,,,,,,,,,,,,,,,,
+"chennai-st-anthony","Parish","St. Anthony’s Shrine",,"13.049088527376865, 80.2535663848687","https://www.facebook.com/indiatlm","https://maps.app.goo.gl/bhfT9UZEmyBx6giHA",,,,,,,,,,,,,,,,,,,
+"kandigai-mcspx","Parish","SSPX- Marian Corps Fraire",,"12.635268838290955, 79.69335041962752",,"https://maps.app.goo.gl/p6nVJ5BRDHVzdvZG9",,,,,,,,,,,,,,,,,,,
+"zendejas-ny","Parish","Bishop Zendejas Seminary","bp-zendejas","41.2499877080973, -73.52725929669987",,"https://maps.app.goo.gl/x12vemZXdKCvDXb37",,,,,,,,,,,,,,,,,,,
+"olp-louisville","Parish","Our Lady of the Pillar","fr-bitzer, fr-oconnor","38.19488914004571, -85.76819954230683","https://olpchapel.org/","https://maps.app.goo.gl/a582GueWVnxNak8B6",,,,,,,,,,,,,,,,,,,
+"vendee-1","Home","Resistance Vendee","fr-bruno",,,,,,,,,,,,,,,,,,,,,,
+"st-athanasius-usa","Parish","Saint Athanasius Traditional Church","fr-ringrose, fr-da-damio","38.94979434012304, -77.26276890537048",,"https://maps.app.goo.gl/FRbhQYw44SJ2y4hj8",,,,,,,,,,,,,,,,,,,
+"donauwoerth","Home","Resistance Donauwörth","fr-failer","48.717321761144945, 10.773400829313672",,"https://maps.app.goo.gl/p76ZVtAxMMdppMnr8",,,,,,,,,,,,,,,,,,,
+"sajm-alsace-1","Parish","Resistance Thal-Drulingen","fr-picot","48.9096022335556, 7.1448285153542805",,"https://maps.app.goo.gl/k4dZNvqEwVpbzTCF9",,,,,,,,,,,,,,,,,,,
+"aigen-1","Parish","Resistance Österreich","fr-fuchs","48.64700146067714, 13.972704230677788",,"https://maps.app.goo.gl/UV32KC1tvGPVzmLt9",,,,,,,,,,,,,,,,,,,
+"aldergrove-canada","Home","Coghlan Community Hall","fr-girouard","49.12586082924718, -122.51550652713061",,,,,,,,,,,,,,,,,,,,,
+"stella-maris-houston","Parish","Miraculous Medal Church","fr-garcia, bp-zendejas","29.371624376970676, -95.02020323208488",,"https://maps.app.goo.gl/zqhKwAYjySdiZsL57",,,,,,,,,,,,,,,,,,,`;
 
-const defaultReligiousData = `ReligiousID,Type,Name,BornYear,AssociatesWith,UsualLocationID,Beliefs,Country,Website,OrdainedInRite,OrdainedBy,ConsecratedInRite,ConsecratedBy,BishopLine,Notes
-bp-williamson,Bishop,Richard Williamson,1940,SSPX (originally),,Resistance,England,,Old Rite,Archbishop Lefebvre,Old Rite,Archbishop Lefebvre,Lefebvre,"Consecrated in 1988 by Archbishop Lefebvre; leads \"SSPX Resistance\""
-bp-zendejas,Bishop,Gerardo Zendejas,1961,Resistance,,Non-sede,USA,https://thebluepaper.org/,Old Rite,Archbishop Lefebvre,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated bishop on May 11 2017 by Bp. Williamson
-bp-faure,Bishop,Jean-Michel Faure,1941,Resistance,,Non-sede,France,,Old Rite,Archbishop Lefebvre,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated in 2015 by Bp. Williamson in Brazil
-bp-aquino,Bishop,Tomas de Aquino,1954,Resistance,mosteiro-santa-cruz,Non-sede,Brazil,,Old Rite,,Old Rite,Bp. R. Williamson,Lefebvre,Consecrated in 2016 by Bp. Williamson
-mother-irene,Mother,Mother Irene,1983,Carmelites of the Holy Face,carmelites-hf-ireland,Non-sede,Ireland,,,,,,,
-fr-chazal,Father,François Chazal,1968,Marian Corps,hjm-seminary,Non-sede,Philippines,,,,,,,
-fr-picot,Priest,Rémi Picot,,SAJM,sajm-seminary,NonSede,France,,OldRite,Williamson,,,Lefebvre,"Fr. Picot serves Alsace & region"`;
+const defaultReligiousData = `"ReligiousID bp-zendejas","Type Bishop","Name Gerardo Zendejas","BornYear ","AssociatesWith Resistance","UsualLocationID ","Beliefs NonSede","Country USA","Website https://thebluepaper.org/","OrdainedInRite OldRite","OrdainedBy Lefevbre","ConsecratedInRite OldRite","ConsecratedBy Williamson","BishopLine Lefebvre","ContactEmail ","ContactPhone ","Notes Consecrated bishop on May 11, 2017",,,,,,,,,,,,
+"bp-faure","Bishop","Jean-Michel Faure","1941","Resistance",,"NonSede","France","https://dominicansavrille.us/","OldRite","Lefevbre","OldRite","Williamson","Lefebvre",,,"Consecrated bishop on March 19, 2015",,,,,,,,,,,,
+"bp-aquino","Bishop","Tomas de Aquino","1954","Resistance",,"NonSede","Brazil","https://www.mosteirodasantacruz.org/","OldRite","Lefevbre","OldRite","Williamson","Lefebvre",,,"Consecrated bishop in 2015 in Brazil",,,,,,,,,,,,
+"bp-stobnicki","Bishop","Michał Stobnicki","1987","Resistance",,"NonSede","Poland","https://archive.is/V8x4h","OldRite","Williamson","OldRite","Williamson","Lefebvre",,,"Consecrated bishop on August 15, 2022",,,,,,,,,,,,
+"bp-morgan","Bishop","Paul Morgan","1963","Resistance",,"NonSede","UK","https://archive.is/iKBL5",,,,"Williamson","Lefebvre",,,,,,,,,,,,,,,
+"bp-ballini","Bishop","Giacomo Ballini",,"Resistance",,"NonSede","Ireland","https://archive.is/YiiNJ","OldRite",,"OldRite","Williamson","Lefebvre",,,,,,,,,,,,,,,
+"bp-vigano","Bishop","Carlo Maria Viganò","1941","Resistance",,"Benevacantism","Italy","https://exsurgedomine.it/","NewRite","Allorio","NewRite","Wojtyła","Wojtyła",,,"Rumored to be re-consecrated by +Williamson",,,,,,,,,,,,
+"fr-ndong","Priest","Pierre Célestin Ndong Ondo Ondzaghe",,"Resistance",,"NonSede","Gabon",,"OldRite","Fellay?",,,"Lefebvre",,,,,,,,,,,,,,,
+"fr-chigbata","Priest","Michael Chigbata",,"Resistance",,"NonSede","Nigeria",,"ReordainedOldRite","de Aquino",,,"Lefebvre",,,"Conditionally reordained",,,,,,,,,,,,
+"fr-onourah","Priest","Onourah",,"Resistance",,"NonSede","Kenia",,"ReordainedOldRite","de Aquino",,,"Lefebvre",,,"Conditionally reordained",,,,,,,,,,,,
+"mother-irene","Mother","Irene Gibson",,"Resistance","carmelites-hf-ireland","NonSede","Ireland","https://carmelitesholyface.com/",,,,,,,,,,,,,,,,,,,,
+"sr-anne-marie","Sister","Anne-Marie",,"Resistance","carmelites-hf-ireland","NonSede","Ireland","https://carmelitesholyface.com/",,,,,,,,,,,,,,,,,,,,
+"fr-hewko","Priest","David Hewko",,"SSPX-MC","oratory-sfheart-mary","NonSede","USA","https://thecatacombs.org/","OldRite","Williamson",,,"Lefebvre",,,"Runs seminary in NY area",,,,,,,,,,,,
+"fr-chazal","Priest","François Chazal",,"SAJM","hjm-seminary","NonSede","Phillipines","https://www.facebook.com/mariancorpsofst.piusx","OldRite","de Mallerais?",,,"Lefebvre",,,,,,,,,,,,,,,
+"fr-lang","Priest","Peter Lang",,"SSPX",,"NonSede","Germany","https://archive.is/wip/aEagQ","OldRite","Fellay?",,,"Lefebvre",,,"Still formally in SSPX",,,,,,,,,,,,
+"fr-rousseau","Priest","Dominque Rousseau","1955","Resistance",,"NonSede","France","https://archive.is/XVRQQ#selection-2629.0-2670.0","OldRite","Fellay?",,,"Lefebvre",,,,,,,,,,,,,,,
+"fr-brocard","Priest","Jean-Baptiste Brocard",,"Resistance","st-dominics-texas","NonSede","USA","https://archive.is/t019H","OldRite","Fellay?",,,"Lefebvre",,,"Resistance Texas / CathInfo.com",,,,,,,,,,,,
+"fr-de-amerode","Priest","Roland de Mérode",,"Resistance",,"NonSede","France","https://notredamegardiennedelafoi.fr/author/admin9234/","OldRite","Fellay?",,,"Lefebvre",,,,,,,,,,,,,,,
+"fr-pivert","Priest","François Pivert",,"Resistance",,"NonSede","France","https://abbe-pivert.com/","OldRite","Fellay?",,,"Lefebvre",,,"La Fidélité Catholique",,,,,,,,,,,,
+"fr-picot","Priest","Rémi Picot",,"SAJM","sajm-alsace-1","NonSede","France",,"OldRite","Williamson",,,"Lefebvre",,,"Fr. Picot serves Alsace & region: ",,,,,,,,,,,,
+"fr-carton","Priest","Francis Carton",,"Resistance",,"NonSede","France","https://archive.is/wip/VAi3J","OldRite","Fellay?",,,"Lefebvre",,,,,,,,,,,,,,,
+"fr-bruhwiler","Priest","Alois Brühwiler",,"Resistance","bruehwiler-st-gallen-ch","NonSede","Switzerland","https://archive.is/wip/kawk6","OldRite","Fellay?",,,"Lefebvre",,,,,,,,,,,,,,,`;
 
-const defaultEventsData = `EventID,LocationID,ReligiousID,EventType,StartDate,EndDate,Notes
-mass-1,carmelites-hf-ireland,mother-irene,Mass,2023-11-26T07:30:00,2023-11-26T08:30:00,Sunday Mass
-mass-2,hjm-seminary,fr-chazal,Mass,2023-11-26T10:00:00,2023-11-26T11:30:00,Sunday High Mass
-sajm-alsace-1,sajm-seminary,fr-picot,Mass,2023-11-26T09:30:00,2023-11-26T10:30:00,Regular Mass in Alsace`;
+const defaultEventsData = `"EventID","EventType","LocationID?","GoogleMaps?","PriestID","DateStart","TimeStart?","DateEnd?","TimeEnd?","Repeats","OrganizerEMail","OrganizerPhone","","","","","","","","","","","","","","","","",""
+"sajm-mass-1","Mass","sajm-alsace-1","","fr-picot","21.04.2025","","30.04.2025","","Daily","","","","","","","","","","","","","","","","","","",""`;
 
-const defaultCancelledEventsData = `AffectsEventID,DateStart,TimeStart,DateEnd,TimeEnd,Reason
-sajm-alsace-1,2023-11-05,10:00:00,2023-11-05,11:00:00,Mass cancelled because Fr. Picot is sick`;
+const defaultCancelledEventsData = `"AffectsEventID","DateStart","TimeStart?","DateEnd?","TimeEnd?","Reason","","","","","","","","","","","","","","","","","","","",""
+"sajm-mass-1","25.04.2025","23:00:00","26.04.2025","16:00:00","Mass cancelled because Fr. XXX is sick","","","","","","","","","","","","","","","","","","","",""`;
 
-const defaultFundingData = `CampaignID,ReligiousOrLocationOrEventID,FundingType,FundingGoal,FundingCurrency,CurrentAmount,DonationLinks,Notes
-discalced-carm-ongoing,discalced-carm-ph,BuildParish,5177,USD,750,paypal.me/StJosephCarmel,
-fr-hewko-ongoing,fr-hewko,FundAPriest,2000,EUR,200,paypal.me/frhewko,
-fr-picot-ongoing,fr-picot,FundAPriest,1000,EUR,500,paypal.me/remi-picot,
-sajm-building-fund,sajm-seminary,BuildParish,50000,EUR,12500,paypal.me/sajmseminary,Seminary building renovation`;
+const defaultFundingData = `"CampaignID","ReligiousOrLocationOrEventID","FundingType","FundingGoal","FundingCurrency","CurrentAmount","DonationLinksMulti","Notes","","","","","","","","","","","","","","","","","","","",""
+"discalced-carm-ongoing","","BuildParish","5177","USD","","paypal.me/StJosephCarmel","","","","","","","","","","","","","","","","","","","","",""
+"fr-hewko-ongoing","fr-hewko","FundAPriest","","","","paypal.me/frhewko","","","","","","","","","","","","","","","","","","","","",""
+"chapelle-pontmain","","BuildParish","","","","","https://archive.is/wip/HJCQh","","","","","","","","","","","","","","","","","","","",""
+"fr-ruiz-ongoing","fr-ruiz","FundAPriest","","","","paypal.me/hugoruizv","","","","","","","","","","","","","","","","","","","","",""`;
 
     // Initialize map when DOM is loaded
     document.addEventListener('DOMContentLoaded', init);
 
-    // Initialize the application
-    function init() {
+    // Initialize function
+    async function init() {
       // Create map
       map = L.map('mapContainer', {
         minZoom: CONFIG.minZoom,
         maxZoom: CONFIG.maxZoom,
-        zoomControl: 'bottom-right' // Disable default zoom control to use custom ones
+        zoomControl: true,
       }).setView([CONFIG.defaultLat, CONFIG.defaultLng], CONFIG.defaultZoom);
       
-      // Add OSM tile layer
       // Add OpenFreeMap
       L.maplibreGL({
         style: 'https://tiles.openfreemap.org/styles/liberty',
@@ -1207,8 +1247,8 @@ sajm-building-fund,sajm-seminary,BuildParish,50000,EUR,12500,paypal.me/sajmsemin
       setupEventListeners();
       
       // Load data (first from fallback, then from Google Sheets)
-      loadData();
-      
+      await loadData();
+            
       // Try to get user's location
       getUserLocation();
     }
@@ -1258,901 +1298,1763 @@ sajm-building-fund,sajm-seminary,BuildParish,50000,EUR,12500,paypal.me/sajmsemin
     }
 
     // Load data from fallback and Google Sheets
-    function loadData() {
+    async function loadData() {
       // First load default data
       console.log("Loading default data...");
-      parseLocationsData(defaultLocationsData);
+      await parseLocationsData(defaultLocationsData);
       parseReligiousData(defaultReligiousData);
       parseEventsData(defaultEventsData);
       parseCancelledEventsData(defaultCancelledEventsData);
       parseFundingData(defaultFundingData);
 
       // Then try to fetch from the live DB
-      fetchSheetData();
+      // await fetchSheetData();
     }
 
-    // Parse locations CSV data
-    function parseLocationsData(csvData) {
-  Papa.parse(csvData, {
-    header: true,
-    skipEmptyLines: true,
-    transformHeader: function(header) {
-      // Extract column name from headers that might contain values
-      return header.split(" ")[0].replace(/"/g, '');
-    },
-    complete: function(results) {
-      // Process locations
-      locations = results.data.map(location => {
-        // First, fix any mangled values in the first row
-        Object.keys(location).forEach(key => {
-          // If the original header had value in it (like "LocationID carmelites-hf-ireland")
-          // Extract and properly set the value
-          const originalHeader = csvData.split('\n')[0].split(',').find(h => h.startsWith('"' + key));
-          if (originalHeader && originalHeader.includes(' ')) {
-            const headerParts = originalHeader.split(' ');
-            headerParts.shift(); // Remove the first part (column name)
-            const value = headerParts.join(' ').replace(/"/g, '');
-            if (value && location[key] === "") {
-              location[key] = value;
-            }
-          }
-        });
-        
-        // Fix location parsing (handling both comma and space separated coordinates)
-        let lat = 0, lng = 0;
-        if (location.Location) {
-          const coordMatch = location.Location.match(/(-?\d+\.?\d*)[,\s]+(-?\d+\.?\d*)/);
-          if (coordMatch) {
-            lat = parseFloat(coordMatch[1]);
-            lng = parseFloat(coordMatch[2]);
+async function getTimezoneForLocation(lat, lng) {
+  try {
+    // geoTz returns an array, we usually want the first one
+    const timezones = await GeoTZ.find(lat, lng);
+    if (timezones && timezones.length > 0) {
+      return timezones[0]; // e.g., "Europe/Berlin", "America/New_York"
+    } else {
+      console.warn(`Could not find timezone for ${lat}, ${lng}. Falling back to UTC.`);
+      return 'UTC'; // Fallback
+    }
+  } catch (error) {
+    console.error(`Error finding timezone for ${lat}, ${lng}:`, error);
+    return 'UTC'; // Fallback on error
+  }
+}
+
+// Function taken from https://github.com/freshp86/achilles-csv-parser 
+// and minified to the essentials
+// 
+// Copyright 2020 Achilles CSV Parser Project Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+function parseCsv(csvData, transformer = null) {
+  const rows = [];
+  const headers = [];
+  
+  let isHeaderRow = false;
+  let columnIndex = 0;
+  let currentRow = {};
+  let fieldStartIndex = -1;
+  let currentIndex = 0;
+  let inQuotes = false;
+  let hasEscapedQuote = false;
+  
+  function processField() {
+    const quoteAdjustment = csvData[currentIndex - 1] === '"' ? 1 : 0;
+    let fieldValue = csvData.substring(fieldStartIndex + 1 + quoteAdjustment, currentIndex - quoteAdjustment);
+    
+    if (hasEscapedQuote) {
+      fieldValue = fieldValue.replace(/""/g, '"');
+    }
+    
+    if (isHeaderRow) {
+      if (transformer) {
+        const transformedValue = transformer(headers[columnIndex], fieldValue);
+        if (transformedValue !== undefined) {
+          currentRow[headers[columnIndex]] = transformedValue;
+        }
+      } else {
+        currentRow[headers[columnIndex]] = fieldValue;
+      }
+      columnIndex++;
+    } else {
+      headers.push(fieldValue);
+    }
+    
+    hasEscapedQuote = false;
+    fieldStartIndex = currentIndex;
+  }
+  
+  function finishRow() {
+    processField();
+    
+    if (isHeaderRow) {
+      rows.push(currentRow);
+      currentRow = {};
+      columnIndex = 0;
+    } else {
+      isHeaderRow = true;
+    }
+  }
+  
+  while (currentIndex < csvData.length) {
+    const currentChar = csvData[currentIndex];
+    
+    if (inQuotes) {
+      if (currentChar === '"') {
+        if (csvData[currentIndex + 1] === '"') {
+          currentIndex += 2;
+          hasEscapedQuote = true;
+        } else {
+          inQuotes = false;
+          currentIndex++;
+          
+          if (currentIndex === csvData.length) {
+            finishRow();
           }
         }
-        
-        return {
-          ...location,
-          Latitude: lat,
-          Longitude: lng,
-          // Convert ReligiousIdMulti to array (handling both comma and space separated values)
-          ReligiousIdArray: location.ReligiousIdMulti ? 
-            location.ReligiousIdMulti.split(/[,\s]+/).filter(id => id.trim() !== "") : []
-        };
-      });
-      
-      // Update location map
-      locationMap.clear();
-      locations.forEach(location => {
-        locationMap.set(location.LocationID, location);
-      });
-      
-      // Update markers
-      updateMapMarkers();
-    }
-  });
-}
-
-    // Parse religious CSV data
-    function parseReligiousData(csvData) {
-  Papa.parse(csvData, {
-    header: true,
-    skipEmptyLines: true,
-    transformHeader: function(header) {
-      // Extract column name from headers that might contain values
-      return header.split(" ")[0].replace(/"/g, '');
-    },
-    complete: function(results) {
-      // Process religious data
-      religious = results.data.map(person => {
-        // Fix any mangled values in the first row
-        Object.keys(person).forEach(key => {
-          const originalHeader = csvData.split('\n')[0].split(',').find(h => h.startsWith('"' + key));
-          if (originalHeader && originalHeader.includes(' ')) {
-            const headerParts = originalHeader.split(' ');
-            headerParts.shift(); // Remove column name
-            const value = headerParts.join(' ').replace(/"/g, '');
-            if (value && person[key] === "") {
-              person[key] = value;
-            }
-          }
-        });
-        
-        return person;
-      });
-      
-      // Update religious map
-      religiousMap.clear();
-      religious.forEach(person => {
-        religiousMap.set(person.ReligiousID, person);
-      });
-      
-      // Update markers
-      updateMapMarkers();
-    }
-  });
-}
-
-
-    // Parse events CSV data
-    function parseEventsData(csvData) {
-  Papa.parse(csvData, {
-    header: true,
-    skipEmptyLines: true,
-    transformHeader: function(header) {
-      return header.split(" ")[0].replace(/"/g, '');
-    },
-    complete: function(results) {
-      // Process events data
-      events = results.data;
-      
-      // Update markers
-      updateMapMarkers();
-    }
-  });
-}
-
-function parseCancelledEventsData(csvData) {
-  Papa.parse(csvData, {
-    header: true,
-    skipEmptyLines: true,
-    transformHeader: function(header) {
-      return header.split(" ")[0].replace(/"/g, '');
-    },
-    complete: function(results) {
-      // Process cancelled events data
-      cancelledEvents = results.data;
-      
-      // Create lookup map for faster access
-      cancelledEventsMap.clear();
-      cancelledEvents.forEach(cancelled => {
-        // Use eventID as key
-        const key = cancelled.AffectsEventID;
-        if (!cancelledEventsMap.has(key)) {
-          cancelledEventsMap.set(key, []);
-        }
-        cancelledEventsMap.get(key).push(cancelled);
-      });
-    }
-  });
-}
-
-function parseFundingData(csvData) {
-  Papa.parse(csvData, {
-    header: true,
-    skipEmptyLines: true,
-    transformHeader: function(header) {
-      return header.split(" ")[0].replace(/"/g, '');
-    },
-    complete: function(results) {
-      // Process funding data
-      fundingData = results.data;
-      
-      // Create lookup map for faster access
-      fundingMap.clear();
-      fundingData.forEach(funding => {
-        fundingMap.set(funding.ReligiousOrLocationOrEventID, funding);
-      });
-    }
-  });
-}
-
-    // Fetch data from Google Sheets
-    function fetchSheetData() {
-      const sheetId = CONFIG.sheetId;
-      const sheets = ["locations", "religious", "events", "cancelled-events", "funding"];
-      
-      sheets.forEach(sheet => {
-        const encodedSheetName = encodeURIComponent(sheet);
-        const googleSheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodedSheetName}&query=rows`;
-        const corsProxyUrl = `https://corsproxy.io/?${encodeURIComponent(googleSheetUrl)}`;
-        
-        fetch(corsProxyUrl)
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(`Failed to fetch ${sheet} data: ${response.status}`);
-            }
-            return response.text();
-          })
-          .then(csvText => {
-            // Parse CSV based on sheet type
-            if (sheet === "locations") {
-              parseLocationsData(csvText);
-            } else if (sheet === "religious") {
-              parseReligiousData(csvText);
-            } else if (sheet === "events") {
-              parseEventsData(csvText);
-            } else if (sheet === "cancelled-events") {
-              parseCancelledEventsData(csvText);
-            } else if (sheet === "funding") {
-              parseFundingData(csvText);
-            }
-          })
-          .catch(error => {
-            console.error(`Error loading ${sheet} data:`, error);
-            console.log(`Using fallback data for ${sheet}`);
-          });
-      });
-    }
-
-    // Update map markers
-    function updateMapMarkers() {
-      // Clear existing markers and lines
-      priestMarkers.clearLayers();
-      parishMarkers.clearLayers();
-      connectionLines.clearLayers();
-      
-      // Process locations
-      locations.forEach(location => {
-        // Create parish marker
-        createParishMarker(location);
-        
-        // Create connection lines between religious and their locations
-        createConnectionLines(location);
-      });
-      
-      // Process religious who don't have an assigned location
-      religious.forEach(person => {
-        const hasLocation = locations.some(location => 
-          location.ReligiousIdArray.includes(person.ReligiousID)
-        );
-        
-        if (!hasLocation && person['Location/Area']) {
-          // Extract coordinates from Location field if available
-          const geoMatch = person['Location/Area']?.match(/(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)/);
-          if (geoMatch) {
-            const lat = parseFloat(geoMatch[1]);
-            const lng = parseFloat(geoMatch[2]);
-            
-            if (!isNaN(lat) && !isNaN(lng)) {
-              createPriestMarker(person, lat, lng);
-            }
-          } else {
-            // Use location approximation based on country/area
-            const coords = approximateLocationFromName(person['Location/Area']);
-            if (coords) {
-              createPriestMarker(person, coords.lat, coords.lng);
-            }
-          }
-        }
-      });
-    }
-
-    // Create parish marker
-    function createParishMarker(location) {
-      if (!location.Latitude || !location.Longitude || 
-          isNaN(location.Latitude) || isNaN(location.Longitude)) {
-        console.warn(`Invalid coordinates for location: ${location.Name}`);
-        return;
+      } else {
+        currentIndex++;
+      }
+    } else {
+      if (currentChar === ',') {
+        processField();
+      } else if (currentChar === '"') {
+        inQuotes = true;
+      } else if (currentChar === '\r') {
+        finishRow();
+        currentIndex++;
+        fieldStartIndex = currentIndex;
+      } else if (currentChar === '\n') {
+        finishRow();
+      } else if (currentIndex === csvData.length - 1) {
+        currentIndex++;
+        finishRow();
       }
       
-      // Create marker
-      const markerSize = CONFIG.parishMarkerSize;
-      const icon = L.divIcon({
-        className: 'parish-marker',
-        html: `<div style="width:${markerSize}px; height:${markerSize}px;"></div>`,
-        iconSize: [markerSize, markerSize],
-        iconAnchor: [markerSize/2, markerSize/2]
+      currentIndex++;
+    }
+  }
+  
+  return fixMangledJson(rows);
+}
+
+// Fix mangled JSON data where column headers are mixed with first row values in keys
+function fixMangledJson(data) {
+if (!data || !data.length) return [];
+
+const extractHeaderAndFirstRowValue = (key) => {
+  if (!key) return null;
+  
+  const parts = key.trim().split(' ');
+  if (!parts.length) return null;
+  
+  const header = parts[0].replace(/\?$/, '');
+  const firstRowValue = parts.slice(1).join(' ').trim();
+  
+  return { header, firstRowValue };
+};
+
+const processRow = (row) => {
+  const normalizedRow = {};
+  
+  Object.keys(row).forEach(key => {
+    const extracted = extractHeaderAndFirstRowValue(key);
+    if (extracted && extracted.header) {
+      normalizedRow[extracted.header] = row[key];
+    }
+  });
+  
+  return normalizedRow;
+};
+
+const headers = {};
+const firstRow = {};
+
+Object.keys(data[0]).forEach(key => {
+  const extracted = extractHeaderAndFirstRowValue(key);
+  if (extracted && extracted.header) {
+    headers[extracted.header] = true;
+    firstRow[extracted.header] = extracted.firstRowValue;
+  }
+});
+
+const fixedData = [firstRow];
+data.forEach(row => {
+  fixedData.push(processRow(row));
+});
+
+return fixedData;
+};
+
+// Parse locations CSV data
+/**
+ * Parse locations CSV data
+ * @param {string} csvData Raw CSV string
+ * @returns {Promise} Promise that resolves when parsing is complete
+ */
+ async function parseLocationsData(csvData) {
+  const parsedData = parseCsv(csvData);
+  
+  // Process locations
+  let newLocations = [];
+  for (const location of parsedData) {
+    // Fix location parsing (handling both comma and space separated coordinates)
+    let lat = NaN, lng = NaN;
+    if (location.Location) {
+      // Use a robust regex for various separators and optional spaces
+      const coordMatch = location.Location.match(/(-?\d+(?:\.\d+)?)\s*[,\s]\s*(-?\d+(?:\.\d+)?)/);
+      if (coordMatch) {
+        lat = parseFloat(coordMatch[1]);
+        lng = parseFloat(coordMatch[2]);
+      } else if (!isNaN(parseFloat(location.Location))) {
+        // Maybe it's just Lat? Or Lon?
+        console.warn(`Could only parse one coordinate for ${location.Name}: ${location.Location}`);
+      }
+    }
+    
+    // Fallback if Lat/Lon fields exist directly
+    if (isNaN(lat) && location.Latitude) lat = parseFloat(location.Latitude);
+    if (isNaN(lng) && location.Longitude) lng = parseFloat(location.Longitude);
+
+    // Get timezone if coordinates are valid
+    let timezone = 'UTC';
+    
+    if (!isNaN(lat) && !isNaN(lng)) { 
+      timezone = await getTimezoneForLocation(lat, lng); 
+    }
+
+    // Create a new location object with all properties
+    const newLocation = {
+      ...location,
+      Latitude: lat,
+      Longitude: lng,
+      ReligiousIdArray: location.ReligiousIdMulti ?
+        location.ReligiousIdMulti.split(/[,\s]+/).filter(id => id.trim() !== "") : [],
+      Timezone: timezone
+    };
+
+    newLocations.push(newLocation);
+  }
+
+  window.locations = newLocations.filter(loc => !isNaN(loc.Latitude) && !isNaN(loc.Longitude));
+  
+  // Update location map
+  window.locationMap.clear();
+  window.locations.forEach(location => {
+    window.locationMap.set(location.LocationID, location);
+  });
+  
+  // Update markers
+  updateMapMarkers();
+}
+
+/**
+ * Parse religious CSV data
+ * @param {string} csvData Raw CSV string
+ */
+ function parseReligiousData(csvData) {
+  const parsedData = parseCsv(csvData);
+  
+  // Process religious data
+  window.religious = parsedData.map(person => {
+    // Create a clean new object
+    return { ...person };
+  });
+  
+  // Update religious map
+  window.religiousMap.clear();
+  window.religious.forEach(person => {
+    window.religiousMap.set(person.ReligiousID, person);
+  });
+  
+  // Update markers
+  updateMapMarkers();
+}
+
+/**
+ * Parse events CSV data
+ * @param {string} csvData Raw CSV string
+ */
+ function parseEventsData(csvData) {
+  const parsedData = parseCsv(csvData);
+  
+  // Process events data
+  window.events = parsedData.map(event => {
+    return { ...event };
+  });
+  
+  // Update markers
+  updateMapMarkers();
+}
+
+/**
+ * Parse cancelled events CSV data
+ * @param {string} csvData Raw CSV string
+ */
+ function parseCancelledEventsData(csvData) {
+  const parsedData = parseCsv(csvData);
+  
+  // Process cancelled events data
+  window.cancelledEvents = parsedData;
+  
+  // Create lookup map for faster access
+  window.cancelledEventsMap.clear();
+  window.cancelledEvents.forEach(cancelled => {
+    // Use eventID as key
+    const key = cancelled.AffectsEventID;
+    if (!window.cancelledEventsMap.has(key)) {
+      window.cancelledEventsMap.set(key, []);
+    }
+    window.cancelledEventsMap.get(key).push({ ...cancelled });
+  });
+}
+
+/**
+ * Parse funding CSV data
+ * @param {string} csvData Raw CSV string
+ */
+ function parseFundingData(csvData) {
+  const parsedData = parseCsv(csvData);
+  
+  // Process funding data
+  window.fundingData = parsedData;
+  
+  // Create lookup map for faster access
+  window.fundingMap.clear();
+  window.fundingData.forEach(funding => {
+    window.fundingMap.set(funding.ReligiousOrLocationOrEventID, { ...funding });
+  });
+}
+
+// Fetch data from Google Sheets
+async function fetchSheetData() {
+  const sheetId = CONFIG.sheetId;
+  const sheets = ["locations", "religious", "events", "cancelled-events", "funding"];
+  
+  for(const sheet of sheets) {
+
+    const encodedSheetName = encodeURIComponent(sheet);
+    const googleSheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodedSheetName}&query=rows`;
+    const corsProxyUrl = `https://corsproxy.io/?${encodeURIComponent(googleSheetUrl)}`;
+    
+    try {
+      const response = await fetch(corsProxyUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ${sheet} data: ${response.status}`);
+      }
+      const csvText = response.text();
+
+      // Parse CSV based on sheet type
+      if (sheet === "locations") {
+        await parseLocationsData(csvText);
+      } else if (sheet === "religious") {
+        parseReligiousData(csvText);
+      } else if (sheet === "events") {
+        parseEventsData(csvText);
+      } else if (sheet === "cancelled-events") {
+        parseCancelledEventsData(csvText);
+      } else if (sheet === "funding") {
+        parseFundingData(csvText);
+      }
+    } catch (e) {
+      console.error(`Error loading ${sheet} data:`, error);
+      console.log(`Using fallback data for ${sheet}`);
+    }
+  }
+}
+
+// Update map markers
+function updateMapMarkers() {
+  // Clear existing markers and lines
+  priestMarkers.clearLayers();
+  parishMarkers.clearLayers();
+  connectionLines.clearLayers();
+  
+  // Process locations
+  window.locations.forEach(location => {
+    // Create parish marker
+    createParishMarker(location);
+    
+    // Create connection lines between religious and their locations
+    createConnectionLines(location);
+  });
+  
+  // Process religious who don't have an assigned location
+  window.religious.forEach(person => {
+    const hasLocation = window.locations.some(location => 
+      location.ReligiousIdArray.includes(person.ReligiousID)
+    );
+    
+    if (!hasLocation && person['Location/Area']) {
+      // Extract coordinates from Location field if available
+      const geoMatch = person['Location/Area']?.match(/(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)/);
+      if (geoMatch) {
+        const lat = parseFloat(geoMatch[1]);
+        const lng = parseFloat(geoMatch[2]);
+        
+        if (!isNaN(lat) && !isNaN(lng)) {
+          createPriestMarker(person, lat, lng);
+        }
+      } else {
+        // Use location approximation based on country/area
+        const coords = approximateLocationFromName(person['Location/Area']);
+        if (coords) {
+          createPriestMarker(person, coords.lat, coords.lng);
+        }
+      }
+    }
+  });
+}
+
+// Create parish marker
+function createParishMarker(location) {
+  if (!location.Latitude || !location.Longitude || 
+      isNaN(location.Latitude) || isNaN(location.Longitude)) {
+    // console.warn(`Invalid coordinates for location: ${location.Name}`);
+    return;
+  }
+  
+  // Create marker
+  const markerSize = CONFIG.parishMarkerSize;
+  const icon = L.divIcon({
+    className: 'parish-marker',
+    html: `<div style="width:${markerSize}px; height:${markerSize}px;"></div>`,
+    iconSize: [markerSize, markerSize],
+    iconAnchor: [markerSize/2, markerSize/2]
+  });
+  
+  const marker = L.marker([location.Latitude, location.Longitude], { icon })
+    .addTo(parishMarkers);
+  
+  // Store location data with marker
+  marker.locationData = location;
+  
+  // Add click handler (no popup)
+  marker.on('click', function() {
+    showLocationInfo(location);
+  });
+  
+  return marker;
+}
+
+// Create priest marker
+function createPriestMarker(priest, lat, lng) {
+  // Create marker
+  const markerSize = CONFIG.priestMarkerSize;
+  const icon = L.divIcon({
+    className: 'priest-marker pulse',
+    html: `<div style="width:${markerSize}px; height:${markerSize}px;"></div>`,
+    iconSize: [markerSize, markerSize],
+    iconAnchor: [markerSize/2, markerSize/2]
+  });
+  
+  const marker = L.marker([lat, lng], { icon })
+    .addTo(priestMarkers);
+  
+  // Store priest data with marker
+  marker.priestData = priest;
+  
+  // Add click handler (no popup)
+  marker.on('click', function() {
+    // Get containing parish (if any)
+    const containingParish = findParishAtCoordinates(lat, lng);
+    
+    // If there's a parish at these exact coordinates, prioritize showing it
+    if (containingParish) {
+      showLocationInfo(containingParish);
+    } else {
+      showPriestInfo(priest);
+    }
+  });
+  
+  return marker;
+}
+
+// Create connection lines between religious and their locations
+function createConnectionLines(location) {
+  if (!location.ReligiousIdArray || !location.Latitude || !location.Longitude) {
+    return;
+  }
+  
+  // For each religious person associated with this location
+  location.ReligiousIdArray.forEach(religiousId => {
+    const person = window.religiousMap.get(religiousId);
+    if (!person) return;
+    
+    // Find all other locations for this religious person
+    window.locations.forEach(otherLocation => {
+      if (otherLocation.LocationID === location.LocationID) return; // Skip self
+      
+      if (otherLocation.ReligiousIdArray.includes(religiousId)) {
+        // Create a line between locations
+        const latlngs = [
+          [location.Latitude, location.Longitude],
+          [otherLocation.Latitude, otherLocation.Longitude]
+        ];
+        
+        const line = L.polyline(latlngs, {
+          color: CONFIG.lineColor,
+          weight: CONFIG.lineWeight,
+          opacity: CONFIG.lineOpacity
+        }).addTo(connectionLines);
+        
+        // Store data with the line
+        line.religiousId = religiousId;
+        line.fromLocation = location.LocationID;
+        line.toLocation = otherLocation.LocationID;
+      }
+    });
+    
+    // Create priest marker at this location
+    createPriestMarker(person, location.Latitude, location.Longitude);
+  });
+}
+
+function findParishAtCoordinates(lat, lng) {
+  let foundParish = null;
+  
+  parishMarkers.eachLayer(marker => {
+    if (marker.locationData && 
+        marker.getLatLng().lat === lat && 
+        marker.getLatLng().lng === lng) {
+      foundParish = marker.locationData;
+    }
+  });
+  
+  return foundParish;
+}
+
+// Approximate location from country or region name
+function approximateLocationFromName(locationName) {
+  if (!locationName) return null;
+  
+  const locationMap = {
+    'England': { lat: 51.5074, lng: -0.1278 },
+    'UK': { lat: 51.5074, lng: -0.1278 },
+    'USA': { lat: 39.8283, lng: -98.5795 },
+    'France': { lat: 46.2276, lng: 2.2137 },
+    'Germany': { lat: 51.1657, lng: 10.4515 },
+    'Italy': { lat: 41.8719, lng: 12.5674 },
+    'Spain': { lat: 40.4637, lng: -3.7492 },
+    'Poland': { lat: 51.9194, lng: 19.1451 },
+    'Ireland': { lat: 53.1424, lng: -7.6921 },
+    'Brazil': { lat: -14.2350, lng: -51.9253 },
+    'Argentina': { lat: -38.4161, lng: -63.6167 },
+    'Mexico': { lat: 23.6345, lng: -102.5528 },
+    'Canada': { lat: 56.1304, lng: -106.3468 },
+    'Australia': { lat: -25.2744, lng: 133.7751 },
+    'New Zealand': { lat: -40.9006, lng: 174.8860 },
+    'Philippines': { lat: 12.8797, lng: 121.7740 },
+    'Austria': { lat: 47.5162, lng: 14.5501 },
+    'Switzerland': { lat: 46.8182, lng: 8.2275 },
+    'Belgium': { lat: 50.5039, lng: 4.4699 },
+    'Netherlands': { lat: 52.1326, lng: 5.2913 },
+    'Portugal': { lat: 39.3999, lng: -8.2245 },
+    'Europe': { lat: 48.8566, lng: 9.3522 }
+  };
+  
+  // Check for direct match
+  for (const [key, coords] of Object.entries(locationMap)) {
+    if (locationName.includes(key)) {
+      return coords;
+    }
+  }
+  
+  // Add small random offset to default location to prevent markers from stacking
+  return { 
+    lat: CONFIG.defaultLat + (Math.random() * 2 - 1), 
+    lng: CONFIG.defaultLng + (Math.random() * 2 - 1) 
+  };
+}
+
+function closeCalendarPopup() {
+  const calendarPopup = document.getElementById('calendarPopup');
+  if (calendarPopup) {
+    calendarPopup.style.display = 'none';
+  }
+}
+
+// Returns a standard JS Date (which is UTC-based) correctly representing that instant,
+// AND the timezone string for formatting later.
+function createZonedDateTime(dateStr, timeStr, timezone) {
+  if (!dateStr || !timezone) {
+      console.warn("Cannot create zoned date time without date string or timezone.");
+      return null;
+  }
+
+  // 1. Parse date components (robustly)
+  let day, month, year;
+  const datePartsMatch = dateStr.match(/(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})/); // Handles DD.MM.YYYY, MM/DD/YYYY
+  if (datePartsMatch) {
+    // Try DD.MM.YYYY first (common European)
+    if (dateStr.includes('.')) {
+        day = parseInt(datePartsMatch[1], 10);
+        month = parseInt(datePartsMatch[2], 10) - 1; // JS month index
+        year = parseInt(datePartsMatch[3], 10);
+    }
+    // Try MM/DD/YYYY (common US)
+    else if (dateStr.includes('/')) {
+        month = parseInt(datePartsMatch[1], 10) - 1; // JS month index
+        day = parseInt(datePartsMatch[2], 10);
+        year = parseInt(datePartsMatch[3], 10);
+    } else {
+        // Default assumption or fallback (e.g. assume DD.MM if no separator info?) - Risky
+        day = parseInt(datePartsMatch[1], 10);
+        month = parseInt(datePartsMatch[2], 10) - 1;
+        year = parseInt(datePartsMatch[3], 10);
+    }
+  } else {
+      // Try YYYY-MM-DD
+       const isoMatch = dateStr.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+       if (isoMatch) {
+           year = parseInt(isoMatch[1], 10);
+           month = parseInt(isoMatch[2], 10) - 1;
+           day = parseInt(isoMatch[3], 10);
+       } else {
+            console.warn(`Could not parse date format: ${dateStr}`);
+            return null; // Cannot proceed
+       }
+  }
+
+
+  // Validate basic date components
+  if (isNaN(day) || isNaN(month) || isNaN(year) || month < 0 || month > 11 || day < 1 || day > 31) {
+      console.warn(`Invalid date components parsed from ${dateStr}: D=${day}, M=${month + 1}, Y=${year}`);
+      return null;
+  }
+
+  // 2. Parse time components (or default to 00:00:00)
+  let hour = 0, minute = 0, second = 0;
+  if (timeStr) {
+    const timeMatch = String(timeStr).match(/(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?/);
+    if (timeMatch) {
+      hour = parseInt(timeMatch[1], 10);
+      minute = parseInt(timeMatch[2], 10);
+      second = timeMatch[3] ? parseInt(timeMatch[3], 10) : 0;
+
+       // Validate time components
+        if (isNaN(hour) || isNaN(minute) || isNaN(second) || hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59) {
+             console.warn(`Invalid time components parsed from ${timeStr}. Using 00:00:00.`);
+             hour = 0; minute = 0; second = 0;
+        }
+
+    } else {
+         console.warn(`Could not parse time format: ${timeStr}. Using 00:00:00.`);
+    }
+  }
+
+  // 3. Construct an ISO-like string *without timezone suffix* representing the LOCAL time.
+  // Pad month and day for ISO format compatibility (YYYY-MM-DDTHH:mm:ss)
+   const localISO = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}`;
+
+  // 4. Use Intl to correctly interpret this local time string *within the target timezone*
+  // This is tricky. We need to find the UTC instant corresponding to this local time.
+  // Strategy: Create a formatter for the target zone, format a known date (like Unix epoch)
+  // in both target zone and UTC, calculate the offset *at that time*, then apply it.
+  // Simpler strategy: Format the target local time to components in the *target* zone,
+  // then use those components to construct a UTC date.
+
+   try {
+       // Create a formatter for the *target* timezone, requesting ALL components
+       const formatter = new Intl.DateTimeFormat('en-CA', { // Use locale that gives YYYY-MM-DD
+           timeZone: timezone,
+           year: 'numeric', month: '2-digit', day: '2-digit',
+           hour: '2-digit', minute: '2-digit', second: '2-digit',
+           hour12: false // Use 24-hour clock for Date.UTC
+       });
+
+        // Construct a Date object TEMPORARILY assuming the components ARE UTC
+        // This is just to get a Date object to pass to the formatter. The actual
+        // time value might be wrong, but we only need it to calculate the correct offset.
+       const tempUTCDateForOffsetCalc = new Date(Date.UTC(year, month, day, hour, minute, second));
+
+       // Format this temporary date IN THE TARGET TIMEZONE to see what local time it corresponds to THERE.
+       const parts = formatter.formatToParts(tempUTCDateForOffsetCalc);
+       const zonedParts = {};
+       parts.forEach(p => { if(p.type !== 'literal') zonedParts[p.type] = p.value; });
+
+       // Now, construct the DEFINITIVE UTC timestamp using the components AS THEY APPEAR LOCALLY
+       // in the target timezone. This essentially reverses the timezone offset correctly.
+       // Note: `Intl` might give slightly different hour/day due to DST when formatting.
+       // It's usually better to construct the local ISO string and find its offset.
+
+       // --- More Reliable Method ---
+       // Find the offset for the target timezone *at the approximate date*
+       const roughDate = new Date(Date.UTC(year, month, day, 12)); // Midday avoids some DST edge cases
+       const offsetMinutes = getOffsetMinutesAtDate(roughDate, timezone);
+
+       // Construct the UTC time from components, THEN subtract the calculated offset
+       // This gives the UTC instant that *corresponds* to the desired local time YYYY-MM-DD HH:MM:SS
+       // in the target zone.
+       const intendedUTCTime = Date.UTC(year, month, day, hour, minute, second);
+       const actualInstantEpoch = intendedUTCTime - (offsetMinutes * 60 * 1000);
+
+       const finalDate = new Date(actualInstantEpoch);
+
+        // Sanity check: Format the result back using the target timezone
+        // const checkFormatter = new Intl.DateTimeFormat('en-US', { timeZone: timezone, dateStyle: 'short', timeStyle: 'medium' });
+        // console.log(`Created date for ${dateStr} ${timeStr || ''} [${timezone}]: ${finalDate.toISOString()}, checks as ${checkFormatter.format(finalDate)}`);
+
+       return { date: finalDate, timezone: timezone }; // Return Date object and timezone string
+
+   } catch (e) {
+       console.error(`Error creating zoned date time for ${localISO} in ${timezone}:`, e);
+       // Fallback: Try creating date assuming local components are UTC (likely wrong offset)
+       try {
+           const fallbackDate = new Date(Date.UTC(year, month, day, hour, minute, second));
+           console.warn("Falling back to UTC interpretation.");
+           return { date: fallbackDate, timezone: 'UTC'}; // Fallback timezone
+       } catch (finalError) {
+           console.error("Fallback date creation failed:", finalError);
+           return null;
+       }
+   }
+}
+
+function getOffsetMinutesAtDate(date, timezone) {
+  try {
+      const formatter = new Intl.DateTimeFormat('en-US', {
+          timeZone: timezone,
+          timeZoneName: 'longOffset', // Request offset like GMT-05:00
       });
+      const parts = formatter.formatToParts(date);
+      const offsetPart = parts.find(p => p.type === 'timeZoneName');
+
+      if (offsetPart) {
+          const offsetMatch = offsetPart.value.match(/GMT([+-])(\d{1,2}):?(\d{2})?/);
+          if (offsetMatch) {
+              const sign = offsetMatch[1] === '+' ? 1 : -1;
+              const hours = parseInt(offsetMatch[2], 10);
+              const minutes = offsetMatch[3] ? parseInt(offsetMatch[3], 10) : 0;
+              return sign * (hours * 60 + minutes);
+          }
+      }
       
-      const marker = L.marker([location.Latitude, location.Longitude], { icon })
-        .addTo(parishMarkers);
+      console.warn(`Could not parse offset from Intl: ${offsetPart?.value} for ${timezone}`);
+
+  } catch (e) {
+      console.error(`Error getting offset for ${timezone}:`, e);
+  }
+    // Fallback: estimate from current local offset (less accurate for past/future dates)
+    console.warn(`Falling back to local offset estimation for ${timezone}`);
+    return -(new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTimezoneOffset());
+}
+
+function formatZonedTime(date, timezone, options = {}) {
+    if (!(date instanceof Date) || !timezone) return '';
+    try {
+        const defaultOptions = {
+            timeZone: timezone,
+            hour: 'numeric', // Use 'numeric' or '2-digit'
+            minute: '2-digit',
+             // Optionally show timezone name:
+             // timeZoneName: 'short' // e.g., PST, CET, EST
+        };
+        return date.toLocaleTimeString(CONFIG.currentLanguage || 'en', { ...defaultOptions, ...options });
+    } catch (e) {
+        console.error(`Error formatting time for zone ${timezone}:`, e);
+        // Fallback to UTC time display
+        return date.toLocaleTimeString(CONFIG.currentLanguage || 'en', { timeZone: 'UTC', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }) + " (UTC Fallback)";
+    }
+}
+
+// Refined Formatting Function (Example for Date)
+function formatZonedDate(date, timezone, options = {}) {
+     if (!(date instanceof Date) || !timezone) return '';
+     try {
+         const defaultOptions = {
+             timeZone: timezone,
+             year: 'numeric',
+             month: 'long', // or 'short', 'numeric', '2-digit'
+             day: 'numeric', // or '2-digit'
+              // weekday: 'long' // optional
+         };
+         return date.toLocaleDateString(CONFIG.currentLanguage || 'en', { ...defaultOptions, ...options });
+     } catch (e) {
+         console.error(`Error formatting date for zone ${timezone}:`, e);
+         return date.toLocaleDateString(CONFIG.currentLanguage || 'en', { timeZone: 'UTC' }) + " (UTC Fallback)";
+     }
+}
+
+// Unified event cancellation checker
+function checkEventCancellation(eventInstance, date) {
+  if (!eventInstance.EventID || !window.cancelledEvents.some(c => c.AffectsEventID === eventInstance.EventID)) {
+    return { isCancelled: false, reason: null };
+  }
+
+  // Get the date to check - either provided date or event's StartDate
+  const eventTimezone = eventInstance.Timezone || 'UTC';
+  const eventDate = date || eventInstance.StartDate || createZonedDateTime(eventInstance.DateStart, eventInstance.TimeStart, eventTimezone);
+  
+  // If there's no valid date to check, we can't determine if it's cancelled
+  if (!eventDate || typeof eventDate.getTime !== 'function') {
+    return { isCancelled: false, reason: null };
+  }
+
+  const cancellations = window.cancelledEvents.filter(c => c.AffectsEventID === eventInstance.EventID);
+
+  for (const cancel of cancellations) {
+    const cancelStartZdtResult = createZonedDateTime(cancel.DateStart, cancel.TimeStart, eventTimezone);
+    const cancelEndZdtResult = createZonedDateTime(cancel.DateEnd || cancel.DateStart, cancel.TimeEnd, eventTimezone);
+
+    if (!cancelStartZdtResult) {
+        console.warn(`Could not parse cancellation start date for ${eventInstance.EventID}: ${cancel.DateStart}`);
+        continue;
+    }
+    let cancelStart = cancelStartZdtResult.date;
+    let cancelEnd = cancelEndZdtResult ? cancelEndZdtResult.date : null;
+    if (!cancelEnd) {
+         const endOfDayCancelZdt = createZonedDateTime(cancel.DateStart, '23:59:59', eventTimezone);
+         if(endOfDayCancelZdt) cancelEnd = endOfDayCancelZdt.date;
+    }
+    if (!cancelEnd) {
+       console.warn(`Could not determine cancellation end time for ${eventInstance.EventID} starting ${cancel.DateStart}`);
+       cancelEnd = new Date(cancelStart.getTime() + 60000); // cancel for 1 minute
+    }
+
+    // Compare UTC epoch milliseconds
+    if (eventDate.getTime() >= cancelStart.getTime() && eventDate.getTime() <= cancelEnd.getTime()) {
+      return { isCancelled: true, reason: cancel.Reason };
+    }
+  }
+
+  return { isCancelled: false, reason: null };
+}
+
+// Apply cancellations to events
+function applyCancellationsToEvents(events) {
+  
+  // Process each event and check for cancellations
+  events.forEach(event => {
+    // Only check events with an ID that might have cancellations
+    if (event.EventID) {
+      const { isCancelled, reason } = checkEventCancellation(event, event.StartDate);
+      if (isCancelled) {
+        event.isCancelled = true;
+        event.cancellationReason = reason;
+      }
+    }
+  });
+  
+  // Return events with cancellation flags set
+  return events.filter(event => !event.isCancelled);
+}
+
+// Get events for current month
+function getEventsForMonth(month, year, entityId, isLocation = true) {
+    // --- FIND THE TARGET TIMEZONE ---
+    let targetTimezone = 'UTC'; // Default
+    let associatedLocation = null;
+    if (isLocation) {
+        associatedLocation = window.locationMap.get(entityId);
+    } else {
+        // Find the *primary* location for the priest to determine timezone context
+        const priestLocations = window.locations.filter(location =>
+            location.ReligiousIdArray && location.ReligiousIdArray.includes(entityId)
+        );
+        if (priestLocations.length > 0) {
+             // Use the first location found, or could add logic for 'primary' location later
+             associatedLocation = priestLocations[0];
+        }
+    }
+    if (associatedLocation && associatedLocation.Timezone) {
+        targetTimezone = associatedLocation.Timezone;
+    } else if (associatedLocation) {
+        console.warn(`Location ${associatedLocation.LocationID} missing timezone property. Using UTC.`);
+    } else {
+         console.warn(`Could not find associated location for ${entityId}. Using UTC.`);
+    }
+    // -------------------------------
+
+    const potentiallyRelevantEvents = window.events.filter(event => {
+
+        const entityMatches = isLocation ? (event.LocationID === entityId) : (event.PriestID === entityId);
+        if (!entityMatches) return false;
+
+        // --- Look up event's specific location and timezone ---
+        const eventLocationId = event.LocationID;
+        const eventLocation = window.locationMap.get(eventLocationId);
+        const eventTimezone = eventLocation?.Timezone || 'UTC'; // Timezone of the EVENT ITSELF
+        //-----------------------------------------------------
+
+        // Use createZonedDateTime for event start date
+        const startZdtResult = createZonedDateTime(event.DateStart, event.TimeStart, eventTimezone);
+        if (!startZdtResult) return false; // Skip if start date invalid
+        const eventStartDate = startZdtResult.date;
+
+        const repeats = event.Repeats || '';
+
+        // Determine the range of the current view IN THE TARGET TIMEZONE
+        // Use start/end of month based on the *context timezone* (usually the primary location's zone)
+         const startOfMonthZdtResult = createZonedDateTime(`${year}-${month + 1}-01`, '00:00:00', targetTimezone);
+         if (!startOfMonthZdtResult) return false; // Cannot determine month range
+         const startOfMonth = startOfMonthZdtResult.date;
+
+         // Last day of month requires careful construction
+         const lastDayOfMonth = new Date(Date.UTC(year, month + 1, 0)); // Last day in UTC
+         const endOfMonthZdtResult = createZonedDateTime(
+             `${lastDayOfMonth.getUTCFullYear()}-${String(lastDayOfMonth.getUTCMonth() + 1).padStart(2, '0')}-${String(lastDayOfMonth.getUTCDate()).padStart(2, '0')}`,
+             '23:59:59', // End of day
+             targetTimezone
+         );
+        if (!endOfMonthZdtResult) return false;
+        const endOfMonth = endOfMonthZdtResult.date;
+         // --- End Month Range Calculation ---
+
+
+        if (!repeats) {
+            // One-time event
+            const endZdtResult = createZonedDateTime(event.DateEnd || event.DateStart, event.TimeEnd, eventTimezone);
+            const actualEndDate = endZdtResult ? endZdtResult.date : null;
+
+            if (actualEndDate) {
+                return eventStartDate.getTime() <= endOfMonth.getTime() && actualEndDate.getTime() >= startOfMonth.getTime();
+            } else {
+                // If end date invalid, just check if start is within month
+                return eventStartDate.getTime() >= startOfMonth.getTime() && eventStartDate.getTime() <= endOfMonth.getTime();
+            }
+        } else {
+            // Repeating event: Check if the first occurrence starts before the end of the view window
+            return eventStartDate.getTime() <= endOfMonth.getTime();
+        }
+    });
+
+    // --- Month range calculation (repeat for main logic) ---
+     const startOfMonthZdtResult = createZonedDateTime(`${year}-${month + 1}-01`, '00:00:00', targetTimezone);
+     const startOfMonth = startOfMonthZdtResult ? startOfMonthZdtResult.date : new Date(Date.UTC(year, month, 1)); // Fallback to UTC start
+
+     const lastDayOfMonth = new Date(Date.UTC(year, month + 1, 0));
+     const endOfMonthZdtResult = createZonedDateTime(
+        `${lastDayOfMonth.getUTCFullYear()}-${String(lastDayOfMonth.getUTCMonth() + 1).padStart(2, '0')}-${String(lastDayOfMonth.getUTCDate()).padStart(2, '0')}`,
+        '23:59:59',
+        targetTimezone
+     );
+    const endOfMonth = endOfMonthZdtResult ? endOfMonthZdtResult.date : new Date(Date.UTC(year, month + 1, 0, 23, 59, 59)); // Fallback
+    // --- End Month Range ---
+
+
+    let expandedEvents = [];
+
+    potentiallyRelevantEvents.forEach(event => {
+        const eventLocationId = event.LocationID;
+        const eventLocation = window.locationMap.get(eventLocationId);
+        const eventTimezone = eventLocation?.Timezone || 'UTC'; // USE EVENT'S ZONE
+
+        const seriesStartZdtResult = createZonedDateTime(event.DateStart, event.TimeStart, eventTimezone);
+        if (!seriesStartZdtResult) return;
+        let seriesStartDate = seriesStartZdtResult.date;
+
+        const seriesEndZdtResult = event.DateEnd ? createZonedDateTime(event.DateEnd, event.TimeEnd, eventTimezone) : null;
+        let seriesEndDate = seriesEndZdtResult ? seriesEndZdtResult.date : null;
+
+        // --- Calculate duration based on *zoned* start/end ---
+        let durationMs = 2 * 60 * 60 * 1000; // Default 2 hours
+        if (seriesEndDate && event.TimeEnd) {
+            // Duration between explicitly zoned start and end
+            durationMs = seriesEndDate.getTime() - seriesStartDate.getTime();
+        } else if (!seriesEndDate && event.TimeStart) {
+             // Ends same day (no explicit end date, but has start time)
+             // Calculate end time relative to start date
+             const endOfDayZdtResult = createZonedDateTime(event.DateStart, '23:59:59', eventTimezone);
+             if (endOfDayZdtResult) {
+                  durationMs = endOfDayZdtResult.date.getTime() - seriesStartDate.getTime();
+             }
+        } // Else use default
+        if (durationMs <= 0) durationMs = 2 * 60 * 60 * 1000; // Ensure positive duration
+        // ----------------------------------------------------
+
+
+        const repeats = event.Repeats || '';
+        let currentDate = new Date(seriesStartDate); // Start iteration from the zoned start date
+
+        const loopUntilDate = seriesEndDate ?
+             new Date(Math.min(seriesEndDate.getTime(), endOfMonth.getTime()))
+             : endOfMonth;
+
+
+        while (currentDate.getTime() <= loopUntilDate.getTime()) {
+             // Check if this instance is within the view month range
+             if (currentDate.getTime() >= startOfMonth.getTime() && currentDate.getTime() <= endOfMonth.getTime()) {
+                  const instanceEndDate = new Date(currentDate.getTime() + durationMs);
+                  const eventCopy = {
+                      ...event,
+                      StartDate: new Date(currentDate), // The Date object (UTC instant)
+                      EndDate: instanceEndDate,
+                      Timezone: eventTimezone, // Store the relevant timezone for display!
+                      OriginalDateStart: event.DateStart,
+                      OriginalDateEnd: event.DateEnd
+                  };
+                  expandedEvents.push(eventCopy);
+             }
+
+            if (!repeats) break;
+
+             const previousLoopDate = new Date(currentDate);
+            // --- Advance date logic (requires careful timezone handling for monthly/yearly) ---
+            // This is complex to do perfectly without a library like Luxon.
+            // For monthly/yearly, Date objects might jump DST incorrectly.
+            // Simplification: Advance by days for simplicity, accept minor inaccuracy for M/Y repeats across DST.
+            // Proper Solution: Use Luxon or date-fns-tz for advancement.
+            switch (repeats.toLowerCase()) {
+                case 'daily': currentDate.setUTCDate(currentDate.getUTCDate() + 1); break;
+                case 'weekly': currentDate.setUTCDate(currentDate.getUTCDate() + 7); break;
+                case 'every2weeks': currentDate.setUTCDate(currentDate.getUTCDate() + 14); break;
+                case 'monthly':
+                case 'everymonth':
+                    currentDate.setUTCMonth(currentDate.getUTCMonth() + 1); break; // DST Warning!
+                case 'every2months':
+                     currentDate.setUTCMonth(currentDate.getUTCMonth() + 2); break; // DST Warning!
+                case 'yearly':
+                case 'everyyear':
+                     currentDate.setUTCFullYear(currentDate.getUTCFullYear() + 1); break; // DST Warning!
+                 default:
+                    console.warn(`Unknown repeat type: ${repeats}`);
+                    currentDate = new Date(loopUntilDate.getTime() + 1); // Force exit
+                    break;
+            }
+            // --------------------------------------------------------------
+
+
+             if (currentDate.getTime() <= previousLoopDate.getTime()) {
+                 console.error(`Date didn't advance for event ${event.EventID}. Loop detected. Breaking.`);
+                 break;
+             }
+             if (currentDate.getTime() > loopUntilDate.getTime() && repeats) {
+                break;
+            }
+        } // end while
+    }); // end forEach potentiallyRelevant
+
+    const finalEvents = applyCancellationsToEvents(expandedEvents);
+    return finalEvents;
+}
+
+// Get upcoming events
+function getUpcomingEvents(entityId, isLocation = true, limit = 3) {
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+  
+  // Get events for current month and next month
+  const events = [
+    ...getEventsForMonth(currentMonth, currentYear, entityId, isLocation),
+    ...getEventsForMonth((currentMonth + 1) % 12, currentMonth === 11 ? currentYear + 1 : currentYear, entityId, isLocation)
+  ];
+  
+  // Filter for future events
+  const futureEvents = events.filter(event => {
+    return event.StartDate && event.StartDate > now;
+  });
+  
+  // Sort by date
+  futureEvents.sort((a, b) => a.StartDate - b.StartDate);
+  
+  // Return limited number of events
+  return futureEvents.slice(0, limit);
+}
+
+function getEventsForDay(entityId, year, month, day, isLocation = true) {
+  // --- Determine Context Timezone (for header/day range) ---
+  let contextTimezone = 'UTC';
+  const entityLocation = isLocation ? window.locationMap.get(entityId) : window.locations.find(l => l.ReligiousIdArray?.includes(entityId));
+  if (entityLocation?.Timezone) {
+    contextTimezone = entityLocation.Timezone;
+  }
+  
+  // --- Determine Date Range for the selected day in Context Timezone ---
+  const targetDayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  const startOfDayZdt = createZonedDateTime(targetDayStr, '00:00:00', contextTimezone);
+  const endOfDayZdt = createZonedDateTime(targetDayStr, '23:59:59', contextTimezone);
+
+  if (!startOfDayZdt || !endOfDayZdt) {
+    console.error('Error calculating date range for this day.');
+    return [];
+  }
+  
+  const targetDayStart = startOfDayZdt.date; // The UTC instant representing start of day
+  const targetDayEnd = endOfDayZdt.date;     // The UTC instant representing end of day
+
+  // Get all expanded events for the month
+  const allMonthEvents = getEventsForMonth(month, year, entityId, isLocation);
+
+  // Filter for events whose *start time* (UTC instant) falls within the calculated day range
+  const dayEvents = allMonthEvents.filter(eventInstance => {
+    if (!eventInstance?.StartDate) return false;
+    const eventStartMs = eventInstance.StartDate.getTime();
+    return eventStartMs >= targetDayStart.getTime() && eventStartMs <= targetDayEnd.getTime();
+  });
+
+  // Sort events by their start time (epoch comparison is fine)
+  return dayEvents.sort((a, b) => a.StartDate.getTime() - b.StartDate.getTime());
+}
+
+// Function to get translated religious type
+function getTranslatedReligiousType(type) {
+  if (!type) return 'Fr.'; // Default fallback
+  
+  // Fallbacks for common types if translations aren't available
+  const fallbacks = {
+    'bishop': '$$title-bishop$$',
+    'priest': '$$title-priest$$',
+    'father': '$$title-priest$$',
+    'sister': '$$title-sister$$',
+    'mother': '$$title-mother$$',
+    'brother': '$$title-brother$$'
+  };
+  
+  return fallbacks[type.toLowerCase()] || type;
+}
+
+// Function to validate URLs
+function isValidUrl(urlString) {
+  if (!urlString) return false;
+  urlString = urlString.trim();
+  if (urlString === '') return false;
+  
+  // Basic URL validation
+  try {
+    new URL(urlString);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+
+//----------------------------------------------------
+// Function: showUpcomingEvents
+// Purpose: Displays a list of the next few upcoming events.
+// Uses:    getUpcomingEvents, formatZonedDate, formatZonedTime,
+//          locationMap, religiousMap
+//----------------------------------------------------
+function showUpcomingEvents(entityId, isLocation = true) {
+  const eventsEl = document.getElementById('calendarEvents');
+  if (!eventsEl) {
+    console.error("Calendar events display element not found!");
+    return;
+  }
+  eventsEl.innerHTML = ''; // Clear previous content
+
+  const upcomingHeading = document.createElement('h3');
+  upcomingHeading.textContent = 'Upcoming Events';
+  eventsEl.appendChild(upcomingHeading);
+
+  const upcomingEvents = getUpcomingEvents(entityId, isLocation);
+
+  if (upcomingEvents.length === 0) {
+    const noEventsEl = document.createElement('p');
+    noEventsEl.textContent = 'No upcoming events scheduled.';
+    eventsEl.appendChild(noEventsEl);
+  } else {
+    const clickMessage = document.createElement('p');
+    clickMessage.textContent = 'Click a date on the calendar to see events for that day.';
+    clickMessage.style.fontStyle = 'italic';
+    clickMessage.style.fontSize = '0.9em';
+    clickMessage.style.color = 'grey';
+    eventsEl.appendChild(clickMessage);
+
+    upcomingEvents.forEach(event => {
+      const eventEl = document.createElement('div');
+      eventEl.className = 'calendar-event';
       
-      // Store location data with marker
-      marker.locationData = location;
+      // Apply cancelled styling if needed
+      if (event.isCancelled) {
+        eventEl.classList.add('cancelled');
+        eventEl.style.textDecoration = 'line-through';
+        eventEl.style.color = 'grey';
+      }
+
+      // Event header - More compact format: "Fri Apr 25 - Mass @ 12:00 AM GMT+2"
+      const headerEl = document.createElement('div');
+      headerEl.className = 'calendar-event-header';
+      headerEl.style.fontWeight = 'bold';
       
-      // Add click handler (no popup)
-      marker.on('click', function() {
+      let headerText = '';
+      
+      if (event.StartDate) {
+        // Format day and date
+        headerText += formatZonedDate(event.StartDate, event.Timezone, { 
+          weekday: 'short', 
+          month: 'short', 
+          day: 'numeric' 
+        });
+      }
+      
+      // Add event type
+      headerText += ` - ${event.EventType || 'Event'}`;
+      
+      // Add time with timezone
+      if (event.StartDate) {
+        headerText += ` - ${formatZonedTime(event.StartDate, event.Timezone, { timeZoneName: 'short' })}`;
+      }
+      
+      headerEl.textContent = headerText;
+      eventEl.appendChild(headerEl);
+
+      // Person or Location details in simpler format
+      if (isLocation && event.PriestID) {
+        const priest = window.religiousMap.get(event.PriestID);
+        if (priest) {
+          const priestEl = document.createElement('div');
+          priestEl.className = 'calendar-event-priest';
+          // Use translated type
+          const translatedType = getTranslatedReligiousType(priest.Type);
+          priestEl.textContent = `${translatedType} ${priest.Name || ''}`;
+          eventEl.appendChild(priestEl);
+        }
+      } else if (!isLocation && event.LocationID) {
+        const location = window.locationMap.get(event.LocationID);
+        if (location) {
+          const locationEl = document.createElement('div');
+          locationEl.className = 'calendar-event-location';
+          locationEl.textContent = `@ ${location.Name || 'Unknown Location'}`;
+          eventEl.appendChild(locationEl);
+        }
+      }
+
+      // Display cancellation reason if applicable
+      if (event.isCancelled && event.cancellationReason) {
+        const cancelEl = document.createElement('div');
+        cancelEl.className = 'calendar-event-cancelled';
+        cancelEl.style.color = '#cc0000'; // Dark red
+        cancelEl.style.fontWeight = 'bold';
+        cancelEl.textContent = `Cancelled: ${event.cancellationReason}`;
+        eventEl.appendChild(cancelEl);
+      }
+
+      // Add spacing between events
+      eventEl.style.marginBottom = '10px';
+      eventEl.style.paddingBottom = '5px';
+      eventEl.style.borderBottom = '1px dashed #ccc';
+
+      eventsEl.appendChild(eventEl);
+    });
+  }
+}
+
+function rerenderCalendarPopup(entityId, isLocation = true) {
+  const popup = document.getElementById('calendarPopup');
+  if (!popup) return;
+  
+  const entity = isLocation ? window.locationMap.get(entityId) : window.religiousMap.get(entityId);
+  if (!entity) return;
+  
+  // Update title
+  const entityName = isLocation ? entity.Name : `${getTranslatedReligiousType(entity.Type)} ${entity.Name}`;
+  const titleElement = popup.querySelector('.calendar-title');
+  if (titleElement) {
+    titleElement.textContent = `${entityName} - $$calendar-title$$`;
+  }
+  
+  // Get current view's month and year from the grid dataset
+  const grid = document.getElementById('calendarGrid');
+  let currentMonth = new Date().getMonth();
+  let currentYear = new Date().getFullYear();
+  
+  if (grid && grid.dataset.month && grid.dataset.year) {
+    currentMonth = parseInt(grid.dataset.month, 10);
+    currentYear = parseInt(grid.dataset.year, 10);
+  }
+  
+  // Regenerate calendar with the new entity and current view
+  generateCalendar(entityId, currentMonth, currentYear, isLocation);
+  
+  // Show upcoming events
+  showUpcomingEvents(entityId, isLocation);
+}
+
+// Generate HTML for buttons
+function getHtmlForButtons(buttons) {
+  const actionsContainer = document.createElement('div');
+  actionsContainer.className = 'actions-container';
+  actionsContainer.style.display = 'grid';
+  actionsContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
+  actionsContainer.style.gap = '8px';
+  
+  const buttonElements = [];
+  
+  buttons.forEach(button => {
+    if (!button.content) return;
+    
+    let element;
+    
+    switch (button.type) {
+      case 'link':
+        element = document.createElement('a');
+        element.href = button.content;
+        if (button.external) {
+          element.target = "_blank";
+        }
+        break;
+      case 'email':
+        element = document.createElement('a');
+        element.href = `mailto:${button.content}`;
+        break;
+      case 'phone':
+        element = document.createElement('a');
+        element.href = `tel:${button.content}`;
+        break;
+      case 'calendar':
+      case 'info':
+      default:
+        element = document.createElement('button');
+        element.addEventListener('click', button.onClick || (() => {}));
+        break;
+    }
+    
+    element.className = button.class || 'action-btn';
+    if (button.donate) {
+      element.className += ' donate-btn';
+    }
+    
+    element.textContent = button.text;
+    buttonElements.push(element);
+  });
+  
+  // If there's an odd number of buttons, make the first one span the full width
+  if (buttonElements.length % 2 !== 0 && buttonElements.length > 0) {
+    buttonElements[0].style.gridColumn = "1 / span 2";
+  }
+  
+  // Add all buttons to container
+  buttonElements.forEach(btn => {
+    actionsContainer.appendChild(btn);
+  });
+  
+  return actionsContainer;
+}
+
+// Generate calendar HTML
+function getHtmlForCalendar(month, year, entityId, isLocation = true) {
+  const container = document.createElement('div');
+  container.className = 'calendar-container';
+  
+  // Month names
+  const monthNames = [
+    '$$month-january$$', '$$month-february$$', '$$month-march$$', '$$month-april$$', 
+    '$$month-may$$', '$$month-june$$', '$$month-july$$', '$$month-august$$', 
+    '$$month-september$$', '$$month-october$$', '$$month-november$$', '$$month-december$$'
+  ];
+  
+  // Day names
+  const dayNames = ['$$day-sun$$', '$$day-mon$$', '$$day-tue$$', '$$day-wed$$', '$$day-thu$$', '$$day-fri$$', '$$day-sat$$'];
+  
+  // Add month/year header
+  const header = document.createElement('div');
+  header.className = 'calendar-month-year';
+  header.textContent = `${monthNames[month]} ${year}`;
+  container.appendChild(header);
+  
+  // Create grid
+  const grid = document.createElement('div');
+  grid.className = 'calendar-grid';
+  
+  // Add day headers
+  dayNames.forEach(day => {
+    const dayHeader = document.createElement('div');
+    dayHeader.className = 'calendar-day-header';
+    dayHeader.textContent = day;
+    grid.appendChild(dayHeader);
+  });
+  
+  // Get first day of the month and total days
+  const firstDay = new Date(year, month, 1);
+  const startingDay = firstDay.getDay();
+  const lastDay = new Date(year, month + 1, 0);
+  const totalDays = lastDay.getDate();
+  
+  // Get events for this month
+  const monthEvents = getEventsForMonth(month, year, entityId, isLocation);
+  
+  // Create map of dates with events
+  const datesWithEvents = new Map();
+  monthEvents.forEach(event => {
+    if (event.StartDate) {
+      const eventDay = event.StartDate.getDate();
+      if (!datesWithEvents.has(eventDay)) {
+        datesWithEvents.set(eventDay, []);
+      }
+      datesWithEvents.get(eventDay).push(event);
+    }
+  });
+  
+  // Add days from previous month
+  const prevMonth = month === 0 ? 11 : month - 1;
+  const prevYear = month === 0 ? year - 1 : year;
+  const prevMonthLastDay = new Date(prevYear, prevMonth + 1, 0).getDate();
+  
+  for (let i = 0; i < startingDay; i++) {
+    const day = prevMonthLastDay - startingDay + i + 1;
+    const dayEl = document.createElement('div');
+    dayEl.className = 'calendar-day other-month';
+    dayEl.textContent = day;
+    grid.appendChild(dayEl);
+  }
+  
+  // Add current month days
+  for (let day = 1; day <= totalDays; day++) {
+
+    let c = "";
+    if (datesWithEvents.has(day)) {
+      c = "has-events";
+    }
+    let dayel_html = `<button class='calendar-day ${c}' onclick="showEventsForDay('${entityId}', ${year}, ${month}, ${day}, '${isLocation}')">${day}</button>`;
+       /*
+    let dayEl = document.createElement('button');
+    dayEl.className = 'calendar-day';
+    dayEl.textContent = day;
+    
+
+    // Check if this day has events
+    var btn = if (datesWithEvents.has(day)) {
+      dayEl.classList.add('has-events');
+      dayEl.style.pointerEvents = 'all';
+      dayEl.onclick = (e) => {
+        showEventsForDay(entityId, year, month, day, isLocation);
+      };
+    } else {
+      ``
+    };
+    */
+    grid.appendChild(createElementFromHTML(dayel_html));
+  }
+  
+  // Add next month days
+  const totalCells = Math.ceil((startingDay + totalDays) / 7) * 7;
+  const nextMonthDays = totalCells - (startingDay + totalDays);
+  
+  for (let day = 1; day <= nextMonthDays; day++) {
+    const dayEl = document.createElement('div');
+    dayEl.className = 'calendar-day other-month';
+    dayEl.textContent = day;
+    grid.appendChild(dayEl);
+  }
+  
+  container.appendChild(grid);
+  return container;
+}
+
+function createElementFromHTML(htmlString) {
+  var div = document.createElement('div');
+  div.innerHTML = htmlString.trim();
+  return div.firstElementChild;
+}
+
+// Show location info function
+function showLocationInfo(location) {
+  const infoPanel = document.getElementById('infoPanel');
+  const priestName = document.getElementById('priestName');
+  const priestInfo = document.getElementById('priestInfo');
+  
+  // Reset all markers before showing this one
+  resetAllMarkers();
+  
+  // Close calendar if open
+  closeCalendarPopup();
+  
+  // Set location name
+  priestName.textContent = location.Name;
+  
+  // Clear previous info
+  priestInfo.innerHTML = '';
+  
+  // Associated religious
+  if (location.ReligiousIdArray && location.ReligiousIdArray.length > 0) {
+    const religiousParagraph = document.createElement('p');
+    religiousParagraph.className = 'info-paragraph';
+    religiousParagraph.textContent = "$$served-by$$: ";
+    
+    // Add links for each religious person
+    location.ReligiousIdArray.forEach((id, index) => {
+      const person = window.religiousMap.get(id);
+      if (person) {
+        // Use proper translated title
+        const translatedType = getTranslatedReligiousType(person.Type);
+        
+        const priestLink = document.createElement('a');
+        priestLink.className = 'priest-link';
+        priestLink.textContent = `${translatedType} ${person.Name}`;
+        priestLink.href = '#';
+        priestLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          showPriestInfo(person);
+        });
+        
+        religiousParagraph.appendChild(priestLink);
+        
+        // Add comma if not the last person
+        if (index < location.ReligiousIdArray.length - 1) {
+          religiousParagraph.appendChild(document.createTextNode(', '));
+        }
+      }
+    });
+    
+    priestInfo.appendChild(religiousParagraph);
+  }
+
+  // Create buttons with validated website
+  const buttons = [
+    // Google Maps link
+    (location.GoogleMaps || (location.Latitude && location.Longitude)) ? 
+      { 
+        type: 'link', 
+        text: "$$view-on-maps$$", 
+        content: location.GoogleMaps || `https://www.google.com/maps?q=${location.Latitude},${location.Longitude}`, 
+        external: true 
+      } : null,
+    
+    // Website link - only add if URL is valid
+    (location.Website && isValidUrl(location.Website)) ? 
+      { type: 'link', text: "$$website$$", content: location.Website, external: true } : null,
+    
+    // Email
+    (location.ContactEmail && location.ContactEmail.replace("mailto:", "").replace("'", "").trim().length > 0) ? 
+      { type: 'email', text: "$$email$$", content: location.ContactEmail } : null,
+    
+    // Phone
+    (location.ContactPhone && location.ContactPhone.replace("tel:", "").replace("'", "").trim().length > 0) ? 
+      { type: 'phone', text: "$$phone$$", content: location.ContactPhone } : null,
+    
+    // Notes
+    (location.Notes && location.Notes.trim().length > 0) ? 
+      { 
+        type: 'info', 
+        text: "$$show-more-info$$", 
+        content: "info", 
+        onClick: () => { 
+          alert(`${location.Name} (${location.LocationType})\n\n$$notes$$: ${location.Notes}`); 
+        } 
+      } : null,
+    
+    // Calendar button
+    { 
+      type: 'calendar', 
+      text: "$$view-calendar$$", 
+      content: "calendar", 
+      onClick: () => { showLocationCalendar(location); } 
+    }
+  ].filter(Boolean); // Remove null entries
+  
+  // Add donate button if available
+  const fundingInfo = getFundingInfo(location.LocationID);
+  if (fundingInfo) {
+    let donateText = '$$donate$$';
+    if (fundingInfo.FundingGoal && fundingInfo.CurrentAmount) {
+      const percentage = Math.round((fundingInfo.CurrentAmount / fundingInfo.FundingGoal) * 100);
+      donateText += ` (${percentage}% $$funded$$)`;
+    }
+    
+    buttons.push({
+      type: 'link',
+      text: donateText,
+      content: fundingInfo.DonationLinks,
+      external: true,
+      donate: true
+    });
+  }
+  
+  // Add buttons to info panel
+  priestInfo.appendChild(getHtmlForButtons(buttons));
+
+  // Show the info panel
+  infoPanel.style.display = 'flex';
+  
+  // Adjust zoom based on current zoom for smoother transition
+  const currentZoom = map.getZoom();
+  const targetZoom = Math.max(currentZoom, 12); // Don't zoom out if already zoomed in
+  
+  // Fly to location
+  map.flyTo([location.Latitude, location.Longitude], targetZoom, {
+    animate: true,
+    duration: 0.5
+  });
+  
+  // Highlight this location and connected locations
+  highlightLocation(location);
+}
+
+function formatBioText(person) {
+  // Get proper translated title
+  const translatedType = getTranslatedReligiousType(person.Type);
+  
+  let bioText = `${translatedType} ${person.Name}\n\n`;
+  const details = [];
+  
+  // Ordination info
+  if (person['OrdainedInRite'] || person['OrdainedBy']) {
+    let ordinationText = `${translatedType} ${person.Name} was ordained`;
+    
+    if (person['OrdainedInRite']) {
+      ordinationText += ` in the ${person['OrdainedInRite']}`;
+    }
+    
+    if (person['OrdainedBy']) {
+      const ordainedByTranslation = getTranslatedReligiousType('Bishop');
+      ordinationText += ` by ${ordainedByTranslation} ${person['OrdainedBy']}`;
+    }
+    
+    details.push(ordinationText);
+  }
+  
+  // Bishop line
+  if (person['BishopLine']) {
+    details.push(`Bishop line: ${person['BishopLine']}`);
+  }
+  
+  // Born year
+  if (person['BornYear']) {
+    details.push(`Born in ${person['BornYear']}`);
+  }
+  
+  // Associates With
+  if (person['AssociatesWith']) {
+    details.push(`Associates with: ${person['AssociatesWith']}`);
+  }
+  
+  // Beliefs
+  if (person['Beliefs']) {
+    details.push(`Holds ${person['Beliefs']} beliefs`);
+  }
+  
+  // Location
+  if (person['Location/Area']) {
+    details.push(`Operates in: ${person['Location/Area']}`);
+  }
+  
+  // Join all details
+  bioText += details.join('. ') + '.';
+  
+  // Notes
+  if (person['Notes']) {
+    bioText += `\n\nNotes: ${person['Notes']}`;
+  }
+  
+  return bioText;
+}
+
+// Show priest info function
+function showPriestInfo(priest) {
+  const infoPanel = document.getElementById('infoPanel');
+  const priestName = document.getElementById('priestName');
+  const priestInfo = document.getElementById('priestInfo');
+  
+  // Reset all markers before showing this one
+  resetAllMarkers();
+  
+  // Close calendar if open
+  closeCalendarPopup();
+  
+  // Get proper translated title
+  const translatedType = getTranslatedReligiousType(priest.Type);
+  
+  // Set priest name with proper title
+  priestName.textContent = `${translatedType} ${priest.Name || ''}`;
+  
+  // Clear previous info
+  priestInfo.innerHTML = '';
+  
+  // Add locations served section first
+  const priestLocations = window.locations.filter(location => 
+    location.ReligiousIdArray && location.ReligiousIdArray.includes(priest.ReligiousID)
+  );
+  
+  if (priestLocations.length > 0) {
+    const locationsSection = document.createElement('div');
+    locationsSection.className = 'parishes-section';
+    
+    // Add section title
+    const locationsTitle = document.createElement('h3');
+    locationsTitle.textContent = "$$parishes-served$$";
+    locationsSection.appendChild(locationsTitle);
+    
+    const locationsList = document.createElement('ul');
+    locationsList.className = 'parishes-list';
+    
+    // Sort locations alphabetically
+    priestLocations.sort((a, b) => a.Name.localeCompare(b.Name));
+    
+    priestLocations.forEach(location => {
+      const locationItem = document.createElement('li');
+      locationItem.className = 'parish-item';
+      
+      locationItem.innerHTML = `<strong>${location.Name}</strong>`;
+      
+      // Add click handler to highlight this location
+      locationItem.style.cursor = 'pointer';
+      locationItem.addEventListener('click', () => {
         showLocationInfo(location);
       });
       
-      return marker;
-    }
+      locationsList.appendChild(locationItem);
+    });
+    
+    locationsSection.appendChild(locationsList);
+    priestInfo.appendChild(locationsSection);
+  }
 
-    // Create priest marker
-    function createPriestMarker(priest, lat, lng) {
-      // Create marker
-      const markerSize = CONFIG.priestMarkerSize;
-      const icon = L.divIcon({
-        className: 'priest-marker pulse',
-        html: `<div style="width:${markerSize}px; height:${markerSize}px;"></div>`,
-        iconSize: [markerSize, markerSize],
-        iconAnchor: [markerSize/2, markerSize/2]
-      });
-      
-      const marker = L.marker([lat, lng], { icon })
-        .addTo(priestMarkers);
-      
-      // Store priest data with marker
-      marker.priestData = priest;
-      
-      // Add click handler (no popup)
-      marker.on('click', function() {
-        // Get containing parish (if any)
-        const containingParish = findParishAtCoordinates(lat, lng);
-        
-        // If there's a parish at these exact coordinates, prioritize showing it
-        if (containingParish) {
-          showLocationInfo(containingParish);
-        } else {
-          showPriestInfo(priest);
-        }
-      });
-      
-      return marker;
+  // Create action buttons
+  const buttons = [
+    // Website link - validate URL
+    (priest.Website && isValidUrl(priest.Website)) ? 
+      { type: 'link', text: "$$website$$", content: priest.Website, external: true } : null,
+    
+    // Email
+    (priest.ContactEmail && ("" + priest.ContactEmail).replace("mailto:", "").replace("'", "").trim().length > 0) ? 
+      { type: 'email', text: "$$email$$", content: priest.ContactEmail } : null,
+    
+    // Phone
+    (priest.ContactPhone && ("" + priest.ContactPhone).replace("tel:", "").replace("'", "").trim().length > 0) ? 
+      { type: 'phone', text: "$$phone$$", content: priest.ContactPhone } : null,
+    
+    // More info button
+    {
+      type: 'info', 
+      text: "$$show-more-info$$", 
+      content: "info", 
+      onClick: () => { alert(formatBioText(priest)); } 
+    },
+    
+    // Calendar button
+    { 
+      type: 'calendar', 
+      text: "$$view-calendar$$", 
+      content: "calendar", 
+      onClick: () => { showPriestCalendar(priest); } 
+    }
+  ].filter(Boolean);
+  
+  // Add donate button if available
+  const fundingInfo = getFundingInfo(priest.ReligiousID);
+  if (fundingInfo) {
+    let donateText = '$$donate$$';
+    if (fundingInfo.FundingGoal && fundingInfo.CurrentAmount) {
+      const percentage = Math.round((fundingInfo.CurrentAmount / fundingInfo.FundingGoal) * 100);
+      donateText += ` (${percentage}% $$funded$$)`;
     }
     
-    // Create connection lines between religious and their locations
-    function createConnectionLines(location) {
-      if (!location.ReligiousIdArray || !location.Latitude || !location.Longitude) {
-        return;
-      }
-      
-      // For each religious person associated with this location
-      location.ReligiousIdArray.forEach(religiousId => {
-        const person = religiousMap.get(religiousId);
-        if (!person) return;
-        
-        // Find all other locations for this religious person
-        locations.forEach(otherLocation => {
-          if (otherLocation.LocationID === location.LocationID) return; // Skip self
-          
-          if (otherLocation.ReligiousIdArray.includes(religiousId)) {
-            // Create a line between locations
-            const latlngs = [
-              [location.Latitude, location.Longitude],
-              [otherLocation.Latitude, otherLocation.Longitude]
-            ];
-            
-            const line = L.polyline(latlngs, {
-              color: CONFIG.lineColor,
-              weight: CONFIG.lineWeight,
-              opacity: CONFIG.lineOpacity
-            }).addTo(connectionLines);
-            
-            // Store data with the line
-            line.religiousId = religiousId;
-            line.fromLocation = location.LocationID;
-            line.toLocation = otherLocation.LocationID;
-          }
-        });
-        
-        // Create priest marker at this location
-        createPriestMarker(person, location.Latitude, location.Longitude);
-      });
-    }
+    buttons.push({
+      type: 'link',
+      text: donateText,
+      content: fundingInfo.DonationLinks,
+      external: true,
+      donate: true
+    });
+  }
+  
+  // Add buttons to info panel
+  priestInfo.appendChild(getHtmlForButtons(buttons));
 
-    function findParishAtCoordinates(lat, lng) {
-      let foundParish = null;
-      
-      parishMarkers.eachLayer(marker => {
-        if (marker.locationData && 
-            marker.getLatLng().lat === lat && 
-            marker.getLatLng().lng === lng) {
-          foundParish = marker.locationData;
-        }
-      });
-      
-      return foundParish;
-    }
+  // Show the info panel
+  infoPanel.style.display = 'flex';
+  
+  // Find primary location for this priest and adjust zoom based on current zoom
+  if (priestLocations.length > 0) {
+    let primaryLocation = priestLocations[0];
+    // Get current zoom level for smoother transition
+    const currentZoom = map.getZoom();
+    const targetZoom = Math.max(currentZoom, 8); // Don't zoom out if already zoomed in
+    
+    map.flyTo([primaryLocation.Latitude, primaryLocation.Longitude], targetZoom, {
+      animate: true,
+      duration: 0.5
+    });
+  }
+  
+  // Highlight this priest's locations
+  highlightPriest(priest);
+}
 
-
-    // Approximate location from country or region name
-    function approximateLocationFromName(locationName) {
-      if (!locationName) return null;
-      
-      const locationMap = {
-        'England': { lat: 51.5074, lng: -0.1278 },
-        'UK': { lat: 51.5074, lng: -0.1278 },
-        'USA': { lat: 39.8283, lng: -98.5795 },
-        'France': { lat: 46.2276, lng: 2.2137 },
-        'Germany': { lat: 51.1657, lng: 10.4515 },
-        'Italy': { lat: 41.8719, lng: 12.5674 },
-        'Spain': { lat: 40.4637, lng: -3.7492 },
-        'Poland': { lat: 51.9194, lng: 19.1451 },
-        'Ireland': { lat: 53.1424, lng: -7.6921 },
-        'Brazil': { lat: -14.2350, lng: -51.9253 },
-        'Argentina': { lat: -38.4161, lng: -63.6167 },
-        'Mexico': { lat: 23.6345, lng: -102.5528 },
-        'Canada': { lat: 56.1304, lng: -106.3468 },
-        'Australia': { lat: -25.2744, lng: 133.7751 },
-        'New Zealand': { lat: -40.9006, lng: 174.8860 },
-        'Philippines': { lat: 12.8797, lng: 121.7740 },
-        'Austria': { lat: 47.5162, lng: 14.5501 },
-        'Switzerland': { lat: 46.8182, lng: 8.2275 },
-        'Belgium': { lat: 50.5039, lng: 4.4699 },
-        'Netherlands': { lat: 52.1326, lng: 5.2913 },
-        'Portugal': { lat: 39.3999, lng: -8.2245 },
-        'Europe': { lat: 48.8566, lng: 9.3522 }
-      };
-      
-      // Check for direct match
-      for (const [key, coords] of Object.entries(locationMap)) {
-        if (locationName.includes(key)) {
-          return coords;
-        }
-      }
-      
-      // Add small random offset to default location to prevent markers from stacking
-      return { 
-        lat: CONFIG.defaultLat + (Math.random() * 2 - 1), 
-        lng: CONFIG.defaultLng + (Math.random() * 2 - 1) 
-      };
-    }
-
-    function addActionButton(container, label, href, isExternal = false) {
-      const button = document.createElement('a');
-      button.className = 'action-btn';
-      button.textContent = label;
-      button.href = href;
-      
-      if (isExternal) {
-        button.target = '_blank';
-      }
-      
-      container.appendChild(button);
-      return button;
-    }
-
-    function closeCalendarPopup() {
-      const calendarPopup = document.getElementById('calendarPopup');
-      if (calendarPopup) {
-        calendarPopup.style.display = 'none';
-      }
-    }
-
-    // Show location info in the panel
-    function showLocationInfo(location) {
-      const infoPanel = document.getElementById('infoPanel');
-      const priestName = document.getElementById('priestName');
-      const priestInfo = document.getElementById('priestInfo');
-      
-      // Reset all markers before showing this one
-      resetAllMarkers();
-      
-      // Close calendar if open
-      closeCalendarPopup();
-      
-      // Set location name
-      priestName.textContent = location.Name;
-      
-      // Clear previous info
-      priestInfo.innerHTML = '';
-      
-      // Associated religious
-      if (location.ReligiousIdArray && location.ReligiousIdArray.length > 0) {
-        const religiousParagraph = document.createElement('p');
-        religiousParagraph.className = 'info-paragraph';
-        religiousParagraph.textContent = "$$served-by$$: ";
-        
-        // Add links for each religious person
-        location.ReligiousIdArray.forEach((id, index) => {
-          const person = religiousMap.get(id);
-          if (person) {
-            const priestLink = document.createElement('a');
-            priestLink.className = 'priest-link';
-            priestLink.textContent = `${person.Type} ${person.Name}`;
-            priestLink.href = '#';
-            priestLink.addEventListener('click', (e) => {
-              e.preventDefault();
-              showPriestInfo(person);
-            });
-            
-            religiousParagraph.appendChild(priestLink);
-            
-            // Add comma if not the last person
-            if (index < location.ReligiousIdArray.length - 1) {
-              religiousParagraph.appendChild(document.createTextNode(', '));
-            }
-          }
-        });
-        
-        priestInfo.appendChild(religiousParagraph);
-      }
-      
-      // Upcoming events at this location
-      const locationEvents = events.filter(event => event.LocationID === location.LocationID);
-      if (locationEvents.length > 0) {
-        const eventsSection = document.createElement('div');
-        eventsSection.className = 'mass-times-section';
-        
-        const eventsTitle = document.createElement('strong');
-        eventsTitle.textContent = "$$mass-times$$";
-        eventsSection.appendChild(eventsTitle);
-        
-        const eventsList = document.createElement('ul');
-        eventsList.className = 'events-list';
-        
-        // Sort events by date
-        locationEvents.sort((a, b) => {
-          return new Date(a.StartDate) - new Date(b.StartDate);
-        });
-        
-        // Only show up to 3 upcoming events
-        let upcomingCount = 0;
-        const now = new Date();
-        
-        locationEvents.forEach(event => {
-          if (upcomingCount >= 3) return;
-          
-          const startDate = new Date(event.StartDate);
-          if (startDate < now) return; // Skip past events
-          
-          upcomingCount++;
-          
-          const eventItem = document.createElement('li');
-          eventItem.className = 'event-item';
-          
-          // Check if event is cancelled
-          const cancelled = isEventCancelled(event, startDate);
-          if (cancelled) {
-            eventItem.style.textDecoration = 'line-through';
-            eventItem.style.color = 'gray';
-          }
-          
-          // Format date and time
-          const formattedDate = startDate.toLocaleDateString(CONFIG.currentLanguage);
-          const formattedTime = startDate.toLocaleTimeString(CONFIG.currentLanguage, { hour: '2-digit', minute: '2-digit' });
-          
-          // Get priest name
-          const priest = religiousMap.get(event.ReligiousID);
-          const priestName = priest ? `${priest.Type} ${priest.Name}` : 'Unknown';
-          
-          eventItem.innerHTML = `<strong>${event.EventType}</strong>: ${formattedDate} ${formattedTime} - ${priestName}`;
-          
-          // Add cancellation reason if cancelled
-          if (cancelled) {
-            const reason = getCancellationReason(event, startDate);
-            if (reason) {
-              eventItem.innerHTML += `<br><strong style="color: #cc0000;">${reason}</strong>`;
-            }
-          }
-          
-          eventsList.appendChild(eventItem);
-        });
-        
-        eventsSection.appendChild(eventsList);
-        priestInfo.appendChild(eventsSection);
-        
-        // Add "See All Events" button if there are more than 3 events
-        if (locationEvents.length > 3) {
-          const seeAllBtn = document.createElement('button');
-          seeAllBtn.className = 'action-btn';
-          seeAllBtn.textContent = "$$see-all-events$$";
-          seeAllBtn.addEventListener('click', () => {
-            showLocationCalendar(location);
-          });
-          priestInfo.appendChild(seeAllBtn);
-        }
-      }
-      
-      const actionsContainer = document.createElement('div');
-      actionsContainer.className = 'actions-container';
-      actionsContainer.style.display = 'grid';
-      actionsContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
-      actionsContainer.style.gap = '8px';
-      
-      // Create an array to hold all button elements
-      const buttons = [];
-      
-      // Google Maps link
-      if (location.GoogleMaps || (location.Latitude && location.Longitude)) {
-        const mapLink = location.GoogleMaps || `https://www.google.com/maps?q=${location.Latitude},${location.Longitude}`;
-        const btn = document.createElement('a');
-        btn.className = 'action-btn';
-        btn.textContent = "$$view-on-maps$$";
-        btn.href = mapLink;
-        btn.target = "_blank";
-        buttons.push(btn);
-      }
-      
-      // Website link (just text, not actual URL)
-      if (location.Website && location.Website.trim() !== '') {
-        const btn = document.createElement('a');
-        btn.className = 'action-btn';
-        btn.textContent = "$$website$$";
-        btn.href = location.Website;
-        btn.target = "_blank";
-        buttons.push(btn);
-      }
-      
-      // Contact Email
-      if (location.ContactEmail && location.ContactEmail.trim() !== '') {
-        const btn = document.createElement('a');
-        btn.className = 'action-btn';
-        btn.textContent = "Email";
-        btn.href = `mailto:${location.ContactEmail}`;
-        buttons.push(btn);
-      }
-      
-      // Contact Phone
-      if (location.ContactPhone && location.ContactPhone.trim() !== '') {
-        const btn = document.createElement('a');
-        btn.className = 'action-btn';
-        btn.textContent = "Phone";
-        btn.href = `tel:${location.ContactPhone}`;
-        buttons.push(btn);
-      }
-      
-      // Notes (Only show "More..." button if notes exist)
-      if (location.Notes && location.Notes.trim() !== '') {
-        const moreBtn = document.createElement('button');
-        moreBtn.className = 'action-btn';
-        moreBtn.textContent = "$$show-more-info$$";
-        moreBtn.addEventListener('click', () => {
-          const noteText = `${location.Name} (${location.LocationType})\n\n$$notes$$: ${location.Notes}`;
-          alert(noteText);
-        });
-        buttons.push(moreBtn);
-      }
-      
-      // Calendar button
-      const calendarBtn = document.createElement('button');
-      calendarBtn.className = 'action-btn';
-      calendarBtn.textContent = "$$view-calendar$$";
-      calendarBtn.addEventListener('click', () => {
-        showLocationCalendar(location);
-      });
-      buttons.push(calendarBtn);
-      
-      // Add Donate button if funding available
-      const fundingInfo = getFundingInfo(location.LocationID);
-      if (fundingInfo) {
-        const donateBtn = document.createElement('a');
-        donateBtn.className = 'action-btn donate-btn';
-        donateBtn.href = fundingInfo.DonationLinks;
-        donateBtn.target = '_blank';
-        
-        // Calculate funding percentage if available
-        let donateText = '$$donate$$';
-        if (fundingInfo.FundingGoal && fundingInfo.CurrentAmount) {
-          const percentage = Math.round((fundingInfo.CurrentAmount / fundingInfo.FundingGoal) * 100);
-          donateText += ` (${percentage}% $$funded$$)`;
-        }
-        
-        donateBtn.textContent = donateText;
-        buttons.push(donateBtn);
-      }
-      
-      // If there's an odd number of buttons, make the first one span the full width
-      if (buttons.length % 2 !== 0 && buttons.length > 0) {
-        buttons[0].style.gridColumn = "1 / span 2";
-      }
-      
-      // Add all buttons to container
-      buttons.forEach(btn => {
-        actionsContainer.appendChild(btn);
-      });
-      
-      // Add actions container to info panel
-      priestInfo.appendChild(actionsContainer);
-
-      // Show the info panel
-      infoPanel.style.display = 'flex';
-      
-      // Fly to location
-      map.flyTo([location.Latitude, location.Longitude], 12, {
-        animate: true,
-        duration: 0.5
-      });
-      
-      // Highlight this location and connected locations
-      highlightLocation(location);
-    }
-
-    // Show priest info in the panel
-    function showPriestInfo(priest) {
-      const infoPanel = document.getElementById('infoPanel');
-      const priestName = document.getElementById('priestName');
-      const priestInfo = document.getElementById('priestInfo');
-      
-      // Reset all markers before showing this one
-      resetAllMarkers();
-      
-      // Close calendar if open
-      closeCalendarPopup();
-      
-      // Set priest name with title
-      priestName.textContent = `${priest.Type || 'Fr.'} ${priest.Name || ''}`;
-      
-      // Clear previous info
-      priestInfo.innerHTML = '';
-      
-      // Add locations served section first
-      const priestLocations = locations.filter(location => 
-        location.ReligiousIdArray && location.ReligiousIdArray.includes(priest.ReligiousID)
-      );
-      
-      if (priestLocations.length > 0) {
-        const locationsSection = document.createElement('div');
-        locationsSection.className = 'parishes-section';
-        
-        // Add section title
-        const locationsTitle = document.createElement('h3');
-        locationsTitle.textContent = "$$parishes-served$$";
-        locationsSection.appendChild(locationsTitle);
-        
-        const locationsList = document.createElement('ul');
-        locationsList.className = 'parishes-list';
-        
-        // Sort locations alphabetically
-        priestLocations.sort((a, b) => a.Name.localeCompare(b.Name));
-        
-        priestLocations.forEach(location => {
-          const locationItem = document.createElement('li');
-          locationItem.className = 'parish-item';
-          
-          locationItem.innerHTML = `<strong>${location.Name}</strong>`;
-          
-          // Add click handler to highlight this location
-          locationItem.style.cursor = 'pointer';
-          locationItem.addEventListener('click', () => {
-            showLocationInfo(location);
-          });
-          
-          locationsList.appendChild(locationItem);
-        });
-        
-        locationsSection.appendChild(locationsList);
-        priestInfo.appendChild(locationsSection);
-      }
-      
-      // Create action buttons container
-      const actionsContainer = document.createElement('div');
-      actionsContainer.className = 'actions-container';
-      actionsContainer.style.display = 'grid';
-      actionsContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
-      actionsContainer.style.gap = '8px';
-      
-      // Create an array to hold all button elements
-      const buttons = [];
-      
-      // Website link
-      if (priest['Website'] && priest['Website'].trim() !== '') {
-        const btn = document.createElement('a');
-        btn.className = 'action-btn';
-        btn.textContent = "$$website$$";
-        btn.href = priest['Website'];
-        btn.target = "_blank";
-        buttons.push(btn);
-      }
-      
-      // Contact Email
-      if (priest['Email']) {
-        const btn = document.createElement('a');
-        btn.className = 'action-btn';
-        btn.textContent = "Email";
-        btn.href = `mailto:${priest['Email']}`;
-        buttons.push(btn);
-      }
-      
-      // Contact Phone
-      if (priest['Phone']) {
-        const btn = document.createElement('a');
-        btn.className = 'action-btn';
-        btn.textContent = "Phone";
-        btn.href = `tel:${priest['Phone']}`;
-        buttons.push(btn);
-      }
-      
-      // More info button
-      const moreBtn = document.createElement('button');
-      moreBtn.className = 'action-btn';
-      moreBtn.textContent = "$$show-more-info$$";
-      moreBtn.addEventListener('click', () => {
-        let bioText = `${priest.Type} ${priest.Name}\n`;
-            
-        // Born year
-        if (priest['BornYear']) {
-          bioText += `\n$$born$$: ${priest['BornYear']}`;
-        }
-        
-        // Ordination info
-        if (priest['OrdainedInRite'] || priest['OrdainedBy']) {
-          bioText += `\n$$ordained-priest-in$$: `;
-          if (priest['OrdainedInRite']) {
-            bioText += priest['OrdainedInRite'] + ' ';
-          }
-          if (priest['OrdainedBy']) {
-            bioText += `$$by$$ ${priest['OrdainedBy']}`;
-          }
-        }
-        
-        // Consecration info (for bishops)
-        if (priest.Type === "Bishop" && (priest['ConsecratedInRite'] || priest['ConsecratedBy'])) {
-          bioText += `\n$$consecrated-bishop-in$$: `;
-          if (priest['ConsecratedInRite']) {
-            bioText += priest['ConsecratedInRite'] + ' ';
-          }
-          if (priest['ConsecratedBy']) {
-            bioText += `$$by$$ ${priest['ConsecratedBy']} `;
-          }
-          
-          // Bishop line
-          if (priest['BishopLine']) {
-            bioText += `\n$$bishop-line$$: ${priest['BishopLine']}`;
-          }
-        }
-        
-        // Location
-        if (priest['Location/Area']) {
-          bioText += `\n\n$$operates-in$$: ${priest['Location/Area']}`;
-        }
-        
-        // Associates With
-        if (priest['AssociatesWith']) {
-          bioText += `\n$$associates-with$$: ${priest['AssociatesWith']}`;
-        }
-        
-        // Beliefs
-        if (priest['Beliefs']) {
-          bioText += `\n$$beliefs$$: ${priest['Beliefs']}`;
-        }
-        
-        // Notes
-        if (priest['Notes']) {
-          bioText += `\n\n$$notes$$: ${priest['Notes']}`;
-        }
-        
-        // Show in alert
-        alert(bioText);
-      });
-      buttons.push(moreBtn);
-      
-      // Calendar button
-      const calendarBtn = document.createElement('button');
-      calendarBtn.className = 'action-btn';
-      calendarBtn.textContent = "$$view-calendar$$";
-      calendarBtn.addEventListener('click', () => {
-        showPriestCalendar(priest);
-      });
-      buttons.push(calendarBtn);
-
-      // Add Donate button if funding available
-      const fundingInfo = getFundingInfo(priest.ReligiousID);
-      if (fundingInfo) {
-        const donateBtn = document.createElement('a');
-        donateBtn.className = 'action-btn donate-btn';
-        donateBtn.href = fundingInfo.DonationLinks;
-        donateBtn.target = '_blank';
-        
-        // Calculate funding percentage if available
-        let donateText = '$$donate$$';
-        if (fundingInfo.FundingGoal && fundingInfo.CurrentAmount) {
-          const percentage = Math.round((fundingInfo.CurrentAmount / fundingInfo.FundingGoal) * 100);
-          donateText += ` (${percentage}% $$funded$$)`;
-        }
-        
-        donateBtn.textContent = donateText;
-        buttons.push(donateBtn);
-      }
-      
-      // If there's an odd number of buttons, make the first one span the full width
-      if (buttons.length % 2 !== 0 && buttons.length > 0) {
-        buttons[0].style.gridColumn = "1 / span 2";
-      }
-      
-      // Add all buttons to container
-      buttons.forEach(btn => {
-        actionsContainer.appendChild(btn);
-      });
-      
-      // Add actions container to info panel
-      priestInfo.appendChild(actionsContainer);
-
-      // Show the info panel
-      infoPanel.style.display = 'flex';
-      
-      // Find primary location for this priest
-      if (priestLocations.length > 0) {
-        let primaryLocation = priestLocations[0];
-        // Fly to location (use less zoom than parish view)
-        map.flyTo([primaryLocation.Latitude, primaryLocation.Longitude], 8, {
-          animate: true,
-          duration: 0.5
-        });
-      }
-      
-      // Highlight this priest's locations
-      highlightPriest(priest);
-    }
 
     // Highlight location and its connections
     function highlightLocation(location) {
@@ -2252,88 +3154,19 @@ function parseFundingData(csvData) {
         }
       });
     }
-    
-    // Function to format date
-function formatDate(dateStr) {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString(CONFIG.currentLanguage, {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-}
-
-// Function to format time
-function formatTime(dateStr) {
-  const date = new Date(dateStr);
-  return date.toLocaleTimeString(CONFIG.currentLanguage, {
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-}
-
-// Check if an event is cancelled
-function isEventCancelled(event, date) {
-  if (!cancelledEventsMap.has(event.EventID)) return false;
-  
-  const cancelled = cancelledEventsMap.get(event.EventID);
-  const eventDate = new Date(date);
-  
-  return cancelled.some(cancel => {
-    // Format may vary, handle different date formats
-    const cancelStartDate = new Date(cancel.DateStart);
-    
-    // If cancelStartDate is invalid, try different format (DD.MM.YYYY)
-    if (isNaN(cancelStartDate.getTime()) && cancel.DateStart) {
-      const parts = cancel.DateStart.split('.');
-      if (parts.length === 3) {
-        const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-        return new Date(formattedDate).toDateString() === eventDate.toDateString();
-      }
-    }
-    
-    return cancelStartDate.toDateString() === eventDate.toDateString();
-  });
-}
-
-// Get cancellation reason for an event
-function getCancellationReason(event, date) {
-  if (!cancelledEventsMap.has(event.EventID)) return null;
-  
-  const cancelled = cancelledEventsMap.get(event.EventID);
-  const eventDate = new Date(date);
-  
-  const cancelEntry = cancelled.find(cancel => {
-    const cancelStartDate = new Date(cancel.DateStart);
-    
-    // If cancelStartDate is invalid, try different format (DD.MM.YYYY)
-    if (isNaN(cancelStartDate.getTime()) && cancel.DateStart) {
-      const parts = cancel.DateStart.split('.');
-      if (parts.length === 3) {
-        const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-        return new Date(formattedDate).toDateString() === eventDate.toDateString();
-      }
-    }
-    
-    return cancelStartDate.toDateString() === eventDate.toDateString();
-  });
-  
-  return cancelEntry ? cancelEntry.Reason : null;
-}
 
 // Get funding info for an entity
 function getFundingInfo(entityId) {
-  return fundingMap.get(entityId) || null;
+  return window.fundingMap.get(entityId) || null;
 }
 
 // Create HTML for the calendar popup
 function createCalendarHtml(entityId, isLocation = true) {
-  const entity = isLocation ? locationMap.get(entityId) : religiousMap.get(entityId);
+  const entity = isLocation ? window.locationMap.get(entityId) : window.religiousMap.get(entityId);
   const entityName = isLocation ? entity.Name : `${entity.Type} ${entity.Name}`;
   
   // Filter events for this entity
-  const entityEvents = events.filter(event => {
+  const entityEvents = window.events.filter(event => {
     if (isLocation) {
       return event.LocationID === entityId;
     } else {
@@ -2349,319 +3182,175 @@ function createCalendarHtml(entityId, isLocation = true) {
   // Create calendar HTML
   let html = `
   <div class="calendar-popup" id="calendarPopup">
-    <div class="calendar-header">
-      <div class="calendar-title">${entityName} - $$calendar-title$$</div>
-      <button class="calendar-close" id="calendarClose">×</button>
+    <div class="calendar-top">
+      <div class="calendar-header">
+        <div class="calendar-title">${entityName} - $$calendar-title$$</div>
+        <button class="calendar-close" id="calendarClose">×</button>
+      </div>
+      <div class="calendar-nav">
+        <button id="prevMonth">&#8249;</button>
+        <div class="calendar-month-year" id="calendarMonthYear"></div>
+        <button id="nextMonth">&#8250;</button>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
     </div>
-    <div class="calendar-nav">
-      <button id="prevMonth">&#8249;</button>
-      <div class="calendar-month-year" id="calendarMonthYear"></div>
-      <button id="nextMonth">&#8250;</button>
+    <div class="calendar-bottom">
+      <div class="calendar-events" id="calendarEvents"></div>
     </div>
-    <div class="calendar-grid" id="calendarGrid"></div>
-    <div class="calendar-events" id="calendarEvents"></div>
   </div>
   `;
   
   return html;
 }
 
-// Generate calendar for a specific month
-function generateCalendar(entityId, month, year, isLocation = true) {
-  const grid = document.getElementById('calendarGrid');
-  const monthYearEl = document.getElementById('calendarMonthYear');
-  const eventsEl = document.getElementById('calendarEvents');
-  
-  // Clear previous content
-  grid.innerHTML = '';
-  eventsEl.innerHTML = '';
-  
-  // Set month and year display
-  const monthNames = [
-    '$$month-january$$', '$$month-february$$', '$$month-march$$', '$$month-april$$', 
-    '$$month-may$$', '$$month-june$$', '$$month-july$$', '$$month-august$$', 
-    '$$month-september$$', '$$month-october$$', '$$month-november$$', '$$month-december$$'
-  ];
-  monthYearEl.textContent = `${monthNames[month]} ${year}`;
-  
-  // Add day headers
-  const dayNames = ['$$day-sun$$', '$$day-mon$$', '$$day-tue$$', '$$day-wed$$', '$$day-thu$$', '$$day-fri$$', '$$day-sat$$'];
-  dayNames.forEach(day => {
-    const dayHeader = document.createElement('div');
-    dayHeader.className = 'calendar-day-header';
-    dayHeader.textContent = day;
-    grid.appendChild(dayHeader);
-  });
-  
-  // Get first day of the month
-  const firstDay = new Date(year, month, 1);
-  const startingDay = firstDay.getDay(); // 0 = Sunday
-  
-  // Get number of days in the month
-  const lastDay = new Date(year, month + 1, 0);
-  const totalDays = lastDay.getDate();
-  
-  // Get previous month days to display
-  const prevMonth = month === 0 ? 11 : month - 1;
-  const prevYear = month === 0 ? year - 1 : year;
-  const prevMonthLastDay = new Date(prevYear, prevMonth + 1, 0).getDate();
-  
-  // Filter events for this entity and month
-  const entityEvents = events.filter(event => {
-    if (!event.StartDate) return false;
-    
-    const eventDate = new Date(event.StartDate);
-    if (isNaN(eventDate.getTime())) return false;
-    
-    if (isLocation) {
-      return event.LocationID === entityId && 
-             eventDate.getMonth() === month && 
-             eventDate.getFullYear() === year;
-    } else {
-      return event.ReligiousID === entityId && 
-             eventDate.getMonth() === month && 
-             eventDate.getFullYear() === year;
-    }
-  });
-  
-  // Create map of dates with events
-  const datesWithEvents = new Map();
-  entityEvents.forEach(event => {
-    const eventDate = new Date(event.StartDate);
-    const dayKey = eventDate.getDate();
-    
-    if (!datesWithEvents.has(dayKey)) {
-      datesWithEvents.set(dayKey, []);
-    }
-    datesWithEvents.get(dayKey).push(event);
-  });
-  
-  // Add days from previous month
-  for (let i = 0; i < startingDay; i++) {
-    const day = prevMonthLastDay - startingDay + i + 1;
-    const dayEl = document.createElement('div');
-    dayEl.className = 'calendar-day other-month';
-    dayEl.textContent = day;
-    grid.appendChild(dayEl);
-  }
-  
-  // Add days of current month
-  for (let day = 1; day <= totalDays; day++) {
-    const dayEl = document.createElement('div');
-    dayEl.className = 'calendar-day';
-    dayEl.textContent = day;
-    
-    // Check if this day has events
-    if (datesWithEvents.has(day)) {
-      dayEl.classList.add('has-events');
-      
-      // Add click handler to show events for this day
-      dayEl.addEventListener('click', () => {
-        showEventsForDay(entityId, year, month, day, isLocation);
-      });
-    }
-    
-    grid.appendChild(dayEl);
-  }
-  
-  // Add days from next month to fill the grid
-  const totalCells = Math.ceil((startingDay + totalDays) / 7) * 7;
-  const nextMonthDays = totalCells - (startingDay + totalDays);
-  
-  for (let day = 1; day <= nextMonthDays; day++) {
-    const dayEl = document.createElement('div');
-    dayEl.className = 'calendar-day other-month';
-    dayEl.textContent = day;
-    grid.appendChild(dayEl);
-  }
-}
-
-// Show events for a specific day
 function showEventsForDay(entityId, year, month, day, isLocation = true) {
+  console.log(`showEventsForDay ${entityId} ${year} ${month} ${day} ${isLocation}`);
   const eventsEl = document.getElementById('calendarEvents');
-  eventsEl.innerHTML = '';
+  if (!eventsEl) {
+    console.error("Calendar events display element not found!");
+    return;
+  }
   
-  // Create date for this day
-  const date = new Date(year, month, day);
+  eventsEl.innerHTML = ''; // Clear previous events
+
+  // --- Get context timezone for formatting ---
+  let contextTimezone = 'UTC';
+  const entityLocation = isLocation ? window.locationMap.get(entityId) : window.locations.find(l => l.ReligiousIdArray?.includes(entityId));
+  if (entityLocation?.Timezone) {
+    contextTimezone = entityLocation.Timezone;
+  }
+
+  // Create the day header using the timezone
+  const targetDayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  const dayDate = createZonedDateTime(targetDayStr, '12:00:00', contextTimezone);
   
-  // Add heading for this day
-  const dayHeading = document.createElement('h3');
-  dayHeading.textContent = formatDate(date);
-  eventsEl.appendChild(dayHeading);
-  
-  // Filter events for this entity and day
-  const dayEvents = events.filter(event => {
-    if (!event.StartDate) return false;
-    
-    const eventDate = new Date(event.StartDate);
-    if (isNaN(eventDate.getTime())) return false;
-    
-    const isSameDay = 
-      eventDate.getDate() === day && 
-      eventDate.getMonth() === month && 
-      eventDate.getFullYear() === year;
-    
-    if (isLocation) {
-      return event.LocationID === entityId && isSameDay;
-    } else {
-      return event.ReligiousID === entityId && isSameDay;
-    }
-  });
-  
-  // Sort events by time
-  dayEvents.sort((a, b) => {
-    return new Date(a.StartDate) - new Date(b.StartDate);
-  });
-  
-  // Add events
-  dayEvents.forEach(event => {
-    const eventEl = document.createElement('div');
-    eventEl.className = 'calendar-event';
-    
-    // Check if event is cancelled
-    const cancelled = isEventCancelled(event, date);
-    if (cancelled) {
-      eventEl.classList.add('cancelled');
-    }
-    
-    // Event title
-    const titleEl = document.createElement('div');
-    titleEl.className = 'calendar-event-title';
-    titleEl.textContent = event.EventType || 'Event';
-    eventEl.appendChild(titleEl);
-    
-    // Event time
-    if (event.StartDate) {
-      const timeEl = document.createElement('div');
-      timeEl.className = 'calendar-event-time';
-      timeEl.textContent = `$$event-time$$: ${formatTime(event.StartDate)}`;
-      if (event.EndDate) {
-        timeEl.textContent += ` - ${formatTime(event.EndDate)}`;
-      }
-      eventEl.appendChild(timeEl);
-    }
-    
-    // Location or Priest (depending on view)
-    if (isLocation) {
-      if (event.ReligiousID) {
-        const priest = religiousMap.get(event.ReligiousID);
-        if (priest) {
-          const priestEl = document.createElement('div');
-          priestEl.className = 'calendar-event-priest';
-          priestEl.textContent = `$$event-priest$$: ${priest.Type || ''} ${priest.Name || ''}`;
-          eventEl.appendChild(priestEl);
-        }
-      }
-    } else {
-      if (event.LocationID) {
-        const location = locationMap.get(event.LocationID);
-        if (location) {
-          const locationEl = document.createElement('div');
-          locationEl.className = 'calendar-event-location';
-          locationEl.textContent = `$$event-location$$: ${location.Name || ''}`;
-          eventEl.appendChild(locationEl);
-        }
-      }
-    }
-    
-    // Notes
-    if (event.Notes) {
-      const notesEl = document.createElement('div');
-      notesEl.className = 'calendar-event-notes';
-      notesEl.textContent = event.Notes;
-      eventEl.appendChild(notesEl);
-    }
-    
-    // Cancellation reason
-    if (cancelled) {
-      const reason = getCancellationReason(event, date);
-      if (reason) {
-        const cancelEl = document.createElement('div');
-        cancelEl.className = 'calendar-event-cancelled';
-        cancelEl.textContent = reason;
-        eventEl.appendChild(cancelEl);
-      }
-    }
-    
-    // Donation link
-    const fundingInfo = getFundingInfo(event.EventID);
-    if (fundingInfo) {
-      const donateEl = document.createElement('a');
-      donateEl.className = 'donate-link';
-      donateEl.href = fundingInfo.DonationLinks;
-      donateEl.target = '_blank';
-      
-      // Calculate funding percentage if available
-      let donateText = '$$donate$$';
-      if (fundingInfo.FundingGoal && fundingInfo.CurrentAmount) {
-        const percentage = Math.round((fundingInfo.CurrentAmount / fundingInfo.FundingGoal) * 100);
-        donateText += ` [${percentage}% $$funded$$]`;
-      }
-      
-      donateEl.textContent = donateText;
-      eventEl.appendChild(donateEl);
-    }
-    
-    eventsEl.appendChild(eventEl);
-  });
-  
-  // No events message
+  if (dayDate) {
+    const dayHeading = document.createElement('h3');
+    dayHeading.textContent = formatZonedDate(dayDate.date, contextTimezone, { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    eventsEl.appendChild(dayHeading);
+  }
+
+  // Get events data using the separated function
+  const dayEvents = getEventsForDay(entityId, year, month, day, isLocation);
+
+  // --- Display Events or "No Events" Message ---
   if (dayEvents.length === 0) {
     const noEventsEl = document.createElement('p');
     noEventsEl.textContent = '$$no-events$$';
     eventsEl.appendChild(noEventsEl);
+  } else {
+    dayEvents.forEach(event => {
+      const eventEl = document.createElement('div');
+      eventEl.className = 'calendar-event';
+
+      // Apply cancelled styling if needed
+      if (event.isCancelled) {
+        eventEl.classList.add('cancelled');
+        eventEl.style.textDecoration = 'line-through';
+        eventEl.style.color = 'grey';
+      }
+
+      // Event title (e.g., "Mass", "Confession")
+      const titleEl = document.createElement('div');
+      titleEl.className = 'calendar-event-title';
+      titleEl.textContent = event.EventType || 'Event';
+      eventEl.appendChild(titleEl);
+
+      // Event Time - Use zoned formatting!
+      if (event.StartDate) {
+        const timeEl = document.createElement('div');
+        timeEl.className = 'calendar-event-time';
+        let timeString = formatZonedTime(event.StartDate, event.Timezone);
+
+        if (event.EndDate && event.EndDate.getTime() !== event.StartDate.getTime()) {
+          // Add end time if different
+          const durationMs = event.EndDate.getTime() - event.StartDate.getTime();
+          if (durationMs > 1000) { // Only show end time if duration > 1 second
+            timeString += ` - ${formatZonedTime(event.EndDate, event.Timezone)}`;
+          }
+        }
+        // Add timezone identifier for clarity
+        timeString += ` (${formatZonedTime(event.StartDate, event.Timezone, { timeZoneName: 'short' })})`;
+
+        timeEl.textContent = `Time: ${timeString}`;
+        eventEl.appendChild(timeEl);
+      }
+
+      // Priest or Location details (depending on context)
+      if (isLocation && event.PriestID) {
+        const priest = window.religiousMap.get(event.PriestID);
+        if (priest) {
+          const priestEl = document.createElement('div');
+          priestEl.className = 'calendar-event-priest';
+          priestEl.textContent = `With: ${priest.Type || 'Priest'} ${priest.Name || ''}`;
+          eventEl.appendChild(priestEl);
+        }
+      } else if (!isLocation && event.LocationID) {
+        const location = window.locationMap.get(event.LocationID);
+        if (location) {
+          const locationEl = document.createElement('div');
+          locationEl.className = 'calendar-event-location';
+          locationEl.textContent = `At: ${location.Name || 'Unknown Location'}`;
+          eventEl.appendChild(locationEl);
+        }
+      }
+
+      // Notes for the event
+      if (event.Notes) {
+        const notesEl = document.createElement('div');
+        notesEl.className = 'calendar-event-notes';
+        notesEl.style.fontStyle = 'italic';
+        notesEl.textContent = event.Notes;
+        eventEl.appendChild(notesEl);
+      }
+
+      // Display cancellation reason if applicable
+      if (event.isCancelled && event.cancellationReason) {
+        const cancelEl = document.createElement('div');
+        cancelEl.className = 'calendar-event-cancelled';
+        cancelEl.style.color = '#cc0000';
+        cancelEl.style.fontWeight = 'bold';
+        cancelEl.textContent = `Cancelled: ${event.cancellationReason}`;
+        eventEl.appendChild(cancelEl);
+      }
+
+      // Append the fully constructed event element
+      eventsEl.appendChild(eventEl);
+    });
   }
 }
 
-// Show calendar popup for a location
+// Show location calendar
 function showLocationCalendar(location) {
-  // Add calendar popup to the DOM if it doesn't exist
-  if (!document.getElementById('calendarPopup')) {
-    const calendarHtml = createCalendarHtml(location.LocationID, true);
-    document.body.insertAdjacentHTML('beforeend', calendarHtml);
-    
-    // Set up event listeners
-    document.getElementById('calendarClose').addEventListener('click', () => {
-      document.getElementById('calendarPopup').style.display = 'none';
-    });
-    
-    // Previous and next month navigation
-    let currentMonth = new Date().getMonth();
-    let currentYear = new Date().getFullYear();
-    
-    document.getElementById('prevMonth').addEventListener('click', () => {
-      currentMonth--;
-      if (currentMonth < 0) {
-        currentMonth = 11;
-        currentYear--;
-      }
-      generateCalendar(location.LocationID, currentMonth, currentYear, true);
-    });
-    
-    document.getElementById('nextMonth').addEventListener('click', () => {
-      currentMonth++;
-      if (currentMonth > 11) {
-        currentMonth = 0;
-        currentYear++;
-      }
-      generateCalendar(location.LocationID, currentMonth, currentYear, true);
-    });
+  const result = showCalendar(location, true);
+  // Setup calendar after it's displayed
+  if (document.getElementById('calendarPopup').style.display === 'flex') {
+    rerenderCalendarPopup(location.LocationID, true);
   }
-  
-  // Show popup
-  const popup = document.getElementById('calendarPopup');
-  popup.style.display = 'flex';
-  
-  // Generate calendar
-  const now = new Date();
-  generateCalendar(location.LocationID, now.getMonth(), now.getFullYear(), true);
+  return result;
 }
 
-// Show calendar popup for a priest
+// Show priest calendar
 function showPriestCalendar(priest) {
+  const result = showCalendar(priest, false);
+  // Setup calendar after it's displayed
+  if (document.getElementById('calendarPopup').style.display === 'flex') {
+    rerenderCalendarPopup(priest.ReligiousID, false);
+  }
+  return result;
+}
+
+function showCalendar(entity, isLocation = true) {
+  const entityId = isLocation ? entity.LocationID : entity.ReligiousID;
+  
   // Add calendar popup to the DOM if it doesn't exist
   if (!document.getElementById('calendarPopup')) {
-    const calendarHtml = createCalendarHtml(priest.ReligiousID, false);
+    const calendarHtml = createCalendarHtml(entityId, isLocation);
     document.body.insertAdjacentHTML('beforeend', calendarHtml);
     
     // Set up event listeners
@@ -2679,7 +3368,7 @@ function showPriestCalendar(priest) {
         currentMonth = 11;
         currentYear--;
       }
-      generateCalendar(priest.ReligiousID, currentMonth, currentYear, false);
+      generateCalendar(entityId, currentMonth, currentYear, isLocation);
     });
     
     document.getElementById('nextMonth').addEventListener('click', () => {
@@ -2688,21 +3377,42 @@ function showPriestCalendar(priest) {
         currentMonth = 0;
         currentYear++;
       }
-      generateCalendar(priest.ReligiousID, currentMonth, currentYear, false);
+      generateCalendar(entityId, currentMonth, currentYear, isLocation);
     });
   }
   
   // Show popup
   const popup = document.getElementById('calendarPopup');
   popup.style.display = 'flex';
+  popup.style.minHeight = '100%';
   
-  // Generate calendar
+  // Generate calendar for current month
   const now = new Date();
-  generateCalendar(priest.ReligiousID, now.getMonth(), now.getFullYear(), false);
+  generateCalendar(entityId, now.getMonth(), now.getFullYear(), isLocation);
+  
+  // Show upcoming events
+  showUpcomingEvents(entityId, isLocation);
 }
 
-    // Reset all markers to their default style
-    function resetAllMarkers() {
+// Generate calendar
+function generateCalendar(entityId, month, year, isLocation = true) {
+  // Update month/year display
+  const monthYearEl = document.getElementById('calendarMonthYear');
+  const grid = document.getElementById('calendarGrid');
+  
+  // Clear previous content
+  grid.innerHTML = '';
+  
+  // Get calendar HTML
+  const calendarHTML = getHtmlForCalendar(month, year, entityId, isLocation);
+  
+  // Update display
+  monthYearEl.innerHTML = calendarHTML.querySelector('.calendar-month-year').innerHTML;
+  grid.innerHTML = calendarHTML.querySelector('.calendar-grid').innerHTML;
+}
+
+// Reset all markers to their default style
+function resetAllMarkers() {
   // Reset parish markers
   parishMarkers.eachLayer(marker => {
     const markerSize = CONFIG.parishMarkerSize;
@@ -2764,31 +3474,17 @@ function levenshteinDistance(a, b) {
   return matrix[a.length][b.length];
 }
 
-
-    // Handle search input
-    function handleSearch(event) {
-  const searchTerm = event.target.value.toLowerCase();
-  const searchResultsContainer = document.getElementById('searchResults');
-  const outboundLinks = document.querySelector('.links');
-  
-  // Reset search results
-  searchResultsContainer.innerHTML = '';
-  
-  if (searchTerm.length < 2) {
-    searchResultsContainer.style.display = 'none';
-    outboundLinks.style.display = 'flex'; // Show outbound links again
-    resetAllMarkers();
-    return;
+// Search results function
+function getSearchResults(searchTerm) {
+  if (!searchTerm || searchTerm.length < 2) {
+    return [];
   }
   
-  // Hide outbound links when showing search results to save space
-  outboundLinks.style.display = 'none';
-  
-  // Search results with scores for ranking
+  searchTerm = searchTerm.toLowerCase();
   const searchResults = [];
   
-  // Filter locations with fuzzy search
-  locations.forEach(location => {
+  // Search locations
+  window.locations.forEach(location => {
     let bestScore = Infinity;
     let matchField = '';
     
@@ -2835,8 +3531,8 @@ function levenshteinDistance(a, b) {
     }
   });
   
-  // Filter religious with fuzzy search
-  religious.forEach(person => {
+  // Search religious people
+  window.religious.forEach(person => {
     let bestScore = Infinity;
     let matchField = '';
     
@@ -2886,106 +3582,79 @@ function levenshteinDistance(a, b) {
     }
   });
   
-  // Sort results by score (closest match first)
+  // Sort results by score
   searchResults.sort((a, b) => a.score - b.score);
   
-  // Find connected entities and add them to results
-  const connectedResults = new Set();
-  
+  // Find connected entities
+  const connectedResults = [];
   searchResults.forEach(result => {
     if (result.type === 'location') {
       // Find priests connected to this location
       const location = result.data;
       if (location.ReligiousIdArray && location.ReligiousIdArray.length > 0) {
         location.ReligiousIdArray.forEach(religiousId => {
-          const person = religiousMap.get(religiousId);
-          if (person) {
-            const connectedResult = {
+          const person = window.religiousMap.get(religiousId);
+          if (person && !searchResults.some(r => r.type === 'religious' && r.data.ReligiousID === religiousId)) {
+            connectedResults.push({
               type: 'religious',
               data: person,
-              score: result.score + 0.1, // Slightly worse score than the main result
-              matchField: 'Connected to ' + location.Name,
+              score: result.score + 0.1,
+              matchField: `Connected to ${location.Name}`,
               connected: true
-            };
-            connectedResults.add(JSON.stringify(connectedResult));
+            });
           }
         });
       }
     } else if (result.type === 'religious') {
       // Find locations connected to this priest
       const person = result.data;
-      locations.forEach(location => {
-        if (location.ReligiousIdArray && location.ReligiousIdArray.includes(person.ReligiousID)) {
-          const connectedResult = {
+      window.locations.forEach(location => {
+        if (location.ReligiousIdArray && 
+            location.ReligiousIdArray.includes(person.ReligiousID) &&
+            !searchResults.some(r => r.type === 'location' && r.data.LocationID === location.LocationID)) {
+          connectedResults.push({
             type: 'location',
             data: location,
-            score: result.score + 0.1, // Slightly worse score than the main result
-            matchField: 'Connected to ' + person.Name,
+            score: result.score + 0.1,
+            matchField: `Connected to ${person.Name}`,
             connected: true
-          };
-          connectedResults.add(JSON.stringify(connectedResult));
+          });
         }
       });
     }
   });
   
-  // Add connected results to main results
-  connectedResults.forEach(resultStr => {
-    const result = JSON.parse(resultStr);
-    // Check if this connected result already exists in the main results
-    const exists = searchResults.some(r => 
-      (r.type === result.type) && 
-      ((r.type === 'location' && r.data.LocationID === result.data.LocationID) ||
-       (r.type === 'religious' && r.data.ReligiousID === result.data.ReligiousID))
-    );
-    
-    if (!exists) {
-      searchResults.push(result);
-    }
-  });
+  // Add connected results and re-sort
+  return [...searchResults, ...connectedResults].sort((a, b) => a.score - b.score);
+}
+
+
+// Handle search input function
+function handleSearch(event) {
+  const searchTerm = event.target.value.toLowerCase();
+  const searchResultsContainer = document.getElementById('searchResults');
+  const outboundLinks = document.querySelector('.links');
   
-  // Re-sort after adding connected results
-  searchResults.sort((a, b) => a.score - b.score);
+  // Reset search results
+  searchResultsContainer.innerHTML = '';
   
-  // Highlight matching markers
-  resetAllMarkers();
+  // Always ensure only one is shown
+  if (searchTerm.length < 2) {
+    searchResultsContainer.style.display = 'none';
+    outboundLinks.style.display = 'flex'; // Show links when no search
+    resetAllMarkers();
+    return;
+  }
+  
+  // Hide outbound links when showing search results
+  outboundLinks.style.display = 'none';
+  
+  // Get search results
+  const searchResults = getSearchResults(searchTerm);
   
   // Display search results
   if (searchResults.length > 0) {
-    // Highlight matching entities on the map
-    searchResults.forEach(result => {
-      if (result.type === 'location') {
-        // Highlight location
-        parishMarkers.eachLayer(marker => {
-          if (marker.locationData && marker.locationData.LocationID === result.data.LocationID) {
-            const markerSize = CONFIG.parishMarkerSize * 1.5;
-            const icon = L.divIcon({
-              className: 'parish-marker',
-              html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color: ${result.connected ? '#00cc00' : 'yellow'};"></div>`,
-              iconSize: [markerSize, markerSize],
-              iconAnchor: [markerSize/2, markerSize/2]
-            });
-            marker.setIcon(icon);
-          }
-        });
-      } else if (result.type === 'religious') {
-        // Highlight priest
-        priestMarkers.eachLayer(marker => {
-          if (marker.priestData && marker.priestData.ReligiousID === result.data.ReligiousID) {
-            const markerSize = CONFIG.priestMarkerSize * 1.5;
-            const icon = L.divIcon({
-              className: 'priest-marker pulse',
-              html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color: ${result.connected ? '#00cc00' : 'yellow'};"></div>`,
-              iconSize: [markerSize, markerSize],
-              iconAnchor: [markerSize/2, markerSize/2]
-            });
-            marker.setIcon(icon);
-          }
-        });
-      }
-    });
-    
-    // Create result items in the UI
+    // Create result items in the UI without highlighting markers during search
     searchResults.forEach(result => {
       const resultItem = document.createElement('div');
       resultItem.className = 'search-result-item';
@@ -2993,7 +3662,9 @@ function levenshteinDistance(a, b) {
       let label = '';
       if (result.type === 'religious') {
         const person = result.data;
-        label = `${person.Type || 'Clergy'} ${person.Name || ''}`;
+        // Use proper translated title
+        const translatedType = getTranslatedReligiousType(person.Type);
+        label = `${translatedType} ${person.Name || ''}`;
       } else {
         label = result.data.Name || 'Location';
       }
@@ -3010,7 +3681,7 @@ function levenshteinDistance(a, b) {
       } else {
         // Connected items are shown differently
         resultItem.innerHTML = `<strong>${label}</strong><br><small>${result.matchField}</small>`;
-        resultItem.style.borderLeft = '3px solid #00cc00';
+        resultItem.classList.add('connected');
       }
       
       resultItem.tabIndex = 0;
@@ -3103,9 +3774,7 @@ function levenshteinDistance(a, b) {
       
       // Approximate latitude based on language
       const approximateLatitude = estimateLatitude(approximateLongitude);
-      
-      console.log(`Estimated location based on timezone and language: ${approximateLatitude}, ${approximateLongitude}`);
-      
+            
       // Center map and add marker
       map.setView([approximateLatitude, approximateLongitude], 5);
       addUserLocationMarker(approximateLatitude, approximateLongitude);
