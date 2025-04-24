@@ -123,6 +123,43 @@
         margin-top: 10px;
     }
     
+    @media screen and (max-width: 450px) {
+        .search-input, .sidebar-links, .search-container .links, .info-panel {
+          margin: 0px 10px;
+        }
+        .info-panel {
+          margin-bottom: 10px;
+        }
+        .calendar-grid {
+          gap: 2px;
+          margin-bottom: 10px;
+        }
+        .calendar-day {
+          border: none;
+        }
+        .calendar-day {
+          padding: 5px;
+        }
+        .calendar-day-header {
+          padding: 2px;
+        }
+        .calendar-title {
+          hyphens: auto;
+          word-break: break-all;
+        }
+        .calendar-popup {
+          border-radius: 0px;
+        }
+        .calendar-day.has-events::after {
+          bottom: 1px;
+        }
+        .calendar-bottom {
+          padding: 0px 10px;
+        }
+        .calendar-top {
+          padding: 20px 10px;
+        }
+    }
     .search-input:focus {
         border: 3px solid var(--focus-col);
     }
@@ -455,6 +492,7 @@
       display: flex;
       justify-content: center;
       flex-direction: column;
+      margin-top: 10px;
     }
 
     #sidebar a {
@@ -586,7 +624,6 @@
     .calendar-popup {
       position: absolute;
       flex-grow: 1;
-      max-width: 440px;
       justify-content: center;
       background: var(--panel-bg);
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
@@ -596,7 +633,10 @@
       display: none;
       min-height: 100%;
       padding: 0px 20px;
-      justify-content: space-between;
+      justify-content: flex-start;
+      max-width: 410px;
+      border-radius: 6px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
     .calendar-top {
@@ -611,6 +651,7 @@
       flex: 1;
       flex-direction: column;
       justify-content: flex-start;
+      overflow-y: scroll;
     }
 
     .calendar-header {
@@ -883,14 +924,6 @@
   right: 12px;
 }
 
-/* Calendar popup improvements */
-.calendar-popup {
-  max-width: 450px;
-  border-radius: 6px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-/* Improve for mobile */
 @media (max-width: 800px) {
   .info-panel {
     max-height: 70vh;
@@ -1059,7 +1092,6 @@
         <a href="/$$LANG$$">$$nav-home$$</a>
         <a href="/$$LANG$$/$$special-topics-path$$">$$nav-articles$$</a>
         <a href="/$$LANG$$/$$special-tools-path$$">$$nav-tools$$</a>
-        <a href="/$$LANG$$/$$special-about-path$$">$$nav-contact$$</a>
       </div>
     </nav>
 
@@ -1069,7 +1101,6 @@
         <div class="links">
           <a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">$$report-error$$</a>
           <a class="outbound-link" href="https://github.com/fschutt/dubiacc/issues">$$request-mass$$</a>
-          <a style="color:white;" class="outbound-link" href="https://dubia.cc">$$back-to-site$$</a>
         </div>
         <div class="search-results" id="searchResults">
         </div>
