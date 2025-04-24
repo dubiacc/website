@@ -130,6 +130,11 @@
         .info-panel {
           margin-bottom: 10px;
         }
+        .search-input {
+          margin-top: 5px;
+          margin-bottom: 5px;
+          padding: 5px;
+        }
         .calendar-grid {
           gap: 2px;
           margin-bottom: 10px;
@@ -149,6 +154,7 @@
         }
         .calendar-popup {
           border-radius: 0px;
+          overflow-y: scroll;
         }
         .calendar-day.has-events::after {
           bottom: 1px;
@@ -1339,7 +1345,7 @@ const defaultFundingData = `"CampaignID","ReligiousOrLocationOrEventID","Funding
       parseFundingData(defaultFundingData);
 
       // Then try to fetch from the live DB
-      // await fetchSheetData();
+      await fetchSheetData();
     }
 
 async function getTimezoneForLocation(lat, lng) {
