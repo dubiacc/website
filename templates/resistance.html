@@ -1670,7 +1670,7 @@ async function fetchSheetData() {
       if (!response.ok) {
         throw new Error(`Failed to fetch ${sheet} data: ${response.status}`);
       }
-      const csvText = response.text();
+      const csvText = await response.text();
 
       // Parse CSV based on sheet type
       if (sheet === "locations") {
