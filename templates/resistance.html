@@ -1547,102 +1547,104 @@ function generateCalendarPDF(entityId, isLocation = true) {
   // Create QR code for entity link
   const entityUrl = `ghttdubia.cc/${CONFIG.currentLanguage}/resistance#${entityId}`;
   
-  // Generate HTML content for PDF
-  let pdfHtml = `
-  <html>
-  <head>
-    <title>${entity.Name} - ${monthNames[currentMonth]} ${currentYear}</title>
-    <style>
-      @media print {
-        @page {
-          size: A4;
-          margin: 1cm;
-        }
-        body {
-          font-family: Arial, sans-serif;
-          margin: 0;
-          padding: 0;
-        }
-        .page-break {
-          page-break-after: always;
-        }
-        .parish-header {
-          text-align: center;
-          background-color: #000000;
-          color: white;
-          padding: 15px 0;
-          margin-bottom: 20px;
-          font-size: 18pt;
-          font-weight: bold;
-        }
-        .event-columns {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          margin-bottom: 20px;
-        }
-        .event-column {
-          width: 48%;
-        }
-        .event {
-          margin-bottom: 15px;
-          padding: 8px;
-          border-left: 3px solid #700000;
-          background-color: #f9f9f9;
-        }
-        .event-cancelled {
-          text-decoration: line-through;
-          color: #999;
-          border-left-color: #999;
-        }
-        .event-title {
-          font-weight: bold;
-          font-size: 12pt;
-          margin-bottom: 5px;
-        }
-        .event-date {
-          font-size: 10pt;
-          margin-bottom: 5px;
-        }
-        .event-priest {
-          font-style: italic;
-          font-size: 10pt;
-        }
-        .notes-section {
-          border-top: 1px solid #ddd;
-          padding-top: 15px;
-          margin-top: 20px;
-          margin-bottom: 20px;
-        }
-        .notes-section h3 {
-          margin-top: 0;
-          margin-bottom: 10px;
-        }
-        .notes-lines {
-          height: 150px;
-          background-image: linear-gradient(#ddd 1px, transparent 1px);
-          background-size: 100% 25px;
-        }
-        .footer {
-          display: flex;
-          border-top: 1px solid #ddd;
-          padding-top: 15px;
-          font-size: 10pt;
-        }
-        .qr-code {
-          margin-right: 20px;
-        }
-        .footer-info {
-          flex-grow: 1;
-        }
-        .link-text {
-          margin-top: 5px;
-          font-size: 9pt;
-        }
-      }
-    </style>
-  </head>
-  <body>`;
+  // Generate HTML content for PDF using array of strings instead of multiline template literals
+  const htmlParts = [];
+  
+  // HTML header
+  htmlParts.push(`<html>`);
+  htmlParts.push(`<head>`);
+  htmlParts.push(`  <title>${entity.Name} - ${monthNames[currentMonth]} ${currentYear}</title>`);
+  htmlParts.push(`  <style>`);
+  htmlParts.push(`    @media print {`);
+  htmlParts.push(`      @page {`);
+  htmlParts.push(`        size: A4;`);
+  htmlParts.push(`        margin: 1cm;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      body {`);
+  htmlParts.push(`        font-family: Arial, sans-serif;`);
+  htmlParts.push(`        margin: 0;`);
+  htmlParts.push(`        padding: 0;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .page-break {`);
+  htmlParts.push(`        page-break-after: always;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .parish-header {`);
+  htmlParts.push(`        text-align: center;`);
+  htmlParts.push(`        background-color: #000000;`);
+  htmlParts.push(`        color: white;`);
+  htmlParts.push(`        padding: 15px 0;`);
+  htmlParts.push(`        margin-bottom: 20px;`);
+  htmlParts.push(`        font-size: 18pt;`);
+  htmlParts.push(`        font-weight: bold;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .event-columns {`);
+  htmlParts.push(`        display: flex;`);
+  htmlParts.push(`        flex-direction: row;`);
+  htmlParts.push(`        justify-content: space-between;`);
+  htmlParts.push(`        margin-bottom: 20px;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .event-column {`);
+  htmlParts.push(`        width: 48%;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .event {`);
+  htmlParts.push(`        margin-bottom: 15px;`);
+  htmlParts.push(`        padding: 8px;`);
+  htmlParts.push(`        border-left: 3px solid #700000;`);
+  htmlParts.push(`        background-color: #f9f9f9;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .event-cancelled {`);
+  htmlParts.push(`        text-decoration: line-through;`);
+  htmlParts.push(`        color: #999;`);
+  htmlParts.push(`        border-left-color: #999;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .event-title {`);
+  htmlParts.push(`        font-weight: bold;`);
+  htmlParts.push(`        font-size: 12pt;`);
+  htmlParts.push(`        margin-bottom: 5px;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .event-date {`);
+  htmlParts.push(`        font-size: 10pt;`);
+  htmlParts.push(`        margin-bottom: 5px;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .event-priest {`);
+  htmlParts.push(`        font-style: italic;`);
+  htmlParts.push(`        font-size: 10pt;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .notes-section {`);
+  htmlParts.push(`        border-top: 1px solid #ddd;`);
+  htmlParts.push(`        padding-top: 15px;`);
+  htmlParts.push(`        margin-top: 20px;`);
+  htmlParts.push(`        margin-bottom: 20px;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .notes-section h3 {`);
+  htmlParts.push(`        margin-top: 0;`);
+  htmlParts.push(`        margin-bottom: 10px;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .notes-lines {`);
+  htmlParts.push(`        height: 150px;`);
+  htmlParts.push(`        background-image: linear-gradient(#ddd 1px, transparent 1px);`);
+  htmlParts.push(`        background-size: 100% 25px;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .footer {`);
+  htmlParts.push(`        display: flex;`);
+  htmlParts.push(`        border-top: 1px solid #ddd;`);
+  htmlParts.push(`        padding-top: 15px;`);
+  htmlParts.push(`        font-size: 10pt;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .qr-code {`);
+  htmlParts.push(`        margin-right: 20px;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .footer-info {`);
+  htmlParts.push(`        flex-grow: 1;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`      .link-text {`);
+  htmlParts.push(`        margin-top: 5px;`);
+  htmlParts.push(`        font-size: 9pt;`);
+  htmlParts.push(`      }`);
+  htmlParts.push(`    }`);
+  htmlParts.push(`  </style>`);
+  htmlParts.push(`</head>`);
+  htmlParts.push(`<body>`);
   
   // Generate pages
   for (let page = 0; page < totalPages; page++) {
@@ -1654,14 +1656,13 @@ function generateCalendarPDF(entityId, isLocation = true) {
     const leftColumnEvents = pageEvents.slice(0, midpoint);
     const rightColumnEvents = pageEvents.slice(midpoint);
     
-    pdfHtml += `
-    <div class="page">
-      <div class="parish-header">
-        ${entity.Name}
-      </div>
-      
-      <div class="event-columns">
-        <div class="event-column">`;
+    htmlParts.push(`<div class="page">`);
+    htmlParts.push(`  <div class="parish-header">`);
+    htmlParts.push(`    ${entity.Name}`);
+    htmlParts.push(`  </div>`);
+    
+    htmlParts.push(`  <div class="event-columns">`);
+    htmlParts.push(`    <div class="event-column">`);
     
     // Left column events
     leftColumnEvents.forEach(event => {
@@ -1684,17 +1685,16 @@ function generateCalendarPDF(entityId, isLocation = true) {
         }
       }
       
-      pdfHtml += `
-      <div class="${eventClass}">
-        <div class="event-title">${event.EventType || 'Event'}</div>
-        <div class="event-date">${dateStr} - ${timeStr}</div>
-        ${priestInfo}
-      </div>`;
+      htmlParts.push(`      <div class="${eventClass}">`);
+      htmlParts.push(`        <div class="event-title">${event.EventType || 'Event'}</div>`);
+      htmlParts.push(`        <div class="event-date">${dateStr} - ${timeStr}</div>`);
+      if (priestInfo) {
+        htmlParts.push(`        ${priestInfo}`);
+      }
+      htmlParts.push(`      </div>`);
     });
     
-    pdfHtml += `
-        </div>
-        <div class="event-column">`;
+    htmlParts.push(`    </div><div class="event-column">`);
     
     // Right column events
     rightColumnEvents.forEach(event => {
@@ -1717,46 +1717,51 @@ function generateCalendarPDF(entityId, isLocation = true) {
         }
       }
       
-      pdfHtml += `
-      <div class="${eventClass}">
-        <div class="event-title">${event.EventType || 'Event'}</div>
-        <div class="event-date">${dateStr} - ${timeStr}</div>
-        ${priestInfo}
-      </div>`;
+      htmlParts.push(`      <div class="${eventClass}">`);
+      htmlParts.push(`        <div class="event-title">${event.EventType || 'Event'}</div>`);
+      htmlParts.push(`        <div class="event-date">${dateStr} - ${timeStr}</div>`);
+      if (priestInfo) {
+        htmlParts.push(`        ${priestInfo}`);
+      }
+      htmlParts.push(`      </div>`);
     });
     
-    pdfHtml += `
-        </div>
-      </div>
-      
-      <div class="notes-section">
-        <h3>$notes-title$</h3>
-        <div class="notes-lines"></div>
-      </div>
-      
-      <div class="footer">
-        <div class="qr-code">
-          <div class="qr-container" id="qrcode-${page}"></div>
-          <div class="link-text">${entityUrl}</div>
-        </div>
-        <div class="footer-info">
-          ${contactInfo ? `<div>${contactInfo}</div>` : ''}
-          ${mapUrl ? `<div><a href="${mapUrl}" target="_blank">$view-on-maps$</a></div>` : ''}
-          <div>dubia.cc/${CONFIG.currentLanguage}/resistance</div>
-        </div>
-      </div>`;
+    htmlParts.push(`    </div>`);
+    htmlParts.push(`  </div>`);
+    
+    htmlParts.push(`  <div class="notes-section">`);
+    htmlParts.push(`    <h3>$notes-title$</h3>`);
+    htmlParts.push(`    <div class="notes-lines"></div>`);
+    htmlParts.push(`  </div>`);
+    
+    htmlParts.push(`  <div class="footer">`);
+    htmlParts.push(`    <div class="qr-code">`);
+    htmlParts.push(`      <div class="qr-container" id="qrcode-${page}"></div>`);
+    htmlParts.push(`      <div class="link-text">${entityUrl}</div>`);
+    htmlParts.push(`    </div>`);
+    htmlParts.push(`    <div class="footer-info">`);
+    if (contactInfo) {
+      htmlParts.push(`      <div>${contactInfo}</div>`);
+    }
+    if (mapUrl) {
+      htmlParts.push(`      <div><a href="${mapUrl}" target="_blank">$view-on-maps$</a></div>`);
+    }
+    htmlParts.push(`      <div>dubia.cc/${CONFIG.currentLanguage}/resistance</div>`);
+    htmlParts.push(`    </div>`);
+    htmlParts.push(`  </div>`);
     
     // Add page break except for last page
     if (page < totalPages - 1) {
-      pdfHtml += `<div class="page-break"></div>`;
+      htmlParts.push('  <div class="page-break"></div>');
     }
     
-    pdfHtml += `</div>`;
+    htmlParts.push('</div>');
   }
   
-  pdfHtml += `
-  </body>
-  </html>`;
+  htmlParts.push('</body></html>');
+  
+  // Join all HTML parts into a single string
+  const pdfHtml = htmlParts.join('\n');
   
   // Create a new window for printing
   const printWindow = window.open('', '_blank');
