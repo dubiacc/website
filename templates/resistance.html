@@ -1123,57 +1123,58 @@
   <div id="mapContainer"></div>
 
   <script>
-    // Configuration
-    window.CONFIG = {
-      // Default center of the map (will be overridden by geolocation if available)
-      defaultLat: 48.8566,
-      defaultLng: 2.3522,
-      defaultZoom: 4,
-      
-      // Styling
-      priestMarkerColor: '#cc0000',
-      parishMarkerColor: '#003399',
-      lineColor: '#ccc',
-      lineWeight: 2,
-      lineOpacity: 0.7,
-      
-      // Marker sizes
-      priestMarkerSize: 10,
-      parishMarkerSize: 7,
-      
-      // Google Sheet ID
-      sheetId: "16wO1gTdilEcdqsWfJ0mZn-hgYD2MRJ1SCKSAHzcDj18",
-      
-      // Current language
-      currentLanguage: "$$LANG$$",
-      
-      // Min/max zoom for map controls
-      minZoom: 2,
-      maxZoom: 18,
-    };
-    
-    // Data storage
-    window.locations = [];
-    window.religious = [];
-    window.events = [];
-    window.fundingData = [];
-    window.cancelledEvents = [];
 
-    // Maps for quick lookup
-    window.locationMap = new Map();
-    window.religiousMap = new Map();
-    window.fundingMap = new Map();
-    window.cancelledEventsMap = new Map();
+// Configuration
+window.CONFIG = {
+  // Default center of the map (will be overridden by geolocation if available)
+  defaultLat: 48.8566,
+  defaultLng: 2.3522,
+  defaultZoom: 4,
+  
+  // Styling
+  priestMarkerColor: '#cc0000',
+  parishMarkerColor: '#003399',
+  lineColor: '#ccc',
+  lineWeight: 2,
+  lineOpacity: 0.7,
+  
+  // Marker sizes
+  priestMarkerSize: 10,
+  parishMarkerSize: 7,
+  
+  // Google Sheet ID
+  sheetId: "16wO1gTdilEcdqsWfJ0mZn-hgYD2MRJ1SCKSAHzcDj18",
+  
+  // Current language
+  currentLanguage: "$$LANG$$",
+  
+  // Min/max zoom for map controls
+  minZoom: 2,
+  maxZoom: 18,
+};
 
-    // Map and layers
-    let map;
-    let priestMarkers = L.layerGroup();
-    let parishMarkers = L.layerGroup();
-    let connectionLines = L.layerGroup();
-    let userLocationMarker = null;
-    
-    // Default data (fallback)
-    const defaultLocationsData = `"LocationID carmelites-hf-ireland","LocationType Convent","Name Carmelites of the Holy Face of Jesus","ReligiousIdMulti mother-irene, sister-anne-marie","Location 51.79025633971586, -9.112158704807591","Website https://carmelitesholyface.com/","GoogleMaps https://maps.app.goo.gl/WaokWwYAmujka5Sr7","ContactEmail ","ContactPhone ","Notes ",,,,,,,,,,,,,,,,
+// Data storage
+window.locations = [];
+window.religious = [];
+window.events = [];
+window.fundingData = [];
+window.cancelledEvents = [];
+
+// Maps for quick lookup
+window.locationMap = new Map();
+window.religiousMap = new Map();
+window.fundingMap = new Map();
+window.cancelledEventsMap = new Map();
+
+// Map and layers
+let map;
+let priestMarkers = L.layerGroup();
+let parishMarkers = L.layerGroup();
+let connectionLines = L.layerGroup();
+let userLocationMarker = null;
+
+// Default data (fallback)
+const defaultLocationsData = `"LocationID carmelites-hf-ireland","LocationType Convent","Name Carmelites of the Holy Face of Jesus","ReligiousIdMulti mother-irene, sister-anne-marie","Location 51.79025633971586, -9.112158704807591","Website https://carmelitesholyface.com/","GoogleMaps https://maps.app.goo.gl/WaokWwYAmujka5Sr7","ContactEmail ","ContactPhone ","Notes ",,,,,,,,,,,,,,,,
 "hjm-seminary","Seminary","Hearts of Jesus and Mary Seminary","fr-chazal","10.342421706935285, 123.83294807185935","https://www.facebook.com/mariancorpsofst.piusx","https://maps.app.goo.gl/o8xmm2b5eQgNXDpy6",,,,,,,,,,,,,,,,,,,
 "discalced-carm-ph","Mission","Our Lady of Mt. Carmel Oratory",,"14.185634883816563, 121.23247682974647","https://discalcedcarmelites.org.ph/","https://maps.app.goo.gl/tXxyMGo6smjHdLW1A",,,"https://www.facebook.com/ScapularConfraternityPH/",,,,,,,,,,,,,,,,
 "carmel-stjosef-ger","Convent","Karmel St. Josef",,"48.1881613609616, 12.668123403146767","https://archive.is/FOkbD","https://maps.app.goo.gl/6uYEqhqvvmJskU2q9",,,"mittwochs und donnerstags von 10.45 Uhr – 11.15 Uhr",,,,,,,,,,,,,,,,
@@ -1256,96 +1257,837 @@ const defaultFundingData = `"CampaignID","ReligiousOrLocationOrEventID","Funding
 "chapelle-pontmain","","BuildParish","","","","","https://archive.is/wip/HJCQh","","","","","","","","","","","","","","","","","","","",""
 "fr-ruiz-ongoing","fr-ruiz","FundAPriest","","","","paypal.me/hugoruizv","","","","","","","","","","","","","","","","","","","","",""`;
 
-    // Initialize map when DOM is loaded
-    document.addEventListener('DOMContentLoaded', init);
+// Initialize map when DOM is loaded
+document.addEventListener('DOMContentLoaded', init);
 
-    // Initialize function
-    async function init() {
-      // Create map
-      map = L.map('mapContainer', {
-        minZoom: CONFIG.minZoom,
-        maxZoom: CONFIG.maxZoom,
-        zoomControl: true,
-      }).setView([CONFIG.defaultLat, CONFIG.defaultLng], CONFIG.defaultZoom);
-      
-      // Add OpenFreeMap
-      L.maplibreGL({
-        style: 'https://tiles.openfreemap.org/styles/liberty',
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 16
-      }).addTo(map);
+// Initialize function
+async function init() {
+  // Create map
+  map = L.map('mapContainer', {
+    minZoom: CONFIG.minZoom,
+    maxZoom: CONFIG.maxZoom,
+    zoomControl: true,
+  }).setView([CONFIG.defaultLat, CONFIG.defaultLng], CONFIG.defaultZoom);
+  
+  // Add OpenFreeMap
+  L.maplibreGL({
+    style: 'https://tiles.openfreemap.org/styles/liberty',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 16
+  }).addTo(map);
 
-      // Add layer groups to map
-      connectionLines.addTo(map);
-      parishMarkers.addTo(map);
-      priestMarkers.addTo(map);
-      
-      // Set up event listeners
-      setupEventListeners();
-      
-      // Load data (first from fallback, then from Google Sheets)
-      await loadData();
-            
-      // Try to get user's location
-      getUserLocation();
+  // Add layer groups to map
+  connectionLines.addTo(map);
+  parishMarkers.addTo(map);
+  priestMarkers.addTo(map);
+  
+  // Set up event listeners
+  setupEventListeners();
+  
+  // Load data (first from fallback, then from Google Sheets)
+  await loadData();
+        
+  // Try to get user's location
+  getUserLocation();
+}
+
+// Set up event listeners
+function setupEventListeners() {
+  // Search input
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+  
+  searchInput.addEventListener('input', handleSearch);
+  
+  searchInput.addEventListener('focus', () => {
+    if (searchResults.children.length > 0) {
+      searchResults.style.display = 'flex';
     }
+  });
+  
+  // Close button
+  document.getElementById('closeBtn').addEventListener('click', () => {
+    document.getElementById('infoPanel').style.display = 'none';
+    closeCalendarPopup();
+    resetAllMarkers();
+  });
+  
+  // Close search results when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+      searchResults.style.display = 'none';
+    }
+  });
+  
+  // Handle light/dark mode
+  const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (prefersDarkMode) {
+    map.getContainer().classList.add('dark-map');
+  }
+  
+  // Listen for theme changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (e.matches) {
+      map.getContainer().classList.add('dark-map');
+    } else {
+      map.getContainer().classList.remove('dark-map');
+    }
+  });
+}
 
-    // Set up event listeners
-    function setupEventListeners() {
-      // Search input
-      const searchInput = document.getElementById('searchInput');
-      const searchResults = document.getElementById('searchResults');
+// Load data from fallback and Google Sheets
+async function loadData() {
+  // First load default data
+  await parseLocationsData(defaultLocationsData);
+  parseReligiousData(defaultReligiousData);
+  parseEventsData(defaultEventsData);
+  parseCancelledEventsData(defaultCancelledEventsData);
+  parseFundingData(defaultFundingData);
+
+  // Then try to fetch from the live DB
+  await fetchSheetData();
+}
+
+// Parse URL hash when page loads and focus on entity
+function handleUrlHash() {
+  const hash = window.location.hash;
+  if (!hash || hash === '#') return;
+  
+  let entityId = hash.substring(1);
+  let openCalendar = false;
+  
+  // Check if we need to open calendar
+  if (entityId.endsWith(':cal')) {
+    openCalendar = true;
+    entityId = entityId.replace(':cal', '');
+  }
+  
+  // Wait for data to be loaded before focusing
+  const checkDataAndFocus = setInterval(() => {
+    if (window.locations.length > 0 && window.religious.length > 0) {
+      clearInterval(checkDataAndFocus);
       
-      searchInput.addEventListener('input', handleSearch);
-      
-      searchInput.addEventListener('focus', () => {
-        if (searchResults.children.length > 0) {
-          searchResults.style.display = 'flex';
+      // Look for entity in locations first
+      const location = window.locationMap.get(entityId);
+      if (location) {
+        showLocationInfo(location);
+        if (openCalendar) {
+          showLocationCalendar(location);
         }
-      });
-      
-      // Close button
-      document.getElementById('closeBtn').addEventListener('click', () => {
-        document.getElementById('infoPanel').style.display = 'none';
-        closeCalendarPopup();
-        resetAllMarkers();
-      });
-      
-      // Close search results when clicking outside
-      document.addEventListener('click', (e) => {
-        if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-          searchResults.style.display = 'none';
-        }
-      });
-      
-      // Handle light/dark mode
-      const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (prefersDarkMode) {
-        map.getContainer().classList.add('dark-map');
+        return;
       }
       
-      // Listen for theme changes
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        if (e.matches) {
-          map.getContainer().classList.add('dark-map');
-        } else {
-          map.getContainer().classList.remove('dark-map');
+      // Then check religious people
+      const person = window.religiousMap.get(entityId);
+      if (person) {
+        showPriestInfo(person);
+        if (openCalendar) {
+          showPriestCalendar(person);
+        }
+        return;
+      }
+      
+      console.warn(`Entity with ID "${entityId}" not found.`);
+    }
+  }, 500);
+}
+
+// Update URL hash when an entity is selected
+function updateUrlHash(entityId, isCalendar = false) {
+  const newHash = isCalendar ? `#${entityId}:cal` : `#${entityId}`;
+  
+  // Use history.replaceState to update URL without page reload
+  if (history.replaceState) {
+    history.replaceState(null, null, newHash);
+  } else {
+    // Fallback for older browsers
+    window.location.hash = newHash;
+  }
+}
+
+// Copy current URL to clipboard
+function copyCurrentUrlToClipboard() {
+  try {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      // Show a temporary success message
+      const message = document.createElement('div');
+      message.textContent = '✓ Link copied!';
+      message.style.position = 'fixed';
+      message.style.top = '20px';
+      message.style.left = '50%';
+      message.style.transform = 'translateX(-50%)';
+      message.style.backgroundColor = '#4CAF50';
+      message.style.color = 'white';
+      message.style.padding = '10px 20px';
+      message.style.borderRadius = '4px';
+      message.style.zIndex = '10000';
+      document.body.appendChild(message);
+      
+      // Remove the message after 2 seconds
+      setTimeout(() => {
+        message.style.opacity = '0';
+        message.style.transition = 'opacity 0.5s';
+        setTimeout(() => document.body.removeChild(message), 500);
+      }, 2000);
+    });
+  } catch (err) {
+    console.error('Failed to copy URL: ', err);
+    alert('Could not copy the link. Please copy it manually from the address bar.');
+  }
+}
+
+// Generate PDF for calendar
+function generateCalendarPDF(entityId, isLocation = true) {
+  // Get entity data
+  const entity = isLocation ? window.locationMap.get(entityId) : window.religiousMap.get(entityId);
+  if (!entity) {
+    console.error(`Entity with ID "${entityId}" not found.`);
+    return;
+  }
+  
+  // Get current month and year from the calendar
+  const grid = document.getElementById('calendarGrid');
+  let currentMonth = new Date().getMonth();
+  let currentYear = new Date().getFullYear();
+  
+  if (grid && grid.dataset.month && grid.dataset.year) {
+    currentMonth = parseInt(grid.dataset.month, 10);
+    currentYear = parseInt(grid.dataset.year, 10);
+  }
+  
+  // Get all events for the month plus next month to ensure we have enough upcoming events
+  const currentMonthEvents = getEventsForMonth(currentMonth, currentYear, entityId, isLocation);
+  const nextMonthEvents = getEventsForMonth((currentMonth + 1) % 12, 
+                                           currentMonth === 11 ? currentYear + 1 : currentYear, 
+                                           entityId, isLocation);
+  
+  // Combine events and filter for future events
+  const now = new Date();
+  const allEvents = [...currentMonthEvents, ...nextMonthEvents].filter(event => 
+    event.StartDate && event.StartDate > now
+  );
+  
+  // Sort by date
+  allEvents.sort((a, b) => a.StartDate - b.StartDate);
+  
+  // Get month name for header
+  const monthNames = [
+    '$month-january$', '$month-february$', '$month-march$', '$month-april$', 
+    '$month-may$', '$month-june$', '$month-july$', '$month-august$', 
+    '$month-september$', '$month-october$', '$month-november$', '$month-december$'
+  ];
+  
+  // Get contact information
+  let contactInfo = '';
+  
+  // Create a list of priests for this entity
+  const priestsList = [];
+  if (isLocation) {
+    // Use associated priests
+    if (entity.ReligiousIdArray && entity.ReligiousIdArray.length > 0) {
+      entity.ReligiousIdArray.forEach(religiousId => {
+        const priest = window.religiousMap.get(religiousId);
+        if (priest) {
+          priestsList.push({
+            name: `${priest.Type || 'Fr.'} ${priest.Name}`,
+            phone: priest.ContactPhone || '',
+            email: priest.ContactEmail || ''
+          });
         }
       });
     }
-
-    // Load data from fallback and Google Sheets
-    async function loadData() {
-      // First load default data
-      await parseLocationsData(defaultLocationsData);
-      parseReligiousData(defaultReligiousData);
-      parseEventsData(defaultEventsData);
-      parseCancelledEventsData(defaultCancelledEventsData);
-      parseFundingData(defaultFundingData);
-
-      // Then try to fetch from the live DB
-      await fetchSheetData();
+  } else {
+    // Use priest's info directly
+    priestsList.push({
+      name: `${entity.Type || 'Fr.'} ${entity.Name}`,
+      phone: entity.ContactPhone || '',
+      email: entity.ContactEmail || ''
+    });
+  }
+  
+  // Create contact info string
+  if (priestsList.length > 0) {
+    contactInfo = priestsList.map(priest => {
+      let info = priest.name;
+      if (priest.phone) info += ` - ${priest.phone}`;
+      if (priest.email) info += ` - ${priest.email}`;
+      return info;
+    }).join('<br>');
+  }
+  
+  // Create Google Maps URL for location
+  let mapUrl = '';
+  if (isLocation) {
+    if (entity.GoogleMaps) {
+      mapUrl = entity.GoogleMaps;
+    } else if (entity.Latitude && entity.Longitude) {
+      mapUrl = `https://www.google.com/maps?q=${entity.Latitude},${entity.Longitude}`;
     }
+  } else {
+    // For priests, use their first associated location
+    const priestLocations = window.locations.filter(location => 
+      location.ReligiousIdArray && location.ReligiousIdArray.includes(entity.ReligiousID)
+    );
+    
+    if (priestLocations.length > 0) {
+      const location = priestLocations[0];
+      if (location.GoogleMaps) {
+        mapUrl = location.GoogleMaps;
+      } else if (location.Latitude && location.Longitude) {
+        mapUrl = `https://www.google.com/maps?q=${location.Latitude},${location.Longitude}`;
+      }
+    }
+  }
+  
+  // Calculate pages needed (max 8 events per page, 2 columns of 4 events each)
+  const eventsPerPage = 8;
+  const totalPages = Math.min(4, Math.ceil(allEvents.length / eventsPerPage));
+  
+  // Create QR code for entity link
+  const entityUrl = `ghttdubia.cc/${CONFIG.currentLanguage}/resistance#${entityId}`;
+  
+  // Generate HTML content for PDF
+  let pdfHtml = `
+  <html>
+  <head>
+    <title>${entity.Name} - ${monthNames[currentMonth]} ${currentYear}</title>
+    <style>
+      @media print {
+        @page {
+          size: A4;
+          margin: 1cm;
+        }
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+        }
+        .page-break {
+          page-break-after: always;
+        }
+        .parish-header {
+          text-align: center;
+          background-color: #000000;
+          color: white;
+          padding: 15px 0;
+          margin-bottom: 20px;
+          font-size: 18pt;
+          font-weight: bold;
+        }
+        .event-columns {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          margin-bottom: 20px;
+        }
+        .event-column {
+          width: 48%;
+        }
+        .event {
+          margin-bottom: 15px;
+          padding: 8px;
+          border-left: 3px solid #700000;
+          background-color: #f9f9f9;
+        }
+        .event-cancelled {
+          text-decoration: line-through;
+          color: #999;
+          border-left-color: #999;
+        }
+        .event-title {
+          font-weight: bold;
+          font-size: 12pt;
+          margin-bottom: 5px;
+        }
+        .event-date {
+          font-size: 10pt;
+          margin-bottom: 5px;
+        }
+        .event-priest {
+          font-style: italic;
+          font-size: 10pt;
+        }
+        .notes-section {
+          border-top: 1px solid #ddd;
+          padding-top: 15px;
+          margin-top: 20px;
+          margin-bottom: 20px;
+        }
+        .notes-section h3 {
+          margin-top: 0;
+          margin-bottom: 10px;
+        }
+        .notes-lines {
+          height: 150px;
+          background-image: linear-gradient(#ddd 1px, transparent 1px);
+          background-size: 100% 25px;
+        }
+        .footer {
+          display: flex;
+          border-top: 1px solid #ddd;
+          padding-top: 15px;
+          font-size: 10pt;
+        }
+        .qr-code {
+          margin-right: 20px;
+        }
+        .footer-info {
+          flex-grow: 1;
+        }
+        .link-text {
+          margin-top: 5px;
+          font-size: 9pt;
+        }
+      }
+    </style>
+  </head>
+  <body>`;
+  
+  // Generate pages
+  for (let page = 0; page < totalPages; page++) {
+    const startIdx = page * eventsPerPage;
+    const pageEvents = allEvents.slice(startIdx, startIdx + eventsPerPage);
+    
+    // Split into two columns
+    const midpoint = Math.ceil(pageEvents.length / 2);
+    const leftColumnEvents = pageEvents.slice(0, midpoint);
+    const rightColumnEvents = pageEvents.slice(midpoint);
+    
+    pdfHtml += `
+    <div class="page">
+      <div class="parish-header">
+        ${entity.Name}
+      </div>
+      
+      <div class="event-columns">
+        <div class="event-column">`;
+    
+    // Left column events
+    leftColumnEvents.forEach(event => {
+      const dateStr = event.StartDate ? formatDate(event.StartDate, { 
+        weekday: 'long', 
+        month: 'long', 
+        day: 'numeric' 
+      }) : '';
+      
+      const timeStr = event.StartDate ? formatTime(event.StartDate, event.Timezone) : '';
+      
+      const eventClass = event.isCancelled ? 'event event-cancelled' : 'event';
+      
+      // Priest info
+      let priestInfo = '';
+      if (event.PriestID) {
+        const priest = window.religiousMap.get(event.PriestID);
+        if (priest) {
+          priestInfo = `<div class="event-priest">${priest.Type || 'Fr.'} ${priest.Name}</div>`;
+        }
+      }
+      
+      pdfHtml += `
+      <div class="${eventClass}">
+        <div class="event-title">${event.EventType || 'Event'}</div>
+        <div class="event-date">${dateStr} - ${timeStr}</div>
+        ${priestInfo}
+      </div>`;
+    });
+    
+    pdfHtml += `
+        </div>
+        <div class="event-column">`;
+    
+    // Right column events
+    rightColumnEvents.forEach(event => {
+      const dateStr = event.StartDate ? formatDate(event.StartDate, { 
+        weekday: 'long', 
+        month: 'long', 
+        day: 'numeric' 
+      }) : '';
+      
+      const timeStr = event.StartDate ? formatTime(event.StartDate, event.Timezone) : '';
+      
+      const eventClass = event.isCancelled ? 'event event-cancelled' : 'event';
+      
+      // Priest info
+      let priestInfo = '';
+      if (event.PriestID) {
+        const priest = window.religiousMap.get(event.PriestID);
+        if (priest) {
+          priestInfo = `<div class="event-priest">${priest.Type || 'Fr.'} ${priest.Name}</div>`;
+        }
+      }
+      
+      pdfHtml += `
+      <div class="${eventClass}">
+        <div class="event-title">${event.EventType || 'Event'}</div>
+        <div class="event-date">${dateStr} - ${timeStr}</div>
+        ${priestInfo}
+      </div>`;
+    });
+    
+    pdfHtml += `
+        </div>
+      </div>
+      
+      <div class="notes-section">
+        <h3>$notes-title$</h3>
+        <div class="notes-lines"></div>
+      </div>
+      
+      <div class="footer">
+        <div class="qr-code">
+          <div class="qr-container" id="qrcode-${page}"></div>
+          <div class="link-text">${entityUrl}</div>
+        </div>
+        <div class="footer-info">
+          ${contactInfo ? `<div>${contactInfo}</div>` : ''}
+          ${mapUrl ? `<div><a href="${mapUrl}" target="_blank">$view-on-maps$</a></div>` : ''}
+          <div>dubia.cc/${CONFIG.currentLanguage}/resistance</div>
+        </div>
+      </div>`;
+    
+    // Add page break except for last page
+    if (page < totalPages - 1) {
+      pdfHtml += `<div class="page-break"></div>`;
+    }
+    
+    pdfHtml += `</div>`;
+  }
+  
+  pdfHtml += `
+  </body>
+  </html>`;
+  
+  // Create a new window for printing
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(pdfHtml);
+  printWindow.document.close();
+  
+  // Wait for content to load before generating QR codes
+  printWindow.onload = function() {
+    // Generate QR codes
+    for (let page = 0; page < totalPages; page++) {
+      const qrContainer = printWindow.document.getElementById(`qrcode-${page}`);
+      if (qrContainer) {
+        new QRCode(qrContainer, {
+          text: `https://${entityUrl}`,
+          width: 100,
+          height: 100,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
+    }
+    
+    // Trigger print after short delay to ensure QR codes are rendered
+    setTimeout(() => {
+      printWindow.print();
+      // Don't close the window after print to allow user to save as PDF manually if needed
+    }, 500);
+  };
+}
+
+// Format date
+function formatDate(date, options = {}) {
+  const defaultOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  };
+  
+  return date.toLocaleDateString(CONFIG.currentLanguage || 'en', { ...defaultOptions, ...options });
+}
+
+// Format time
+function formatTime(date, timezone) {
+  if (!date) return '';
+  
+  try {
+    return date.toLocaleTimeString(CONFIG.currentLanguage || 'en', {
+      timeZone: timezone || 'UTC',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+  } catch (e) {
+    return date.toLocaleTimeString(CONFIG.currentLanguage || 'en', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+  }
+}
+
+// Function to generate and download iCal file
+function generateICalFile(entityId, isLocation = true) {
+  // Get entity data
+  const entity = isLocation ? window.locationMap.get(entityId) : window.religiousMap.get(entityId);
+  if (!entity) {
+    console.error(`Entity with ID "${entityId}" not found.`);
+    return;
+  }
+  
+  // Get current month and year from the calendar
+  const grid = document.getElementById('calendarGrid');
+  let currentMonth = new Date().getMonth();
+  let currentYear = new Date().getFullYear();
+  
+  if (grid && grid.dataset.month && grid.dataset.year) {
+    currentMonth = parseInt(grid.dataset.month, 10);
+    currentYear = parseInt(grid.dataset.year, 10);
+  }
+  
+  // Get all events for the month
+  const monthEvents = getEventsForMonth(currentMonth, currentYear, entityId, isLocation);
+  
+  // Check if there are events
+  if (monthEvents.length === 0) {
+    alert('No events to export for this month.');
+    return;
+  }
+  
+  // Generate iCal content
+  let iCalContent = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//DubiaCC//Resistance Calendar//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    `X-WR-CALNAME:${entity.Name || 'Calendar'}`
+  ];
+  
+  // Process each event
+  monthEvents.forEach(event => {
+    // Skip if no start date
+    if (!event.StartDate) return;
+    
+    // Format dates for iCal (YYYYMMDDTHHMMSSZ)
+    const startDate = formatDateForICal(event.StartDate);
+    const endDate = event.EndDate ? formatDateForICal(event.EndDate) : startDate;
+    
+    // Get unique ID for event
+    const eventUid = `${event.EventID || 'event'}-${startDate}@dubia.cc`;
+    
+    // Start event
+    iCalContent.push('BEGIN:VEVENT');
+    iCalContent.push(`UID:${eventUid}`);
+    iCalContent.push(`DTSTAMP:${formatDateForICal(new Date())}`);
+    iCalContent.push(`DTSTART:${startDate}`);
+    iCalContent.push(`DTEND:${endDate}`);
+    
+    // Add summary
+    const summary = event.EventType || 'Event';
+    iCalContent.push(`SUMMARY:${summary}`);
+    
+    // Add location if available
+    if (isLocation) {
+      const location = window.locationMap.get(event.LocationID);
+      if (location) {
+        iCalContent.push(`LOCATION:${location.Name}`);
+        
+        // Add geo if coordinates available
+        if (location.Latitude && location.Longitude) {
+          iCalContent.push(`GEO:${location.Latitude};${location.Longitude}`);
+        }
+      }
+    } else if (event.LocationID) {
+      const location = window.locationMap.get(event.LocationID);
+      if (location) {
+        iCalContent.push(`LOCATION:${location.Name}`);
+        
+        if (location.Latitude && location.Longitude) {
+          iCalContent.push(`GEO:${location.Latitude};${location.Longitude}`);
+        }
+      }
+    }
+    
+    // Add description including notes
+    let description = '';
+    if (event.Notes) {
+      description += event.Notes;
+    }
+    
+    // Add priest info to description if available
+    if (event.PriestID) {
+      const priest = window.religiousMap.get(event.PriestID);
+      if (priest) {
+        if (description) description += '\n\n';
+        description += `Celebrant: ${priest.Type || 'Fr.'} ${priest.Name || ''}`;
+      }
+    }
+    
+    if (description) {
+      // Format description for iCal (escape special chars and wrap lines)
+      description = description.replace(/\n/g, '\\n');
+      description = description.replace(/,/g, '\\,');
+      description = description.replace(/;/g, '\\;');
+      iCalContent.push(`DESCRIPTION:${description}`);
+    }
+    
+    // Add organizer if available
+    if (event.PriestID) {
+      const priest = window.religiousMap.get(event.PriestID);
+      if (priest && priest.ContactEmail) {
+        const email = priest.ContactEmail.replace('mailto:', '').trim();
+        if (email) {
+          iCalContent.push(`ORGANIZER;CN=${priest.Name}:mailto:${email}`);
+        }
+      }
+    }
+    
+    // Add status (cancelled or confirmed)
+    const { isCancelled } = checkEventCancellation(event, event.StartDate);
+    iCalContent.push(isCancelled ? 'STATUS:CANCELLED' : 'STATUS:CONFIRMED');
+    
+    // Add recurrence rule if needed
+    if (event.Repeats) {
+      const rrule = generateRRule(event.Repeats);
+      if (rrule) {
+        iCalContent.push(rrule);
+      }
+    }
+    
+    // End event
+    iCalContent.push('END:VEVENT');
+  });
+  
+  // End calendar
+  iCalContent.push('END:VCALENDAR');
+  
+  // Join lines and download
+  const iCalData = iCalContent.join('\r\n');
+  downloadFile(iCalData, `${entity.Name || 'calendar'}.ics`, 'text/calendar');
+}
+
+// Format date for iCal
+function formatDateForICal(date) {
+  return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+}
+
+// Generate RRULE from repeat pattern
+function generateRRule(repeatPattern) {
+  let freq = '';
+  
+  switch (repeatPattern.toLowerCase()) {
+    case 'daily':
+      freq = 'FREQ=DAILY';
+      break;
+    case 'weekly':
+      freq = 'FREQ=WEEKLY';
+      break;
+    case 'every2weeks':
+      freq = 'FREQ=WEEKLY;INTERVAL=2';
+      break;
+    case 'monthly':
+    case 'everymonth':
+      freq = 'FREQ=MONTHLY';
+      break;
+    case 'every2months':
+      freq = 'FREQ=MONTHLY;INTERVAL=2';
+      break;
+    case 'yearly':
+    case 'everyyear':
+      freq = 'FREQ=YEARLY';
+      break;
+    default:
+      return null;
+  }
+  
+  return `RRULE:${freq}`;
+}
+
+// Download a file
+function downloadFile(content, filename, contentType) {
+  const blob = new Blob([content], { type: contentType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Run validation checks on data
+function validateData() {
+  const warnings = [];
+  
+  // Check for invalid location IDs in religious people
+  window.religious.forEach(person => {
+    if (person.UsualLocationID && !window.locationMap.has(person.UsualLocationID)) {
+      warnings.push(`Warning: Religious person "${person.Name}" has invalid UsualLocationID "${person.UsualLocationID}"`);
+    }
+  });
+  
+  // Check for priests without a parish
+  window.religious.forEach(person => {
+    if (person.Type?.toLowerCase() === 'priest' || person.Type?.toLowerCase() === 'bishop') {
+      const hasParish = window.locations.some(location => 
+        location.ReligiousIdArray && location.ReligiousIdArray.includes(person.ReligiousID)
+      );
+      
+      if (!hasParish) {
+        warnings.push(`Warning: ${person.Type} "${person.Name}" has no associated parish`);
+      }
+    }
+  });
+  
+  // Check for events with invalid LocationID
+  window.events.forEach(event => {
+    if (event.LocationID && !window.locationMap.has(event.LocationID)) {
+      warnings.push(`Warning: Event "${event.EventID}" has invalid LocationID "${event.LocationID}"`);
+    }
+  });
+  
+  // Check for events with invalid PriestID
+  window.events.forEach(event => {
+    if (event.PriestID && !window.religiousMap.has(event.PriestID)) {
+      warnings.push(`Warning: Event "${event.EventID}" has invalid PriestID "${event.PriestID}"`);
+    }
+  });
+  
+  // Check for locations without coordinates
+  window.locations.forEach(location => {
+    if (isNaN(location.Latitude) || isNaN(location.Longitude)) {
+      warnings.push(`Warning: Location "${location.Name}" has invalid coordinates`);
+    }
+  });
+  
+  // Check for locations without contact info
+  window.locations.forEach(location => {
+    if (!location.ContactEmail && !location.ContactPhone && 
+        !location.Website && !location.GoogleMaps) {
+      warnings.push(`Warning: Location "${location.Name}" has no contact information`);
+    }
+  });
+  
+  // Check for ReligiousIdArray referencing non-existent religious people
+  window.locations.forEach(location => {
+    if (location.ReligiousIdArray && location.ReligiousIdArray.length > 0) {
+      location.ReligiousIdArray.forEach(id => {
+        if (!window.religiousMap.has(id)) {
+          warnings.push(`Warning: Location "${location.Name}" references non-existent religious ID "${id}"`);
+        }
+      });
+    }
+  });
+  
+  // Check for cancelled events referencing non-existent events
+  window.cancelledEvents.forEach(cancelled => {
+    if (!window.events.some(event => event.EventID === cancelled.AffectsEventID)) {
+      warnings.push(`Warning: Cancelled event entry references non-existent event ID "${cancelled.AffectsEventID}"`);
+    }
+  });
+  
+  // Output all warnings to console
+  if (warnings.length > 0) {
+    console.warn('Data validation warnings:');
+    warnings.forEach(warning => console.warn(warning));
+  } else {
+    console.log('Data validation completed with no warnings.');
+  }
+  
+  return warnings;
+}
 
 async function getTimezoneForLocation(lat, lng) {
   try {
@@ -1467,50 +2209,50 @@ function parseCsv(csvData, transformer = null) {
 
 // Fix mangled JSON data where column headers are mixed with first row values in keys
 function fixMangledJson(data) {
-if (!data || !data.length) return [];
+  if (!data || !data.length) return [];
 
-const extractHeaderAndFirstRowValue = (key) => {
-  if (!key) return null;
-  
-  const parts = key.trim().split(' ');
-  if (!parts.length) return null;
-  
-  const header = parts[0].replace(/\?$/, '');
-  const firstRowValue = parts.slice(1).join(' ').trim();
-  
-  return { header, firstRowValue };
-};
+  const extractHeaderAndFirstRowValue = (key) => {
+    if (!key) return null;
+    
+    const parts = key.trim().split(' ');
+    if (!parts.length) return null;
+    
+    const header = parts[0].replace(/\?$/, '');
+    const firstRowValue = parts.slice(1).join(' ').trim();
+    
+    return { header, firstRowValue };
+  };
 
-const processRow = (row) => {
-  const normalizedRow = {};
-  
-  Object.keys(row).forEach(key => {
+  const processRow = (row) => {
+    const normalizedRow = {};
+    
+    Object.keys(row).forEach(key => {
+      const extracted = extractHeaderAndFirstRowValue(key);
+      if (extracted && extracted.header) {
+        normalizedRow[extracted.header] = row[key];
+      }
+    });
+    
+    return normalizedRow;
+  };
+
+  const headers = {};
+  const firstRow = {};
+
+  Object.keys(data[0]).forEach(key => {
     const extracted = extractHeaderAndFirstRowValue(key);
     if (extracted && extracted.header) {
-      normalizedRow[extracted.header] = row[key];
+      headers[extracted.header] = true;
+      firstRow[extracted.header] = extracted.firstRowValue;
     }
   });
-  
-  return normalizedRow;
-};
 
-const headers = {};
-const firstRow = {};
+  const fixedData = [firstRow];
+  data.forEach(row => {
+    fixedData.push(processRow(row));
+  });
 
-Object.keys(data[0]).forEach(key => {
-  const extracted = extractHeaderAndFirstRowValue(key);
-  if (extracted && extracted.header) {
-    headers[extracted.header] = true;
-    firstRow[extracted.header] = extracted.firstRowValue;
-  }
-});
-
-const fixedData = [firstRow];
-data.forEach(row => {
-  fixedData.push(processRow(row));
-});
-
-return fixedData;
+  return fixedData;
 };
 
 // Parse locations CSV data
@@ -1688,6 +2430,8 @@ async function fetchSheetData() {
       console.log(`Using fallback data for ${sheet}`);
     }
   }
+
+  validateData();
 }
 
 // Update map markers
@@ -2666,11 +3410,39 @@ function getHtmlForCalendar(month, year, entityId, isLocation = true) {
   // Day names
   const dayNames = ['$$day-sun$$', '$$day-mon$$', '$$day-tue$$', '$$day-wed$$', '$$day-thu$$', '$$day-fri$$', '$$day-sat$$'];
   
-  // Add month/year header
+  // Add month/year header with copy link button
+  const headerContainer = document.createElement('div');
+  headerContainer.style.display = 'flex';
+  headerContainer.style.alignItems = 'center';
+  headerContainer.style.justifyContent = 'space-between';
+  headerContainer.style.marginBottom = '10px';
+  
   const header = document.createElement('div');
   header.className = 'calendar-month-year';
   header.textContent = `${monthNames[month]} ${year}`;
-  container.appendChild(header);
+  
+  const copyButton = document.createElement('button');
+  copyButton.className = 'copy-link-btn';
+  copyButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 5.5L9.5 8.5M9.5 5.5L6.5 8.5M4.5 3.5H11.5C12.0523 3.5 12.5 3.94772 12.5 4.5V11.5C12.5 12.0523 12.0523 12.5 11.5 12.5H4.5C3.94772 12.5 3.5 12.0523 3.5 11.5V4.5C3.5 3.94772 3.94772 3.5 4.5 3.5Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Copy Link';
+  copyButton.style.padding = '5px 10px';
+  copyButton.style.background = '#eee';
+  copyButton.style.border = 'none';
+  copyButton.style.borderRadius = '4px';
+  copyButton.style.cursor = 'pointer';
+  copyButton.style.display = 'inline-flex';
+  copyButton.style.alignItems = 'center';
+  copyButton.style.gap = '5px';
+  copyButton.style.fontSize = '0.9rem';
+  
+  copyButton.addEventListener('click', () => {
+    // Update URL hash first to ensure we're copying the correct URL
+    updateUrlHash(entityId, true);
+    copyCurrentUrlToClipboard();
+  });
+  
+  headerContainer.appendChild(header);
+  headerContainer.appendChild(copyButton);
+  container.appendChild(headerContainer);
   
   // Create grid
   const grid = document.createElement('div');
@@ -2720,29 +3492,12 @@ function getHtmlForCalendar(month, year, entityId, isLocation = true) {
   
   // Add current month days
   for (let day = 1; day <= totalDays; day++) {
-
     let c = "";
     if (datesWithEvents.has(day)) {
       c = "has-events";
     }
+    // NOTE: Don't change this
     let dayel_html = `<button class='calendar-day ${c}' onclick="showEventsForDay('${entityId}', ${year}, ${month}, ${day}, '${isLocation}')">${day}</button>`;
-       /*
-    let dayEl = document.createElement('button');
-    dayEl.className = 'calendar-day';
-    dayEl.textContent = day;
-    
-
-    // Check if this day has events
-    var btn = if (datesWithEvents.has(day)) {
-      dayEl.classList.add('has-events');
-      dayEl.style.pointerEvents = 'all';
-      dayEl.onclick = (e) => {
-        showEventsForDay(entityId, year, month, day, isLocation);
-      };
-    } else {
-      ``
-    };
-    */
     grid.appendChild(createElementFromHTML(dayel_html));
   }
   
@@ -2758,6 +3513,38 @@ function getHtmlForCalendar(month, year, entityId, isLocation = true) {
   }
   
   container.appendChild(grid);
+  
+  // Add export buttons below the grid
+  const exportButtonsContainer = document.createElement('div');
+  exportButtonsContainer.className = 'calendar-export-buttons';
+  exportButtonsContainer.style.display = 'flex';
+  exportButtonsContainer.style.gap = '10px';
+  exportButtonsContainer.style.marginTop = '15px';
+  exportButtonsContainer.style.marginBottom = '10px';
+  
+  // Create PDF export button
+  const pdfButton = document.createElement('button');
+  pdfButton.className = 'action-btn';
+  pdfButton.textContent = 'Export to PDF';
+  pdfButton.addEventListener('click', () => {
+    generateCalendarPDF(entityId, isLocation);
+  });
+  
+  // Create iCal export button
+  const iCalButton = document.createElement('button');
+  iCalButton.className = 'action-btn';
+  iCalButton.textContent = 'Export to iCal';
+  iCalButton.addEventListener('click', () => {
+    generateICalFile(entityId, isLocation);
+  });
+  
+  // Add buttons to container
+  exportButtonsContainer.appendChild(pdfButton);
+  exportButtonsContainer.appendChild(iCalButton);
+  
+  // Add the export buttons container to the main container
+  container.appendChild(exportButtonsContainer);
+  
   return container;
 }
 
@@ -2769,6 +3556,7 @@ function createElementFromHTML(htmlString) {
 
 // Show location info function
 function showLocationInfo(location) {
+
   const infoPanel = document.getElementById('infoPanel');
   const priestName = document.getElementById('priestName');
   const priestInfo = document.getElementById('priestInfo');
@@ -2898,6 +3686,9 @@ function showLocationInfo(location) {
   
   // Highlight this location and connected locations
   highlightLocation(location);
+
+  // Update URL
+  updateUrlHash(location.LocationID, false);
 }
 
 function formatBioText(person) {
@@ -3089,68 +3880,37 @@ function showPriestInfo(priest) {
   
   // Highlight this priest's locations
   highlightPriest(priest);
+
+  // Update URL hash
+  updateUrlHash(priest.ReligiousID, false);
 }
 
+// Highlight location and its connections
+function highlightLocation(location) {
 
-    // Highlight location and its connections
-    function highlightLocation(location) {
-      // Reset all markers
-      resetAllMarkers();
-      
-      // Highlight this location's marker
-      parishMarkers.eachLayer(marker => {
-        if (marker.locationData && marker.locationData.LocationID === location.LocationID) {
-          // Create highlighted marker
-          const markerSize = CONFIG.parishMarkerSize * 1.5;
-          const icon = L.divIcon({
-            className: 'parish-marker',
-            html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color: yellow;"></div>`,
-            iconSize: [markerSize, markerSize],
-            iconAnchor: [markerSize/2, markerSize/2]
-          });
-          marker.setIcon(icon);
-        }
+  // Reset all markers
+  resetAllMarkers();
+  
+  // Highlight this location's marker
+  parishMarkers.eachLayer(marker => {
+    if (marker.locationData && marker.locationData.LocationID === location.LocationID) {
+      // Create highlighted marker
+      const markerSize = CONFIG.parishMarkerSize * 1.5;
+      const icon = L.divIcon({
+        className: 'parish-marker',
+        html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color: yellow;"></div>`,
+        iconSize: [markerSize, markerSize],
+        iconAnchor: [markerSize/2, markerSize/2]
       });
-      
-      // Highlight associated religious
-      if (location.ReligiousIdArray && location.ReligiousIdArray.length > 0) {
-        location.ReligiousIdArray.forEach(religiousId => {
-          priestMarkers.eachLayer(marker => {
-            if (marker.priestData && marker.priestData.ReligiousID === religiousId) {
-              // Create highlighted marker
-              const markerSize = CONFIG.priestMarkerSize * 1.5;
-              const icon = L.divIcon({
-                className: 'priest-marker pulse',
-                html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color: yellow;"></div>`,
-                iconSize: [markerSize, markerSize],
-                iconAnchor: [markerSize/2, markerSize/2]
-              });
-              marker.setIcon(icon);
-            }
-          });
-        });
-        
-        // Highlight connection lines
-        connectionLines.eachLayer(line => {
-          if (line.fromLocation === location.LocationID || line.toLocation === location.LocationID) {
-            line.setStyle({
-              color: 'yellow',
-              weight: CONFIG.lineWeight * 1.5,
-              opacity: 1.0
-            });
-          }
-        });
-      }
+      marker.setIcon(icon);
     }
-    
-    // Highlight priest's locations
-    function highlightPriest(priest) {
-      // Reset all markers
-      resetAllMarkers();
-      
-      // Highlight priest's marker
+  });
+  
+  // Highlight associated religious
+  if (location.ReligiousIdArray && location.ReligiousIdArray.length > 0) {
+    location.ReligiousIdArray.forEach(religiousId => {
       priestMarkers.eachLayer(marker => {
-        if (marker.priestData && marker.priestData.ReligiousID === priest.ReligiousID) {
+        if (marker.priestData && marker.priestData.ReligiousID === religiousId) {
           // Create highlighted marker
           const markerSize = CONFIG.priestMarkerSize * 1.5;
           const icon = L.divIcon({
@@ -3162,34 +3922,68 @@ function showPriestInfo(priest) {
           marker.setIcon(icon);
         }
       });
-      
-      // Highlight priest's locations
-      parishMarkers.eachLayer(marker => {
-        if (marker.locationData && marker.locationData.ReligiousIdArray && 
-            marker.locationData.ReligiousIdArray.includes(priest.ReligiousID)) {
-          // Create highlighted marker
-          const markerSize = CONFIG.parishMarkerSize * 1.5;
-          const icon = L.divIcon({
-            className: 'parish-marker',
-            html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color: #00cc00;"></div>`,
-            iconSize: [markerSize, markerSize],
-            iconAnchor: [markerSize/2, markerSize/2]
-          });
-          marker.setIcon(icon);
-        }
+    });
+    
+    // Highlight connection lines
+    connectionLines.eachLayer(line => {
+      if (line.fromLocation === location.LocationID || line.toLocation === location.LocationID) {
+        line.setStyle({
+          color: 'yellow',
+          weight: CONFIG.lineWeight * 1.5,
+          opacity: 1.0
+        });
+      }
+    });
+  }
+}
+
+// Highlight priest's locations
+function highlightPriest(priest) {
+  // Reset all markers
+  resetAllMarkers();
+  
+  // Highlight priest's marker
+  priestMarkers.eachLayer(marker => {
+    if (marker.priestData && marker.priestData.ReligiousID === priest.ReligiousID) {
+      // Create highlighted marker
+      const markerSize = CONFIG.priestMarkerSize * 1.5;
+      const icon = L.divIcon({
+        className: 'priest-marker pulse',
+        html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color: yellow;"></div>`,
+        iconSize: [markerSize, markerSize],
+        iconAnchor: [markerSize/2, markerSize/2]
       });
-      
-      // Highlight connection lines
-      connectionLines.eachLayer(line => {
-        if (line.religiousId === priest.ReligiousID) {
-          line.setStyle({
-            color: '#00cc00',
-            weight: CONFIG.lineWeight * 1.5,
-            opacity: 1.0
-          });
-        }
+      marker.setIcon(icon);
+    }
+  });
+  
+  // Highlight priest's locations
+  parishMarkers.eachLayer(marker => {
+    if (marker.locationData && marker.locationData.ReligiousIdArray && 
+        marker.locationData.ReligiousIdArray.includes(priest.ReligiousID)) {
+      // Create highlighted marker
+      const markerSize = CONFIG.parishMarkerSize * 1.5;
+      const icon = L.divIcon({
+        className: 'parish-marker',
+        html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color: #00cc00;"></div>`,
+        iconSize: [markerSize, markerSize],
+        iconAnchor: [markerSize/2, markerSize/2]
+      });
+      marker.setIcon(icon);
+    }
+  });
+  
+  // Highlight connection lines
+  connectionLines.eachLayer(line => {
+    if (line.religiousId === priest.ReligiousID) {
+      line.setStyle({
+        color: '#00cc00',
+        weight: CONFIG.lineWeight * 1.5,
+        opacity: 1.0
       });
     }
+  });
+}
 
 // Get funding info for an entity
 function getFundingInfo(entityId) {
@@ -3367,6 +4161,8 @@ function showLocationCalendar(location) {
   if (document.getElementById('calendarPopup').style.display === 'flex') {
     rerenderCalendarPopup(location.LocationID, true);
   }
+  // Update URL
+  updateUrlHash(location.LocationID, true);
   return result;
 }
 
@@ -3377,6 +4173,8 @@ function showPriestCalendar(priest) {
   if (document.getElementById('calendarPopup').style.display === 'flex') {
     rerenderCalendarPopup(priest.ReligiousID, false);
   }
+    // Update URL
+    updateUrlHash(priest.ReligiousID, true);
   return result;
 }
 
