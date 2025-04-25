@@ -1337,7 +1337,6 @@ const defaultFundingData = `"CampaignID","ReligiousOrLocationOrEventID","Funding
     // Load data from fallback and Google Sheets
     async function loadData() {
       // First load default data
-      console.log("Loading default data...");
       await parseLocationsData(defaultLocationsData);
       parseReligiousData(defaultReligiousData);
       parseEventsData(defaultEventsData);
@@ -3241,7 +3240,6 @@ function createCalendarHtml(entityId, isLocation = true) {
 }
 
 function showEventsForDay(entityId, year, month, day, isLocation = true) {
-  console.log(`showEventsForDay ${entityId} ${year} ${month} ${day} ${isLocation}`);
   const eventsEl = document.getElementById('calendarEvents');
   if (!eventsEl) {
     console.error("Calendar events display element not found!");
