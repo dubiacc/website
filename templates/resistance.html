@@ -1345,6 +1345,8 @@ async function loadData() {
   parseCancelledEventsData(defaultCancelledEventsData);
   parseFundingData(defaultFundingData);
 
+  handleUrlHash();
+
   // Then try to fetch from the live DB
   await fetchSheetData();
 }
@@ -2437,6 +2439,7 @@ async function fetchSheetData() {
     }
   }
 
+  handleUrlHash();
   validateData();
 }
 
@@ -2648,6 +2651,13 @@ function closeCalendarPopup() {
   const calendarPopup = document.getElementById('calendarPopup');
   if (calendarPopup) {
     calendarPopup.style.display = 'none';
+    
+    // Get the current hash and remove the :cal suffix if present
+    const currentHash = window.location.hash;
+    if (currentHash && currentHash.endsWith(':cal')) {
+      const entityId = currentHash.substring(1).replace(':cal', '');
+      updateUrlHash(entityId, false); // Update URL to entity ID without calendar
+    }
   }
 }
 
