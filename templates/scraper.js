@@ -3,10 +3,14 @@ const axios = require('axios');
 const Papa = require('papaparse');
 const fs = require('fs-extra');
 const path = require('path');
-const cheerio = require('cheerio');
 
-// URLs of Google Sheets
-const MAIN_SHEET_URL = 'https://docs.google.com/spreadsheets/d/12kg-wXZsFPgxObEO1mK5GluVNdBbTzzek15qnJ9EyhE/gviz/tq?tqx=out:csv&sheet=scrape&query=rows';
+// URLs to scrape - easily visible at the top
+const URLS_TO_SCRAPE = [
+  'https://apotresdejesusetdemarie.fr/evenements/',
+  'https://abbe-pivert.com/ministere-dominical/'
+];
+
+// URLs of additional Google Sheets for reference data
 const ADDITIONAL_SHEETS = [
   'https://docs.google.com/spreadsheets/d/16wO1gTdilEcdqsWfJ0mZn-hgYD2MRJ1SCKSAHzcDj18/gviz/tq?tqx=out:csv&sheet=events&query=rows',
   'https://docs.google.com/spreadsheets/d/16wO1gTdilEcdqsWfJ0mZn-hgYD2MRJ1SCKSAHzcDj18/gviz/tq?tqx=out:csv&sheet=locations&query=rows',
@@ -42,8 +46,45 @@ function parseCSV(csvData) {
   return results.data;
 }
 
+// Clean HTML content using browser-native tools
+async function cleanHtml(page) {
+  return await page.evaluate(() => {
+    // Create a new document to work with
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(document.documentElement.outerHTML, 'text/html');
+    
+    // Remove all scripts EXCEPT ld+json
+    const scripts = doc.querySelectorAll('script:not([type="application/ld+json"])');
+    scripts.forEach(script => script.remove());
+    
+    // Remove all style tags
+    const styles = doc.querySelectorAll('style');
+    styles.forEach(style => style.remove());
+    
+    // Remove all link tags (external CSS)
+    const links = doc.querySelectorAll('link[rel="stylesheet"]');
+    links.forEach(link => link.remove());
+    
+    // Remove all inline styles and class attributes from elements
+    const allElements = doc.querySelectorAll('*');
+    allElements.forEach(el => {
+      el.removeAttribute('style');
+      el.removeAttribute('class');
+      // Remove data attributes
+      for (const attr of [...el.attributes]) {
+        if (attr.name.startsWith('data-')) {
+          el.removeAttribute(attr.name);
+        }
+      }
+    });
+    
+    // Return the cleaned HTML
+    return doc.documentElement.outerHTML;
+  });
+}
+
 // Fetch a website using Puppeteer with JavaScript support
-async function fetchWithJavaScript(url, extractorFunction = '', index, total) {
+async function fetchWithJavaScript(url, index, total) {
   console.log(`[${index+1}/${total}] Fetching with JavaScript: ${url}`);
   const browser = await puppeteer.launch({
     executablePath: process.env.CHROME_PATH || undefined,
@@ -64,6 +105,8 @@ async function fetchWithJavaScript(url, extractorFunction = '', index, total) {
     timeout: 60000
   });
   
+  let rawHtml = '';
+  
   try {
     const page = await browser.newPage();
     await page.setDefaultNavigationTimeout(90000);
@@ -73,63 +116,46 @@ async function fetchWithJavaScript(url, extractorFunction = '', index, total) {
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
     console.log(`Successfully loaded ${url}`);
     
-    // Use page.content() to get the HTML with all JavaScript executed
-    console.log(`Getting page content with JavaScript executed...`);
-    let content = await page.content();
-    console.log(`Successfully retrieved page content (${content.length} bytes)`);
-    
     // Save raw content for debugging
+    console.log(`Getting raw HTML with JavaScript executed...`);
+    rawHtml = await page.content();
     const rawFilename = `raw_content_${index}.html`;
-    saveContent(rawFilename, content);
-    console.log(`Saved raw content to ${rawFilename}`);
+    saveContent(rawFilename, rawHtml);
+    console.log(`Saved raw content to ${rawFilename} (${rawHtml.length} bytes)`);
     
-    // If there's an extractor function, apply it using cheerio
-    if (extractorFunction && extractorFunction.trim() !== '') {
-      console.log(`Applying extractor function...`);
+    // Clean the HTML
+    console.log(`Cleaning HTML content...`);
+    try {
+      const cleanedHtml = await cleanHtml(page);
       
-      // Save the extractor function for debugging
-      const extractorFilename = `extractor_function_${index}.js`;
-      saveContent(extractorFilename, extractorFunction);
+      console.log(`Successfully cleaned HTML content (${cleanedHtml.length} bytes)`);
       
-      try {
-        const $ = cheerio.load(content);
-        
-        // Create a function from the extractor code
-        const extractFunction = new Function('$', extractorFunction);
-        const extractResult = extractFunction($);
-        
-        if (!extractResult) {
-          throw new Error(`Extractor function did not return a result for ${url}`);
-        }
-        
-        content = typeof extractResult === 'string' 
-          ? extractResult 
-          : JSON.stringify(extractResult, null, 2);
-        
-        console.log(`Extraction successful: ${content.substring(0, 100)}...`);
-        
-        // Save extracted content for debugging
-        const extractedFilename = `extracted_content_${index}.txt`;
-        saveContent(extractedFilename, content);
-      } catch (extractorError) {
-        console.error(`Error applying extractor function for ${url}:`, extractorError);
-        
-        // Save error details
-        const errorFilename = `extractor_error_${index}.txt`;
-        saveContent(errorFilename, `Error: ${extractorError.message}\n\nStack: ${extractorError.stack}`);
-        
-        // Exit with error
-        throw extractorError;
-      }
+      // Save cleaned content
+      const cleanedFilename = `cleaned_content_${index}.html`;
+      saveContent(cleanedFilename, cleanedHtml);
+      console.log(`Saved cleaned content to ${cleanedFilename}`);
+      
+      return cleanedHtml;
+    } catch (cleaningError) {
+      console.warn(`Warning: HTML cleaning failed, using raw HTML instead: ${cleaningError.message}`);
+      saveContent(`cleaning_error_${index}.txt`, `${cleaningError.message}\n\n${cleaningError.stack}`);
+      
+      // Return raw HTML if cleaning fails
+      console.log(`Falling back to raw HTML content`);
+      return rawHtml;
     }
-    
-    return content;
   } catch (error) {
     console.error(`Error fetching ${url} with JavaScript:`, error.message);
     
     // Save error details
     const errorFilename = `fetch_error_${index}.txt`;
     saveContent(errorFilename, `Error: ${error.message}\n\nStack: ${error.stack}`);
+    
+    // If we have raw HTML even though an error occurred, return it
+    if (rawHtml) {
+      console.log(`Despite error, returning available raw HTML (${rawHtml.length} bytes)`);
+      return rawHtml;
+    }
     
     throw error;
   } finally {
@@ -205,14 +231,6 @@ async function main() {
     // Create data directory if it doesn't exist
     fs.ensureDirSync(dataDir);
     
-    // Fetch and save the main CSV
-    console.log("\n=== Fetching Main Sheet ===");
-    const mainCsvData = await fetchCSV(MAIN_SHEET_URL);
-    if (!mainCsvData) throw new Error("Failed to fetch main CSV");
-    
-    const mainCsvPath = saveContent('main_sheet.csv', mainCsvData);
-    const urlsToScrape = parseCSV(mainCsvData);
-    
     // Fetch additional CSVs
     console.log("\n=== Fetching Additional Sheets ===");
     const additionalCsvs = [];
@@ -226,23 +244,22 @@ async function main() {
       }
     }
     
-    // Scrape URLs from the main CSV
+    // Scrape URLs from the hardcoded list
     console.log("\n=== Scraping URLs ===");
     const scrapedContents = [];
-    const validUrls = urlsToScrape.filter(row => row.URL);
-    const totalUrls = validUrls.length;
+    const totalUrls = URLS_TO_SCRAPE.length;
     
-    for (const [index, row] of validUrls.entries()) {
+    for (const [index, url] of URLS_TO_SCRAPE.entries()) {
       console.log(`\nProcessing URL ${index+1}/${totalUrls} (${Math.round((index+1)/totalUrls*100)}%)`);
-      console.log(`URL: ${row.URL}`);
+      console.log(`URL: ${url}`);
       
       try {
-        const content = await fetchWithJavaScript(row.URL, row.ExtractorFunction || '', index, totalUrls);
-        const filename = `scraped_content_${index}.txt`;
+        const content = await fetchWithJavaScript(url, index, totalUrls);
+        const filename = `scraped_content_${index}.html`;
         const contentPath = saveContent(filename, content);
-        scrapedContents.push({ path: contentPath, name: filename, url: row.URL });
+        scrapedContents.push({ path: contentPath, name: filename, url: url });
       } catch (error) {
-        console.error(`Failed to process URL ${row.URL}:`, error.message);
+        console.error(`Failed to process URL ${url}:`, error.message);
         // Continue with next URL instead of failing completely
       }
     }

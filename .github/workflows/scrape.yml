@@ -28,7 +28,7 @@ jobs:
       - name: Install Node dependencies
         run: |
           # Install dependencies directly without using package.json
-          npm install puppeteer axios papaparse fs-extra cheerio
+          npm install puppeteer axios papaparse fs-extra
 
       - name: Run scraper
         run: node templates/scraper.js
