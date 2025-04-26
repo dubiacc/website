@@ -38,16 +38,33 @@ function parseCSV(csvData) {
   return results.data;
 }
 
-// Load Puppeteer config
-const puppeteerConfig = require('./puppeteer-config');
-
 // Fetch a website using Puppeteer with JavaScript support
 async function fetchWithJavaScript(url, extractorFunction = '') {
   console.log(`Fetching with JavaScript: ${url}`);
-  const browser = await puppeteer.launch(puppeteerConfig.launch);
+  const browser = await puppeteer.launch({
+    executablePath: process.env.CHROME_PATH || undefined,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--no-first-run',
+      '--no-zygote',
+      '--disable-gpu',
+      '--headless',
+      '--disable-notifications',
+      '--disable-extensions',
+      '--disable-popup-blocking'
+    ],
+    headless: true,
+    timeout: 60000
+  });
   
   try {
     const page = await browser.newPage();
+    await page.setDefaultNavigationTimeout(90000);
+    await page.setDefaultTimeout(60000);
+    
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
     
     // Use page.content() to get the HTML with all JavaScript executed
