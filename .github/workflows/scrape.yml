@@ -16,7 +16,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Setup Chrome
         id: setup-chrome
@@ -33,18 +32,18 @@ jobs:
           
       - name: Install Node dependencies
         run: |
-          npm init -y
+          # Install dependencies directly without using package.json
           npm install puppeteer axios papaparse fs-extra cheerio
 
       - name: Run scraper
-        run: node templates/scraper.js
+        run: node scraper.js
         env:
           CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
           CHROMEDRIVER_PATH: ${{ steps.setup-chrome.outputs.chromedriver-path }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: Upload all data artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: scraped-data
           path: data/
@@ -52,7 +51,7 @@ jobs:
           
       # Upload only the final Gemini output as a separate artifact for easier access
       - name: Upload Gemini output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: gemini-output
           path: data/gemini_processed_data.json
