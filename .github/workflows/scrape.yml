@@ -25,11 +25,6 @@ jobs:
           install-chromedriver: true
           install-dependencies: true
 
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgbm-dev libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libglu1-mesa libgl1 libasound2 libxshmfence1 libx11-xcb1
-          
       - name: Install Node dependencies
         run: |
           # Install dependencies directly without using package.json
