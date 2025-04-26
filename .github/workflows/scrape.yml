@@ -44,7 +44,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: Upload all data artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: scraped-data
           path: data/
@@ -52,7 +52,7 @@ jobs:
           
       # Upload only the final Gemini output as a separate artifact for easier access
       - name: Upload Gemini output
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gemini-output
           path: data/gemini_processed_data.json
