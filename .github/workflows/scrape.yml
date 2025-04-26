@@ -1,0 +1,69 @@
+name: Web Scraper Workflow
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Run daily at midnight
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup Chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+          install-chromedriver: true
+          install-dependencies: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgbm-dev libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libglu1-mesa libgl1 libasound2 libxshmfence1 libx11-xcb1
+          
+      - name: Install Node dependencies
+        run: |
+          npm init -y
+          npm install puppeteer axios papaparse fs-extra cheerio
+
+      - name: Run scraper
+        run: node templates/scraper.js
+        env:
+          CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
+          CHROMEDRIVER_PATH: ${{ steps.setup-chrome.outputs.chromedriver-path }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: Upload all data artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: scraped-data
+          path: data/
+          retention-days: 7
+          
+      # Upload only the final Gemini output as a separate artifact for easier access
+      - name: Upload Gemini output
+        uses: actions/upload-artifact@v3
+        with:
+          name: gemini-output
+          path: data/gemini_processed_data.json
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Commit and push changes
+        if: success()
+        run: |
+          git config --local user.email "github-actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add data/
+          git commit -m "Update scraped data [skip ci]" || echo "No changes to commit"
+          git push

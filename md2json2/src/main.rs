@@ -2183,7 +2183,68 @@ struct Author {
 }
 
 fn read_meta_json(s: &str) -> MetaJson {
-    serde_json::from_str(&s).unwrap_or_default()
+
+    /*
+    let keys = &serde_json::json!({
+        "email" => {
+            "de" => "E-Mail",
+            "en" => "E-Mail",
+        }
+    });
+    */
+
+    let initial = serde_json::from_str(&s).unwrap_or_default();
+    // add_translation_keys(&initial)
+    initial
+}
+
+/// Add a new translation key to a meta.json structure and write it back to disk
+pub fn add_translation_keys(
+    meta: &MetaJson, 
+    key: &str,
+    translations: &BTreeMap<String, String>,
+    meta_path: &Path,
+    force: bool,
+) -> Result<MetaJson, String> {
+
+    let mut meta = meta.clone();
+
+    // Check if the key already exists
+    let key_exists = meta.strings.values().any(|langs| langs.contains_key(key));
+    if key_exists {
+        if !force {
+            return Err(format!("Translation key '{}' already exists. Use force=true to overwrite.", key));
+        }
+        println!("Warning: Overwriting existing translation key '{}'.", key);
+    }
+    
+    // Check if all languages in meta have a translation
+    let missing_translations: Vec<_> = meta.strings.keys()
+        .filter(|lang| !translations.contains_key(*lang))
+        .cloned()
+        .collect();
+    
+    if !missing_translations.is_empty() {
+        println!("Warning: The following languages don't have a translation for '{}': {:?}", key, missing_translations);
+    }
+    
+    // Add the translations to the meta structure
+    for (lang, translation) in translations {
+        meta.strings
+            .entry(lang.clone())
+            .or_insert_with(|| BTreeMap::new())
+            .insert(key.to_string(), translation.clone());
+    }
+    
+    // Serialize the meta structure to JSON
+    let json = serde_json::to_string_pretty(&meta)
+        .map_err(|e| format!("Failed to serialize meta.json: {}", e))?;
+    
+    // Write the JSON to disk
+    std::fs::write(meta_path, json)
+        .map_err(|e| format!("Failed to write meta.json to disk: {}", e))?;
+    
+    Ok(meta)
 }
 
 fn page_metadata(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
