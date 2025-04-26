@@ -31,7 +31,7 @@ jobs:
           npm install puppeteer axios papaparse fs-extra cheerio
 
       - name: Run scraper
-        run: node scraper.js
+        run: node templates/scraper.js
         env:
           CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
           CHROMEDRIVER_PATH: ${{ steps.setup-chrome.outputs.chromedriver-path }}
