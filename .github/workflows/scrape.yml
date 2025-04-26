@@ -58,12 +58,3 @@ jobs:
           path: data/gemini_processed_data.json
           retention-days: 7
           if-no-files-found: warn
-
-      - name: Commit and push changes
-        if: success()
-        run: |
-          git config --local user.email "github-actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add data/
-          git commit -m "Update scraped data [skip ci]" || echo "No changes to commit"
-          git push
