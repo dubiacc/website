@@ -7,7 +7,8 @@ const path = require('path');
 // URLs to scrape - easily visible at the top
 const URLS_TO_SCRAPE = [
   'https://apotresdejesusetdemarie.fr/evenements/',
-  'https://abbe-pivert.com/ministere-dominical/'
+  'https://abbe-pivert.com/ministere-dominical/',
+  'https://sspxmc.com/mass-schedule/',
 ];
 
 // URLs of additional Google Sheets for reference data
