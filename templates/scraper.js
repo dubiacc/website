@@ -401,6 +401,17 @@ IMPORTANT: Return your response as valid, complete JSON without any markdown for
       saveContent('gemini_processed_data.json', processedResponse);
       console.log("\n=== Successfully processed data with Gemini API ===");
       
+      // Update Google Spreadsheet with processed data
+      if (processedResponse) {
+        try {
+          const jsonData = JSON.parse(processedResponse);
+          await updateSpreadsheet(jsonData);
+        } catch (error) {
+          console.error("Error parsing JSON for spreadsheet update:", error.message);
+          saveContent('json_parse_error_for_update.txt', error.message);
+        }
+      }
+      
     } catch (error) {
       console.error("Error calling Gemini API:", error.message);
       if (error.response) {
@@ -408,17 +419,6 @@ IMPORTANT: Return your response as valid, complete JSON without any markdown for
         saveContent('gemini_api_error.json', JSON.stringify(error.response.data, null, 2));
       }
       process.exit(1);
-    }
-    
-    // Update Google Spreadsheet with processed data
-    if (processedResponse) {
-      try {
-        const jsonData = JSON.parse(processedResponse);
-        await updateSpreadsheet(jsonData);
-      } catch (error) {
-        console.error("Error parsing JSON for spreadsheet update:", error.message);
-        saveContent('json_parse_error_for_update.txt', error.message);
-      }
     }
   } catch (error) {
     console.error("\n=== FATAL ERROR ===");
