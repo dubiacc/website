@@ -1,8 +1,8 @@
 const puppeteer = require('puppeteer');
 const axios = require('axios');
-const Papa = require('papaparse');
 const fs = require('fs-extra');
 const path = require('path');
+const { JWT } = require('google-auth-library');
 
 // URLs to scrape - easily visible at the top
 const URLS_TO_SCRAPE = [
@@ -11,11 +11,16 @@ const URLS_TO_SCRAPE = [
   'https://sspxmc.com/mass-schedule/',
 ];
 
+const SPREADSHEET_ID = "16wO1gTdilEcdqsWfJ0mZn-hgYD2MRJ1SCKSAHzcDj18";
+const LOCATIONS_SHEET = 'locations';
+const RELIGIOUS_SHEET = 'religious';
+const EVENTS_SHEET = 'events';
+
 // URLs of additional Google Sheets for reference data
 const ADDITIONAL_SHEETS = [
-  'https://docs.google.com/spreadsheets/d/16wO1gTdilEcdqsWfJ0mZn-hgYD2MRJ1SCKSAHzcDj18/gviz/tq?tqx=out:csv&sheet=events&query=rows',
-  'https://docs.google.com/spreadsheets/d/16wO1gTdilEcdqsWfJ0mZn-hgYD2MRJ1SCKSAHzcDj18/gviz/tq?tqx=out:csv&sheet=locations&query=rows',
-  'https://docs.google.com/spreadsheets/d/16wO1gTdilEcdqsWfJ0mZn-hgYD2MRJ1SCKSAHzcDj18/gviz/tq?tqx=out:csv&sheet=religious&query=rows'
+  `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${EVENTS_SHEET}&query=rows`,
+  `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${LOCATIONS_SHEET}&query=rows`,
+  `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${RELIGIOUS_SHEET}&query=rows`
 ];
 
 // Create data directory
@@ -33,18 +38,6 @@ async function fetchCSV(url) {
     console.error(`Error fetching CSV from ${url}:`, error.message);
     return null;
   }
-}
-
-// Parse CSV data
-function parseCSV(csvData) {
-  console.log(`Parsing CSV data...`);
-  const results = Papa.parse(csvData, {
-    header: true,
-    skipEmptyLines: true,
-    dynamicTyping: true
-  });
-  console.log(`Parsed ${results.data.length} rows from CSV data`);
-  return results.data;
 }
 
 // Clean HTML content using browser-native tools
@@ -225,6 +218,83 @@ function processGeminiResponse(responseData) {
   }
 }
 
+// Parse and validate service account credentials
+function parseServiceAccountCredentials(credentialsJson) {
+  try {
+    const credentials = JSON.parse(credentialsJson);
+    
+    const requiredFields = ['client_email', 'private_key', 'type'];
+    for (const field of requiredFields) {
+      if (!credentials[field]) 
+        throw new Error(`Missing required field in service account credentials: ${field}`);
+    }
+    
+    if (credentials.type !== 'service_account')
+      throw new Error(`Invalid credential type: expected 'service_account', got '${credentials.type}'`);
+    
+    return credentials;
+  } catch (error) {
+    if (error instanceof SyntaxError)
+      throw new Error(`Invalid JSON format in service account credentials: ${error.message}`);
+    throw error;
+  }
+}
+
+// Update Google Spreadsheet with new data
+async function updateSpreadsheet(jsonData) {
+  if (!process.env.GOOGLE_DOCS_SERVICE_ACCOUNT) {
+    console.error('Missing Google authentication credentials. Skipping spreadsheet update.');
+    return false;
+  }
+
+  console.log('\n=== Updating Google Spreadsheet ===');
+  
+  try {
+    const credentials = parseServiceAccountCredentials(process.env.GOOGLE_DOCS_SERVICE_ACCOUNT);
+    
+    const serviceAccountAuth = new JWT({
+      email: credentials.client_email,
+      key: credentials.private_key,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+    
+    const doc = new GoogleSpreadsheet(SPREADSHEET_ID, serviceAccountAuth);
+    
+    await doc.loadInfo();
+    console.log(`Connected to spreadsheet: ${doc.title}`);
+    
+    if (jsonData.newlocations?.length > 0) 
+      await appendRows(doc, LOCATIONS_SHEET, jsonData.newlocations);
+    
+    if (jsonData.newreligious?.length > 0) 
+      await appendRows(doc, RELIGIOUS_SHEET, jsonData.newreligious);
+    
+    if (jsonData.newevents?.length > 0) 
+      await appendRows(doc, EVENTS_SHEET, jsonData.newevents);
+    
+    console.log('Spreadsheet update completed successfully');
+    return true;
+  } catch (error) {
+    console.error('Error updating spreadsheet:', error.message);
+    saveContent('spreadsheet_update_error.txt', `${error.message}\n\n${error.stack}`);
+    return false;
+  }
+}
+
+// Append rows to a specific sheet
+async function appendRows(doc, sheetName, data) {
+  const sheet = doc.sheetsByTitle[sheetName];
+  if (!sheet) {
+    throw new Error(`Sheet '${sheetName}' not found in spreadsheet`);
+  }
+  
+  console.log(`Adding ${data.length} rows to ${sheetName}`);
+  
+  // Don't modify/clean the column names - keep them as is, including question marks
+  await sheet.addRows(data);
+  console.log(`Successfully added ${data.length} rows to ${sheetName}`);
+}
+
 // Main function
 async function main() {
   try {
@@ -340,6 +410,16 @@ IMPORTANT: Return your response as valid, complete JSON without any markdown for
       process.exit(1);
     }
     
+    // Update Google Spreadsheet with processed data
+    if (processedResponse) {
+      try {
+        const jsonData = JSON.parse(processedResponse);
+        await updateSpreadsheet(jsonData);
+      } catch (error) {
+        console.error("Error parsing JSON for spreadsheet update:", error.message);
+        saveContent('json_parse_error_for_update.txt', error.message);
+      }
+    }
   } catch (error) {
     console.error("\n=== FATAL ERROR ===");
     console.error(error);
