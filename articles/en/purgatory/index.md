@@ -9,10 +9,10 @@ mercy in forgiving the sins of the repentant without requiring punishment after 
 
 ## Refutation
 
-In "Contra Errores Graecorum," St. Thomas Aquinas presents evidence that the 
-concept of purification after death was indeed recognized by Eastern Fathers, 
-though not always with the precise terminology used in the West, citing St. 
-Gregory of Nyssa, who clearly speaks of purification after death:
+St. Thomas Aquinas presents evidence that the concept of purification after 
+death was indeed recognized by Eastern Fathers, though not always with the 
+precise terminology used in the West, citing St. Gregory of Nyssa, who clearly 
+speaks of purification after death:
 
 > Further, Gregory of Nyssa [De iis qui in fide dormiunt] says: "If one who 
 > loves and believes in Christ," has failed to wash away his sins in this life, 
@@ -23,7 +23,7 @@ Gregory of Nyssa, who clearly speaks of purification after death:
 > this the universal Church holds, by praying for the dead that they may be 
 > loosed from sins.
 >
-> -- [source]()
+> -- [Contra Errores Graecorum]()
 
 Theodoret of Cyr is also quoted:
 
@@ -32,7 +32,7 @@ Theodoret of Cyr is also quoted:
 > or at least from the dust of the feet of earthly living. In this fire 
 > one remains so long as any earthly and bodily affections are being purged.
 >
-> -- [source]()
+> -- [Theodoret of Cyr]()
 
 These teachings align with the Catholic understanding of Purgatory as a state 
 of purification necessary for souls who die in God's friendship but still bear 

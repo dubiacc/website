@@ -504,8 +504,8 @@ fn enhance_typography(text: &str) -> String {
     let mut result = text.to_string();
     
     // Replace ellipses
-    result = result.replace("..", "…");
     result = result.replace("...", "…");
+    result = result.replace("..", "…");
     
     // TODO: match lang { ... }
 

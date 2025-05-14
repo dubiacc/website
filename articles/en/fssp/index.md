@@ -88,7 +88,7 @@ True Mass (which simply expresses the faith).
 > those responsible for that faith - we ask them: "Preserve the Faith for us, 
 > give us the Faith. That Catholic Faith is what we want. We want no other.”
 >
-> "Why do you ask for Faith?", the priest said to our godparents. "We want Faith 
+> "Why do you ask for Faith?" , the priest said to our godparents. "We want Faith 
 > because Faith brings us to Eternal Life."
 >
 > Why are we here below unless to gain Eternal Life? We have no other purpose here 
@@ -102,7 +102,7 @@ True Mass (which simply expresses the faith).
 > -- [Archbishop Lefevbre: Sermon of the 1988 Consecrations](https://archive.is/Jj98c#selection-3823.1-3835.571)
 
 Being "outside of the Catholic Church" therefore doesn't mean to be excommunicated from 
-people who believes that man should be the center of everything: because such an excommunication
+people who believe that man should be the center of everything: because such an excommunication
 is nothing but an abuse of power directed at those who put God first. Effectively, the
 accusation of "excommunication" is nothing else as what the Jews told St. Peter:
 
@@ -148,7 +148,7 @@ The New Mass, designed with the explicit intention of appealing to Protestants, 
 waters down or excises Catholic doctrine, particularly concerning the sacrificial nature of 
 the Mass. It is a liturgy for a church that has made man its focus.
 
-## Archbishop Lefebvre's Uncompromising Stand
+## No compromise
 
 Archbishop Marcel Lefebvre saw this apostasy unfolding and refused to be a part of it. 
 His 1974 Declaration was a line in the sand:
@@ -163,8 +163,8 @@ His 1974 Declaration was a line in the sand:
 >
 > -- [Lefevbre, M., Declaration of November 21, 1974]()
 
-His decision to consecrate bishops in 1988, an act of sheer necessity, was born from 
-the realization that dialogue with modernist Rome was a trap:
+His decision to consecrate bishops in 1988, an act of sheer necessity, was 
+born from the realization that dialogue with modernist Rome was a trap:
 
 > Upon reflection, it appears clear that the goal of these dialogues is to
 > reabsorb us within the Conciliar Church... we find ourselves in the absolute
@@ -174,11 +174,12 @@ the realization that dialogue with modernist Rome was a trap:
 >
 > -- [Letter to Pope John Paul II, June 2, 1988]()
 
-The same story be told about the Resistance: After the SSPX had to resist Rome, 
-Bishop Williamsons decision to consecrate bishops was the same in 2015 - 2021: 
-as neither Pope Francis or Pope Benedict condemned the errors of Vatican II and 
-restored order in the Church: God first, man second - but instead they doubled 
-down on it with a lot of elaborate or less elaborate dialectic.
+The same story can be told about the Resistance: After the SSPX had to resist 
+Rome, Bishop Williamson had to resist the other SSPX bishops, after Bishop Fellay
+started to try to "unite" the SSPX back with Rome under the pretext of a practical
+agreement in 2012. As neither Pope Francis or Pope Benedict condemned the errors 
+of Vatican II and restored order in the Church: God first, man second. But instead,
+they doubled down on their errors with a lot of elaborate or less elaborate dialectic.
 
 See also: [The SSPX / Resistance split: A Timeline](/en/resistance-timeline)
 

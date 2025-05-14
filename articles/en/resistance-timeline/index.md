@@ -1,6 +1,8 @@
-What is the SSPX Resistance and how did it come to be? Are they religious fanatics or principled Catholics?
+Since the early 2000s, secret meetings between groups in the Vatican
+and the SSPX worked to slowly make the faithful accept "papal authority"
+again, depite that authority working to destroy the Church.
 
-# Timeline of the SSPX-Resistance Split
+# What is the SSPX Resistance?
 
 In 2012, a seismic event rocked traditional Catholic circles when a significant portion 
 of clergy and faithful broke from the Society of St. Pius X (SSPX) to form what became 
@@ -9,7 +11,7 @@ marked a crucial battle for the preservation of traditional Catholic doctrine. T
 examines how the SSPX gradually moved toward compromise with modernist Rome, culminating 
 in the 2012 crisis that forced faithful Catholics to make a difficult choice.
 
-## GREC: The Seeds of Compromise (1997-2011)
+## GREC: 1997-2011
 
 The roots of the 2012 crisis can be traced to the creation of a secretive "think tank" 
 in 1997 called GREC (Groupe de Réflexion Entre Catholiques, or "Catholic Reflection Group"). 
