@@ -189,7 +189,7 @@ modern errors be overcome, and true Christian marriage be restored.
 ```
 {
     "date": "2025-05-14",
-    "authors": ["john-farrell", "github:fschutt"],
+    "authors": ["john-farrell"],
     "tags": ["catholic-morality"]
 }
 ```

@@ -394,7 +394,7 @@ body.page-index #markdownBody #notable {
             display: block;
         }
         body.page-index #markdownBody .abstract {
-            max-width: 935px;
+            max-width: 800px;
             margin-left: 20ch;
         }
         body.page-index #markdownBody hr {

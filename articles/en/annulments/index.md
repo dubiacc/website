@@ -235,7 +235,7 @@ and divorce crisis: Even among "traditional Catholics", the focus on "natural"
 contraception and "unity of the spouses" distorts the actual definition of marriage,
 leading to its downfall.
 
-## Can the bad quality of a person invalidate full consent?
+## Can we invalidate full consent?
 
 Error about the person you're marrying logically invalidates marriage: you did 
 intend to marry Steve, but his genetic twin brother Alex showed up at the wedding - 
