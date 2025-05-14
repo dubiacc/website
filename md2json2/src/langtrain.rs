@@ -16,7 +16,7 @@ impl TrainLang {
     pub fn get_initial_vocab(&self, lang: &str) -> Vec<VocabCsvRow> {
         match lang {
             "en" => parse_vocab_csv(include_str!(
-                "../../articles/en/online-latin-trainer/latin.vocab.1.csv"
+                "../../articles/en/learn-latin/latin.vocab.1.csv"
             ))
             .unwrap_or_default(),
             _ => Vec::new(),
@@ -26,7 +26,7 @@ impl TrainLang {
     pub fn get_grammar_lessons(&self, lang: &str) -> GrammarLessons {
         match lang {
             "en" => parse_grammar_lessons(include_str!(
-                "../../articles/en/online-latin-trainer/latin.grammar.json"
+                "../../articles/en/learn-latin/latin.grammar.json"
             ))
             .unwrap_or_default(),
             _ => GrammarLessons::default(),
