@@ -219,7 +219,7 @@ had to sign an agreement of either silence in order to get recognition from mode
 
 ## The Real Question of Salvation
 
-Now, might one ask, is there "no salvation outside the Resistance"? While The 
+Now, might one ask, is there "no salvation outside the Resistance"? Well, the 
 terrifying, real question is: Is there salvation for those who, for the sake of 
 "regularization" or "obedience" to compromised authorities, sign off on or remain 
 silent about heresies that place man at the center instead of God? Will God in his 
