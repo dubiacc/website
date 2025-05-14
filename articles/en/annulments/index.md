@@ -63,7 +63,7 @@ breaking the bond), we simply have to contrast Matthew 19:9 with Luke 16:18:
 >
 > -- [Luke 16:18 DRA](https://www.drbo.org/cgi-bin/s?q=Luke+16%3A18&x=0&y=0&b=drb)
 
-So, if an "apolyse" refers to a divortium perfectum, as Susan argues, this would "annull" 
+So, if an "apolyse" refers to a divortium perfectum, this would "annull" 
 the marriage - then how can it be adultery to mary such an "anulled" woman? St. Paul 
 distinguishes in 1st Corinthians 7 with his use of "chorizo":
 
