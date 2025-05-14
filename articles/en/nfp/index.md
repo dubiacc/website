@@ -9,15 +9,13 @@ In an age saturated with compromise and confusion, even within the Church,
 few deviations from perennial teaching have become as normalized and accepted 
 as the practice commonly known as "Natural" Family Planning (NFP). 
 
-Promoted as a licit, even virtuous, method of regulating births, NFP stands in stark 
-contrast to the consistent Magisterium of the Church prior to the upheavals 
-of the mid-20th century. This is not merely a debate over calendars and charts; 
-it is a confrontation with a mindset that fundamentally redefines marriage, 
-elevates subjective desires over divine law, and ultimately contributes to the 
-very breakdown of the family it claims to support. 
-
-Pope Pius XI’s encyclical *Casti Connubii* serves as an enduring beacon, 
-exposing the fallacies underlying the NFP ideology.
+Natural Family Planning (NFP), despite its widespread acceptance, 
+contradicts the Church's historical teaching on marriage and procreation. 
+Far from being a morally neutral method of birth regulation, NFP 
+fundamentally reorders marital ends, prioritizing personal choice over 
+divine mandate. Pope Pius XI's encyclica "Casti Connubii" clearly condemns 
+this mindset that has contributed to family breakdown under the guise 
+of responsible parenthood.
 
 ## Why NFP Seems Plausible
 
@@ -34,7 +32,7 @@ These arguments, however well-intentioned or widely repeated, fail to
 withstand scrutiny when measured against the immutable truths articulated 
 in Casti Connubii and the broader Tradition.
 
-## The Purpose and Primary End of Marriage
+## Primary End of Marriage
 
 Pius XI, writing prophetically in 1930, dismantled the foundations upon which NFP 
 would later be built. His encyclical "Casti Connubii" (On Chaste Marriage) relentlessly 
@@ -65,7 +63,7 @@ and primary purpose during fertile times. Whether the frustration is achieved ch
 mechanically, or chronologically is irrelevant to the intrinsic disordering of the act from 
 its God-given end.
 
-## Do "Grave Circumstances" permit NFP?
+## Do Grave Circumstances permit NFP?
 
 No. Pius XI foresaw the appeal to difficult circumstances: 
 
@@ -190,6 +188,6 @@ modern errors be overcome, and true Christian marriage be restored.
 {
     "date": "2025-05-14",
     "authors": ["john-farrell"],
-    "tags": ["catholic-morality"]
+    "tags": ["morality"]
 }
 ```

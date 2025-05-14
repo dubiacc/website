@@ -1,6 +1,6 @@
 Do statues resemble pagan idols? The Seventh Ecumenical Council approved various art forms based on principle, not dimension: Honor shown to sacred images passes to the thing they resemble.
 
-# Should Christians Venerate Religious Images?
+# May Christians Venerate Statues?
 
 While both Orthodox and Catholics venerate religious images, Orthodox Christians 
 criticize Catholic use of three-dimensional statues as opposed to two-dimensional 

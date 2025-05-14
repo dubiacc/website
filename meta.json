@@ -3189,11 +3189,11 @@
                     "featured": []
                 },
                 "apostles": {
-                    "title": "Apostles and Early Church",
+                    "title": "Early Church",
                     "featured": []
                 },
-                "catholic-morality": {
-                    "title": "Moral and Social Teaching",
+                "morality": {
+                    "title": "Morality",
                     "featured": []
                 },
                 "history": {
@@ -3201,7 +3201,7 @@
                     "featured": []
                 },
                 "theology": {
-                    "title": "Theology / Thomism",
+                    "title": "Thomism",
                     "featured": []
                 },
                 "philosophy": {
@@ -3216,8 +3216,7 @@
             "tags": {
                 "islam": "Islam",
                 "judaism": "Judaism",
-                "orthodoxy": "Eastern Orthodoxy",
-                "oriental-orthodoxy": "Oriental Orthodoxy",
+                "orthodoxy": "Orthodoxy",
                 "atheism": "Atheism",
                 "history": "History",
                 "polytheism": "Polytheism",
@@ -3227,7 +3226,7 @@
                 "middle-ages": "Middle Ages",
                 "church-fathers": "Church Fathers",
                 "evolution": "Evolution",
-                "catholic-morality": "Catholic Morality",
+                "morality": "Morality",
                 "gnosticism": "Gnosticism",
                 "early-church": "Early Church",
                 "prayer": "Prayers",
@@ -4035,7 +4034,6 @@
                 "islam": "Islã",
                 "judaism": "Judaísmo",
                 "orthodoxy": "Ortodoxia Oriental",
-                "oriental-orthodoxy": "Ortodoxia Oriental Antiga",
                 "atheism": "Ateísmo",
                 "history": "História",
                 "polytheism": "Politeísmo",
@@ -4045,7 +4043,7 @@
                 "middle-ages": "Idade Média",
                 "church-fathers": "Pais da Igreja",
                 "evolution": "Evolução",
-                "catholic-morality": "Moral Católica",
+                "morality": "Moral Católica",
                 "gnosticism": "Gnosticismo",
                 "early-church": "Igreja Primitiva",
                 "prayer": "Orações",
@@ -4308,7 +4306,6 @@
                 "islam": "Islam",
                 "judaism": "Judaísmo",
                 "orthodoxy": "Ortodoxia Oriental",
-                "oriental-orthodoxy": "Ortodoxia Oriental Antigua",
                 "atheism": "Ateísmo",
                 "history": "Historia",
                 "polytheism": "Politeísmo",
@@ -4318,7 +4315,7 @@
                 "middle-ages": "Edad Media",
                 "church-fathers": "Padres de la Iglesia",
                 "evolution": "Evolución",
-                "catholic-morality": "Moral Católica",
+                "morality": "Moral",
                 "gnosticism": "Gnosticismo",
                 "early-church": "Iglesia Primitiva",
                 "prayer": "Oraciones",
@@ -4581,7 +4578,6 @@
                 "islam": "Islam",
                 "judaism": "Ebraismo",
                 "orthodoxy": "Ortodossia Orientale",
-                "oriental-orthodoxy": "Ortodossia Orientale Antica",
                 "atheism": "Ateismo",
                 "history": "Storia",
                 "polytheism": "Politeismo",
@@ -4591,7 +4587,7 @@
                 "middle-ages": "Medioevo",
                 "church-fathers": "Padri della Chiesa",
                 "evolution": "Evoluzione",
-                "catholic-morality": "Morale Cattolica",
+                "morality": "Morale",
                 "gnosticism": "Gnosticismo",
                 "early-church": "Chiesa Primitiva",
                 "prayer": "Preghiere",
@@ -4829,8 +4825,8 @@
                     "title": "Апостолы и Ранняя Церковь",
                     "featured": []
                 },
-                "catholic-morality": {
-                    "title": "Нравственное и Социальное Учение",
+                "morality": {
+                    "title": "Нравственное",
                     "featured": []
                 },
                 "history": {
@@ -4854,7 +4850,6 @@
                 "islam": "Ислам",
                 "judaism": "Иудаизм",
                 "orthodoxy": "Восточное Православие",
-                "oriental-orthodoxy": "Древневосточные Церкви",
                 "atheism": "Атеизм",
                 "history": "История",
                 "polytheism": "Политеизм",
@@ -4864,7 +4859,7 @@
                 "middle-ages": "Средние Века",
                 "church-fathers": "Отцы Церкви",
                 "evolution": "Эволюция",
-                "catholic-morality": "Католическая Мораль",
+                "morality": "Мораль",
                 "gnosticism": "Гностицизм",
                 "early-church": "Ранняя Церковь",
                 "prayer": "Молитвы",
@@ -5127,7 +5122,6 @@
                 "islam": "İslam",
                 "judaism": "Yahudilik",
                 "orthodoxy": "Doğu Ortodoksluğu",
-                "oriental-orthodoxy": "Oryantal Ortodoksluk",
                 "atheism": "Ateizm",
                 "history": "Tarih",
                 "polytheism": "Politeizm",
@@ -5137,7 +5131,7 @@
                 "middle-ages": "Orta Çağ",
                 "church-fathers": "Kilise Babaları",
                 "evolution": "Evrim",
-                "catholic-morality": "Katolik Ahlakı",
+                "morality": "Ahlakı",
                 "gnosticism": "Gnostisizm",
                 "early-church": "Erken Kilise",
                 "prayer": "Dualar",
@@ -5400,7 +5394,6 @@
                 "islam": "Ισλάμ",
                 "judaism": "Ιουδαϊσμός",
                 "orthodoxy": "Ανατολική Ορθοδοξία",
-                "oriental-orthodoxy": "Προχαλκηδόνιες Εκκλησίες",
                 "atheism": "Αθεϊσμός",
                 "history": "Ιστορία",
                 "polytheism": "Πολυθεϊσμός",
@@ -5410,7 +5403,7 @@
                 "middle-ages": "Μεσαίωνας",
                 "church-fathers": "Πατέρες της Εκκλησίας",
                 "evolution": "Εξέλιξη",
-                "catholic-morality": "Καθολική Ηθική",
+                "morality": "Ηθική",
                 "gnosticism": "Γνωστικισμός",
                 "early-church": "Πρώιμη Εκκλησία",
                 "prayer": "Προσευχές",
@@ -5648,7 +5641,7 @@
                     "title": "الرسل والكنيسة الأولى",
                     "featured": []
                 },
-                "catholic-morality": {
+                "morality": {
                     "title": "التعليم الأخلاقي والاجتماعي",
                     "featured": []
                 },
@@ -5673,7 +5666,6 @@
                 "islam": "الإسلام",
                 "judaism": "اليهودية",
                 "orthodoxy": "الأرثوذكسية الشرقية",
-                "oriental-orthodoxy": "الأرثوذكسية المشرقية",
                 "atheism": "الإلحاد",
                 "history": "التاريخ",
                 "polytheism": "الشرك",
@@ -5683,7 +5675,7 @@
                 "middle-ages": "العصور الوسطى",
                 "church-fathers": "آباء الكنيسة",
                 "evolution": "التطور",
-                "catholic-morality": "الأخلاق الكاثوليكية",
+                "morality": "الأخلاق الكاثوليكية",
                 "gnosticism": "الغنوصية",
                 "early-church": "الكنيسة المبكرة",
                 "prayer": "صلوات",
@@ -5946,7 +5938,6 @@
                 "islam": "Islam",
                 "judaism": "Hudaismo",
                 "orthodoxy": "Silangang Ortodokso",
-                "oriental-orthodoxy": "Oryental na Ortodokso",
                 "atheism": "Ateismo",
                 "history": "Kasaysayan",
                 "polytheism": "Politeismo",
@@ -5956,7 +5947,7 @@
                 "middle-ages": "Gitnang Panahon",
                 "church-fathers": "Mga Ama ng Simbahan",
                 "evolution": "Ebolusyon",
-                "catholic-morality": "Moralidad Katoliko",
+                "morality": "Moralidad Katoliko",
                 "gnosticism": "Nostisismo",
                 "early-church": "Sinaunang Simbahan",
                 "prayer": "Mga Dasal",
@@ -6194,7 +6185,7 @@
                     "title": "使徒与早期教会",
                     "featured": []
                 },
-                "catholic-morality": {
+                "morality": {
                     "title": "道德与社会训导",
                     "featured": []
                 },
@@ -6219,7 +6210,6 @@
                 "islam": "伊斯兰教",
                 "judaism": "犹太教",
                 "orthodoxy": "东正教",
-                "oriental-orthodoxy": "东方正统教会",
                 "atheism": "无神论",
                 "history": "历史",
                 "polytheism": "多神论",
@@ -6229,7 +6219,7 @@
                 "middle-ages": "中世纪",
                 "church-fathers": "教父",
                 "evolution": "进化论",
-                "catholic-morality": "天主教道德",
+                "morality": "天主教道德",
                 "gnosticism": "诺斯底主义",
                 "early-church": "早期教会",
                 "prayer": "祈祷",
@@ -6467,7 +6457,7 @@
                     "title": "사도들과 초기 교회",
                     "featured": []
                 },
-                "catholic-morality": {
+                "morality": {
                     "title": "도덕 및 사회 교리",
                     "featured": []
                 },
@@ -6492,7 +6482,6 @@
                 "islam": "이슬람교",
                 "judaism": "유대교",
                 "orthodoxy": "동방 정교회",
-                "oriental-orthodoxy": "오리엔트 정교회",
                 "atheism": "무신론",
                 "history": "역사",
                 "polytheism": "다신론",
@@ -6502,7 +6491,7 @@
                 "middle-ages": "중세",
                 "church-fathers": "교부",
                 "evolution": "진화",
-                "catholic-morality": "가톨릭 윤리",
+                "morality": "가톨릭 윤리",
                 "gnosticism": "영지주의",
                 "early-church": "초대 교회",
                 "prayer": "기도",
@@ -6740,7 +6729,7 @@
                     "title": "使徒と初期教会",
                     "featured": []
                 },
-                "catholic-morality": {
+                "morality": {
                     "title": "道徳的・社会的教え",
                     "featured": []
                 },
@@ -6765,7 +6754,6 @@
                 "islam": "イスラム教",
                 "judaism": "ユダヤ教",
                 "orthodoxy": "東方正教会",
-                "oriental-orthodoxy": "オリエント正教",
                 "atheism": "無神論",
                 "history": "歴史",
                 "polytheism": "多神教",
@@ -6775,7 +6763,7 @@
                 "middle-ages": "中世",
                 "church-fathers": "教父",
                 "evolution": "進化論",
-                "catholic-morality": "カトリック倫理",
+                "morality": "カトリック倫理",
                 "gnosticism": "グノーシス主義",
                 "early-church": "初期教会",
                 "prayer": "祈り",
@@ -7038,7 +7026,6 @@
                 "islam": "Islam",
                 "judaism": "Iudaism",
                 "orthodoxy": "Ortodoxie Răsăriteană",
-                "oriental-orthodoxy": "Ortodoxie Orientală",
                 "atheism": "Ateism",
                 "history": "Istorie",
                 "polytheism": "Politeism",
@@ -7048,7 +7035,7 @@
                 "middle-ages": "Evul Mediu",
                 "church-fathers": "Părinți Bisericești",
                 "evolution": "Evoluție",
-                "catholic-morality": "Morală Catolică",
+                "morality": "Morală Catolică",
                 "gnosticism": "Gnosticism",
                 "early-church": "Biserica Primară",
                 "prayer": "Rugăciuni",
@@ -7311,7 +7298,6 @@
                 "islam": "Islão",
                 "judaism": "Judaísmo",
                 "orthodoxy": "Ortodoxia Oriental",
-                "oriental-orthodoxy": "Ortodoxia Oriental Antiga",
                 "atheism": "Ateísmo",
                 "history": "História",
                 "polytheism": "Politeísmo",
@@ -7321,7 +7307,7 @@
                 "middle-ages": "Idade Média",
                 "church-fathers": "Pais da Igreja",
                 "evolution": "Evolução",
-                "catholic-morality": "Moral Católica",
+                "morality": "Moral Católica",
                 "gnosticism": "Gnosticismo",
                 "early-church": "Igreja Primitiva",
                 "prayer": "Orações",

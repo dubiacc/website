@@ -69,7 +69,7 @@ impl ParsedArticle {
             .iter()
             .flat_map(|l| {
                 l.pars.iter().flat_map(|p| match p {
-                    Paragraph::Sentence { s } => s
+                    Paragraph::Sentence { s } | Paragraph::Markdown { s, ..} => s
                         .iter()
                         .filter_map(|s| match s {
                             SentenceItem::Link { l } => Some(l.clone()),
@@ -321,20 +321,22 @@ enum Paragraph {
     Sentence { s: Vec<SentenceItem> },
     Quote { q: Quote },
     Image { i: Image },
+    Markdown { html: String, s: Vec<SentenceItem> },
 }
 
 impl Paragraph {
     pub fn as_sentence(&self) -> Option<&[SentenceItem]> {
-        if let Paragraph::Sentence { s } = self {
-            Some(s)
-        } else {
-            None
+        match self {
+            Paragraph::Sentence { s } => Some(s),
+            Paragraph::Markdown { s, .. } => Some(s),
+            _ => None,
         }
     }
 
     pub fn word_count(&self) -> usize {
         match self {
-            Paragraph::Sentence { s } => s
+            Paragraph::Sentence { s } | 
+            Paragraph::Markdown { s, ..} => s
                 .iter()
                 .map(|z| match z {
                     SentenceItem::Text { text } => text.split_whitespace().count() + 1,
@@ -349,7 +351,8 @@ impl Paragraph {
 
     pub fn get_chars(&self) -> Vec<char> {
         match self {
-            Paragraph::Sentence { s } => s
+            Paragraph::Sentence { s } | 
+            Paragraph::Markdown { s, ..} => s
                 .iter()
                 .flat_map(|z| match z {
                     SentenceItem::Text { text } => text.chars().collect::<Vec<_>>(),
@@ -496,13 +499,69 @@ fn parse_image_align(s: &str) -> Option<ImageAlignment> {
     }
 }
 
+/// Improves typography by replacing straight quotes and double dots with proper characters
+fn enhance_typography(text: &str) -> String {
+    let mut result = text.to_string();
+    
+    // Replace ellipses
+    result = result.replace("..", "…");
+    result = result.replace("...", "…");
+    
+    // TODO: match lang { ... }
+
+    // German-style quotes
+    result = replace_quotes(&result, "\"", "„", "‟");  // Double quotes
+    result = replace_quotes(&result, "'", "‚", "’");   // Single quotes
+    
+    result
+}
+
+/// Helper function to replace quotes considering their context
+fn replace_quotes(text: &str, straight_quote: &str, opening_quote: &str, closing_quote: &str) -> String {
+    let mut result = String::with_capacity(text.len());
+    let mut chars = text.chars().peekable();
+    let mut in_quote = false;
+    
+    while let Some(c) = chars.next() {
+        if c.to_string() == straight_quote {
+            // Determine if this is an opening or closing quote based on context
+            let is_opening = if !in_quote {
+                // Check if preceded by space or punctuation or start of text
+                result.chars().last().map_or(true, |last| last.is_whitespace() || last.is_ascii_punctuation())
+            } else {
+                false
+            };
+            
+            if is_opening {
+                result.push_str(opening_quote);
+            } else {
+                result.push_str(closing_quote);
+            }
+            
+            in_quote = !in_quote;
+        } else {
+            result.push(c);
+        }
+    }
+    
+    result
+}
+
 fn parse_paragraph(s: &str) -> Paragraph {
+    use comrak::{markdown_to_html, Options as ComrakOptions};
+
+    let s = enhance_typography(s);
+
     if let Some(i) = Image::new(s.trim()) {
         Paragraph::Image { i }
     } else if let Some(q) = Quote::new(s.trim()) {
         Paragraph::Quote { q }
     } else {
-        Paragraph::Sentence {
+        // automatically handles links
+        let options = ComrakOptions::default();
+        let html = markdown_to_html(s.trim(), &options);
+        Paragraph::Markdown { 
+            html,
             s: Sentence::new(s.trim()).items,
         }
     }
@@ -1692,7 +1751,8 @@ fn si2html(si: &[SentenceItem]) -> String {
 
 fn par2text(p: &Paragraph) -> String {
     match p {
-        Paragraph::Sentence { s } => return si2text(s),
+        Paragraph::Sentence { s } |
+        Paragraph::Markdown { s, .. } => return si2text(s),
         _ => String::new(),
     }
 }
@@ -1700,6 +1760,7 @@ fn par2text(p: &Paragraph) -> String {
 fn par2html(p: &Paragraph) -> String {
     match p {
         Paragraph::Sentence { s } => return si2html(s),
+        Paragraph::Markdown { html, .. } => html.to_string(),
         _ => String::new(),
     }
 }
@@ -1989,12 +2050,26 @@ fn link_tags(lang: &str, tags: &[String], meta: &MetaJson) -> Result<String, Str
 
     let t_descr_string = get_string(meta, lang, "link-tags-descr")?;
     let t_url = get_string(meta, lang, "nav-articles-link")?;
+    
+    // Get the tag display names mapping for this language
+    let tag_display_names = meta
+        .tags
+        .get(lang)
+        .ok_or_else(|| format!("No tags found for language: {}", lang))?
+        .tags
+        .clone();
 
     let tags_str = tags.iter().map(|t| {
-        let t_descr = t_descr_string.replace("$$TAG$$", t);
+        // Look up the display name for this tag
+        let display_name = tag_display_names
+            .get(t)
+            .unwrap_or(&t.to_string())  // Fallback to the raw tag if no display name is found
+            .clone();
+        
+        let t_descr = t_descr_string.replace("$$TAG$$", &display_name);
         let t1 = format!("<a href='{root_href}/{t_url}#{t}'");
         let t2 = "class='link-tag link-page link-annotated icon-not has-annotation spawns-popup' rel='tag' ";
-        let t3 = format!(" data-attribute-title='{t_descr}'>{t}</a>");
+        let t3 = format!(" data-attribute-title='{t_descr}'>{display_name}</a>");
         t1 + t2 + &t3
     }).collect::<Vec<_>>().join(", ");
 
@@ -2313,6 +2388,15 @@ fn render_paragraph(lang: &str, par: &Paragraph, is_abstract: bool, article_id: 
     let (r, v) = rv();
     let mut target = String::new();
     match par {
+        Paragraph::Markdown { html, ..} => {
+            let mut result = html.to_string();
+
+            // Other common typography improvements
+            result = result.replace(" - ", " – ");  // En dash for ranges/breaks
+            result = result.replace("--", "–");     // Double hyphen to en dash
+    
+            target.push_str(&result);
+        },
         Paragraph::Sentence { s } => {
             if s.is_empty() {
                 return String::new();
@@ -2351,6 +2435,9 @@ fn render_paragraph(lang: &str, par: &Paragraph, is_abstract: bool, article_id: 
                 },
                 Paragraph::Sentence { .. } => {
                     format!("<p class='first-block first-graf'>{}</p>", par2html(&p))
+                },
+                Paragraph::Markdown { html, .. } => {
+                    format!("<p class='first-block first-graf'>{}</p>", html)
                 },
                 Paragraph::Image { .. } => {
                     String::new()
@@ -2468,6 +2555,7 @@ fn render_section(
         .get(0)
         .map(|p| render_paragraph(lang, p, false, slug))
         .unwrap_or_default();
+
     let other_pars = a
         .pars
         .iter()
@@ -2487,9 +2575,13 @@ fn render_section(
     section = section.replace("$$SECTION_TITLE$$", &header);
     section = section.replace("<!-- FIRST_PARAGRAPH -->", &first_par);
 
-    section += &other_pars;
+    let with_clearfix = format!(
+        "<div class='content-section' style='clear:both;'>{}{}</div>",
+        section,
+        other_pars
+    );
 
-    Ok(section)
+    Ok(with_clearfix)
 }
 
 fn body_content(
@@ -2664,8 +2756,34 @@ fn bibliography(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Resul
         return Ok(String::new());
     }
 
-    let bib = a
-        .bibliography
+    // Group links by href (URL)
+    let mut url_map: BTreeMap<String, Link> = BTreeMap::new();
+    
+    for link in &a.bibliography {
+        let url = link.href.clone();
+        
+        // If this URL already exists in our map, keep the one with longer text
+        if let Some(existing) = url_map.get(&url) {
+            // Compare lengths to keep the one with more descriptive text
+            let existing_len = existing.text.len().max(existing.title.len());
+            let current_len = link.text.len().max(link.title.len());
+            
+            // Only replace if this entry has a longer description
+            if current_len > existing_len {
+                url_map.insert(url, link.clone());
+            }
+        } else {
+            // First occurrence of this URL
+            url_map.insert(url, link.clone());
+        }
+    }
+    
+    // Convert back to vector and sort
+    let mut unique_links: Vec<Link> = url_map.into_values().collect();
+    unique_links.sort_by(|a, b| a.text.cmp(&b.text));
+    
+    // Create section links from unique links
+    let bib = unique_links
         .iter()
         .map(|l| SectionLink {
             id: Some(l.id.clone()),

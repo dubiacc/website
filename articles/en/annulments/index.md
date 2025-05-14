@@ -464,6 +464,6 @@ God's law, and fight for your family and your Faith.
 {
     "date": "2025-05-14",
     "authors": ["john-farrell", "github:fschutt"],
-    "tags": ["catholic-morality"]
+    "tags": ["morality"]
 }
 ```

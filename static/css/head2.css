@@ -33,6 +33,7 @@
 }
 
 :root {
+    --GW-image-single-black-star-svg: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz1cImh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnXCIgdmlld0JveD1cIjAgMCAxMCAxMFwiPjxwYXRoIGQ9XCJNIDUsMCBDIDQsNCA0LDQgMCw1IDQsNiA0LDYgNSwxMCA2LDYgNiw2IDEwLDUgNiw0IDYsNCA1LDAgWlwiLz48L3N2Zz4=");
     --GW-serif-font-stack: "Source Serif Pro", "Apple Garamond", "Baskerville", "Libre Baskerville", "Droid Serif", "Times New Roman", "Times", serif;
     --GW-sans-serif-font-stack: "Lucida Sans Unicode", "Helvetica", "Trebuchet MS", sans-serif;
     --GW-monospaced-font-stack: "IBM Plex Mono", "Liberation Mono", "Consolas", "Courier", monospace;
@@ -374,6 +375,8 @@ article {
 
 #page-metadata .page-description {
     font-style: italic;
+    text-align: justify;
+    text-align-last: center;
 }
 #page-metadata .page-description em {
     font-style: normal;
@@ -682,6 +685,20 @@ p.empty-graf {
     -webkit-hyphens: var(--text-hyphenation);
     hyphens: var(--text-hyphenation);
     text-align: var(--text-alignment);
+}
+
+.markdownBody ul li,
+.markdownBody p,
+.markdownBody ol li {
+    margin-bottom: 1em;
+}
+
+.markdownBody li.block, .markdownBody p.block {
+    margin-bottom: 0px;
+}
+
+.markdownBody ol li {
+    list-style-type: initial;
 }
 
 .markdownBody p * {

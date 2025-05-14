@@ -1,5 +1,7 @@
-The FSSP is in full communion with the Pope, has seemingly the full support of the Vatican: 
-why not just try to reform the Church from the inside instead of risking a schism?
+The FSSP is in "full communion" with the Pope, has seemingly the full support 
+of the Vatican and celebrates the Latin Mass - so what's wrong with their 
+approach? Why not just try to reform the Church from the inside instead 
+of risking a schism?
 
 # What about the FSSP, ICKSP, Indult Mass?
 

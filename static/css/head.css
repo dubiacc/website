@@ -380,6 +380,8 @@ article {
  */
 #page-metadata .page-description {
     font-style: italic;
+    text-align: justify;
+    text-align-last: center;
 }
 #page-metadata .page-description em {
     font-style: normal;
@@ -1218,6 +1220,20 @@ p.empty-graf {
     -webkit-hyphens: var(--text-hyphenation);
     hyphens: var(--text-hyphenation);
     text-align: var(--text-alignment);
+}
+
+.markdownBody ul li,
+.markdownBody p,
+.markdownBody ol li {
+    margin-bottom: 1em;
+}
+
+.markdownBody li.block, .markdownBody p.block {
+    margin-bottom: 0px;
+}
+
+.markdownBody ol li {
+    list-style-type: initial;
 }
 
 /*  Prevent inheritance of indentation property.
