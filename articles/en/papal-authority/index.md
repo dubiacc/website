@@ -1,4 +1,4 @@
-# Does the Pope Have Supreme Authority?
+# Is Papal Supreme Authority an invention?
 
 Orthodox Christians often argue that the Pope's claim to universal jurisdiction and 
 doctrinal infallibility has no basis in the early Church. In documents like the 1848 

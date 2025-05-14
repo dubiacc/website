@@ -2,7 +2,7 @@
 The Catholic Church's greatest crisis emerged not from persecution but from within, 
 as Masonic forces executed a centuries-long plan to subvert her teachings and structures. 
 
-# Timeline of the Infiltration of the Vatican
+# The Infiltration of the Vatican
 
 The Catholic Church has always faced external enemies, but her 
 most devastating wounds came from those who, like Judas, betrayed 
