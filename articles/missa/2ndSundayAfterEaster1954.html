@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sancta Missa - Devotional Prayer (May 4)</title>
+    <style>
+        body {
+            font-family: serif;
+            line-height: 1.6;
+            background-color: #f8f8f0; /* Light cream background */
+            color: #333; /* Dark text */
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 700px; /* Centered column */
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #ffffff; /* White content area */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .legend {
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            border-radius: 5px;
+        }
+        .legend p {
+            margin: 5px 0;
+            font-size: 1em; /* Ensure legend text isn't too small */
+        }
+        .highlight-priest {
+            background-color: #fffacd; /* Lemon Chiffon yellow */
+        }
+        .cross-self {
+            color: red;
+            font-weight: bold;
+        }
+        .cross-priest {
+            color: #DAA520; /* Goldenrod yellow/orange */
+            font-weight: bold;
+            background-color: #fffacd; /* Match highlight */
+        }
+        h1, h2, h3 {
+            text-align: center;
+            color: maroon;
+            font-weight: normal;
+        }
+        h1 {
+             font-size: 1.8em;
+             margin-bottom: 0.5em;
+        }
+        h2 {
+            margin-top: 2em;
+            font-size: 1.5em; /* Larger section headings */
+            font-weight: bold;
+            font-style: italic;
+            margin-bottom: 1em;
+        }
+         h3 {
+            font-size: 1.3em; /* Sub-section headings */
+            font-weight: bold;
+            color: #800000; /* Darker red */
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+            text-align: left; /* Align subheadings left for clarity */
+         }
+         .commemoration-title {
+             font-size: 1em;
+             font-style: italic;
+             color: #555;
+             text-align: left;
+             margin-top: 1em;
+             margin-bottom: 0.2em;
+         }
+        p {
+            margin-bottom: 0; /* Remove default paragraph bottom margin */
+            font-size: 1.2em; /* Larger base text */
+            text-align: left; /* Standard text alignment */
+        }
+        .latin {
+            font-weight: bold;
+            display: block;
+            margin-top: 0.8em; /* Space before Latin line */
+            margin-bottom: 0.1em; /* Minimal space before English */
+            color: #000; /* Black for Latin */
+            font-size: 1.1em; /* Slightly larger Latin */
+        }
+        .english {
+            display: block;
+            font-style: italic;
+            font-size: 1em; /* Base size for English */
+            margin-bottom: 0.8em; /* Space after English before next block */
+            margin-left: 0.5em; /* Slight indent */
+            color: #444; /* Grey for English */
+        }
+        .rubric {
+            color: red;
+            font-style: italic;
+            font-size: 1em;
+            display: block; /* Ensure rubrics are on their own line */
+            margin: 1em 0; /* Spacing around rubrics */
+            text-align: left;
+            font-weight: bold;
+        }
+        .instruction {
+             color: blue;
+             font-style: normal;
+             font-size: 0.95em;
+             display: block;
+             margin: 0.8em 0;
+             text-align: center;
+             font-weight: bold;
+        }
+        .warning {
+            background-color: #fff3cd; /* Light yellow */
+            border: 1px solid #ffeeba;
+            color: #856404; /* Dark yellow/brown */
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 1em; /* Consistent font size */
+            font-style: normal;
+            text-align: left;
+        }
+        .warning strong {
+            color: #721c24; /* Dark red for emphasis */
+        }
+        .spiritual-communion {
+             background-color: #e2e3e5; /* Light grey */
+             border: 1px solid #d6d8db;
+             color: #383d41;
+             padding: 15px;
+             margin: 20px 0;
+             border-radius: 4px;
+             font-size: 1em;
+             font-style: italic;
+        }
+        .psalm-verse {
+             margin-left: 1em; /* Indent psalm verses slightly */
+             font-size: 0.95em;
+        }
+
+        /* Basic Dark Mode */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #121212;
+                color: #e0e0e0;
+            }
+            .container {
+                background-color: #1e1e1e;
+                box-shadow: 0 0 15px rgba(255,255,255,0.1);
+            }
+            .legend {
+                background-color: #2a2a2a;
+                border-color: #555;
+            }
+            h1, h2, h3 {
+                color: #bb86fc; /* Purple variant */
+            }
+            .commemoration-title {
+                 color: #aaaaaa;
+            }
+            .highlight-priest {
+                 background-color: #4d4d00; /* Darker yellow background */
+                 color: #e0e0e0; /* Ensure text is visible */
+            }
+            .cross-priest {
+                 color: #FFD700; /* Brighter yellow cross */
+                 background-color: #4d4d00; /* Match highlight */
+            }
+            .latin {
+                 color: #ffffff; /* White Latin */
+            }
+            .english {
+                 color: #b0b0b0; /* Lighter grey English */
+            }
+            .instruction {
+                 color: #87CEFA; /* Light Sky Blue */
+            }
+            .warning {
+                background-color: #332a00;
+                border-color: #856404;
+                color: #fff3cd;
+            }
+            .warning strong {
+                 color: #f8d7da; /* Light red */
+            }
+            .spiritual-communion {
+                 background-color: #333333;
+                 border-color: #555555;
+                 color: #e0e0e0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="legend">
+            <p><strong>Legend:</strong></p>
+            <p><span class="highlight-priest" style="padding: 0 2px;">Yellow Highlight</span>: Priest-specific words/actions (read silently, do not say/do).</p>
+            <p><span class="cross-priest">+</span> : Sign of the Cross made by priest over objects/people (observe silently).</p>
+            <p><span class="cross-self">+</span> : Sign of the Cross you make on yourself.</p>
+            <p><span class="instruction">(Instruction)</span>: Posture or action to take.</p>
+        </div>
+
+        <h1>Sancta Missa</h1>
+        <h3>Dominica II Post Pascha (May 4th)</h3>
+        <p style="text-align:center; font-style:italic; color:maroon;">Commemoration: St. Monica, Widow</p>
+        <p class="rubric">(Praying Devotionally at Home)</p>
+
+        <p class="instruction">(Stand)</p>
+
+        <h2>Vidi Aquam (Asperges Rite during Eastertide)</h2>
+        <p class="rubric">Before Solemn Mass on Sundays, the priest sprinkles the people with holy water.</p>
+        <p>
+            <span class="latin highlight-priest">Ant. Vidi aquam egrediéntem de templo a látere dextro, allelúja:</span>
+            <span class="english highlight-priest">(Ant. I saw water flowing from the right side of the temple, alleluia:)</span>
+            <span class="latin highlight-priest">et omnes ad quos pervénit aqua ista salvi facti sunt et dicent: allelúja, allelúja.</span>
+            <span class="english highlight-priest">(and all they to whom that water came were saved; and they shall say: alleluia, alleluia.)</span>
+            <span class="latin psalm-verse highlight-priest">Ps. Confitémini Dómino, quoniam bonus: quoniam in sǽculum misericórdia eius.</span>
+            <span class="english psalm-verse highlight-priest">(Ps. Praise the Lord, because He is good; because His mercy endureth forever.)</span>
+            <span class="latin psalm-verse highlight-priest">Glória Patri, et Fílio, et Spirítui Sancto.</span>
+            <span class="english psalm-verse highlight-priest">(Glory be to the Father, and to the Son, and to the Holy Ghost.)</span>
+            <span class="latin psalm-verse highlight-priest">Sicut erat in princípio, et nunc, et semper, et in sǽcula sæculórum. Amen.</span>
+            <span class="english psalm-verse highlight-priest">(As it was in the beginning, is now, and ever shall be, world without end. Amen.)</span>
+            <span class="latin highlight-priest">Ant. Vidi aquam egrediéntem de templo a látere dextro, allelúja: et omnes ad quos pervénit aqua ista salvi facti sunt et dicent: allelúja, allelúja.</span>
+            <span class="english highlight-priest">(Ant. I saw water flowing from the right side of the temple, alleluia; and all they to whom that water came were saved; and they shall say: alleluia, alleluia.)</span>
+        </p>
+        <p>
+            <span class="latin highlight-priest">V. Osténde nobis, Dómine, misericórdiam tuam, allelúja.</span>
+            <span class="english highlight-priest">(V. Show us, O Lord, Thy mercy, alleluia.)</span>
+            <span class="latin">R. Et salutáre tuum da nobis, allelúja.</span>
+            <span class="english">R. And grant us Thy salvation, alleluia.</span>
+            <span class="latin highlight-priest">V. Dómine, exáudi oratiónem meam.</span>
+            <span class="english highlight-priest">(V. O Lord, hear my prayer.)</span>
+            <span class="latin">R. Et clamor meus ad te véniat.</span>
+            <span class="english">R. And let my cry come unto Thee.</span>
+            <span class="latin highlight-priest">V. Dóminus vobíscum.</span>
+            <span class="english highlight-priest">(V. The Lord be with you.)</span>
+            <span class="latin">R. Et cum spíritu tuo.</span>
+            <span class="english">R. And with thy spirit.</span>
+        </p>
+        <p>
+            <span class="latin highlight-priest">Orémus.</span>
+            <span class="english highlight-priest">(Let us pray.)</span>
+            <span class="latin highlight-priest">Exáudi nos, Dómine sancte, Pater omnípotens, ætérne Deus, et míttere dignéris sanctum Angelum tuum de cælis, qui custódiat, fóveat, prótegat, vísitet atque deféndat omnes habitántes in hoc habitáculo. Per Christum Dóminum nostrum.</span>
+            <span class="english highlight-priest">(Hear us, O holy Lord, almighty Father, everlasting God, and vouchsafe to send Thy holy Angel from heaven, to guard, cherish, protect, visit and defend all that are assembled in this place: through Christ our Lord.)</span>
+            <span class="latin">Amen.</span>
+            <span class="english">Amen.</span>
+        </p>
+        <p class="instruction">(The Mass prayers begin)</p>
+
+        <h2>Prayers at the Foot of the Altar</h2>
+        <p class="instruction">(Remain Standing)</p>
+        <p class="rubric">Make the Sign of the Cross:</p>
+        <p>
+            <span class="latin">In nómine Patris, <span class="cross-self">+</span> et Fílii, et Spíritus Sancti. Amen.</span>
+            <span class="english">In the Name of the Father, <span class="cross-self">+</span> and of the Son, and of the Holy Ghost. Amen.</span>
+        </p>
+
+        <p>
+            <span class="latin">Introíbo ad altáre Dei.</span>
+            <span class="english">I will go in to the altar of God.</span>
+            <span class="latin">Ad Deum, qui lætíficat juventútem meam.</span>
+            <span class="english">To God who giveth joy to my youth.</span>
+        </p>
+
+        <p class="rubric">(Psalm 42 - Judica me)</p>
+        <p>
+            <span class="latin">Júdica me, Deus, et discérne causam meam de gente non sancta: ab hómine iníquo et dolóso érue me.</span>
+            <span class="english">Judge me, O God, and distinguish my cause from the nation which is not holy: deliver me from the unjust and deceitful man.</span>
+            <span class="latin">Quia tu es, Deus, fortitúdo mea: quare me repulísti, et quare tristis incédo, dum afflígit me inimícus?</span>
+            <span class="english">For Thou, O God, art my strength: why hast Thou cast me off? and why go I sorrowful whilst the enemy afflicteth me?</span>
+            <span class="latin">Emítte lucem tuam et veritátem tuam: ipsa me deduxérunt, et adduxérunt in montem sanctum tuum et in tabernácula tua.</span>
+            <span class="english">Send forth Thy light and Thy truth: they have conducted me and brought me unto Thy holy mount, and into Thy tabernacles.</span>
+            <span class="latin">Et introíbo ad altáre Dei: ad Deum, qui lætíficat juventútem meam.</span>
+            <span class="english">And I will go in to the altar of God: to God who giveth joy to my youth.</span>
+            <span class="latin">Confitébor tibi in cíthara, Deus, Deus meus: quare tristis es, ánima mea, et quare contúrbas me?</span>
+            <span class="english">To Thee, O God, my God, I will give praise upon the harp; why art thou sad, O my soul, and why dost thou disquiet me?</span>
+            <span class="latin">Spera in Deo, quóniam adhuc confitébor illi: salutáre vultus mei, et Deus meus.</span>
+            <span class="english">Hope in God, for I will still give praise to Him: the salvation of my countenance and my God.</span>
+            <span class="latin">Glória Patri, et Fílio, et Spirítui Sancto.</span>
+            <span class="english">Glory be to the Father, and to the Son, and to the Holy Ghost.</span>
+            <span class="latin">Sicut erat in princípio, et nunc, et semper: et in sǽcula sæculórum. Amen.</span>
+            <span class="english">As it was in the beginning, is now, and ever shall be, world without end. Amen.</span>
+            <span class="latin">Introíbo ad altáre Dei.</span>
+            <span class="english">I will go in to the altar of God.</span>
+            <span class="latin">Ad Deum, qui lætíficat juventútem meam.</span>
+            <span class="english">To God who giveth joy to my youth.</span>
+        </p>
+
+        <p>
+            <span class="latin">Adjutórium nostrum <span class="cross-self">+</span> in nómine Dómini.</span>
+            <span class="english">Our help <span class="cross-self">+</span> is in the Name of the Lord.</span>
+            <span class="latin">Qui fecit cælum et terram.</span>
+            <span class="english">Who made heaven and earth.</span>
+        </p>
+
+        <p class="rubric">(The Confiteor - Pray this acknowledging your own sins)</p>
+        <p class="instruction">(Bow profoundly)</p>
+        <p>
+            <span class="latin">Confíteor Deo omnipoténti, beátæ Maríæ semper Vírgini, beáto Michaéli Archángelo, beáto Joánni Baptístæ, sanctis Apóstolis Petro et Paulo, ómnibus Sanctis, et vobis, fratres (tibi, Pater): quia peccávi nimis cogitatióne, verbo et ópere:</span>
+            <span class="english">I confess to almighty God, to the blessed Mary ever Virgin, blessed Michael the Archangel, blessed John the Baptist, the holy Apostles Peter and Paul, to all the Saints, and to you, brothers (Father): that I have sinned exceedingly in thought, word, and deed,</span>
+            <span class="instruction">(Strike breast three times)</span>
+            <span class="latin">mea culpa, mea culpa, mea máxima culpa.</span>
+            <span class="english">through my fault, through my fault, through my most grievous fault.</span>
+            <span class="latin">Ideo precor beátam Maríam semper Vírginem, beátum Michaélem Archángelum, beátum Joánnem Baptístam, sanctos Apóstolos Petrum et Paulum, omnes Sanctos, et vos, fratres (te, Pater), oráre pro me ad Dóminum, Deum nostrum.</span>
+            <span class="english">Therefore I beseech the blessed Mary, ever Virgin, blessed Michael the Archangel, blessed John the Baptist, the holy Apostles Peter and Paul, all the Saints, and you, brothers (Father), to pray to the Lord our God for me.</span>
+        </p>
+
+        <p>
+            <span class="latin highlight-priest">Misereátur tui omnípotens Deus, et, dimíssis peccátis tuis, perdúcat te ad vitam ætérnam.</span>
+            <span class="english highlight-priest">(May almighty God be merciful to thee, and forgiving thy sins, bring thee to everlasting life.)</span>
+            <span class="latin">Amen.</span>
+            <span class="english">Amen.</span>
+        </p>
+        <p>
+            <span class="latin highlight-priest">Confíteor Deo omnipoténti, beátæ Maríæ semper Vírgini, beáto Michaéli Archángelo, beáto Joánni Baptístæ, sanctis Apóstolis Petro et Paulo, ómnibus Sanctis, et tibi, pater: quia peccávi nimis cogitatióne, verbo et ópere: mea culpa, mea culpa, mea máxima culpa. Ideo precor beátam Maríam semper Vírginem, beátum Michaélem Archángelum, beátum Joánnem Baptístam, sanctos Apóstolos Petrum et Paulum, omnes Sanctos, et te, pater, oráre pro me ad Dóminum, Deum nostrum.</span>
+            <span class="english highlight-priest">(I confess to almighty God, to the blessed Mary ever Virgin, blessed Michael the Archangel, blessed John the Baptist, the holy Apostles Peter and Paul, to all the Saints, and to you, Father, that I have sinned exceedingly in thought, word, and deed, through my fault, through my fault, through my most grievous fault. Therefore I beseech the blessed Mary, ever Virgin, blessed Michael the Archangel, blessed John the Baptist, the holy Apostles Peter and Paul, all the Saints, and you, Father, to pray to the Lord our God for me.)</span>
+        </p>
+         <p>
+            <span class="latin highlight-priest">Misereátur vestri omnípotens Deus, et, dimíssis peccátis vestris, perdúcat vos ad vitam ætérnam.</span>
+            <span class="english highlight-priest">(May almighty God be merciful to you, and forgiving your sins, bring you to everlasting life.)</span>
+            <span class="latin">Amen.</span>
+            <span class="english">Amen.</span>
+        </p>
+        <p class="instruction">(Rise)</p>
+        <p class="rubric">(This absolution is read silently; sacramental absolution requires a priest.)</p>
+        <p>
+            <span class="latin highlight-priest">Indulgéntiam, <span class="cross-priest">+</span> absolutiónem et remissiónem peccatórum nostrórum tríbuat nobis omnípotens et miséricors Dóminus.</span>
+            <span class="english highlight-priest">(May the <span class="cross-priest">+</span> almighty and merciful Lord grant us pardon, absolution, and remission of our sins.)</span>
+            <span class="latin">Amen.</span>
+            <span class="english">Amen.</span>
+        </p>
+
+        <p class="instruction">(Bow)</p>
+        <p>
+            <span class="latin">Deus, tu convérsus vivificábis nos.</span>
+            <span class="english">O God, Thou wilt turn again and quicken us.</span>
+            <span class="latin">Et plebs tua lætábitur in te.</span>
+            <span class="english">And thy people shall rejoice in Thee.</span>
+            <span class="latin">Osténde nobis, Dómine, misericórdiam tuam.</span>
+            <span class="english">Show us, O Lord, Thy mercy.</span>
+            <span class="latin">Et salutáre tuum da nobis.</span>
+            <span class="english">And grant us Thy salvation.</span>
+            <span class="latin">Dómine, exáudi oratiónem meam.</span>
+            <span class="english">O Lord, hear my prayer.</span>
+            <span class="latin">Et clamor meus ad te véniat.</span>
+            <span class="english">And let my cry come before Thee.</span>
+            <span class="latin">Dóminus vobíscum.</span>
+            <span class="english">The Lord be with you.</span>
+            <span class="latin">Et cum spíritu tuo.</span>
+            <span class="english">And with thy spirit.</span>
+        </p>
+
+        <p class="instruction">(Rise)</p>
+        <p>
+            <span class="latin">Orémus.</span>
+            <span class="english">Let us pray.</span>
+        </p>
+        <p class="instruction">(Priest ascends the altar steps)</p>
+        <p>
+            <span class="latin highlight-priest">Aufer a nobis, quǽsumus, Dómine, iniquitátes nostras: ut ad Sancta sanctórum puris mereámur méntibus introíre. Per Christum, Dóminum nostrum. Amen.</span>
+            <span class="english highlight-priest">(Take away from us our iniquities, we beseech Thee, O Lord, that we may be worthy to enter with pure minds into the Holy of Holies, through Christ our Lord. Amen.)</span>
+        </p>
+        <p class="instruction">(Priest bows and kisses the altar)</p>
+        <p>
+            <span class="latin highlight-priest">Orámus te, Dómine, per mérita Sanctórum tuórum, quorum relíquiæ hic sunt, et ómnium Sanctórum: ut indulgére dignéris ómnia peccáta mea. Amen.</span>
+            <span class="english highlight-priest">(We beseech Thee, O Lord, by the merits of Thy Saints, whose relics are here, and of all the Saints, that Thou wouldst vouchsafe to forgive me all my sins. Amen.)</span>
+        </p>
+
+        <h2>Incensation of the Altar (Solemn Mass)</h2>
+        <div class="warning">
+            <strong>Layperson's Note:</strong> In a Solemn Mass, the altar is incensed here. Read the prayers silently. The crosses (<span class="cross-priest">+</span>) are blessings performed by the priest.
+        </div>
+        <p>
+             <span class="latin highlight-priest">Diaconus: Benedícite, pater reverénde.</span>
+             <span class="english highlight-priest">(Deacon: Bless, reverend father!)</span>
+             <span class="latin highlight-priest">Sacerdos: Ab illo bene<span class="cross-priest">+</span>dicáris, in cujus honóre cremáberis. Amen.</span>
+             <span class="english highlight-priest">(Priest: Be blessed <span class="cross-priest">+</span> by Him in whose honor thou art burnt. Amen.)</span>
+             <span class="instruction">(Priest incenses the altar in silence)</span>
+             <span class="instruction">(Deacon receives thurible and incenses the Priest)</span>
+        </p>
+
+        <h2>Liturgy of the Word</h2>
+        <p class="instruction">(Remain Standing)</p>
+
+        <h3>Introit</h3>
+        <p class="rubric">(Ps 32:5-6, 1)</p>
+        <p>
+            <span class="latin">Misericórdia Dómini plena est terra, allelúja:</span>
+            <span class="english">The earth is full of the goodness of the Lord, alleluia:</span>
+            <span class="latin">verbo Dómini cœli firmáti sunt, allelúja, allelúja.</span>
+            <span class="english">by the word of the Lord were the heavens made, alleluia, alleluia.</span>
+            <span class="latin psalm-verse">Ps. Exsultáte, justi, in Dómino: rectos decet collaudátio.</span>
+            <span class="english psalm-verse">Ps. Rejoice in the Lord, O ye righteous: praise is comely for the upright.</span>
+            <span class="latin psalm-verse">Glória Patri, et Fílio, et Spirítui Sancto.</span>
+            <span class="english psalm-verse">Glory be to the Father, and to the Son, and to the Holy Ghost.</span>
+            <span class="latin psalm-verse">Sicut erat in princípio, et nunc, et semper, et in sǽcula sæculórum. Amen.</span>
+            <span class="english psalm-verse">As it was in the beginning, is now, and ever shall be, world without end. Amen.</span>
+            <span class="latin">Misericórdia Dómini plena est terra, allelúja: verbo Dómini cœli firmáti sunt, allelúja, allelúja.</span>
+            <span class="english">The earth is full of the goodness of the Lord, alleluia: by the word of the Lord were the heavens made, alleluia, alleluia.</span>
+        </p>
+
+        <h3>Kyrie</h3>
+         <p class="instruction">(Remain Standing)</p>
+        <p>
+            <span class="latin">Kýrie, eléison.</span> <span class="english">Lord, have mercy.</span>
+            <span class="latin">Kýrie, eléison.</span> <span class="english">Lord, have mercy.</span>
+            <span class="latin">Kýrie, eléison.</span> <span class="english">Lord, have mercy.</span>
+            <span class="latin">Christe, eléison.</span> <span class="english">Christ, have mercy.</span>
+            <span class="latin">Christe, eléison.</span> <span class="english">Christ, have mercy.</span>
+            <span class="latin">Christe, eléison.</span> <span class="english">Christ, have mercy.</span>
+            <span class="latin">Kýrie, eléison.</span> <span class="english">Lord, have mercy.</span>
+            <span class="latin">Kýrie, eléison.</span> <span class="english">Lord, have mercy.</span>
+            <span class="latin">Kýrie, eléison.</span> <span class="english">Lord, have mercy.</span>
+        </p>
+
+        <h3>Gloria</h3>
+        <p class="instruction">(Remain Standing. Bow head at 'Adoramus te', 'Gratias agimus tibi', 'Jesu Christe', and 'Suscipe deprecationem nostram')</p>
+        <p>
+            <span class="latin">Glória in excélsis Deo.</span>
+            <span class="english">Glory be to God on high.</span>
+            <span class="latin">Et in terra pax homínibus bonæ voluntátis.</span>
+            <span class="english">And on earth peace to men of good will.</span>
+            <span class="latin">Laudámus te.</span> <span class="english">We praise Thee.</span>
+            <span class="latin">Benedícimus te.</span> <span class="english">We bless Thee.</span>
+            <span class="latin">Adorámus te.</span> <span class="english">We adore Thee.</span>
+            <span class="latin">Glorificámus te.</span> <span class="english">We glorify Thee.</span>
+            <span class="latin">Grátias ágimus tibi propter magnam glóriam tuam.</span>
+            <span class="english">We give Thee thanks for Thy great glory.</span>
+            <span class="latin">Dómine Deus, Rex cæléstis, Deus Pater omnípotens.</span>
+            <span class="english">O Lord God, heavenly King, God the Father almighty.</span>
+            <span class="latin">Dómine Fili unigénite, Jesu Christe.</span>
+            <span class="english">O Lord Jesus Christ, the only begotten Son.</span>
+            <span class="latin">Dómine Deus, Agnus Dei, Fílius Patris.</span>
+            <span class="english">O Lord God, Lamb of God, Son of the Father.</span>
+            <span class="latin">Qui tollis peccáta mundi, miserére nobis.</span>
+            <span class="english">Who takest away the sins of the world, have mercy on us.</span>
+            <span class="latin">Qui tollis peccáta mundi, súscipe deprecatiónem nostram.</span>
+            <span class="english">Who takest away the sins of the world, receive our prayer.</span>
+            <span class="latin">Qui sedes ad déxteram Patris, miserére nobis.</span>
+            <span class="english">Who sittest at the right hand of the Father, have mercy on us.</span>
+            <span class="latin">Quóniam tu solus Sanctus.</span> <span class="english">For Thou only art holy.</span>
+            <span class="latin">Tu solus Dóminus.</span> <span class="english">Thou only art the Lord.</span>
+            <span class="latin">Tu solus Altíssimus, Jesu Christe.</span>
+            <span class="english">Thou only art most high, O Jesus Christ.</span>
+            <span class="latin">Cum Sancto Spíritu <span class="cross-self">+</span> in glória Dei Patris. Amen.</span>
+            <span class="english">Together with the Holy Ghost <span class="cross-self">+</span> in the glory of God the Father. Amen.</span>
+        </p>
+
+        <h3>Collect</h3>
+        <p class="instruction">(Remain Standing. Bow head at 'Per Dominum nostrum')</p>
+        <p>
+            <span class="latin highlight-priest">V. Dóminus vobíscum.</span>
+            <span class="english highlight-priest">(V. The Lord be with you.)</span>
+            <span class="latin">R. Et cum spíritu tuo.</span>
+            <span class="english">R. And with thy spirit.</span>
+            <span class="latin highlight-priest">Orémus.</span>
+            <span class="english highlight-priest">(Let us pray.)</span>
+        </p>
+        <p>
+            <span class="latin highlight-priest">Deus, qui in Fílii tui humilitáte jacéntem mundum erexísti:</span>
+            <span class="english highlight-priest">(O God, who, by the humility of Thy Son, didst lift up a fallen world,)</span>
+            <span class="latin highlight-priest">fidélibus tuis perpétuam concéde lætítiam;</span>
+            <span class="english highlight-priest">(grant unending happiness to Thy faithful:)</span>
+            <span class="latin highlight-priest">ut, quos perpétuæ mortis eripuísti cásibus, gáudiis fácias pérfrui sempitérnis.</span>
+            <span class="english highlight-priest">(that those whom Thou hast snatched from the perils of endless death, Thou mayest cause to rejoice in everlasting days.)</span>
+            <span class="latin highlight-priest">Per eúndem Dóminum nostrum Jesum Christum Fílium tuum, qui tecum vivit et regnat in unitáte Spíritus Sancti, Deus, per ómnia sǽcula sæculórum.</span>
+            <span class="english highlight-priest">(Through the same Jesus Christ, thy Son, Our Lord, Who liveth and reigneth with thee in the unity of the Holy Ghost, God, world without end.)</span>
+            <span class="latin">Amen.</span> <span class="english">Amen.</span>
+        </p>
+        <p class="commemoration-title">Commemoration: St. Monica</p>
+        <p>
+             <span class="latin highlight-priest">Orémus.</span>
+             <span class="english highlight-priest">(Let us pray.)</span>
+             <span class="latin highlight-priest">Deus, mæréntium consolátor et in te sperántium salus, qui beátæ Mónicæ pias lácrimas in conversióne fílii sui Augustíni misericórditer suscepísti:</span>
+             <span class="english highlight-priest">(O God, the consoler of those Who mourn and the safety of those who put their trust in You; Who mercifully accepted the holy tears of blessed Monica for the conversion of Augustine, her son;)</span>
+             <span class="latin highlight-priest">da nobis utriúsque intervéntu; peccáta nostra deploráre, et grátiæ tuæ indulgéntiam inveníre.</span>
+             <span class="english highlight-priest">(grant us through the intercession of both to bewail our sins and to obtain the grace of Your forgiveness.)</span>
+             <span class="latin highlight-priest">Per Dóminum nostrum Jesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum.</span>
+             <span class="english highlight-priest">(Through Jesus Christ, thy Son our Lord, Who liveth and reigneth with thee, in the unity of the Holy Ghost, God, world without end.)</span>
+             <span class="latin">Amen.</span> <span class="english">Amen.</span>
+         </p>
+
+        <h3>Epistle (Lesson)</h3>
+        <p class="instruction">(Sit)</p>
+        <p class="rubric">(1 Peter 2:21-25)</p>
+        <p>
+            <span class="latin">Léctio Epístolæ beáti Petri Apóstoli.</span>
+            <span class="english">Lesson from the first letter of St. Peter the Apostle.</span>
+            <span class="latin">Caríssimi: Christus passus est pro nobis, vobis relínquens exémplum, ut sequámini vestígia ejus.</span>
+            <span class="english">Dearly beloved, Christ suffered for us, leaving you an example, that you should follow His steps.</span>
+            <span class="latin">Qui peccátum non fecit, nec invéntus est dolus in ore ejus:</span>
+            <span class="english">Who did no sin, neither was guile found in His mouth.</span>
+            <span class="latin">qui cum maledicerétur, non maledicébat: cum paterétur, non comminabátur:</span>
+            <span class="english">Who when He was reviled, did not revile: when He suffered, He threatened not:</span>
+            <span class="latin">tradébat autem judicánti se injúste:</span>
+            <span class="english">but delivered Himself to him that judged Him unjustly:</span>
+            <span class="latin">qui peccáta nostra ipse pértulit in córpore suo super lignum:</span>
+            <span class="english">who His own self bore our sins in His body upon the tree:</span>
+            <span class="latin">ut, peccátis mórtui, justítiæ vivámus: cujus livóre sanáti estis.</span>
+            <span class="english">that we, being dead to sins, should live to justice; by whose stripes you were healed.</span>
+             <span class="latin">Eratis enim sicut oves errántes, sed convérsi estis nunc ad pastórem et epíscopum animárum vestrárum.</span>
+             <span class="english">For you were as sheep going astray: but you are now converted to the Shepherd and Bishop of your souls.</span>
+             <span class="latin">Deo grátias.</span> <span class="english">Thanks be to God.</span>
+         </p>
+
+        <h3>Alleluia</h3>
+        <p class="instruction">(Remain Seated)</p>
+        <p>
+             <span class="latin">Allelúja, allelúja.</span>
+             <span class="english">Alleluia, alleluia.</span>
+             <span class="latin psalm-verse">V. (Luke 24:35) Cognovérunt discípuli Dóminum Jesum in fractióne panis.</span>
+             <span class="english psalm-verse">V. The disciples knew the Lord Jesus in the breaking of bread.</span>
+             <span class="latin">Allelúja.</span>
+             <span class="english">Alleluia.</span>
+             <span class="latin psalm-verse">V. (John 10:14) Ego sum pastor bonus: et cognósco oves meas, et cognósc*** me meæ.</span>
+             <span class="english psalm-verse">V. I am the good Shepherd: and I know My sheep, and Mine know Me.</span>
+             <span class="latin">Allelúja.</span>
+             <span class="english">Alleluia.</span>
+        </p>
+
+        <h3>Gospel</h3>
+        <p class="instruction">(Stand)</p>
+        <div class="warning">
+            <strong>Layperson's Note:</strong> Read the Munda Cor and Jube Domne silently. In a Solemn Mass, the Deacon chants these.
+        </div>
+        <p>
+             <span class="latin highlight-priest">Munda cor meum ac lábia mea, omnípotens Deus, qui lábia Isaíæ Prophétæ cálculo mundásti igníto: ita me tua grata miseratióne dignáre mundáre, ut sanctum Evangélium tuum digne váleam nuntiáre. Per Christum, Dóminum nostrum. Amen.</span>
+             <span class="english highlight-priest">(Cleanse my heart and my lips, O almighty God, who didst cleanse the lips of the prophet Isaias with a burning coal, and vouchsafe, through Thy gracious mercy, so to purify me, that I may worthily announce Thy holy Gospel. Through Christ our Lord. Amen.)</span>
+             <span class="latin highlight-priest">Jube, domne (Dómine), benedícere.</span>
+             <span class="english highlight-priest">(Sir (Lord), grant a blessing.)</span>
+             <span class="latin highlight-priest">Dóminus sit in corde meo (tuo) et in lábiis meis (tuis): ut digne et competénter annúntiem (annúnties) Evangélium suum: In nómine Patris, et Fílii, <span class="cross-priest">+</span> et Spíritus Sancti. Amen.</span>
+             <span class="english highlight-priest">(The Lord be in my (thy) heart and on my (thy) lips, that I (thou) mayest worthily and fittingly announce His Gospel. In the Name of the Father, and of the Son, <span class="cross-priest">+</span> and of the Holy Ghost. Amen.)</span>
+        </p>
+        <p>
+            <span class="latin">Dóminus vobíscum.</span> <span class="english">The Lord be with you.</span>
+            <span class="latin">Et cum spíritu tuo.</span> <span class="english">And with thy spirit.</span>
+            <p class="rubric">(Make Sign of Cross on forehead, lips, and heart)</p>
+            <span class="latin">Sequéntia <span class="cross-self">+</span> sancti Evangélii secúndum Joánnem.</span>
+            <span class="english">Continuation <span class="cross-self">+</span> of the Holy Gospel according to John.</span>
+            <span class="latin">Glória tibi, Dómine.</span> <span class="english">Glory be to Thee, O Lord.</span>
+        </p>
+        <p class="rubric">(John 10:11-16)</p>
+        <p>
+            <span class="latin">In illo témpore: Dixit Jesus pharisǽis: Ego sum pastor bonus.</span>
+            <span class="english">At that time Jesus said to the Pharisees: I am the good Shepherd.</span>
+            <span class="latin">Bonus pastor ánimam suam dat pro óvibus suis.</span>
+            <span class="english">The good Shepherd giveth his life for his sheep.</span>
+            <span class="latin">Mercenárius autem et qui non est pastor, cujus non sunt oves própriæ, videt lupum veniéntem, et dimíttit oves et fugit:</span>
+            <span class="english">But the hireling, and he that is not the shepherd, whose own the sheep are not, seeth the wolf coming and leaveth the sheep and flieth:</span>
+            <span class="latin">et lupus rapit et dispérgit oves:</span>
+            <span class="english">and the wolf catcheth and scattereth the sheep:</span>
+            <span class="latin">mercenárius autem fugit, quia mercenárius est et non pértinet ad eum de óvibus.</span>
+            <span class="english">and the hireling flieth, because he is a hireling, and he hath no care for the sheep.</span>
+            <span class="latin">Ego sum pastor bonus: et cognósco meas et cognósc*** me meæ.</span>
+            <span class="english">I am the good Shepherd: and I know Mine, and Mine know Me,</span>
+            <span class="latin">Sicut novit me Pater, et ego agnósco Patrem, et ánimam meam pono pro óvibus meis.</span>
+            <span class="english">as the Father knoweth Me, and I know the Father: and I lay down My life for My sheep.</span>
+            <span class="latin">Et álias oves hábeo, quæ non sunt ex hoc ovíli: et illas opórtet me addúcere, et vocem meam áudient, et fiet unum ovíle et unus pastor.</span>
+            <span class="english">And other sheep I have that are not of this fold: them also I must bring, and they shall hear My voice, and there shall be one fold and one shepherd.</span>
+        </p>
+        <p>
+            <span class="latin">Laus tibi, Christe.</span>
+            <span class="english">Praise be to Thee, O Christ.</span>
+            <span class="latin highlight-priest">Per Evangélica dicta, deleántur nostra delícta.</span>
+            <span class="english highlight-priest">(By the words of the Gospel may our sins be blotted out.)</span>
+        </p>
+        <p class="instruction">(Priest/Deacon is incensed in Solemn Mass)</p>
+
+        <h3>Creed</h3>
+        <p class="instruction">(Remain Standing. Bow head at 'Deum' and 'Jesum Christum'. Kneel at 'Et incarnatus est'. Rise at 'Et homo factus est'. Bow head at 'simul adoratur'.)</p>
+        <p>
+            <span class="latin">Credo in unum Deum, Patrem omnipoténtem, factórem cæli et terræ, visibílium ómnium et invisibílium.</span>
+            <span class="english">I believe in one God, the Father almighty, Maker of heaven and earth, and of all things, visible and invisible.</span>
+            <span class="latin">Et in unum Dóminum Jesum Christum, Fílium Dei unigénitum.</span>
+            <span class="english">And in one Lord Jesus Christ, the only begotten Son of God.</span>
+            <span class="latin">Et ex Patre natum ante ómnia sǽcula.</span> <span class="english">And born of the Father, before all ages.</span>
+            <span class="latin">Deum de Deo, lumen de lúmine, Deum verum de Deo vero.</span>
+            <span class="english">God of God: Light of Light: true God of true God.</span>
+            <span class="latin">Génitum, non factum, consubstantiálem Patri: per quem ómnia facta sunt.</span>
+            <span class="english">Begotten, not made, consubstantial with the Father, by whom all things were made.</span>
+            <span class="latin">Qui propter nos hómines et propter nostram salútem descéndit de cælis.</span>
+            <span class="english">Who, for us men, and for our salvation, came down from heaven.</span>
+            <p class="instruction">(Kneel)</p>
+            <span class="latin">Et incarnátus est de Spíritu Sancto ex María Vírgine: Et homo factus est.</span>
+            <span class="english">And became incarnate by the Holy Ghost of the Virgin Mary: and was made man.</span>
+            <p class="instruction">(Rise)</p>
+            <span class="latin">Crucifíxus étiam pro nobis: sub Póntio Piláto passus, et sepúltus est.</span>
+            <span class="english">He was crucified also for us, suffered under Pontius Pilate, and was buried.</span>
+            <span class="latin">Et resurréxit tértia die, secúndum Scriptúras.</span>
+            <span class="english">And the third day He rose again according to the Scriptures.</span>
+            <span class="latin">Et ascéndit in cælum: sedet ad déxteram Patris.</span>
+            <span class="english">And ascended into heaven, and sitteth at the right hand of the Father.</span>
+            <span class="latin">Et íterum ventúrus est cum glória judicáre vivos et mórtuos: cujus regni non erit finis.</span>
+            <span class="english">And He shall come again with glory to judge both the living and the dead, of whose kingdom there shall be no end.</span>
+            <span class="latin">Et in Spíritum Sanctum, Dóminum et vivificántem: qui ex Patre Filióque procédit.</span>
+            <span class="english">And in the Holy Ghost, the Lord and Giver of Life, proceeding from the Father and the Son.</span>
+            <span class="latin">Qui cum Patre et Fílio simul adorátur et conglorificátur: qui locútus est per Prophétas.</span>
+            <span class="english">Who together, with the Father and the Son, is adored and glorified: Who spoke by the prophets.</span>
+            <span class="latin">Et unam sanctam cathólicam et apostólicam Ecclésiam.</span>
+            <span class="english">And in one, holy, Catholic and Apostolic Church.</span>
+            <span class="latin">Confíteor unum baptísma in remissiónem peccatórum.</span>
+            <span class="english">I confess one baptism for the remission of sins.</span>
+            <span class="latin">Et exspécto resurrectiónem mortuórum.</span>
+            <span class="english">And I look for the resurrection of the dead.</span>
+            <span class="latin">Et vitam <span class="cross-self">+</span> ventúri sæculi. Amen.</span>
+            <span class="english">And the life <span class="cross-self">+</span> of the world to come. Amen.</span>
+        </p>
+
+
+        <h2>Liturgy of the Eucharist</h2>
+
+        <h3>Offertory</h3>
+        <p class="instruction">(Sit)</p>
+        <p>
+            <span class="latin highlight-priest">V. Dóminus vobíscum.</span>
+            <span class="english highlight-priest">(V. The Lord be with you.)</span>
+            <span class="latin">R. Et cum spíritu tuo.</span>
+            <span class="english">R. And with thy spirit.</span>
+            <span class="latin highlight-priest">Orémus.</span>
+            <span class="english highlight-priest">(Let us pray.)</span>
+        </p>
+        <p class="rubric">(Offertory Antiphon - Ps 62:2, 5)</p>
+        <p>
+            <span class="latin">Deus, Deus meus, ad te de luce vígilo: et in nómine tuo levábo manus meas, allelúja.</span>
+            <span class="english">O God, my God, to Thee do I watch at break of day: and in Thy Name I will lift up my hands, alleluia.</span>
+        </p>
+
+        <p class="instruction">(Stand when the priest comes to incense you, if applicable, otherwise remain seated until Orate Fratres)</p>
+
+        <div class="warning">
+            <strong>Layperson's Note:</strong> The following prayers are said by the priest as he offers the bread and wine. Read them silently, uniting your intention with the offering of the Mass happening throughout the world, but understand you are not performing the priestly act of offering the sacrifice. The crosses (<span class="cross-priest">+</span>) indicate blessings over the gifts, which only the priest can perform.
+        </div>
+
+        <p>
+            <span class="latin highlight-priest">Súscipe, sancte Pater, omnípotens ætérne Deus, hanc immaculátam hóstiam,</span>
+            <span class="english highlight-priest">(Accept, O holy Father, almighty and eternal God, this unspotted host,)</span>
+            <span class="latin highlight-priest">quam ego indígnus fámulus tuus óffero tibi Deo meo vivo et vero, pro innumerabílibus peccátis, et offensiónibus, et neglegéntiis meis, et pro ómnibus circumstántibus,</span>
+            <span class="english highlight-priest">(which I, Thy unworthy servant, offer unto Thee, my living and true God, for my innumerable sins, offenses, and negligences, and for all here present:)</span>
+            <span class="latin highlight-priest">sed et pro ómnibus fidélibus christiánis vivis atque defúnctis: ut mihi, et illis profíciat ad salútem in vitam ætérnam. Amen.</span>
+            <span class="english highlight-priest">(as also for all faithful Christians, both living and dead, that it may avail both me and them for salvation unto life everlasting. Amen.)</span>
+        </p>
+        <p>
+            <span class="latin highlight-priest">Deus, <span class="cross-priest">+</span> qui humánæ substántiæ dignitátem mirabíliter condidísti, et mirabílius reformásti:</span>
+            <span class="english highlight-priest">(O God, <span class="cross-priest">+</span> who, in creating human nature, didst wonderfully dignify it, and still more wonderfully restore it,)</span>
+            <span class="latin highlight-priest">da nobis per hujus aquæ et vini mystérium, ejus divinitátis esse consórtes, qui humanitátis nostræ fíeri dignátus est párticeps, Jesus Christus, Fílius tuus, Dóminus noster:</span>
+            <span class="english highlight-priest">(grant that, by the Mystery of this water and wine, we may be made partakers of His divine nature, who vouchsafed to be made partaker of our human nature, even Jesus Christ our Lord, Thy Son,)</span>
+            <span class="latin highlight-priest">Qui tecum vivit et regnat in unitáte Spíritus Sancti Deus: per ómnia sǽcula sæculórum. Amen.</span>
+            <span class="english highlight-priest">(who with Thee, liveth and reigneth in the unity of the Holy Ghost, God: world without end. Amen.)</span>
+        </p>
+        <p>
+            <span class="latin highlight-priest">Offérimus tibi, Dómine, cálicem salutáris, tuam deprecántes cleméntiam:</span>
+            <span class="english highlight-priest">(We offer unto Thee, O Lord, the chalice of salvation, beseeching Thy clemency,)</span>
+            <span class="latin highlight-priest">ut in conspéctu divínæ majestátis tuæ, pro nostra et totíus mundi salúte, cum odóre suavitátis ascéndat. Amen.</span>
+            <span class="english highlight-priest">(that it may ascend before Thy divine Majesty, as a sweet savor, for our salvation, and for that of the whole world. Amen.)</span>
+        </p>
+        <p class="instruction">(Priest bows)</p>
+        <p>
+            <span class="latin highlight-priest">In spíritu humilitátis et in ánimo contríto suscipiámur a te, Dómine:</span>
+            <span class="english highlight-priest">(Accept us, O Lord, in the spirit of humility and contrition of heart,)</span>
+            <span class="latin highlight-priest">et sic fiat sacrifícium nostrum in conspéctu tuo hódie, ut pláceat tibi, Dómine Deus.</span>
+            <span class="english highlight-priest">(and grant that the sacrifice which we offer this day in Thy sight may be pleasing to Thee, O Lord God.)</span>
+        </p>
+        <p class="instruction">(Priest stands erect)</p>
+        <p>
+            <span class="latin highlight-priest">Veni, sanctificátor omnípotens ætérne Deus: et béne<span class="cross-priest">+</span>dic hoc sacrifícium, tuo sancto nómini præparátum.</span>
+            <span class="english highlight-priest">(Come, O almighty and eternal God, the Sanctifier, and bless <span class="cross-priest">+</span> this Sacrifice, prepared for the glory of Thy holy Name.)</span>
+        </p>
+
+        <h3>Incensation of Oblata and Altar (Solemn Mass)</h3>
+         <div class="warning">
+            <strong>Layperson's Note:</strong> Read the prayers for incensing silently. Crosses (<span class="cross-priest">+</span>) indicate blessings.
+        </div>
+        <p>
+             <span class="latin highlight-priest">Per intercessiónem beáti Michaélis Archángeli, stantis a dextris altáris incénsi, et ómnium electórum suórum, incénsum istud dignétur Dóminus bene<span class="cross-priest">+</span>dícere, et in odórem suavitátis accípere. Per Christum, Dóminum nostrum. Amen.</span>
+             <span class="english highlight-priest">(May the Lord, by the intercession of blessed Michael the Archangel, who standeth at the right side of the altar of incense, and of all His Elect, vouchsafe to bless <span class="cross-priest">+</span> this incense and receive it as an odor of sweetness: through Jesus Christ our Lord. Amen.)</span>
+        </p>
+        <p class="instruction">(Priest incenses the bread and wine)</p>
+        <p>
+             <span class="latin highlight-priest">Incénsum istud a te benedíctum ascéndat ad te, Dómine: et descéndat super nos misericórdia tua.</span>
+             <span class="english highlight-priest">(May this incense, which Thou hast blessed, O Lord, ascend to Thee, and may Thy mercy descend upon us.)</span>
+        </p>
+        <p class="instruction">(Priest incenses the altar)</p>
+        <p class="rubric">(Ps 140:2-4)</p>
+        <p>
+             <span class="latin highlight-priest">Dirigátur, Dómine, orátio mea, sicut incénsum, in conspéctu tuo: elevátio mánuum meárum sacrifícium vespertínum.</span>
+             <span class="english highlight-priest">(Let my prayer, O Lord, be directed as incense in Thy sight: the lifting up of my hands as an evening sacrifice.)</span>
+             <span class="latin highlight-priest">Pone, Dómine, custódiam ori meo, et óstium circumstántiæ lábiis meis: ut non declínet cor meum in verba malítiæ, ad excusándas excusatiónes in peccátis.</span>
+             <span class="english highlight-priest">(Set a watch, O Lord, before my mouth, and a door round about my lips. May my heart not incline to evil words, to make excuses for sins.)</span>
+        </p>
+        <p class="instruction">(Priest returns thurible to Deacon)</p>
+        <p>
+             <span class="latin highlight-priest">Accéndat in nobis Dóminus ignem sui amóris, et flammam ætérnæ caritátis. Amen.</span>
+             <span class="english highlight-priest">(May the Lord enkindle within us the fire of His love, and the flame of everlasting charity. Amen.)</span>
+        </p>
+         <p class="instruction">(Deacon incenses Priest, then Clergy, then people)</p>
+
+        <h3>Washing of Hands (Lavabo)</h3>
+         <p class="instruction">(Priest washes his fingers)</p>
+         <p class="rubric">(Psalm 25:6-12)</p>
+         <p>
+            <span class="latin highlight-priest">Lavábo inter innocéntes manus meas: et circúmdabo altáre tuum, Dómine:</span>
+            <span class="english highlight-priest">(I will wash my hands among the innocent: and I will compass Thine altar, O Lord)</span>
+            <span class="latin highlight-priest">Ut áudiam vocem laudis, et enárrem univérsa mirabília tua.</span>
+            <span class="english highlight-priest">(That I may hear the voice of praise: and tell of all Thy wonderous works.)</span>
+            <span class="latin highlight-priest">Dómine, diléxi decórem domus tuæ et locum habitatiónis glóriæ tuæ.</span>
+            <span class="english highlight-priest">(I have loved, O Lord, the beauty of Thy house and the place where Thy glory dwelleth.)</span>
+            <span class="latin highlight-priest">Ne perdas cum ímpiis, Deus, ánimam meam, et cum viris sánguinum vitam meam:</span>
+            <span class="english highlight-priest">(Take not away my soul, O God, with the wicked: nor my life with blood-thirsty men.)</span>
+            <span class="latin highlight-priest">In quorum mánibus iniquitátes sunt: déxtera eórum repléta est munéribus.</span>
+            <span class="english highlight-priest">(In whose hands are iniquities, their right hand is filled with gifts.)</span>
+            <span class="latin highlight-priest">Ego autem in innocéntia mea ingréssus sum: rédime me et miserére mei.</span>
+            <span class="english highlight-priest">(But I have walked in my innocence: redeem me, and have mercy on me.)</span>
+            <span class="latin highlight-priest">Pes meus stetit in dirécto: in ecclésiis benedícam te, Dómine.</span>
+            <span class="english highlight-priest">(My foot hath stood in the direct way, in the churches I will bless Thee, O Lord.)</span>
+            <span class="latin highlight-priest">Glória Patri, et Fílio, et Spirítui Sancto.</span>
+            <span class="english highlight-priest">(Glory be to the Father, and to the Son, and to the Holy Ghost.)</span>
+            <span class="latin highlight-priest">Sicut erat in princípio, et nunc, et semper, et in sǽcula sæculórum. Amen.</span>
+            <span class="english highlight-priest">(As it was in the beginning, is now, and ever shall be, world without end. Amen.)</span>
+        </p>
+
+        <p class="instruction">(Priest bows at the middle of the altar)</p>
+        <p>
+            <span class="latin highlight-priest">Súscipe, sancta Trínitas, hanc oblatiónem, quam tibi offérimus ob memóriam passiónis, resurrectiónis, et ascensiónis Jesu Christi, Dómini nostri:</span>
+            <span class="english highlight-priest">(Receive, O holy Trinity, this oblation which we make to Thee, in memory of the Passion, Resurrection and Ascension of our Lord Jesus Christ,)</span>
+            <span class="latin highlight-priest">et in honórem beátæ Maríæ semper Vírginis, et beáti Joannis Baptistæ, et sanctórum Apostolórum Petri et Pauli, et istórum et ómnium Sanctórum:</span>
+            <span class="english highlight-priest">(and in honor of Blessed Mary, ever Virgin, blessed John the Baptist, the holy Apostles Peter and Paul, and of these (Saints whose relics are here) and of all the Saints,)</span>
+            <span class="latin highlight-priest">ut illis profíciat ad honórem, nobis autem ad salútem:</span>
+            <span class="english highlight-priest">(that it may avail unto their honor and our salvation,)</span>
+            <span class="latin highlight-priest">et illi pro nobis intercédere dignéntur in cælis, quorum memóriam ágimus in terris. Per eúndem Christum, Dóminum nostrum. Amen.</span>
+            <span class="english highlight-priest">(and may they vouchsafe to intercede for us in heaven, whose memory we celebrate on earth. Through the same Christ our Lord. Amen.)</span>
+        </p>
+
+        <p class="instruction">(Stand)</p>
+        <p>
+             <span class="latin highlight-priest">Oráte, fratres: ut meum ac vestrum sacrifícium acceptábile fiat apud Deum Patrem omnipoténtem.</span>
+             <span class="english highlight-priest">(Brethren, pray that my Sacrifice and yours may be acceptable to God the Father almighty.)</span>
+             <span class="latin">Suscípiat Dóminus sacrifícium de mánibus tuis ad laudem et glóriam nominis sui, ad utilitátem quoque nostram, totiúsque Ecclésiæ suæ sanctæ.</span>
+             <span class="english">May the Lord receive the Sacrifice from thy hands, to the praise and glory of His Name, to our benefit and that of all His holy Church.</span>
+             <span class="latin highlight-priest">Amen.</span>
+             <span class="english highlight-priest">(Amen.)</span>
+        </p>
+
+        <h3>Secret Prayer</h3>
+        <p class="instruction">(Remain Standing)</p>
+        <p>
+            <span class="latin highlight-priest">Benedictiónem nobis, Dómine, cónferat salutárem sacra semper oblátio:</span>
+            <span class="english highlight-priest">(May this holy offering, O Lord, always bring to us Thy healing blessing:)</span>
+            <span class="latin highlight-priest">ut, quod agit mystério, virtúte perfíciat.</span>
+            <span class="english highlight-priest">(that what it represents in a Mystery, it may accomplish with power.)</span>
+            <span class="latin highlight-priest">Per Dóminum nostrum Jesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus...</span>
+            <span class="english highlight-priest">(Through Jesus Christ, thy Son our Lord, Who liveth and reigneth with thee, in the unity of the Holy Ghost, God...)</span>
+        </p>
+         <p class="commemoration-title">Commemoration: St. Monica</p>
+         <p>
+             <span class="latin highlight-priest">Accépta tibi sit, Dómine, sacrátæ plebis oblátio pro tuórum honóre Sanctórum:</span>
+             <span class="english highlight-priest">(May the service of thy holy people be acceptable to Thee, O Lord, and honorable to thy saints,)</span>
+             <span class="latin highlight-priest">quorum se méritis de tribulatióne percepísse cognóscit auxílium.</span>
+             <span class="english highlight-priest">(through whose merits we know that we have received help in trouble.)</span>
+             <span class="latin highlight-priest">Per Dóminum nostrum Jesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus...</span>
+             <span class="english highlight-priest">(Through Jesus Christ, thy Son our Lord, Who liveth and reigneth with thee, in the unity of the Holy Ghost, God...)</span>
+         </p>
+
+        <h3>Preface</h3>
+         <p class="instruction">(Remain Standing)</p>
+         <p>
+             <span class="latin highlight-priest">...per ómnia sǽcula sæculórum.</span>
+             <span class="english highlight-priest">(...world without end.)</span>
+             <span class="latin">Amen.</span> <span class="english">Amen.</span>
+             <span class="latin">Dóminus vobíscum.</span> <span class="english">The Lord be with you.</span>
+             <span class="latin">Et cum spíritu tuo.</span> <span class="english">And with thy spirit.</span>
+             <span class="latin">Sursum corda.</span> <span class="english">Lift up your hearts.</span>
+             <span class="latin">Habémus ad Dóminum.</span> <span class="english">We have lifted them up to the Lord.</span>
+             <span class="latin">Grátias agámus Dómino, Deo nostro.</span> <span class="english">Let us give thanks to the Lord our God.</span>
+             <span class="latin">Dignum et justum est.</span> <span class="english">It is meet and just.</span>
+         </p>
+        <p class="rubric">(Preface of Easter)</p>
+        <p>
+            <span class="latin">Vere dignum et justum est, æquum et salutáre:</span>
+            <span class="english">It is truly meet and just, right and for our salvation,</span>
+            <span class="latin">Te quidem, Dómine, omni témpore, sed in hoc potíssimum gloriósius prædicáre, cum Pascha nostrum immolátus est Christus.</span>
+            <span class="english">at all times to praise Thee, O Lord, but more gloriously especially in this season when Christ our Pasch was sacrificed.</span>
+            <span class="latin">Ipse enim verus est Agnus, qui ábstulit peccáta mundi.</span>
+            <span class="english">For He is the true Lamb Who hath taken away the sins of the world:</span>
+            <span class="latin">Qui mortem nostram moriéndo destrúxit et vitam resurgéndo reparávit.</span>
+            <span class="english">Who by dying hath destroyed our death: and by rising again hath restored us to life.</span>
+            <span class="latin">Et ídeo cum Angelis et Archángelis, cum Thronis et Dominatiónibus cumque omni milítia cœléstis exércitus hymnum glóriæ tuæ cánimus, sine fine dicéntes:</span>
+            <span class="english">And therefore with Angels and Archangels, with Thrones and Dominations, and with all the hosts of the heavenly army, we sing the hymn of Thy glory, evermore saying:</span>
+        </p>
+
+        <h3>Sanctus</h3>
+        <p class="instruction">(Remain Standing. Bow head at 'Sanctus...' and 'Benedictus...' Kneel after the Sanctus)</p>
+        <p>
+            <span class="latin">Sanctus, Sanctus, Sanctus Dóminus, Deus Sábaoth.</span>
+            <span class="english">Holy, Holy, Holy, Lord God of Sabaoth!</span>
+            <span class="latin">Pleni sunt cæli et terra glória tua.</span>
+            <span class="english">Heaven and earth are full of Thy glory!</span>
+            <span class="latin">Hosánna in excélsis.</span>
+            <span class="english">Hosanna in the highest!</span>
+            <span class="latin">Benedíctus, qui venit in nómine Dómini.</span>
+            <span class="english">Blessed <span class="cross-self">+</span> is He that cometh in the Name of the Lord!</span>
+            <span class="latin">Hosánna in excélsis.</span>
+            <span class="english">Hosanna in the highest!</span>
+        </p>
+
+
+        <h2>Canon of the Mass</h2>
+        <p class="instruction">(Kneel)</p>
+
+        <div class="warning">
+            <strong>Layperson's Note:</strong> You are now entering the Canon (Eucharistic Prayer). Read the highlighted prayers silently, uniting yourself with the priest at the altar who acts *in persona Christi*. Remember that your reading is devotional and does not confect the Eucharist. The crosses (<span class="cross-priest">+</span>) are blessings over the gifts which only the priest can make.
+        </div>
+
+        <p>
+            <span class="latin highlight-priest">Te ígitur, clementíssime Pater, per Jesum Christum, Fílium tuum, Dóminum nostrum, súpplices rogámus, ac pétimus,</span>
+            <span class="english highlight-priest">(We therefore, humbly pray and beseech Thee, most merciful Father, through Jesus Christ; Thy Son, our Lord,)</span>
+            <span class="instruction">(Priest kisses the altar)</span>
+            <span class="latin highlight-priest">uti accépta hábeas et benedícas, hæc <span class="cross-priest">+</span> dona, hæc <span class="cross-priest">+</span> múnera, hæc <span class="cross-priest">+</span> sancta sacrifícia illibáta,</span>
+            <span class="english highlight-priest">(that Thou wouldst vouchsafe to accept and bless these <span class="cross-priest">+</span> gifts, these <span class="cross-priest">+</span> presents, these <span class="cross-priest">+</span> holy unspotted Sacrifices,)</span>
+            <span class="latin highlight-priest">in primis, quæ tibi offérimus pro Ecclésia tua sancta cathólica: quam pacificáre, custodíre, adunáre et régere dignéris toto orbe terrárum:</span>
+            <span class="english highlight-priest">(which in the first place we offer Thee for Thy holy Catholic Church to which vouchsafe to grant peace, as also to preserve, unite, and govern it throughout the world,)</span>
+            <span class="latin highlight-priest">una cum fámulo tuo Papa nostro Francisco et Antístite nostro Stephano et ómnibus orthodóxis, atque cathólicæ et apostólicæ fídei cultóribus.</span>
+            <span class="english highlight-priest">(together with Thy servant our Pope, Francis, and our Bishop, Stefan, and all orthodox believers and professors of the Catholic and Apostolic Faith.)</span>
+        </p>
+
+        <p class="rubric">(Memento for the Living - pause silently to remember your intentions)</p>
+        <p>
+            <span class="latin highlight-priest">Meménto, Dómine, famulórum famularúmque tuarum N. et N. et ómnium circumstántium, quorum tibi fides cógnita est et nota devótio,</span>
+            <span class="english highlight-priest">(Be mindful, O Lord, of Thy servants and handmaidens, N. and N. and of all here present, whose faith and devotion are known unto Thee,)</span>
+            <span class="latin highlight-priest">pro quibus tibi offérimus: vel qui tibi ófferunt hoc sacrifícium laudis, pro se suísque ómnibus:</span>
+            <span class="english highlight-priest">(for whom we offer, or who offer up to Thee, this sacrifice of praise for themselves, their families and friends,)</span>
+             <span class="latin highlight-priest">pro redemptióne animárum suárum, pro spe salútis et incolumitátis suæ:</span>
+             <span class="english highlight-priest">(for the redemption of their souls, for the health and salvation they hope for;)</span>
+             <span class="latin highlight-priest">tibíque reddunt vota sua ætérno Deo, vivo et vero.</span>
+             <span class="english highlight-priest">(and who now pay their vows to Thee, the everlasting, living and true God.)</span>
+        </p>
+
+        <p class="rubric">(Communicantes)</p>
+        <p>
+            <span class="latin highlight-priest">Communicántes, et memóriam venerántes, in primis gloriósæ semper Vírginis Maríæ, Genitrícis Dei et Dómini nostri Jesu Christi:</span>
+            <span class="english highlight-priest">(Communicating, and honoring the memory, especially of the glorious ever Virgin Mary, mother of our God and Lord Jesus Christ:)</span>
+             <span class="latin highlight-priest">sed et beatórum Apostolórum ac Mártyrum tuórum, Petri et Pauli, Andréæ, Jacóbi, Joánnis, Thomæ, Jacóbi, Philíppi, Bartholomǽi, Matthǽi, Simónis et Thaddǽi:</span>
+             <span class="english highlight-priest">(and also of the blessed Apostles and Martyrs Peter and Paul, Andrew, James, John, Thomas, James, Philip, Bartholomew, Matthew, Simon, and Thaddeus;)</span>
+             <span class="latin highlight-priest">Lini, Cleti, Cleméntis, Xysti, Cornélii, Cypriáni, Lauréntii, Chrysógoni, Joánnis et Pauli, Cosmæ et Damiáni: et ómnium Sanctórum tuórum;</span>
+             <span class="english highlight-priest">(Linus, Cletus, Clement, Xystus, Cornelius, Cyprian, Lawrence, Chrysogonus, John and Paul, Cosmas and Damian, and of all Thy Saints,)</span>
+             <span class="latin highlight-priest">quorum méritis precibúsque concédas, ut in ómnibus protectiónis tuæ muniámur auxílio. Per eúndem Christum, Dóminum nostrum. Amen.</span>
+             <span class="english highlight-priest">(through whose merits and prayers, grant that we may in all things be defended by the help of Thy protection. Through the same Christ our Lord. Amen.)</span>
+        </p>
+
+        <p class="rubric">(Hanc Igitur)</p>
+        <p class="instruction">(Priest spreads hands over the oblata)</p>
+        <p>
+            <span class="latin highlight-priest">Hanc ígitur oblatiónem servitútis nostræ, sed et cunctæ famíliæ tuæ,</span>
+            <span class="english highlight-priest">(We therefore beseech Thee, O Lord, graciously to accept this oblation of our service, as also of Thy whole family;)</span>
+             <span class="latin highlight-priest">quǽsumus, Dómine, ut placátus accípias:</span>
+             <span class="english highlight-priest">(we beseech Thee, O Lord, that Thou wouldst accept it with favour:)</span>
+             <span class="latin highlight-priest">diésque nostros in tua pace dispónas, atque ab ætérna damnatióne nos éripi, et in electórum tuórum júbeas grege numerári.</span>
+             <span class="english highlight-priest">(dispose our days in Thy peace, preserve us from eternal damnation, and rank us in the number of Thine Elect.)</span>
+             <span class="latin highlight-priest">Per Christum, Dóminum nostrum. Amen.</span>
+             <span class="english highlight-priest">(Through Christ our Lord. Amen.)</span>
+        </p>
+
+        <p>
+            <span class="latin highlight-priest">Quam oblatiónem tu, Deus, in ómnibus, quǽsumus,</span>
+            <span class="english highlight-priest">(Which oblation do Thou, O God, vouchsafe in all respects,)</span>
+            <span class="latin highlight-priest">bene<span class="cross-priest">+</span>díctam, adscríp<span class="cross-priest">+</span>tam, ra<span class="cross-priest">+</span>tam, rationábilem, acceptabilémque fácere dignéris:</span>
+            <span class="english highlight-priest">(to bless, <span class="cross-priest">+</span> approve, <span class="cross-priest">+</span> ratify, <span class="cross-priest">+</span> make worthy and acceptable;)</span>
+             <span class="latin highlight-priest">ut nobis Cor<span class="cross-priest">+</span>pus, et San<span class="cross-priest">+</span>guis fiat dilectíssimi Fílii tui, Dómini nostri Jesu Christi.</span>
+             <span class="english highlight-priest">(that it may be made for us the Body <span class="cross-priest">+</span> and Blood <span class="cross-priest">+</span> of Thy most beloved Son Jesus Christ our Lord.)</span>
+        </p>
+
+        <div class="warning">
+             <strong>CRITICAL WARNING: Words of Consecration</strong><br/>
+             The following are the sacred words of Consecration. <strong>Only a validly ordained priest has the power, given by Christ, to change the bread and wine into the Body and Blood of Jesus Christ by saying these words *in persona Christi* during the Mass.</strong>
+             <br/>As a layperson, read these highlighted words silently with utmost reverence, recalling the moment of Consecration in the true Mass. <strong>Your silent reading does NOT consecrate anything.</strong> Pray with faith in the Real Presence effected by priests in Masses throughout the world.
+        </div>
+
+        <p>
+            <span class="latin highlight-priest">Qui prídie quam paterétur, accépit panem in sanctas ac venerábiles manus suas,</span>
+            <span class="english highlight-priest">(Who, the day before He suffered, took bread into His holy and venerable hands,)</span>
+            <span class="instruction">(Priest raises eyes to heaven)</span>
+            <span class="latin highlight-priest">et elevátis óculis in cælum ad te Deum, Patrem suum omnipoténtem, tibi grátias agens,</span>
+            <span class="english highlight-priest">(and with His eyes lifted up towards heaven unto Thee, God, His almighty Father, giving thanks to Thee,)</span>
+            <span class="latin highlight-priest">bene<span class="cross-priest">+</span>díxit, fregit, dedítque discípulis suis, dicens: Accípite, et manducáte ex hoc omnes.</span>
+            <span class="english highlight-priest">(He blessed <span class="cross-priest">+</span> it, broke it and gave it to His disciples saying: Take and eat ye all of this,)</span>
+            <p class="latin highlight-priest" style="font-size: 1.3em; text-align:center; margin-top: 1em; margin-bottom: 1em;">HOC EST ENIM CORPUS MEUM.</p>
+            <p class="english highlight-priest" style="font-size: 1.1em; text-align:center; font-style: normal; margin-left:0;">(FOR THIS IS MY BODY.)</p>
+        </p>
+
+        <p class="instruction">(Priest genuflects, elevates the Host, genuflects again. Remain Kneeling. Bow head in adoration during the elevation, perhaps saying silently "My Lord and my God.")</p>
+
+        <p>
+            <span class="latin highlight-priest">Símili modo postquam cenátum est, accípiens et hunc præclárum Cálicem in sanctas ac venerábiles manus suas:</span>
+            <span class="english highlight-priest">(In like manner, after He had supped, taking also this excellent chalice into His holy and venerable hands,)</span>
+            <span class="latin highlight-priest">item tibi grátias agens, bene<span class="cross-priest">+</span>díxit, dedítque discípulis suis, dicens: Accípite, et bíbite ex eo omnes.</span>
+            <span class="english highlight-priest">(also giving thanks to Thee, He blessed <span class="cross-priest">+</span>, and gave it to His disciples, saying: Take and drink ye all of this,)</span>
+            <p class="latin highlight-priest" style="font-size: 1.3em; text-align:center; margin-top: 1em; margin-bottom: 1em;">HIC EST ENIM CALIX SANGUINIS MEI, NOVI ET ÆTERNI TESTAMENTI: MYSTERIUM FIDEI: QUI PRO VOBIS ET PRO MULTIS EFFUNDETUR IN REMISSIONEM PECCATORUM.</p>
+            <p class="english highlight-priest" style="font-size: 1.1em; text-align:center; font-style: normal; margin-left:0;">(FOR THIS IS THE CHALICE OF MY BLOOD OF THE NEW AND ETERNAL TESTAMENT, THE MYSTERY OF FAITH; WHICH SHALL BE SHED FOR YOU AND FOR MANY UNTO THE REMISSION OF SINS.)</p>
+            <span class="latin highlight-priest" style="margin-top: 1em;">Hæc quotiescúmque fecéritis, in mei memóriam faciétis.</span>
+            <span class="english highlight-priest">(As often as ye do these things, ye shall do them in remembrance of Me.)</span>
+        </p>
+
+        <p class="instruction">(Priest genuflects, elevates the Chalice, genuflects again. Remain Kneeling. Bow head in adoration during the elevation.)</p>
+
+        <p>
+            <span class="latin highlight-priest">Unde et mémores, Dómine, nos servi tui, sed et plebs tua sancta, ejúsdem Christi Fílii tui, Dómini nostri, tam beátæ passiónis, nec non et ab ínferis resurrectiónis, sed et in cælos gloriósæ ascensiónis:</span>
+            <span class="english highlight-priest">(Wherefore, O Lord, we Thy servants, as also Thy holy people, calling to mind the blessed Passion of the same Christ, Thy Son, our Lord, and also His Resurrection from the dead and His glorious Ascension into heaven:)</span>
+            <span class="latin highlight-priest">offérimus præcláræ majestáti tuæ de tuis donis ac datis,</span>
+            <span class="english highlight-priest">(do offer unto Thy most excellent Majesty of Thine own gifts, bestowed upon us,)</span>
+            <span class="latin highlight-priest">Hóstiam <span class="cross-priest">+</span> puram, Hóstiam <span class="cross-priest">+</span> sanctam, Hóstiam <span class="cross-priest">+</span> immaculátam,</span>
+            <span class="english highlight-priest">(a pure <span class="cross-priest">+</span> Host, a holy <span class="cross-priest">+</span> Host, an unspotted <span class="cross-priest">+</span> Host,)</span>
+             <span class="latin highlight-priest">Panem <span class="cross-priest">+</span> sanctum vitæ ætérnæ, et Cálicem <span class="cross-priest">+</span> salútis perpétuæ.</span>
+             <span class="english highlight-priest">(the holy <span class="cross-priest">+</span> Bread of eternal life, and the Chalice <span class="cross-priest">+</span> of everlasting salvation.)</span>
+        </p>
+        <p>
+            <span class="latin highlight-priest">Supra quæ propítio ac seréno vultu respícere dignéris: et accépta habére,</span>
+            <span class="english highlight-priest">(Upon which vouchsafe to look with a propitious and serene countenance, and to accept them,)</span>
+            <span class="latin highlight-priest">sicúti accépta habére dignátus es múnera púeri tui justi Abel, et sacrifícium Patriárchæ nostri Abrahæ:</span>
+            <span class="english highlight-priest">(as Thou wert graciously pleased to accept the gifts of Thy just servant Abel, and the sacrifice of our patriarch Abraham,)</span>
+             <span class="latin highlight-priest">et quod tibi óbtulit summus sacérdos tuus Melchísedech, sanctum sacrifícium, immaculátam hóstiam.</span>
+             <span class="english highlight-priest">(and that which Thy high priest Melchisedech offered to Thee, a holy sacrifice, and unspotted victim.)</span>
+        </p>
+        <p class="instruction">(Priest bows profoundly)</p>
+        <p>
+            <span class="latin highlight-priest">Súpplices te rogámus, omnípotens Deus: jube hæc perférri per manus sancti Angeli tui in sublíme altáre tuum, in conspéctu divínæ majestátis tuæ:</span>
+            <span class="english highlight-priest">(We most humbly beseech Thee, almighty God, command these offerings to be borne by the hands of Thy holy Angels to Thine altar on high, in the sight of Thy divine majesty,)</span>
+            <span class="instruction">(Priest kisses the altar)</span>
+            <span class="latin highlight-priest">ut, quotquot ex hac altáris participatióne sacrosánctum Fílii tui Cor<span class="cross-priest">+</span>pus, et Sán<span class="cross-priest">+</span>guinem sumpsérimus,</span>
+            <span class="english highlight-priest">(that as many of us as shall, by partaking at this altar, receive the most holy Body <span class="cross-priest">+</span> and Blood <span class="cross-priest">+</span> of Thy Son,)</span>
+            <span class="instruction">(Priest makes Sign of the Cross on himself)</span>
+             <span class="latin highlight-priest">omni benedictióne cælésti et grátia repleámur. Per eúndem Christum, Dóminum nostrum. Amen.</span>
+             <span class="english highlight-priest">(may be filled with every heavenly grace and blessing. Through the same Christ our Lord. Amen.)</span>
+        </p>
+
+        <p class="rubric">(Memento for the Dead - pause silently to remember the faithful departed)</p>
+        <p>
+             <span class="latin highlight-priest">Meménto étiam, Dómine, famulórum famularúmque tuárum N. et N., qui nos præcessérunt cum signo fídei, et dórmiunt in somno pacis.</span>
+             <span class="english highlight-priest">(Remember also, O Lord, Thy servants and handmaids N. and N., who are gone before us with the sign of faith, and rest in the sleep of peace.)</span>
+             <span class="instruction">(Priest prays silently for the dead)</span>
+             <span class="latin highlight-priest">Ipsis, Dómine, et ómnibus in Christo quiescéntibus locum refrigérii, lucis, et pacis, ut indúlgeas, deprecámur.</span>
+             <span class="english highlight-priest">(To these, O Lord, and to all that rest in Christ, grant, we beseech Thee, a place of refreshment, light, and peace;)</span>
+             <span class="instruction">(Priest bows head)</span>
+              <span class="latin highlight-priest">Per eúndem Christum, Dóminum nostrum. Amen.</span>
+              <span class="english highlight-priest">(Through the same Christ our Lord. Amen.)</span>
+        </p>
+
+        <p class="rubric">(Nobis quoque peccatoribus - strike breast)</p>
+        <p>
+            <span class="latin highlight-priest">Nobis quoque peccatóribus fámulis tuis, de multitúdine miseratiónum tuárum sperántibus,</span>
+            <span class="english highlight-priest">(To us also, Thy sinful servants, (*strike breast*) confiding in the multitude of Thy mercies,)</span>
+            <span class="latin highlight-priest">partem áliquam et societátem donáre dignéris, cum tuis sanctis Apóstolis et Martýribus:</span>
+            <span class="english highlight-priest">(vouchsafe to grant some part and fellowship with Thy holy Apostles and Martyrs,)</span>
+             <span class="latin highlight-priest">cum Joánne, Stéphano, Matthía, Bárnaba, Ignátio, Alexándro, Marcellíno, Petro, Felicitáte, Perpétua, Agatha, Lúcia, Agnéte, Cæcília, Anastásia, et ómnibus Sanctis tuis:</span>
+             <span class="english highlight-priest">(with John, Stephen, Matthias, Barnabas, Ignatius, Alexander, Marcellinus, Peter, Felicitas, Perpetua, Agatha, Lucy, Agnes, Cecilia, Anastasia, and with all Thy Saints,)</span>
+             <span class="latin highlight-priest">intra quorum nos consórtium, non æstimátor mériti, sed véniæ, quǽsumus, largítor admítte.</span>
+             <span class="english highlight-priest">(into whose company we beseech Thee to admit us, not weighing our merits, but pardoning our offenses.)</span>
+             <span class="latin highlight-priest">Per Christum, Dóminum nostrum.</span>
+             <span class="english highlight-priest">(Through Christ our Lord.)</span>
+        </p>
+        <p>
+            <span class="latin highlight-priest">Per quem hæc ómnia, Dómine, semper bona creas,</span>
+            <span class="english highlight-priest">(By Whom, O Lord, Thou dost ever create,)</span>
+            <span class="latin highlight-priest">sanctí<span class="cross-priest">+</span>ficas, viví<span class="cross-priest">+</span>ficas, bene<span class="cross-priest">+</span>dícis et præstas nobis.</span>
+            <span class="english highlight-priest">(sanctify, <span class="cross-priest">+</span> quicken, <span class="cross-priest">+</span> bless, <span class="cross-priest">+</span> and give unto us all these good things.)</span>
+            <span class="instruction">(Priest uncovers chalice, genuflects, makes signs of the cross with the Host over the Chalice)</span>
+            <span class="latin highlight-priest">Per Ip<span class="cross-priest">+</span>sum, et cum Ip<span class="cross-priest">+</span>so, et in Ip<span class="cross-priest">+</span>so,</span>
+            <span class="english highlight-priest">(By Him, <span class="cross-priest">+</span> and with Him, <span class="cross-priest">+</span> and in Him <span class="cross-priest">+</span>)</span>
+             <span class="latin highlight-priest">est tibi Deo Patri<span class="cross-priest">+</span> omnipoténti, in unitáte Spíritus<span class="cross-priest">+</span> Sancti,</span>
+             <span class="english highlight-priest">(is to Thee, God the Father <span class="cross-priest">+</span> almighty, in the unity of the Holy <span class="cross-priest">+</span> Ghost,)</span>
+             <span class="instruction">(Priest slightly elevates Host and Chalice together)</span>
+             <span class="latin highlight-priest">omnis honor, et glória.</span>
+             <span class="english highlight-priest">(all honor and glory.)</span>
+        </p>
+        <p class="instruction">(Priest replaces Host and Chalice, covers Chalice, genuflects)</p>
+        <p>
+            <span class="latin highlight-priest">Per ómnia sǽcula sæculórum.</span>
+            <span class="english highlight-priest">(World without end.)</span>
+            <span class="latin">Amen.</span> <span class="english">Amen.</span>
+        </p>
+
+
+        <h2>Communion Rite</h2>
+        <p class="instruction">(Remain Kneeling)</p>
+        <h3>Pater Noster</h3>
+        <p>
+             <span class="latin">Orémus: Præcéptis salutáribus móniti, et divína institutióne formáti audémus dícere:</span>
+             <span class="english">Let us pray. Instructed by Thy saving precepts, and following Thy divine institution, we are bold to say:</span>
+        </p>
+        <p>
+            <span class="latin">Pater noster, qui es in cælis.</span> <span class="english">Our Father, who art in heaven,</span>
+            <span class="latin">Sanctificétur nomen tuum.</span> <span class="english">hallowed be Thy Name;</span>
+            <span class="latin">Advéniat regnum tuum.</span> <span class="english">Thy kingdom come;</span>
+            <span class="latin">Fiat volúntas tua, sicut in cælo et in terra.</span>
+            <span class="english">Thy will be done on earth as it is in heaven.</span>
+            <span class="latin">Panem nostrum quotidiánum da nobis hódie.</span>
+            <span class="english">Give us this day our daily bread.</span>
+            <span class="latin">Et dimítte nobis débita nostra, sicut et nos dimíttimus debitóribus nostris.</span>
+            <span class="english">And forgive us our trespasses, as we forgive those who trespass against us.</span>
+            <span class="latin">Et ne nos indúcas in tentatiónem:</span>
+            <span class="english">And lead us not into temptation.</span>
+            <span class="latin">Sed líbera nos a malo.</span> <span class="english">But deliver us from evil.</span>
+            <span class="latin highlight-priest">Amen.</span>
+            <span class="english highlight-priest">(Amen.)</span>
+        </p>
+
+        <p>
+            <span class="latin highlight-priest">Líbera nos, quǽsumus, Dómine, ab ómnibus malis, prætéritis, præséntibus et futúris:</span>
+            <span class="english highlight-priest">(Deliver us, we beseech Thee, O Lord, from all evils, past, present, and to come;)</span>
+            <span class="latin highlight-priest">et intercedénte beáta et gloriósa semper Vírgine Dei Genitríce María, cum beátis Apóstolis tuis Petro et Paulo, atque Andréa, et ómnibus Sanctis,</span>
+            <span class="english highlight-priest">(and by the intercession of the Blessed and glorious ever Virgin Mary, Mother of God, and of the holy Apostles, Peter and Paul, and of Andrew, and of all the Saints,)</span>
+            <span class="instruction">(Priest signs himself with the Paten)</span>
+            <span class="latin highlight-priest">da propítius pacem in diébus nostris:</span> <span class="english highlight-priest">(mercifully grant peace in our days,)</span>
+            <span class="instruction">(Priest kisses the Paten)</span>
+            <span class="latin highlight-priest">ut, ope misericórdiæ tuæ adjúti, et a peccáto simus semper líberi et ab omni perturbatióne secúri.</span>
+            <span class="english highlight-priest">(that through the assistance of Thy mercy we may be always free from sin, and secure from all disturbance.)</span>
+            <span class="instruction">(Priest places Paten under Host, uncovers Chalice, genuflects, breaks Host)</span>
+            <span class="latin highlight-priest">Per eúndem Dóminum nostrum Jesum Christum, Fílium tuum.</span>
+            <span class="english highlight-priest">(Through the same Jesus Christ, Thy Son, our Lord.)</span>
+            <span class="latin highlight-priest">Qui tecum vivit et regnat in unitáte Spíritus Sancti Deus.</span>
+            <span class="english highlight-priest">(Who with Thee in the unity of the Holy Ghost liveth and reigneth God,)</span>
+            <span class="latin highlight-priest">Per ómnia sǽcula sæculórum.</span>
+            <span class="english highlight-priest">(World without end.)</span>
+            <span class="latin">Amen.</span> <span class="english">Amen.</span>
+        </p>
+
+        <p>
+            <span class="latin highlight-priest">Pax Dómini sit <span class="cross-priest">+</span> semper <span class="cross-priest">+</span> vobís<span class="cross-priest">+</span>cum.</span>
+            <span class="english highlight-priest">(The peace <span class="cross-priest">+</span> of the Lord be <span class="cross-priest">+</span> always with <span class="cross-priest">+</span> you.)</span>
+            <span class="latin">Et cum spíritu tuo.</span> <span class="english">And with thy spirit.</span>
+        </p>
+        <p>
+            <span class="instruction">(Priest places particle of Host into Chalice)</span>
+            <span class="latin highlight-priest">Hæc commíxtio, et consecrátio Córporis et Sánguinis Dómini nostri Jesu Christi, fiat accipiéntibus nobis in vitam ætérnam. Amen.</span>
+            <span class="english highlight-priest">(May this mixture and consecration of the Body and Blood of our Lord Jesus Christ be to us who receive it effectual unto eternal life. Amen.)</span>
+        </p>
+
+        <h3>Agnus Dei</h3>
+        <p class="instruction">(Remain Kneeling. Strike breast three times)</p>
+        <p>
+            <span class="latin">Agnus Dei, qui tollis peccáta mundi: miserére nobis.</span>
+            <span class="english">Lamb of God, who takest away the sins of the world, have mercy on us.</span>
+            <span class="latin">Agnus Dei, qui tollis peccáta mundi: miserére nobis.</span>
+            <span class="english">Lamb of God, who takest away the sins of the world, have mercy on us.</span>
+            <span class="latin">Agnus Dei, qui tollis peccáta mundi: dona nobis pacem.</span>
+            <span class="english">Lamb of God, who takest away the sins of the world, grant us peace.</span>
+        </p>
+
+        <div class="warning">
+             <strong>Layperson's Note:</strong> The following three prayers are said privately by the priest before his own Communion. Read them silently, preparing yourself for Spiritual Communion. The Kiss of Peace ritual in Solemn Mass is omitted here for simplicity in devotional prayer.
+        </div>
+
+        <p>
+            <span class="latin highlight-priest">Dómine Jesu Christe, qui dixísti Apóstolis tuis: Pacem relínquo vobis, pacem meam do vobis:</span>
+            <span class="english highlight-priest">(O Lord Jesus Christ, who saidst to Thine Apostles: Peace I leave you, My peace I give you:)</span>
+            <span class="latin highlight-priest">ne respícias peccáta mea, sed fidem Ecclésiæ tuæ;</span>
+            <span class="english highlight-priest">(regard not my sins, but the faith of Thy Church;)</span>
+            <span class="latin highlight-priest">eámque secúndum voluntátem tuam pacificáre et coadunáre dignéris: Qui vivis et regnas Deus per ómnia sǽcula sæculórum. Amen.</span>
+            <span class="english highlight-priest">(and vouchsafe to grant her that peace and unity which is agreeable to Thy will: Who livest and reignest God, world without end. Amen.)</span>
+        </p>
+        <p>
+            <span class="latin highlight-priest">Dómine Jesu Christe, Fili Dei vivi, qui ex voluntáte Patris, cooperánte Spíritu Sancto, per mortem tuam mundum vivificásti:</span>
+            <span class="english highlight-priest">(O Lord Jesus Christ, Son of the living God, who, according to the will of Thy Father, with the cooperation of the Holy Ghost, hast by Thy death given life to the world;)</span>
+            <span class="latin highlight-priest">líbera me per hoc sacrosánctum Corpus et Sánguinem tuum ab ómnibus iniquitátibus meis, et univérsis malis:</span>
+            <span class="english highlight-priest">(deliver me by this Thy most sacred Body and Blood, from all my iniquities and from all evils;)</span>
+             <span class="latin highlight-priest">et fac me tuis semper inhærére mandátis, et a te numquam separári permíttas:</span>
+             <span class="english highlight-priest">(and make me always cleave to Thy commandments, and suffer me never to be separated from Thee,)</span>
+             <span class="latin highlight-priest">Qui cum eódem Deo Patre et Spíritu Sancto vivis et regnas Deus in sǽcula sæculórum. Amen.</span>
+             <span class="english highlight-priest">(Who livest and reignest, with the same God the Father and the Holy Ghost, God, world without end. Amen.)</span>
+        </p>
+        <p>
+            <span class="latin highlight-priest">Percéptio Córporis tui, Dómine Jesu Christe, quod ego indígnus súmere præsúmo, non mihi provéniat in judícium et condemnatiónem:</span>
+            <span class="english highlight-priest">(Let not the partaking of Thy Body, O Lord, Jesus Christ, which I, though unworthy, presume to receive, turn to my judgment and condemnation;)</span>
+            <span class="latin highlight-priest">sed pro tua pietáte prosit mihi ad tutaméntum mentis et córporis, et ad medélam percipiéndam:</span>
+            <span class="english highlight-priest">(but let it, through Thy mercy, become a safeguard and remedy, both for soul and body;)</span>
+            <span class="latin highlight-priest">Qui vivis et regnas cum Deo Patre in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum. Amen.</span>
+            <span class="english highlight-priest">(Who with God the Father, in the unity of the Holy Ghost, livest and reignest God, world without end. Amen.)</span>
+        </p>
+
+        <div class="warning">
+             <strong>Layperson's Note:</strong> The priest now receives Communion. Read the following prayers silently, uniting yourself with his action, and then make your own Act of Spiritual Communion below.
+        </div>
+
+        <p>
+            <span class="instruction">(Priest genuflects)</span>
+            <span class="latin highlight-priest">Panem cæléstem accípiam, et nomen Dómini invocábo.</span>
+            <span class="english highlight-priest">(I will take the Bread of heaven, and will call upon the Name of the Lord.)</span>
+        </p>
+        <p class="instruction">(Remain Kneeling. Strike breast three times)</p>
+        <p>
+            <span class="latin">Dómine, non sum dignus, ut intres sub tectum meum: sed tantum dic verbo, et sanábitur ánima mea.</span>
+            <span class="english">Lord, I am not worthy that Thou shouldst enter under my roof; say but the word, and my soul shall be healed.</span>
+            <span class="latin">Dómine, non sum dignus, ut intres sub tectum meum: sed tantum dic verbo, et sanábitur ánima mea.</span>
+            <span class="english">Lord, I am not worthy that Thou shouldst enter under my roof; say but the word, and my soul shall be healed.</span>
+            <span class="latin">Dómine, non sum dignus, ut intres sub tectum meum: sed tantum dic verbo, et sanábitur ánima mea.</span>
+            <span class="english">Lord, I am not worthy that Thou shouldst enter under my roof; say but the word, and my soul shall be healed.</span>
+         </p>
+        <p>
+             <span class="instruction">(Priest makes sign of cross with Host over Paten)</span>
+             <span class="latin highlight-priest">Corpus Dómini nostri Jesu Christi custódiat ánimam meam in vitam ætérnam. Amen.</span>
+             <span class="english highlight-priest">(May the Body of our Lord Jesus Christ preserve my soul unto life everlasting. Amen.)</span>
+             <span class="instruction">(Priest receives the Host)</span>
+        </p>
+        <p>
+            <span class="instruction">(Priest uncovers Chalice, genuflects, collects fragments)</span>
+            <span class="latin highlight-priest">Quid retríbuam Dómino pro ómnibus, quæ retríbuit mihi?</span>
+            <span class="english highlight-priest">(What return shall I make to the Lord for all He has given to me?)</span>
+            <span class="latin highlight-priest">Cálicem salutáris accípiam, et nomen Dómini invocábo.</span>
+            <span class="english highlight-priest">(I will take the chalice of salvation, and call upon the Name of the Lord.)</span>
+            <span class="latin highlight-priest">Laudans invocábo Dóminum, et ab inimícis meis salvus ero.</span>
+            <span class="english highlight-priest">(Praising I will call upon the Lord, and I shall be saved from my enemies.)</span>
+         </p>
+        <p>
+            <span class="instruction">(Priest makes sign of cross with Chalice)</span>
+            <span class="latin highlight-priest">Sanguis Dómini nostri Jesu Christi custódiat ánimam meam in vitam ætérnam. Amen.</span>
+            <span class="english highlight-priest">(May the Blood of our Lord Jesus Christ preserve my soul unto life everlasting. Amen.)</span>
+            <span class="instruction">(Priest receives the Precious Blood)</span>
+        </p>
+
+        <div class="spiritual-communion">
+             <h3>Act of Spiritual Communion</h3>
+             <p class="instruction">(Remain Kneeling)</p>
+             <p>My Jesus, I believe that You are present in the Most Holy Sacrament.</p>
+             <p>I love You above all things, and I desire to receive You into my soul.</p>
+             <p>Since I cannot at this moment receive You sacramentally, come at least spiritually into my heart.</p>
+             <p>I embrace You as if You were already there and unite myself wholly to You.</p>
+             <p>Never permit me to be separated from You. Amen.</p>
+             <p class="instruction">(Pause for silent prayer, uniting yourself with Jesus)</p>
+        </div>
+        <p class="instruction">(Priest receives ablutions)</p>
+
+        <p class="rubric">(Prayers during ablutions - read silently)</p>
+        <p>
+            <span class="latin highlight-priest">Quod ore súmpsimus, Dómine, pura mente capiámus:</span>
+            <span class="english highlight-priest">(Grant, O Lord, that what we have taken with our mouth, we may receive with a pure mind;)</span>
+            <span class="latin highlight-priest">et de múnere temporáli fiat nobis remédium sempitérnum.</span>
+            <span class="english highlight-priest">(and from a temporal gift may it become to us an eternal remedy.)</span>
+        </p>
+        <p>
+             <span class="latin highlight-priest">Corpus tuum, Dómine, quod sumpsi, et Sanguis, quem potávi, adhǽreat viscéribus meis:</span>
+             <span class="english highlight-priest">(May Thy Body, O Lord, which I have received, and Thy Blood which I have drunk, cleave to my inmost parts (bowels);)</span>
+             <span class="latin highlight-priest">et præsta; ut in me non remáneat scélerum mácula, quem pura et sancta refecérunt sacraménta:</span>
+             <span class="english highlight-priest">(and grant that no stain of sin may remain in me, whom these pure and holy Sacraments have refreshed;)</span>
+             <span class="latin highlight-priest">Qui vivis et regnas in sǽcula sæculórum. Amen.</span>
+             <span class="english highlight-priest">(Who livest and reignest for ever and ever. Amen.)</span>
+        </p>
+
+        <h3>Communion Antiphon</h3>
+        <p class="instruction">(Stand)</p>
+        <p class="rubric">(John 10:14)</p>
+        <p>
+             <span class="latin">Ego sum pastor bonus, allelúja: et cognósco oves meas, et cognósc*** me meæ, allelúja, allelúja.</span>
+             <span class="english">I am the good Shepherd, alleluia: and I know My sheep, and Mine know Me, alleluia, alleluia.</span>
+        </p>
+
+
+        <h3>Postcommunion Prayer</h3>
+        <p class="instruction">(Remain Standing. Bow head at 'Per Dominum nostrum')</p>
+        <p>
+             <span class="latin highlight-priest">V. Dóminus vobíscum.</span>
+             <span class="english highlight-priest">(V. The Lord be with you.)</span>
+             <span class="latin">R. Et cum spíritu tuo.</span>
+             <span class="english">R. And with thy spirit.</span>
+             <span class="latin highlight-priest">Orémus.</span>
+             <span class="english highlight-priest">(Let us pray.)</span>
+         </p>
+         <p>
+             <span class="latin highlight-priest">Præsta nobis, quǽsumus, omnípotens Deus:</span>
+             <span class="english highlight-priest">(Grant unto us, we beseech Thee, almighty God,)</span>
+             <span class="latin highlight-priest">ut, vivificatiónis tuæ grátiam consequéntes, in tuo semper múnere gloriémur.</span>
+             <span class="english highlight-priest">(that having received the grace of a new life, we may ever glory in Thy gift.)</span>
+             <span class="latin highlight-priest">Per Dóminum nostrum Jesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum.</span>
+             <span class="english highlight-priest">(Through Jesus Christ, thy Son our Lord, Who liveth and reigneth with thee, in the unity of the Holy Ghost, God, world without end.)</span>
+             <span class="latin">Amen.</span> <span class="english">Amen.</span>
+         </p>
+         <p class="commemoration-title">Commemoration: St. Monica</p>
+         <p>
+             <span class="latin highlight-priest">Orémus.</span>
+             <span class="english highlight-priest">(Let us pray.)</span>
+             <span class="latin highlight-priest">Satiásti, Dómine, famíliam tuam munéribus sacris:</span>
+             <span class="english highlight-priest">(Thou hast fed thy servants, O Lord, with the holy gifts;)</span>
+             <span class="latin highlight-priest">ejus, quǽsumus, semper interventióne nos réfove, cujus sollémnia celebrámus.</span>
+             <span class="english highlight-priest">(comfort us ever we pray, by her intercession whose festival we celebrate.)</span>
+             <span class="latin highlight-priest">Per Dóminum nostrum Jesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum.</span>
+             <span class="english highlight-priest">(Through Jesus Christ, thy Son our Lord, Who liveth and reigneth with thee, in the unity of the Holy Ghost, God, world without end.)</span>
+             <span class="latin">Amen.</span> <span class="english">Amen.</span>
+         </p>
+
+        <h2>Concluding Rites</h2>
+        <p class="instruction">(Remain Standing)</p>
+        <p>
+             <span class="latin highlight-priest">V. Dóminus vobíscum.</span>
+             <span class="english highlight-priest">(V. The Lord be with you.)</span>
+             <span class="latin">R. Et cum spíritu tuo.</span>
+             <span class="english">R. And with thy spirit.</span>
+        </p>
+        <p>
+            <span class="latin highlight-priest">V. Ite, Missa est.</span>
+            <span class="english highlight-priest">(V. Go, the Mass is ended.)</span>
+            <span class="latin">R. Deo grátias.</span>
+            <span class="english">R. Thanks be to God.</span>
+        </p>
+
+        <p class="instruction">(Bow head)</p>
+        <div class="warning">
+             <strong>Layperson's Note:</strong> This prayer is said privately by the priest. Read it silently.
+        </div>
+        <p>
+            <span class="latin highlight-priest">Pláceat tibi, sancta Trínitas, obséquium servitútis meæ:</span>
+            <span class="english highlight-priest">(May the performance of my homage be pleasing to Thee, O holy Trinity:)</span>
+            <span class="latin highlight-priest">et præsta; ut sacrifícium, quod óculis tuæ majestátis indígnus óbtuli, tibi sit acceptábile,</span>
+            <span class="english highlight-priest">(and grant that the Sacrifice which I, though unworthy, have offered up in the sight of Thy Majesty, may be acceptable to Thee,)</span>
+            <span class="latin highlight-priest">mihíque et ómnibus, pro quibus illud óbtuli, sit, te miseránte, propitiábile.</span>
+            <span class="english highlight-priest">(and through Thy mercy, be a propitiation for me, and for all those for whom I have offered it.)</span>
+            <span class="latin highlight-priest">Per Christum, Dóminum nostrum. Amen.</span>
+            <span class="english highlight-priest">(Through Christ our Lord. Amen.)</span>
+        </p>
+
+        <p class="instruction">(Kneel for the Blessing)</p>
+        <div class="warning">
+            <strong>Layperson's Note:</strong> The following blessing is given by the priest with sacramental authority. Read the words silently, asking God's blessing upon yourself and others. Make the Sign of the Cross (<span class="cross-self">+</span>) on yourself when indicated, but understand you are not conferring the priestly blessing signified by the yellow cross (<span class="cross-priest">+</span>).
+        </div>
+        <p>
+             <span class="instruction">(Priest kisses the altar)</span>
+             <span class="latin highlight-priest">Benedícat vos omnípotens Deus,</span>
+             <span class="english highlight-priest">(May almighty God bless you,)</span>
+             <span class="instruction">(Priest turns to people and blesses)</span>
+             <span class="latin highlight-priest">Pater, et Fílius, <span class="cross-priest">+</span> et Spíritus Sanctus.</span>
+             <span class="english highlight-priest">(the Father, and the Son, <span class="cross-priest">+</span> and the Holy Ghost.)</span>
+             <span class="instruction">(Make the Sign of the Cross on yourself <span class="cross-self">+</span>)</span>
+             <span class="latin">Amen.</span> <span class="english">Amen.</span>
+        </p>
+
+        <h3>The Last Gospel</h3>
+        <p class="instruction">(Stand)</p>
+        <p>
+            <span class="latin highlight-priest">V. Dóminus vobíscum.</span>
+            <span class="english highlight-priest">(V. The Lord be with you.)</span>
+            <span class="latin">R. Et cum spíritu tuo.</span>
+            <span class="english">R. And with thy spirit.</span>
+            <p class="rubric">(Make Sign of Cross on forehead, lips, and heart)</p>
+            <span class="latin highlight-priest">Inítium <span class="cross-self">+</span> sancti Evangélii secúndum Joánnem.</span>
+            <span class="english highlight-priest">(The beginning <span class="cross-self">+</span> of the holy Gospel according to John.)</span>
+            <span class="latin">Glória tibi, Dómine.</span> <span class="english">Glory be to Thee, O Lord.</span>
+        </p>
+        <p class="rubric">(John 1:1-14)</p>
+        <p>
+            <span class="latin">In princípio erat Verbum, et Verbum erat apud Deum, et Deus erat Verbum.</span>
+            <span class="english">In the beginning was the Word, and the Word was with God, and the Word was God.</span>
+            <span class="latin">Hoc erat in princípio apud Deum.</span> <span class="english">The same was in the beginning with God.</span>
+            <span class="latin">Omnia per ipsum facta sunt: et sine ipso factum est nihil, quod factum est:</span>
+            <span class="english">All things were made by Him, and without Him was made nothing that was made:</span>
+            <span class="latin">in ipso vita erat, et vita erat lux hóminum:</span> <span class="english">in Him was life, and the life was the Light of men;</span>
+            <span class="latin">et lux in ténebris lucet, et ténebræ eam non comprehendérunt.</span>
+            <span class="english">and the Light shineth in darkness, and the darkness did not comprehend it.</span>
+            <span class="latin">Fuit homo missus a Deo, cui nomen erat Joánnes.</span>
+            <span class="english">There was a man sent from God, whose name was John.</span>
+            <span class="latin">Hic venit in testimónium, ut testimónium perhibéret de lúmine, ut omnes créderent per illum.</span>
+            <span class="english">This man came for a witness, to testify concerning the Light, that all might believe through Him.</span>
+            <span class="latin">Non erat ille lux, sed ut testimónium perhibéret de lúmine.</span>
+            <span class="english">He was not the Light, but he was to testify concerning the Light.</span>
+            <span class="latin">Erat lux vera, quæ illúminat omnem hóminem veniéntem in hunc mundum.</span>
+            <span class="english">That was the true Light, which enlighteneth every man that cometh into this world.</span>
+            <span class="latin">In mundo erat, et mundus per ipsum factus est, et mundus eum non cognóvit.</span>
+            <span class="english">He was in the world, and the world was made by Him, and the world knew Him not.</span>
+            <span class="latin">In própria venit, et sui eum non recepérunt.</span>
+            <span class="english">He came unto His own, and His own received Him not.</span>
+            <span class="latin">Quotquot autem recepérunt eum, dedit eis potestátem fílios Dei fíeri, his, qui credunt in nómine ejus:</span>
+            <span class="english">But as many as received Him to them He gave power to become sons of God, to them that believe in His Name,</span>
+            <span class="latin">qui non ex sanguínibus, neque ex voluntáte carnis, neque ex voluntáte viri, sed ex Deo nati sunt.</span>
+            <span class="english">who are born not of blood, nor of the will of the flesh, nor of the will of man, but of God.</span>
+            <p class="instruction">(Kneel)</p>
+            <span class="latin">Et Verbum caro factum est,</span> <span class="english">And the Word was made flesh,</span>
+            <p class="instruction">(Rise)</p>
+            <span class="latin">et habitávit in nobis: et vídimus glóriam ejus, glóriam quasi Unigéniti a Patre, plenum grátiæ et veritátis.</span>
+            <span class="english">and dwelt among us: and we saw His glory, the glory as of the Only begotten of the Father, full of grace and truth.</span>
+        </p>
+        <p>
+            <span class="latin">Deo grátias.</span> <span class="english">Thanks be to God.</span>
+        </p>
+        <p class="instruction">(Leonine Prayers are omitted after Solemn Mass unless local custom dictates otherwise.)</p>
+
+    </div><!-- /.container -->
+</body>
+</html>
