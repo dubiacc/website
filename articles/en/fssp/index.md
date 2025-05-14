@@ -3,7 +3,7 @@ of the Vatican and celebrates the Latin Mass - so what's wrong with their
 approach? Why not just try to reform the Church from the inside instead
 of risking a schism?
 
-# FSSP: Betrayal of Faith in exchange for "full communion"
+# FSSP: Betrayal of Faith in exchange for Communion
 
 In traditional Catholic circles, it is often not understood that the "schism" 
 between the Novus Ordo and the Latin Mass isn't just about the Mass; it's 
@@ -16,13 +16,6 @@ the Catholic Faith. But what is the Catholic Faith? It is nothing else than the
 tradition of the Church, passed down from the apostles and their successors. So,
 if a pope directly contradicts tradition in matters of faith, are we bound to 
 obey him? Should we be scared of such a person excommunicating us? 
-
-The question of groups like the Priestly Fraternity of St. Peter (FSSP), the Institute 
-of Christ the King Sovereign Priest (ICKSP), and other "Ecclesia Dei" communities cuts 
-to the very heart of what it means to be Catholic. While they offer the Traditional 
-Latin Mass, their "full communion" (a term invented by the modernist pope Benedict XVI)
-with post-Conciliar Rome is built on a catastrophic compromise: the acceptance of 
-Vatican II's doctrinal deviations in exchange to keep the marble altars and nice churches. 
 
 This isn't a mere disagreement on strategy between the FSSP / SSPX / Resistance: it's 
 a battle for the soul of Catholicism, the Catholic faith.
@@ -106,7 +99,7 @@ True Mass (which simply expresses the faith).
 > in the Church, the Holy See and the Vatican, have been turning away, turning us 
 > away from the Catholic Faith and have become the friends of our enemies.
 > 
-> -- [Archbishop Lefevbre: Sermon of the 1988 Consecrations]()
+> -- [Archbishop Lefevbre: Sermon of the 1988 Consecrations](https://archive.is/Jj98c#selection-3823.1-3835.571)
 
 Being "outside of the Catholic Church" therefore doesn't mean to be excommunicated from 
 people who believes that man should be the center of everything: because such an excommunication
@@ -137,7 +130,7 @@ or will you plead, "I obeyed the pope, even when he led us astray"?
 > 
 > I will not be an adulterer. I will keep my Catholic Faith!
 >
-> -- [Archbishop Lefevbre: Sermon of the 1988 Consecrations]()
+> -- [Archbishop Lefevbre: Sermon of the 1988 Consecrations](https://archive.is/Jj98c#selection-3863.1-3863.609)
 
 ## The Novus Ordo: Fruit of a Poisoned Tree
 
@@ -149,7 +142,7 @@ by Vatican II.
 > and the New Rite is against the Divine Law. Therefore, I'm not allowed to
 > celebrate it. I commit a sin if I celebrate it.
 >
-> -- [Hesse, G.: On the SSPX, FSSP, ICKSP and sedevacantists]()
+> -- [Fr. Gregory Hesse: On the SSPX, FSSP, ICKSP and sedevacantists](https://youtu.be/tjckUEBkkBI?t=2170)
 
 The New Mass, designed with the explicit intention of appealing to Protestants, necessarily 
 waters down or excises Catholic doctrine, particularly concerning the sacrificial nature of 
@@ -264,8 +257,11 @@ to compromise with the revolution that seeks to destroy it. I care about saying 
 the truth, even if I have to be labeled "disobedient," "schismatic," and whatnot. 
 
 If the FSSP truly stood for tradition, they would be standing with those who resist, 
-not appeasing those who dismantle. What they do stand for are marble altars and incense.
+not appeasing those who dismantle. While they offer the Traditional Latin Mass, their 
+"full communion" (a term invented by the modernist pope Benedict XVI) with post-Conciliar 
+Rome is built on a catastrophic compromise: the acceptance of Vatican II's doctrinal 
+deviations in exchange to keep the marble altars and nice churches. 
 
-And this is why we, the dubia.cc editorial team, cannot recommend people to attend the Masses 
+And this is why we, the dubia.cc editorial team, have to advise against attending the Masses 
 of the FSSP / ICKSP or the Novus Ordo, not even for pastoral reasons: If the goal of attending
 a Mass is to get sanctifying grace from God, being at an adulterous FSSP Mass is a waste of time.
