@@ -53,6 +53,8 @@ struct ParsedArticle {
     title: String,
     date: String,
     tags: Vec<String>,
+    // map: lang => article slug
+    translations: BTreeMap<String, String>,
     authors: Vec<String>,
     sha256: String,
     img: Option<Image>,
@@ -306,6 +308,8 @@ struct Config {
     tags: Vec<String>,
     #[serde(default)]
     authors: Vec<String>,
+    #[serde(default)]
+    translations: BTreeMap<String, String>,
 }
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
@@ -724,6 +728,7 @@ fn parse_article(s: &str) -> ParsedArticle {
         title,
         date: config.date,
         tags: config.tags,
+        translations: config.translations,
         authors: config.authors,
         sha256: sha256,
         img: None,

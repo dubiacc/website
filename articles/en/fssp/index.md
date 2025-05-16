@@ -264,5 +264,5 @@ Rome is built on a catastrophic compromise: the acceptance of Vatican II's doctr
 deviations in exchange to keep the marble altars and nice churches. 
 
 And this is why we, the dubia.cc editorial team, have to advise against attending the Masses 
-of the FSSP / ICKSP or the Novus Ordo, not even for pastoral reasons: If the goal of attending
+of the FSSP / ICKSP or the Novus Ordo, even for pastoral reasons: If the goal of attending
 a Mass is to get sanctifying grace from God, being at an adulterous FSSP Mass is a waste of time.

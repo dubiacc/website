@@ -2932,17 +2932,17 @@
                         },
                         {
                             "slug": "fssp",
-                            "title": "➽ Warum nicht zu FSSP / Ecclesia-Dei Gruppen gehen?"
+                            "title": "➽ Warum nicht zu FSSP gehen?"
                         },
                         {
                             "slug": "resistance-timeline",
-                            "title": "➽ Warum nicht zur Piusbruderschaft gehen?"
+                            "title": "➽ Warum nicht (mehr) zur SSPX gehen?"
                         }
                     ]
                 },
                 {
-                    "id": "bibeln",
-                    "title": "Bibeln & Kirchenväter",
+                    "id": "kirchenvaeter",
+                    "title": "Kirchenväter",
                     "links": [
                         {
                             "slug": "https://k-bibel.de/",
@@ -3117,7 +3117,7 @@
         "en": {
             "ibelievein": [
                 {
-                    "title": "Naturalism / Agnosticism",
+                    "title": "Science",
                     "option": "science",
                     "tag": "evolution",
                     "featured": []

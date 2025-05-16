@@ -1,7 +1,7 @@
-No. Jesus allows for physical separation in Matthew 19:9, but not for divorce 
-and remarriage in Luke 16:18. Canon Law allows for "divortium imperfectum" and 
-a ban on sacraments for the guilty party - however, what God has put together 
-let no man separate. 
+Jesus allows for physical separation in Matthew 19:9, but not for divorce and 
+remarriage in Luke 16:18. Canon Law allows for "divortium imperfectum" and 
+a ban on sacraments for the guilty party - however, a "divortium perfectum"
+is only permissible under extremely specific circumstances. 
 
 # Are Annulments Catholic?
 
@@ -160,15 +160,15 @@ lack of proper consent. However, the burden of proof would be on them to
 demonstrate this extraordinary ignorance, as the normal presumption is that 
 adults understand these basics ("until death do us part" + "children").
 
-This also means that "Josephite marriages" do not exist, in fact there is a 
-great delusion about this being a "Catholic tradition". It is not: in 
-the eyes of the Church, if a "marriage" positively excludes all right 
-to the conjugal act, it is not a valid marriage.
-
 > Spouses have the obligation and the right to maintain their common conjugal 
 > life unless a lawful reason excuses them.
 >
 > -- [Canon 1128, 1917 Code of Canon Law](https://canonlaw.ninja/?nums=1128&v=1917)
+
+The only reason against rendering this obligation of the marital act is abstinence 
+by mutual consent (Josephite marriage, see Augustine in 
+[De nupt. et concupiscent., XII.](https://archive.is/IvHP4#selection-1695.0-1703.1)). 
+However, for the purpose of this article, we will ignore this case.
 
 Since the Church cannot look into the heart, the intention to consent to the above is 
 expressed in the rite and cannot be disputed with internal justification. Once you say 

@@ -2,7 +2,7 @@ In der katholischen Tradition wurde das Zölibat nicht immer als
 Voraussetzung für Priester betrachtet. Es wurde jedoch im Mittelalter 
 eingeführt, um der Verweltlichung des Klerus entgegenzuwirken. 
 
-# Widerspricht Timotheus dem Zölibat?
+# Ist der Zölibat unbiblisch?
 
 Aus evangelischen, aber auch modernistisch-"katholischen"
 Kreisen kommt immer wieder der Ruf, das Zölibat abzuschaffen,
