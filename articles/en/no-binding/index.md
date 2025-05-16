@@ -272,3 +272,10 @@ get a lot of pushback, I'd love to have more friends at Mass, etc. I am human to
 But I cannot overlook the elephant in the room and feign a "Unity of the Church" 
 with people who are heretical (nevermind that my local NO is mostly attended by liberal 
 60+ year olds).
+
+```
+{
+    "authors": ["github:fschutt"],
+    "date": "2025-05-17"
+}
+```

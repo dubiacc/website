@@ -149,3 +149,10 @@ Even John XXIII, for all his modernism, added his decree to this chain.
 We ask our readers: do not fall into the abyss of Papolatry on one side, nor into 
 the chasm of private judgment declaring the See vacant on the other. Hold fast to 
 Tradition. The Church of Christ will endure, for the gates of hell shall not prevail against it.
+
+```
+{
+    "authors": ["github:fschutt"],
+    "date": "2025-05-17"
+}
+```
