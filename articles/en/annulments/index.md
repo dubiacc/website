@@ -6,13 +6,15 @@ is only permissible under extremely specific circumstances.
 # Are Annulments Catholic?
 
 It’s a scenario tragically familiar to many Catholic husbands today: your wife, 
-the woman you swore vows with before God, goes off the rails (or vice versa). 
-Infidelity, emotional abuse, financial ruin, or a complete abandonment of his / her duties. 
+the woman you swore vows with before God, starts throwing tantrums (our: your 
+husband starts flirting with women). Infidelity, emotional abuse, financial ruin, 
+or a complete abandonment of his / her duties. 
 
 You’re trying to hold it together for the kids, your job, your sanity, but you're stuck. 
-Secular advice on YouTube screams "take your power back, divorce her!" and the MGTOW 
-group says "see, that's why it's bad to get married in the first place!". So, how does the
-Church answer this problem?
+Secular advice screams "take your power back, divorce her!" and some groups says 
+"See, that's why it's bad to get married in the first place!". How does the Church 
+answer this problem - do we have to just suffer or does the Church permits a 
+"divorce with extra steps"?
 
 ## Does Jesus allow divorce?
 
@@ -64,16 +66,16 @@ breaking the bond), we simply have to contrast Matthew 19:9 with Luke 16:18:
 > -- [Luke 16:18 DRA](https://www.drbo.org/cgi-bin/s?q=Luke+16%3A18&x=0&y=0&b=drb)
 
 So, if an "apolyse" refers to a divortium perfectum, this would "annull" 
-the marriage - then how can it be adultery to mary such an "anulled" woman? St. Paul 
+the marriage - then how can it be adultery to marry such an "anulled" woman? St. Paul 
 distinguishes in 1st Corinthians 7 with his use of "chorizo":
 
 > But if the unbeliever depart (chorizo), let him depart. For a brother or sister is not 
 > under servitude in such cases. But God hath called us in peace.
 >
-> -- [1 Corintians 7:15 DRA](https://www.drbo.org/cgi-bin/s?q=1+Corinthians+7+15&bk=drb)
+> -- [1 Corinthians 7:15 DRA](https://www.drbo.org/cgi-bin/s?q=1+Corinthians+7+15&bk=drb)
 
 Paul therefore allows invalidation of the bond (annullment / chorizo) in mixed marriages, 
-if the non-Catholic partner wants this. The sprit of the law therefore is simple - one 
+if the non-Catholic partner wants this. The spirit of the law therefore is simple - one 
 may not divorce, as this undermines "what God has put together", but one may "put away", or 
 physically separate. 
 
@@ -90,12 +92,11 @@ they should marry" - so, the "Orthodox" argue, "if they don't love each other an
 they should divorce".
 
 This was never the traditional teaching, only after the schism of 1054, Patriarch Alexius I 
-of Constantinople (1025-1043) [stopped suspending priests for blessing remarriages](https://archive.is/wip/zz3cZ), 
-now branding this heretical justification as "traditional Orthodoxy". In addition, in 1086, 
-after the schism of 1054, the rejection of the papacy then led to the "Orthodox" accepting 
+of Constantinople (1025-1043) [stopped suspending priests for blessing remarriages](https://archive.is/wip/zz3cZ). 
+In addition, in 1086, after the schism of 1054, the rejection of the papacy then led to the "Orthodox" accepting 
 the secular rules of the Byzantine Empire, which, of course, allowed divorce. 
 
-Both Presbetyrian and Orthodox heretics therefore undermine the sanctity of marriage, 
+Both Presbyterian and Orthodox heretics therefore undermine the sanctity of marriage, 
 ignoring the spirit of the law in favor of their own personal feeling. The Latin Canon 
 Law is therefore the ONLY one who actually adheres to Jesus' teaching in 
 Luke 16:18 and distinguishes between "putting away / physical separation" (divortium 
@@ -111,7 +112,7 @@ of marriage, leads to an undefinable contract. Before we therefore have to talk
 about marriage, we have to talk about what marriage even is.
 
 Annulments often attack the validity of the marriage itself, based on facts that 
-were only know retroactively ("I didn't know he used to be a cheater before, so he 
+were only known retroactively ("I didn't know he used to be a cheater before, so he 
 tricked me into marrying, therefore not full consent"). However, this does not 
 invalidate the marriage contract, even if it was made with a deceptive 
 person (see "Legitimate Form"). The validity of a marriage, contractually and 
@@ -136,7 +137,7 @@ must be free from any "diriment impediments" (Canons 1067-1080 list specific one
 - No blood relationship (consanguinity) ([Can. 1076](https://canonlaw.ninja/?nums=1076&v=1917))
 - No relationship by marriage affinity ([Can. 1077](https://canonlaw.ninja/?nums=1077&v=1917))
 - No sacred orders ([Can. 1072](https://canonlaw.ninja/?nums=1072&v=1917)) or solemn religious vows ([Can. 1073](https://canonlaw.ninja/?nums=1073&v=1917))
-- No relation by adoption ([Can. 1092]())
+- No relation by adoption ([Canon 1080](https://canonlaw.ninja/?nums=1080&v=1917), [Canon 1059](https://canonlaw.ninja/?nums=1059&v=1917))
 
 Any one of the above invalidates the marriage contract.
 
@@ -183,7 +184,7 @@ Only if the marriage rite would explicitly express that the "marriage" is only t
 > marriage itself, or all right to the conjugal act, or any essential property 
 > of marriage, they contract invalidly.
 >
-> -- [Canon 1086]()
+> -- [Canon 1086](https://canonlaw.ninja/?nums=1086&v=1917)
 
 Later on, we will discuss cases of "I was tricked into marrying him / her", but in 
 general: without explicit conditions, mere disappointment does not invalidate a marriage.
@@ -206,21 +207,18 @@ Catholic.
 For non-Catholics who married civilly, the canonical form does not apply: 
 as the Church does recognize "natural marriages", if the above points (full consent, 
 freedom to marry, procreation, until death do us part) are respected in the form.
-Meaning: a non-Catholic (or a Catholic who was never) who marries outside the 
-Church civilly, then converts later, is validly married, even if the rite wasn't 
-Catholic.
+
+Meaning: a non-Catholic who marries outside the Church civilly, then converts later, 
+is validly married, even if the rite wasn't Catholic.
 
 ## Valid marriages cannot be undone
 
-The primary ends of marriage, which defines the marriage **contract**, is merely 
-procreation. That's it. However, 
-
-If "love" (often confused with "lust" or romantic feelings or emotional 
-fulfillment) or "unity of the spouses" ("you didn't do the dishes enough") 
-is the measure, then marriage becomes invalid the moment feelings 
-fade - or, according to the modernist writings "Theology of the Body" (JPII) isn't 
-being "lived out" to someone's satisfaction. This is a Gnostic redefinition, 
-not a Catholic one.
+The primary end of marriage, which defines the marriage **contract**, is merely 
+procreation. That's it. If secondary ends such as "love" (often confused with "lust" 
+or romantic feelings or emotional fulfillment) or "unity of the spouses" is the measure, then marriage 
+becomes invalid the moment feelings fade - or, according to the modernist writings "Theology of the Body" (JPII) isn't 
+being "lived out" to someone's satisfaction ("you didn't do the dishes enough"). 
+This is a Gnostic redefinition, not a Catholic one.
 
 Obviously, marriage can have secondary ends (romance, love, charity), but, as 
 we see in ["Is Natural Family Planning Catholic?"](/en/nfp), the very moment that
@@ -243,7 +241,7 @@ you are not married to Alex, but also not yet married to Steve.
 
 Error about a quality of the person does not invalidate the marriage, except if it is a 
 lawful condition that was explicitly agreed upon before the wedding and can be proven
-to be false (Canon 1092 §4, "Marriage under condition").
+to be false (Canon 1092 §3, "Marriage under condition").
 
 > A condition once placed and not revoked:
 >
@@ -270,9 +268,9 @@ To give examples for these cases, that could invalidate a marriage:
 Additionally, one can marry under a given condition, which has to be explicit, known before 
 the marriage, proven to be false and grave enough that one would not have given consent, if known:
 
-- "I marry you if that you have never been married before"
-- "I marry you if that you are a citizen of this country"
-- "I marry you if that you don't have any debts" (note: has to be explicit and grave debts)
+- "I marry you if you have never been married before"
+- "I marry you if you are a citizen of this country"
+- "I marry you if you don't have any debts" (note: has to be explicit and grave debts)
 - "I marry you if you are a virgin" (has to explicitly stated and proven for invalidity)
 
 These conditions, especially §4, must be placed on the consent at the point
@@ -318,18 +316,18 @@ in Catholic teaching, as men are under no obligation to submit to women:
 
 > Thou shalt be under thy husband's power, and he shall have dominion over thee.
 >
-> -- Genesis 3:16
+> -- [Genesis 3:16](https://www.drbo.org/cgi-bin/s?q=Genesis+3%3A16&x=0&y=0&b=drb&t=0)
 
 Therefore, any marriage annulled or separated under the pretext of "my husband 
 shows no mutual submission" is still valid. The modernist subversion of "mutual 
 submission" (mutual charity, loving the spouse as one flesh), causes chaos, but 
 this problem seems to be known:
 
-> So many females in these days who endeavor to rule over their husbands, 
-> but perhaps the fault is in the men, who do not know how to retain their 
-> superiority.
+> And would that there were not so many females in these days, who endeavour 
+> to rule over their husbands; but perhaps the fault is in the men, who do 
+> not know how to retain their superiority. 
 >
-> -- St. Robert Bellarmine, 1507
+> -- [St. Robert Bellarmine](https://en.wikipedia.org/wiki/Robert_Bellarmine) -- [The Art of Dying Well, ch. XV](https://archive.is/dY8MU#selection-953.192-953.381)
 
 ## Separation courts
 
@@ -368,7 +366,7 @@ allow to "put her away" (separate) for "fornication": (πορνεία - porneia,
 for serious sexual misconduct).
 
 Nowhere does Jesus even mention remarriage, disproving both the heretical "Orthodox" 
-line of thinking and the modernist-Catholic "annullments". The modern reinterpretation 
+line of thinking and the modernist-Catholic "annulments". The modern reinterpretation 
 that "fornication" means "invalidity" is a novelty designed to justify the annulment explosion.
 
 So, the Church's traditional and still existing (though largely unused) recourse towards
@@ -397,17 +395,16 @@ contract, in true charity towards both parties.
 as this would be against the command of Jesus. However, it does allow for "separation 
 from bread and board" (while the bond remains).
 
-## The Bishops duty
+## The Bishop's duty
 
 Under normal circumstances, local ordinary (the bishop) has a solemn duty here 
 (note: as diocesan bishops are now incredibly modernist, talk to a traditional 
 bishop, [see our list](/resistance#bishops)).
 
-> The Christian faithful can legitimately vindicate and defend the rights 
-> which they possess in the Church in the competent ecclesiastical forum 
-> according to the norm of law.
+> Anyone can act in a trial (or bring an action in court), unless prohibited 
+> by the sacred canons; a respondent, however, legitimately summoned, must respond.
 >
-> - Canon 221 §1, 1917 Code of Canon Law
+> -- [Canon 1646](https://canonlaw.ninja/?nums=1646&v=1917)
 
 You have a right to have your case heard. A husband (or wife) facing an 
 impossible situation due to the other's grave fault should petition the 
@@ -457,8 +454,8 @@ provision for unlivable marriages. It is time to bring back the separation court
 demand that our shepherds apply true Catholic teaching, not modern, feminized, or emotionally-driven 
 substitutes. 
 
-This is how you truly "take your power back" as a Catholic man, "maintain your frame" within 
-God's law, and fight for your family and your Faith.
+This is how you truly "take your power back" as a Catholic man - to hold on strong, but always
+within God's law - and fight for justice for your family and your Faith.
 
 ```
 {
