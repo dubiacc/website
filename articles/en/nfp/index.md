@@ -142,21 +142,20 @@ with her "engaged boyfriend" (remember, for modernists, even NFP is seen as hard
 
 > NFP (for avoiding pregnancy) is the complete opposite of a woman's natural 
 > sex drive cycle. Basically I would not be able to have sex when I most want it 
-> [note: on fertile days, women usually have a higher sex drive] and only be able 
-> to when I least want it.
+> [editorial note: on fertile days, women usually have a higher sex drive] and 
+> only be able to when I least want it.
 >
 > [...] 
 > 
-> After starting to track my cervical mucus, I felt a genuine wave of sadness come over me, 
-> like I am accepting a death sentence (to my sexuality), like I am pretending to want to do 
-> something I truly don't.
+> After starting to track my cervical mucus, I felt a genuine wave of sadness 
+> come over me, like I am accepting a death sentence (to my sexuality), like 
+> I am pretending to want to do something I truly don't.
 >
 > -- ["nfp" topic on r/Catholicism](https://archive.is/Gf2ec#selection-1413.2-1413.206)
 
-Now, obviously she here complains from the modernist perspective about "not being able to 
-live out my sexuality" and complaining about having to get pregnant, because living yourself 
-is the number one goal of modernists -- but even she recognizes that it goes directly against 
-her nature as a woman. 
+Now, obviously she here complains from the modernist perspective not being able to use 
+regular contraception -- but even she recognizes that it goes directly against her 
+nature as a woman to have sex on .
 
 This is the result of what you eventually end up with when practicing NFP: tracking mucus, 
 Marquette method, temperatures, ovulation cycles, etc. - all of that effort in order to 
