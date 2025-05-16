@@ -168,7 +168,7 @@ of the act from its God-given end. Intentional NFP, as practiced above, is most 
 intentional contra-ception. 
 
 The softness on NFP by Pius XII later on led to his successor Paul VI getting really hard 
-pressed on justifying hist teaching against contraception: if chronological contraception is allowed, 
+pressed on justifying his teaching against contraception: if chronological contraception is allowed, 
 then there is no moral difference to artifical contraception, since the *intention* is the same.
 
 NFP substitutes scientific knowledge and technique for the virtue of chastity and 
