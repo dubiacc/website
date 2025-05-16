@@ -10,7 +10,7 @@ The liberal view dismisses the Middle Ages as the "Dark Ages" — a period of ig
 
 In reality, the Middle Ages represented the high-water mark of Christian civilization—a society ordered around Christ as its sovereign. While far from perfect (as no human society can be), medieval Christendom recognized divine authority as the foundation of all legitimate human authority. This wasn't merely theoretical; it manifested in institutions, laws, arts, economics, and social structures that reflected and reinforced Christian principles.
 
-The medieval person, whether peasant or noble, lived within a coherent worldview. Sin existed abundantly (as Dante's _Divine Comedy_ vividly illustrates), but the recognition of sin as sin preserved moral clarity. Man's fallen nature was acknowledged without being celebrated or redefined as virtue. Catholicism provided the intellectual and spiritual architecture that unified European civilization, establishing social harmony through a shared understanding of truth, goodness, and beauty.
+The medieval person, whether peasant or noble, lived within a coherent worldview. Sin existed abundantly (as Dante's *Divine Comedy* vividly illustrates), but the recognition of sin as sin preserved moral clarity. Man's fallen nature was acknowledged without being celebrated or redefined as virtue. Catholicism provided the intellectual and spiritual architecture that unified European civilization, establishing social harmony through a shared understanding of truth, goodness, and beauty.
 
 The medieval conception of authority differed fundamentally from modern notions. Political power descended from God through proper channels (most visibly in the sacred anointing of kings), not upward from popular sovereignty. This divine investiture of authority created stability and legitimacy that transcended the personal qualities of individual rulers. When a king was anointed by the Archbishop, people witnessed the visible bestowal of divine authority—even if the king himself was flawed—and the social order functioned accordingly.
 
@@ -52,7 +52,7 @@ Far from bringing light, the Enlightenment represented the methodical extinguish
 
 The Enlightenment's intellectual rebellion completed the transition from acknowledging religious plurality as a regrettable fact to embracing it as a positive principle. Religious neutrality became the new orthodoxy, with traditional Christianity increasingly marginalized from public life. What began in the Peace of Westphalia as a pragmatic accommodation of religious division evolved into a philosophical justification for religious indifferentism.
 
-This period witnessed the rise of Freemasonry, deism, rationalism, and religious skepticism—all directly targeting Catholic doctrine and authority. The "philosophes" deliberately undermined traditional Christian morality and social teaching while promoting a naturalistic worldview incompatible with revealed truth. This wasn't progress but regress—not enlightenment but darkening.
+This period witnessed the rise of Freemasonry, deism, rationalism, and religious skepticism—all directly targeting Catholic doctrine and authority. These "philosophies" deliberately undermined traditional Christian morality and social teaching while promoting a naturalistic worldview incompatible with revealed truth. This wasn't progress but regress—not enlightenment but darkening.
 
 ## The French Revolution
 

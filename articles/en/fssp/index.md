@@ -52,8 +52,8 @@ Church there is no Salvation", we have to look at "Who belongs to the Catholic C
 
 What is certain, is that there is no salvation for people who knowingly sign off on heresy. 
 This applies directly to priests of the FSSP, ICKSP, and any who operate under the banner 
-of "Ecclesia Dei" or celebrate the Novus Ordo Missae while endorsing the Council that 
-birthed its errors.
+of "Ecclesia Dei" or celebrate the Novus Ordo Missae while endorsing or being silent on 
+the Council that birthed its errors.
 
 > I know thy works, that thou art neither cold, nor hot. I would thou wert cold, or hot.
 > But because thou art lukewarm, and neither cold, nor hot, I will begin to vomit thee 
@@ -75,7 +75,7 @@ True Mass (which simply expresses the faith).
 > is not destined for any other purpose. 
 > 
 > The Holy Roman Church is the mother and mistress of all truth: Mater et Magistra omnium 
-> ecclesiarum magistra veritatis. And if is just that for which we ask. At our baptism we 
+> ecclesiarum magistra veritatis. And it is just that for which we ask. At our baptism we 
 > asked for it from the Church. Our godparents asked for it in our name when we were carried 
 > to the baptismal font. 
 > 
@@ -88,7 +88,7 @@ True Mass (which simply expresses the faith).
 > those responsible for that faith - we ask them: "Preserve the Faith for us, 
 > give us the Faith. That Catholic Faith is what we want. We want no other.”
 >
-> "Why do you ask for Faith?" , the priest said to our godparents. "We want Faith 
+> "Why do you ask for Faith?," the priest said to our godparents. "We want Faith 
 > because Faith brings us to Eternal Life."
 >
 > Why are we here below unless to gain Eternal Life? We have no other purpose here 
@@ -99,7 +99,7 @@ True Mass (which simply expresses the faith).
 > in the Church, the Holy See and the Vatican, have been turning away, turning us 
 > away from the Catholic Faith and have become the friends of our enemies.
 > 
-> -- [Archbishop Lefevbre: Sermon of the 1988 Consecrations](https://archive.is/Jj98c#selection-3823.1-3835.571)
+> -- [Abp. Lefebvre](https://en.wikipedia.org/wiki/Marcel_Lefebvre) -- [Sermon of the 1988 Consecrations](https://archive.is/Jj98c#selection-3823.1-3835.571)
 
 Being "outside of the Catholic Church" therefore doesn't mean to be excommunicated from 
 people who believe that man should be the center of everything: because such an excommunication
@@ -130,7 +130,7 @@ or will you plead, "I obeyed the pope, even when he led us astray"?
 > 
 > I will not be an adulterer. I will keep my Catholic Faith!
 >
-> -- [Archbishop Lefevbre: Sermon of the 1988 Consecrations](https://archive.is/Jj98c#selection-3863.1-3863.609)
+> -- [Abp. Lefebvre](https://en.wikipedia.org/wiki/Marcel_Lefebvre) -- [Sermon of the 1988 Consecrations](https://archive.is/Jj98c#selection-3863.1-3863.609)
 
 ## The Novus Ordo: Fruit of a Poisoned Tree
 
@@ -142,7 +142,7 @@ by Vatican II.
 > and the New Rite is against the Divine Law. Therefore, I'm not allowed to
 > celebrate it. I commit a sin if I celebrate it.
 >
-> -- [Fr. Gregory Hesse: On the SSPX, FSSP, ICKSP and sedevacantists](https://youtu.be/tjckUEBkkBI?t=2170)
+> -- [Fr. Gregorius Hesse]() -- [On the SSPX, FSSP, ICKSP and sedevacantists](https://youtu.be/tjckUEBkkBI?t=2170)
 
 The New Mass, designed with the explicit intention of appealing to Protestants, necessarily 
 waters down or excises Catholic doctrine, particularly concerning the sacrificial nature of 
@@ -161,7 +161,7 @@ His 1974 Declaration was a line in the sand:
 > neo-Modernist and neo-Protestant tendencies which were clearly evident in the
 > Second Vatican Council and, after the Council, in all the reforms which issued from it.
 >
-> -- [Lefevbre, M., Declaration of November 21, 1974]()
+> -- [Abp. Lefebvre](https://en.wikipedia.org/wiki/Marcel_Lefebvre) -- [Declaration of November 21, 1974]()
 
 His decision to consecrate bishops in 1988, an act of sheer necessity, was 
 born from the realization that dialogue with modernist Rome was a trap:
@@ -172,30 +172,48 @@ born from the realization that dialogue with modernist Rome was a trap:
 > will help us to protect ourselves against the spirit of Vatican II and the
 > spirit of Assisi.
 >
-> -- [Letter to Pope John Paul II, June 2, 1988]()
+> -- [Abp. Lefebvre](https://en.wikipedia.org/wiki/Marcel_Lefebvre) -- [Letter to Pope John Paul II, June 2, 1988]()
 
 The same story can be told about the Resistance: After the SSPX had to resist 
 Rome, Bishop Williamson had to resist the other SSPX bishops, after Bishop Fellay
-started to try to "unite" the SSPX back with Rome under the pretext of a practical
+started to try to "reunite" the SSPX with Rome under the pretext of a practical
 agreement in 2012. As neither Pope Francis or Pope Benedict condemned the errors 
-of Vatican II and restored order in the Church: God first, man second. But instead,
-they doubled down on their errors with a lot of elaborate or less elaborate dialectic.
+of Vatican II and restored order in the Church, we cannot make practical agreements 
+with people who put man first, God second. Instead of repenting, Rome doubled down 
+on their error - with a lot of elaborate or less elaborate dialectic.
 
-See also: [The SSPX / Resistance split: A Timeline](/en/resistance-timeline)
+See also: [What is the SSPX Resistance?](/en/resistance-timeline)
 
 ## FSSP: Controlled Opposition and Fatal Compromise
 
 The FSSP was not born from Rome's love for Tradition but from its desire to neutralize 
 it. As Bishop Williamson bluntly stated, the FSSP became an opportunity for Conciliar Rome:
 
-> To set up under Rome's control an alternative 'Traditional' movement 
-> to keep souls away from the real Traditional movement henceforth 
-> 'excommunicated' and so out of Rome's control...
+> Conciliar Rome welcomed them with open arms. Because it had converted to 
+> Tridentinism? Of course not. 
+> 
+> Rather, it saw in these refugees from the Society of St. Plus X an opportunity 
+> to set up under Rome's control an alternative "Traditional" movement to keep 
+> souls away from the real Traditional movement henceforth "excommunicated" and 
+> so out of Rome's control, except by the silence and marginalisation, or calumny 
+> and scorn, which have constituted Rome's treatment of the Society ever since. 
+> 
+> However, while allowing these Tridentinists to say only the old Mass, Rome required 
+> as a condition for its acceptance of them that they recognize the "orthodoxy and validity" 
+> of Pope Paul's New Mass. Which these Tridentinists did. So Rome now had a docile 
+> decoy to pull priests and people, as it hoped, away from the uncompromising 
+> Society of St. Plus X.
 >
-> -- [Bishop Williamson: Letter of December 1999]()
+> -- [Bishop Williamson](https://en.wikipedia.org/wiki/Richard_Williamson_(bishop)) -- [Letter of December 1, 1999](https://archive.is/rO4OR#selection-263.0-220.34)
 
 This is not conspiracy; it's strategy. Archbishop Gänswein confirmed Benedict XVI's motive 
-for *Summorum Pontificum* being "to get them away from [Archbishop Marcel] Lefebvre." 
+for *Summorum Pontificum* being "to get them away from [Archbishop Marcel] Lefebvre":
+
+> I believe that Pope Benedict read this motu proprio (Traditiones Custodes) with pain in his heart 
+> because he wished [via SP] to help those who wanted to find inner peace, also 
+> the liturgical peace, and to get them away from Lefebvre.
+>
+> -- [Abp. Georg Gänswein, secretary of Benedict XVI](https://de.wikipedia.org/wiki/Georg_G%C3%A4nswein) -- [Interview with Die Tagespost, 2023](https://archive.is/x3hpV#selection-1177.0-1180.0)
 
 Without the SSPX, there would be no FSSP. The FSSP exists as **controlled opposition**, designed 
 to offer a veneer of tradition while ensuring loyalty to the Conciliar revolution, lest people 
@@ -212,7 +230,7 @@ accept and promote the New Mass and to be integrated into the post-Conciliar chu
 > They are formally not Catholics... **Formally, they're in heresy** because they sign and 
 > affirm, officially, formally, objectively, heresy, which means Vatican II.
 >
-> -- [Hesse, G.: On the SSPX, FSSP, ICKSP and sedevacantists]()
+> -- [Fr. Gregorius Hesse](https://archive.is/PpbnV) -- [Talks: On the SSPX, FSSP, ICKSP and sedevacantists](https://youtu.be/tjckUEBkkBI?t=1986)
 
 This also explains why this site does not link to Latin Masses "in communion"
 with the modernist popes: Because all these communities (and there are lots of them),
@@ -243,10 +261,15 @@ It is a choice between the Eternal Rome of the Apostles, Martyrs, and Saints, an
 Neo-Modernist Rome that worships at the altar of man. Archbishop Lefebvre's stance was clear: 
 obedience to God and His immutable Truth comes before obedience to men who betray that Truth.
 
-> The only attitude of faithfulness to the Church and Catholic doctrine,
-> in view of our salvation, is a categorical refusal to accept this Reformation.
+> This reformation, deriving as it does from Liberalism and Modernism, is entirely 
+> corrupted; it derives from heresy and results in heresy, even if all its acts 
+> are not formally heretical. It is therefore impossible for any conscientious 
+> and faithful Catholic to espouse this reformation and to submit to it in any way whatsoever.
+> 
+> The only attitude of fidelity to the Church and to Catholic doctrine 
+> appropriate for our salvation is a categorical refusal to accept this reformation.
 >
-> -- [Declaration of November 21, 1974]()
+> -- [Abp. Lefebvre](https://en.wikipedia.org/wiki/Marcel_Lefebvre) -- [Declaration of November 21, 1974](https://archive.is/DMoEX#selection-327.0-342.0)
 
 This is not a path of disobedience but of supreme obedience to Christ the King. Those who 
 choose the FSSP, ICKSP, or any "Ecclesia Dei" group, believing they can reform from within 
@@ -254,15 +277,16 @@ while accepting the Conciliar premises, are deluding themselves.
 
 They have swallowed the poison pill of Vatican II in exchange for a Potemkin village of 
 tradition. The true fight for the Faith requires courage, clarity, and an unwillingness 
-to compromise with the revolution that seeks to destroy it. I care about saying and teaching 
-the truth, even if I have to be labeled "disobedient," "schismatic," and whatnot. 
+to compromise with the revolution that seeks to destroy it.
 
 If the FSSP truly stood for tradition, they would be standing with those who resist, 
 not appeasing those who dismantle. While they offer the Traditional Latin Mass, their 
-"full communion" (a term invented by the modernist pope Benedict XVI) with post-Conciliar 
+"full communion" (a term introduced by the modernist pope Benedict XVI) with post-Conciliar 
 Rome is built on a catastrophic compromise: the acceptance of Vatican II's doctrinal 
 deviations in exchange to keep the marble altars and nice churches. 
 
 And this is why we, the dubia.cc editorial team, have to advise against attending the Masses 
 of the FSSP / ICKSP or the Novus Ordo, even for pastoral reasons: If the goal of attending
 a Mass is to get sanctifying grace from God, being at an adulterous FSSP Mass is a waste of time.
+We care about saying and teaching the truth, even if we have to be falsely labeled 
+"disobedient", "schismatic" and other terms.
