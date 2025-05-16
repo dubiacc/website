@@ -95,8 +95,8 @@ up the claim that "NFP is lawful given sufficient reason", who in turn cites "co
 of theologians" for his justification:
 
 > Deliberately to limit the use of marital relations exclusively to the sterile periods 
-> **in order to avoid conception** (i.e., to practice periodic continence or rhythm) is, according 
-> to the common teaching of theologians, **morally lawful** in actual practice if there is mutual 
+> in order to avoid conception (i.e., to practice periodic continence or rhythm) is, according 
+> to the common teaching of theologians, morally lawful in actual practice if there is mutual 
 > consent, sufficient reason and due safeguards against attendant dangers.
 >
 > -- [Fr. Halligan, cited by Bp. Pivarunas](https://archive.is/6sktD#selection-737.56-737.399)
@@ -109,8 +109,8 @@ given by the Sacred Penintentiary in 1853:
 >  Are those who do not use the marriage right except on such days to be disturbed, 
 > especially if they have legitimate reasons for abstaining from the conjugal act?”
 > 
-> [A.]: Those spoken of in the request [note: regarding scruples about using "rhythm"]
-> are not to be disturbed, **providing that they do nothing to impede conception**.
+> [A.]: Those spoken of in the request are not to be disturbed, 
+> **providing that they do nothing to impede conception**.
 >
 > -- [Sacred Apostolic Penitentiary, 1853](https://archive.is/6sktD#selection-607.0-612.0)
 
@@ -127,10 +127,10 @@ even though modern "Catholics" even think they're hardcore traditionalists
 because they use NFP rather than condoms:
 
 > Such wholesome instruction and religious training in regard to Christian marriage will 
-> be quite different from that **exaggerated physiological education** by means of which, 
+> be quite different from that *exaggerated physiological education* by means of which, 
 > in these times of ours, some reformers of married life make pretense of helping those 
 > joined in wedlock, laying much stress on these physiological matters, in which 
-> **is learned rather the art of sinning in a subtle way than the virtue of living chastely**.
+> *is learned rather the art of sinning in a subtle way than the virtue of living chastely*.
 >
 > -- [Casti Conubii, 108](https://archive.is/boRjM#selection-1127.6-1127.429)
 
@@ -151,21 +151,17 @@ with her "engaged boyfriend" (remember, for modernists, even NFP is seen as hard
 > like I am accepting a death sentence (to my sexuality), like I am pretending to want to do 
 > something I truly don't.
 >
-> [...] 
-> 
-> If I get pregnant unexpectedly that is totally ok, but it won't be a surprise with NFP.
->
 > -- ["nfp" topic on r/Catholicism](https://archive.is/Gf2ec#selection-1413.2-1413.206)
 
 Now, obviously she here complains from the modernist perspective about "not being able to 
 live out my sexuality" and complaining about having to get pregnant, because living yourself 
-is the number one goal of modernists, but even she recognizes that it goes directly against 
+is the number one goal of modernists -- but even she recognizes that it goes directly against 
 her nature as a woman. 
 
 This is the result of what you eventually end up with when practicing NFP: tracking mucus, 
 Marquette method, temperatures, ovulation cycles, etc. - all of that effort in order to 
 **intentionally prevent** Gods will - and Bishop Pivarunas still argues that this elaborate 
-scheme is "not a deliberate frustration" and does "not impede contraception"?!
+scheme is not a "deliberate frustration" and does not "impede contraception"?!
 
 This simply flies in the face of Pius XI's warning: whether the frustration is achieved 
 chemically, mechanically, or chronologically is irrelevant to the intrinsic disordering 
@@ -202,8 +198,9 @@ natural end is a form of "idolatry of the flesh" ([CC, 107](https://archive.is/b
 The conjugal act is only "honest wedlock" when ordered primarily to offspring.
 
 St. Augustine had already condemned the Manicheans for the same practice centuries earlier,
-although their reasoning was only slightly different, he still foresaw the change from 
-procreation to lust:
+although their reasoning was only slightly different (wanting to contracept since they saw 
+the "Divine Light" being trapped in human flesh, which they taught, was imprisonment and inherently evil) - 
+still, he foresaw their practice of observing cycles being rooted in passions:
 
 > Is it not you who hold that begetting children, by which souls are confined in flesh, 
 > is a greater sin than cohabitation? Is it not you who used to counsel us to observe 
