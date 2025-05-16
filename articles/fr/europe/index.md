@@ -4,8 +4,6 @@ On nous a enseigné à l'école que les soi-disant Lumières ont finalement vain
 
 L'histoire sert à la fois de miroir et de prophète — reflétant notre passé tout en prédisant notre avenir. Pourtant, dans le paysage éducatif actuel, l'histoire a été délibérément marginalisée. Ce n'est pas un accident. Une compréhension correcte de l'histoire révèle des schémas qui remettent en question les présupposés modernes et menacent les idéologies contemporaines. Cet article examine l'histoire européenne d'un point de vue catholique traditionnel, retraçant ce qui ne peut être décrit que comme un détrônement méthodique du Christ de la civilisation occidentale — un processus s'étendant sur des siècles qui a conduit à notre crise spirituelle et culturelle actuelle.
 
-Deux interprétations de l'histoire européenne existent en opposition frappante : le récit libéral du "progrès" supposé des ténèbres vers les lumières, et la compréhension catholique du déclin d'une civilisation christocentrique vers une civilisation de chaos et de pauvreté spirituelle. En examinant les tournants historiques clés à travers ces perspectives contrastées, nous pouvons mieux comprendre notre situation actuelle et le chemin vers une restauration authentique.
-
 ## Le Moyen Âge
 
 La vision libérale rejette le Moyen Âge comme les "Âges Sombres" — une période d'ignorance, de superstition et de tyrannie. Selon cette perspective, l'Europe médiévale était intellectuellement stagnante, opprimée par l'Église catholique, et gouvernée par des monarques despotiques qui piétinaient les droits et la dignité humaine. Cette caractérisation sert un récit qui positionne la modernité comme le libérateur de l'humanité de l'asservissement religieux et monarchique.

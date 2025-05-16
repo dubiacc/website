@@ -4,8 +4,6 @@ We were told in school that the so-called Enlightenment finally overcame the med
 
 History serves as both mirror and prophet — reflecting our past while forecasting our future. Yet in today's educational landscape, history has been deliberately marginalized. This is no accident. A proper understanding of history reveals patterns that challenge modern assumptions and threaten contemporary ideologies. This article examines European history from a traditional Catholic perspective, tracing what can only be described as a methodical dethroning of Christ from Western civilization—a process spanning centuries that has led to our current spiritual and cultural crisis.
 
-Two interpretations of European history exist in stark opposition: the liberal narrative of "progress" from supposed darkness to enlightenment, and the Catholic understanding of decline from a Christ-centered civilization to one of chaos and spiritual poverty. By examining key historical turning points through these contrasting lenses, we can better understand our present predicament and the path to authentic restoration.
-
 ## The Middle Ages
 
 The liberal view dismisses the Middle Ages as the "Dark Ages" — a period of ignorance, superstition, and tyranny. According to this perspective, medieval Europe was intellectually stagnant, oppressed by the Catholic Church, and ruled by despotic monarchs who trampled human rights and dignity. This characterization serves a narrative that positions modernity as the liberator of humanity from religious and monarchical bondage.
