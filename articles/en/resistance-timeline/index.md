@@ -181,7 +181,7 @@ The Resistance emerged not as rebels, but as the true inheritors of Archbishop
 Lefebvre's work. While the SSPX leadership betrayed their founder's mission 
 through compromise, the Resistance maintained his unwavering stance against modernism.
 
-[Search Resistance Masses](/priests)
+[Search Resistance Masses](/en/resistance)
 
 ```
 {

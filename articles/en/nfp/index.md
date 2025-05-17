@@ -104,12 +104,12 @@ of theologians" for his justification:
 Fr. Halligan is simply wrong here, as his teaching directly contradicts the answer 
 given by the Sacred Penintentiary in 1853:
 
-> [Q.]: Certain married couples, relying on the opinion of learned physicians, are 
+> Q: Certain married couples, relying on the opinion of learned physicians, are 
 > convinced that there are several days each month in which conception cannot occur.
 >  Are those who do not use the marriage right except on such days to be disturbed, 
 > especially if they have legitimate reasons for abstaining from the conjugal act?”
 > 
-> [A.]: Those spoken of in the request are not to be disturbed, 
+> A: Those spoken of in the request are not to be disturbed, 
 > **providing that they do nothing to impede conception**.
 >
 > -- [Sacred Apostolic Penitentiary, 1853](https://archive.is/6sktD#selection-607.0-612.0)
@@ -210,12 +210,12 @@ still, he foresaw their practice of observing cycles being rooted in passions:
 >
 > -- [St. Augustine](https://en.wikipedia.org/wiki/Augustine_of_Hippo) -- [On the Morals of the Manicheans, ch. 18, p. 65](https://archive.is/f9mb5#selection-2839.201-2855.152)
 
-This completely obliterates the idea that "using the Marquette method to avoid conception is
-traditional Catholic teaching" is simply laughable, at least since 388 AD - if Augustine and 
-Pius XI would truly "allow NFP", why do they both write about continence as an alternative - 
-and not just "if a couple cannot contain themselves, they should simply watch the days of the 
-menses"? It is obvious that only licit and Catholic option is continence, not calculated 
-avoidance, justified by out-of-context and out-of-meaning quotes of the 20th century.
+The idea that "using the Marquette method to avoid conception is traditional Catholic teaching" 
+is simply laughable, at least since 388 AD - if Augustine and Pius XI would truly "allow NFP", 
+why do they both write about continence as an alternative - and not just "if a couple cannot 
+contain themselves, they should simply watch the days of the menses"? It is obvious that only 
+licit and Catholic option is continence, not calculated avoidance, justified by out-of-context 
+and out-of-meaning quotes of the 20th century.
 
 ### Rejection of Divine providence
 
@@ -256,7 +256,7 @@ to a subjective *covenant* based on feelings:
 > -- [Pius XI](https://en.wikipedia.org/wiki/Pope_Pius_XI) -- [Casti Conubii, 78](https://archive.is/boRjM#selection-887.5-887.357)
 
 Notably, this heretical teaching is even espoused by the Eastern "Orthodox", see 
-[Are Annulments Catholic?](/annulments).
+[Are Annulments Catholic?](/en/annulments).
 
 Augustine goes even further, after condenming the Manicheans for their mistress-wives:
 

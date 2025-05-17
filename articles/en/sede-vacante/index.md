@@ -2,7 +2,7 @@
 
 We live in times of unparalleled confusion and scandalous popes. On the other side 
 of the aisle stand those that seem to think we must follow the pope always and 
-without questioning (hyperpapalists, see [How much obedience do we owe the Pope?](/obedience)) 
+without questioning (hyperpapalists, see [How much obedience do we owe the Pope?](/en/obedience)) 
 or those who seem to think that the errors of Vatican II have to be followed. 
 
 Others fall into the opposite extreme: Sedevacantism, the claim that the Chair of 

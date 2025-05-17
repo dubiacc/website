@@ -243,7 +243,7 @@ pastoral reasons to abstain from the Novus Ordo Mass.
 
 The obligation to keep Sunday holy is best fulfilled by seeking out the 
 Traditional Latin Mass from a priest that is not putting you in spiritual danger
-and uncompromisingly preaches about the full Catholic Faith - [see this map](/resistance),
+and uncompromisingly preaches about the full Catholic Faith - [see this map](/en/resistance),
 as this undoubtedly offers true worship and sanctifying grace. 
 
 If this is unavailable, it is far more pleasing to God to sanctify the Sunday 
@@ -256,7 +256,7 @@ texts for every day).
 While it might seem contradictory to get grace by staying away from the Blessed
 Sacrament: participating in a rite that is riddled with scandal and heresy and is 
 a danger to faith is not Catholic, nor can the Church obligate one to (see 
-[What obedience do we owe the Pope?](/obedience)).
+[What obedience do we owe the Pope?](/en/obedience)).
 
 It is not the goal of the editorial team to prevent anyone from getting grace:
 the opposite! However, Catholics have to be aware that not every "sacrifice" nowadays

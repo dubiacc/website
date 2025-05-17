@@ -1934,6 +1934,7 @@ fn head(
     title_id: &str,
     meta: &MetaJson,
 ) -> Result<String, String> {
+    let license = include_str!("../../templates/license.html");
     let darklight = include_str!("../../templates/darklight.html");
     let head_css = include_str!("../../static/css/head2.css").to_string();
     let toc = include_str!("../../static/css/TOC.css");
@@ -1953,10 +1954,13 @@ fn head(
 
     let title = get_title(lang, a, meta)?;
     let description = get_description(lang, a, meta)?.replace("\"", "'");
+    let og_description = description.replace("<p>", "").replace("</p>", "").replace("&lt;p&gt;", "").replace("&lt;/p&gt;", "");
+
     let drc = format!("<style>{}</style>", generate_dropcap_css(a));
     let page_href = get_root_href().to_string() + "/" + lang + "/" + title_id;
 
     let mut head = include_str!("../../templates/head.html").to_string();
+    head = head.replace("<!-- LICENSE_FULL -->", license);
     head = head.replace("<!-- DARKLIGHT_STYLES -->", &darklight);
     head = head.replace("<!-- CRITICAL_CSS -->", &critical_css_2);
     head = head.replace("<!-- DROPCAP_CSS -->", &drc);
@@ -1967,6 +1971,7 @@ fn head(
 
     head = head.replace("$$TITLE$$", &title);
     head = head.replace("$$DESCRIPTION$$", &description);
+    head = head.replace("$$OG_DESCRIPTION$$", &og_description);
     head = head.replace("$$TITLE_ID$$", title_id);
     head = head.replace("$$KEYWORDS$$", &a.tags.join(", "));
     head = head.replace("$$DATE$$", &a.date);

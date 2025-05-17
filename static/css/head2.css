@@ -33,7 +33,7 @@
 }
 
 :root {
-    --GW-image-single-black-star-svg: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz1cImh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnXCIgdmlld0JveD1cIjAgMCAxMCAxMFwiPjxwYXRoIGQ9XCJNIDUsMCBDIDQsNCA0LDQgMCw1IDQsNiA0LDYgNSwxMCA2LDYgNiw2IDEwLDUgNiw0IDYsNCA1LDAgWlwiLz48L3N2Zz4=");
+    --GW-image-single-black-star-svg: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMCAxMCI+PHBhdGggZD0iTSA1IDAgQyA2IDQgNiA0IDEwIDUgQSA1IDUgMCAwIDAgNSAwIHogTSA1IDAgQSA1IDUgMCAwIDAgMCA1IEMgNCA0IDQgNCA1IDAgeiBNIDAgNSBBIDUgNSAwIDAgMCA1IDEwIEMgNCA2IDQgNiAwIDUgeiBNIDUgMTAgQSA1IDUgMCAwIDAgMTAgNSBDIDYgNiA2IDYgNSAxMCB6Ii8+PC9zdmc+");
     --GW-serif-font-stack: "Source Serif Pro", "Apple Garamond", "Baskerville", "Libre Baskerville", "Droid Serif", "Times New Roman", "Times", serif;
     --GW-sans-serif-font-stack: "Lucida Sans Unicode", "Helvetica", "Trebuchet MS", sans-serif;
     --GW-monospaced-font-stack: "IBM Plex Mono", "Liberation Mono", "Consolas", "Courier", monospace;
