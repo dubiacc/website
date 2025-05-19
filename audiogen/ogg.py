@@ -47,23 +47,27 @@ def transcribe_audio_with_elevenlabs(
             "timestamps_granularity": "word"  # Get word-level timestamps
         }
         
+                        
+        # Save raw JSON response
+        base_filename = os.path.basename(audio_path)
+        filename_no_ext = os.path.splitext(base_filename)[0]
+        json_path = os.path.join(output_dir, f"{filename_no_ext}_transcription.json")
+        text_path = os.path.join(output_dir, f"{filename_no_ext}_transcription.txt")
+
+        if os.path.exists(json_path) or os.path.exists(text_path):
+            return "" # success
+
         try:
             log("Sending request to ElevenLabs API...")
             response = requests.post(API_URL, headers=headers, data=data, files=files)
             
             if response.status_code == 200:
                 result = response.json()
-                
-                # Save raw JSON response
-                base_filename = os.path.basename(audio_path)
-                filename_no_ext = os.path.splitext(base_filename)[0]
-                json_path = os.path.join(output_dir, f"{filename_no_ext}_transcription.json")
-                
+
                 with open(json_path, 'w', encoding='utf-8') as f:
                     json.dump(result, f, indent=2, ensure_ascii=False)
                 
                 # Save plain text transcription
-                text_path = os.path.join(output_dir, f"{filename_no_ext}_transcription.txt")
                 with open(text_path, 'w', encoding='utf-8') as f:
                     f.write(result.get("text", ""))
                 

@@ -35,12 +35,13 @@
 
     --GW-body-max-width: 800px;
     --GW-body-side-padding: 20px;
+    --list-left-padding: 0em;
 }
 @media all and (max-width: 649px) {
     :root {
         --GW-body-text-font-size: 18px;
-
         --GW-body-side-padding: 15px;
+        --list-left-padding: 0em;
     }
 }
 
@@ -1353,7 +1354,7 @@ blockquote,
 
 .list {
     --text-alignment: left;
-    --list-left-padding: 2.5em;
+    --list-left-padding: 0em;
 
     margin: 0;
     padding: 0;
@@ -1361,7 +1362,7 @@ blockquote,
 }
 @media all and (max-width: 649px) {
     .list {
-        --list-left-padding: 1.75em;
+        --list-left-padding: 0em;
     }
 }
 @media all and (min-width: 650px) {

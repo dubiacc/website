@@ -236,10 +236,12 @@
     --GW-page-toolbar-fade-after-collapse-duration: 0.25s;
     --GW-page-toolbar-widget-flash-rise-duration: 1s;
     --GW-page-toolbar-widget-flash-fall-duration: 1s;
+    --list-left-padding: 0em;
 }
 @supports (-moz-appearance: none) {
     :root {
         --GW-popups-audio-popup-min-height: 75px;
+        --list-left-padding: 0em;
     }
 }
 
@@ -3017,7 +3019,7 @@ a.footnote-back {
 }
 
 #markdownBody .sidenote .list {
-    --list-left-padding: 1.75em;
+    --list-left-padding: 0em;
 }
 
 #markdownBody .sidenote li p {
@@ -3402,7 +3404,7 @@ ol.bibliography-list-compact > li::before {
 }
 @media all and (max-width: 649px) {
     ol.bibliography-list-compact {
-        --list-left-padding: 1.75em;
+        --list-left-padding: 0em;
     }
 }
 

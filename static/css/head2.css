@@ -41,6 +41,7 @@
     --GW-body-text-font-size: 20px;
     --GW-body-max-width: 800px;
     --GW-body-side-padding: 20px;
+    --list-left-padding: 0em;
 }
 
 .intro-graf::first-line { 
@@ -797,16 +798,10 @@ blockquote,
 
 .list {
     --text-alignment: left;
-    --list-left-padding: 2.5em;
 
     margin: 0;
     padding: 0;
     list-style-type: none;
-}
-@media all and (max-width: 649px) {
-    .list {
-        --list-left-padding: 1.75em;
-    }
 }
 @media all and (min-width: 650px) {
     .list.big-list {

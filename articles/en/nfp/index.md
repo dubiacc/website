@@ -137,7 +137,7 @@ because they use NFP rather than condoms:
 This "exaggerated physiological education" addresses intentional NFP directly: with 
 its various methods, trackers, apps, etc. - all done with the intention of lust 
 without consequences. Therefore, it is definitely a "subtle sin" to act as this 
-modernist "Catholic" woman recalls her sadness about not being able to have sex 
+modernist "Catholic" woman recalls her sadness about not being able to interact
 with her "engaged boyfriend" (remember, for modernists, even NFP is seen as hard):
 
 > NFP (for avoiding pregnancy) is the complete opposite of a woman's natural 
@@ -155,7 +155,7 @@ with her "engaged boyfriend" (remember, for modernists, even NFP is seen as hard
 
 Now, obviously she here complains from the modernist perspective not being able to use 
 regular contraception -- but even she recognizes that it goes directly against her 
-nature as a woman to have sex on .
+nature as a woman to have relations on non-fertile days.
 
 This is the result of what you eventually end up with when practicing NFP: tracking mucus, 
 Marquette method, temperatures, ovulation cycles, etc. - all of that effort in order to 
@@ -211,7 +211,7 @@ still, he foresaw their practice of observing cycles being rooted in passions:
 > -- [St. Augustine](https://en.wikipedia.org/wiki/Augustine_of_Hippo) -- [On the Morals of the Manicheans, ch. 18, p. 65](https://archive.is/f9mb5#selection-2839.201-2855.152)
 
 The idea that "using the Marquette method to avoid conception is traditional Catholic teaching" 
-is simply laughable, at least since 388 AD - if Augustine and Pius XI would truly "allow NFP", 
+is simply untenable, at least since 388 AD - if Augustine and Pius XI would truly "allow NFP", 
 why do they both write about continence as an alternative - and not just "if a couple cannot 
 contain themselves, they should simply watch the days of the menses"? It is obvious that only 
 licit and Catholic option is continence, not calculated avoidance, justified by out-of-context 
@@ -237,7 +237,7 @@ with human planning and control, a hallmark of modern pride.
 
 ### Redefining Marriage
 
-As a secondary cause, after turning the purpose of sex from procreation to lust,
+As a secondary cause, after turning the purpose of sexuality from procreation to lust,
 the acceptance of NFP even *necessitated* a redefinition of marriage. If the act need 
 not always be ordered to procreation, then procreation cannot be the sole primary 
 end. 

@@ -824,7 +824,19 @@ impl Quote {
             return None;
         }
 
-        let title = lines.iter().find(|s| s.starts_with("**")).cloned();
+        // Find the index of the first non-empty line
+        let first_non_empty_idx = lines.iter().position(|line| !line.trim().is_empty());
+
+        // Only consider the first non-empty line as a potential title
+        let title = first_non_empty_idx
+            .and_then(|idx| {
+                let line = &lines[idx];
+                if line.starts_with("**") && line.trim_end().ends_with("**") {
+                    Some(line.clone())
+                } else {
+                    None
+                }
+            });
 
         if let Some(t) = title.as_deref() {
             lines.retain(|l| l.as_str() != t);
