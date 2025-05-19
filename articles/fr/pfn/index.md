@@ -5,7 +5,7 @@ subtilement le péché, détruisant ultimement la famille.
 
 # La Planification Familiale Naturelle est-elle catholique ?
 
-À une époque saturée de compromis et de confusion, même au sein de l'Église,
+En une époque saturée de compromis et de confusion, même au sein de l'Église,
 peu de déviations de l'enseignement pérenne sont devenues aussi normalisées et
 acceptées que la pratique communément appelée Planification Familiale
 « Naturelle » (PFN).
@@ -134,9 +134,9 @@ directement la réponse donnée par la Sacrée Pénitencerie en 1853 :
 La seconde moitié est la distinction cruciale : Si la PFN est pratiquée par
 accident ou avec l'intention de réduire la famille. Seule la première n'est pas
 un péché : ceci est conseillé pour calmer la conscience des couples scrupuleux
-qui s'inquiètent de pécher certains jours et pas d'autres. Cependant, ce n'est
-pas une approbation de la PFN et, même si c'en était une, elle serait supplantée
-par l'enseignement ultérieur de Pie XI.
+qui s'inquiètent de pécher certains jours et pas d'autres. Cependant, ce n'est pas
+une approbation de la PFN et, même si elle était considérée comme telle, elle a
+été supplantée par l'enseignement ultérieur de Pie XI.
 
 ## Apprendre l'art de pécher subtilement
 
@@ -158,8 +158,8 @@ Cette « éducation physiologique exagérée » vise directement la PFN intentio
 avec ses diverses méthodes, trackers, applications, etc. - tout cela fait dans
 l'intention de la luxure sans conséquences. C'est donc définitivement un « péché
 subtil » d'agir comme cette femme « catholique » moderniste qui se souvient de sa
-tristesse de ne pas pouvoir avoir de relations sexuelles avec son « fiancé »
-(rappelez-vous, pour les modernistes, même la PFN est considérée comme difficile) :
+tristesse de ne pas pouvoir interagir avec son « fiancé » (rappelez-vous, pour
+les modernistes, même la PFN est considérée comme difficile) :
 
 > La PFN (pour éviter une grossesse) est tout le contraire du cycle naturel de la
 > libido d'une femme. En gros, je ne pourrais pas avoir de relations sexuelles
@@ -177,8 +177,8 @@ tristesse de ne pas pouvoir avoir de relations sexuelles avec son « fiancé »
 
 Or, de toute évidence, elle se plaint ici du point de vue moderniste de ne pas
 pouvoir utiliser la contraception ordinaire -- mais même elle reconnaît que cela
-va directement à l'encontre de sa nature de femme d'avoir des relations
-sexuelles à contretemps.
+va directement à l'encontre de sa nature de femme d'avoir *uniquement* des
+relations les jours non fertiles (afin de contracevoir).
 
 C'est le résultat auquel on aboutit finalement en pratiquant la PFN : suivi de la
 glaire, méthode Marquette, températures, cycles d'ovulation, etc. - tout cet
@@ -273,10 +273,10 @@ par la planification et le contrôle humains, marque de l'orgueil moderne.
 
 ### Redéfinir le Mariage
 
-Comme cause secondaire, après avoir détourné le but du sexe de la procréation
-vers la luxure, l'acceptation de la PFN a même *nécessité* une redéfinition du
-mariage. Si l'acte n'a pas besoin d'être toujours ordonné à la procréation,
-alors la procréation ne peut pas être la seule fin première.
+Comme cause secondaire, après avoir détourné le but de l'acte conjugal de la
+procréation vers la luxure, l'acceptation de la PFN a même *nécessité* une
+redéfinition du mariage. Si l'acte n'a pas besoin d'être toujours ordonné à la
+procréation, alors la procréation ne peut pas être la seule fin première.
 
 L'« amour » ou l'« unité » (concepts indéfinis, subjectifs) ont donc dû être
 élevés à un statut co-égal, faisant passer le mariage d'un *contrat* objectif

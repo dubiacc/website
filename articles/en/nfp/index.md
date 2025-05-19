@@ -102,7 +102,7 @@ of theologians" for his justification:
 > -- [Fr. Halligan, cited by Bp. Pivarunas](https://archive.is/6sktD#selection-737.56-737.399)
 
 Fr. Halligan is simply wrong here, as his teaching directly contradicts the answer 
-given by the Sacred Penintentiary in 1853:
+given by the Sacred Penitentiary in 1853:
 
 > Q: Certain married couples, relying on the opinion of learned physicians, are 
 > convinced that there are several days each month in which conception cannot occur.
@@ -117,8 +117,8 @@ given by the Sacred Penintentiary in 1853:
 The latter half is the crucial distinction: Whether NFP done by accident or with the 
 intention of shrinking the family. Only the first one is not a sin: this is advised to 
 calm the conscience of scrupulous couples who worry whether they're sinning on certain 
-days and not on others. However, it is not an endorsment of NFP and, even if, superseded
-by the teaching of Pius XI later on.
+days and not on others. However, it is not an endorsement of NFP and, even if it were 
+considered one, it was superseded by the teaching of Pius XI later on.
 
 ## Learning the art of subtle sinning
 
@@ -155,7 +155,7 @@ with her "engaged boyfriend" (remember, for modernists, even NFP is seen as hard
 
 Now, obviously she here complains from the modernist perspective not being able to use 
 regular contraception -- but even she recognizes that it goes directly against her 
-nature as a woman to have relations on non-fertile days.
+nature as a woman to *only* have relations on non-fertile days (in order to contracept).
 
 This is the result of what you eventually end up with when practicing NFP: tracking mucus, 
 Marquette method, temperatures, ovulation cycles, etc. - all of that effort in order to 
@@ -169,7 +169,7 @@ intentional contra-ception.
 
 The softness on NFP by Pius XII later on led to his successor Paul VI getting really hard 
 pressed on justifying his teaching against contraception: if chronological contraception is allowed, 
-then there is no moral difference to artifical contraception, since the *intention* is the same.
+then there is no moral difference to artificial contraception, since the *intention* is the same.
 
 NFP substitutes scientific knowledge and technique for the virtue of chastity and 
 trust in God's Providence, it subtly shifts the focus from openness to God's 
@@ -237,9 +237,9 @@ with human planning and control, a hallmark of modern pride.
 
 ### Redefining Marriage
 
-As a secondary cause, after turning the purpose of sexuality from procreation to lust,
-the acceptance of NFP even *necessitated* a redefinition of marriage. If the act need 
-not always be ordered to procreation, then procreation cannot be the sole primary 
+As a secondary cause, after turning the purpose of the marital act from procreation to 
+lust, the acceptance of NFP even *necessitated* a redefinition of marriage. If the act
+need not always be ordered to procreation, then procreation cannot be the sole primary 
 end. 
 
 "Love" or "unity" (undefined, subjective concepts) had to therefore be elevated to co-equal 
@@ -258,7 +258,7 @@ to a subjective *covenant* based on feelings:
 Notably, this heretical teaching is even espoused by the Eastern "Orthodox", see 
 [Are Annulments Catholic?](/en/annulments).
 
-Augustine goes even further, after condenming the Manicheans for their mistress-wives:
+Augustine goes even further, after condemning the Manicheans for their mistress-wives:
 
 > In marriage, as the marriage law declares, the man and woman come together for the procreation 
 > of children. Therefore whoever makes the procreation of children a greater sin than copulation, 
