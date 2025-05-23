@@ -29,7 +29,7 @@ The Catholic teaching on the Filioque, as Aquinas demonstrates, preserves both t
 ```
 {
     "date": "2025-04-08",
-    "authors": ["thomas-aquinas"],
+    "authors": ["aquinas"],
     "tags": ["orthodoxy"]
 }
 ```

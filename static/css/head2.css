@@ -574,20 +574,15 @@ section.collapse.expanded-not {
     line-height: 1;
     hyphens: auto;
 }
-@media all and (min-width: 1180px) {
-    .heading {
-        margin-left: calc(-1 * var(--base-font-size));
-    }
-}
 
 
 
 section.level1 > .heading {
-    text-align: right;
+    text-align: left;
     font-weight: 600;
     font-variant-caps: small-caps;
     letter-spacing: -0.75px;
-    padding: 0 0.05em 0.025em calc(1.25 * var(--base-font-size));
+    padding-bottom: 0.2em;
     border-bottom: 1px solid var(--GW-H1-border-color);
 }
 @media all and (max-width: 1179px) {

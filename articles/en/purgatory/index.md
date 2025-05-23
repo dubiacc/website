@@ -57,7 +57,7 @@ intercession, implying some process of growth or purification after death.
 
 ```
 {
-    "authors": ["thomas-aquinas"],
+    "authors": ["aquinas"],
     "date": "1240-01-01",
     "tags": ["resistance"]
 }

@@ -59,7 +59,7 @@ and communion with the saints.
 
 ```
 {
-    "authors": ["thomas-aquinas"],
+    "authors": ["aquinas"],
     "date": "1230-01-01",
     "tags": ["orthodoxy"]
 }

@@ -57,7 +57,7 @@ the equally valid symbolism in the Eastern practice.
 
 ```
 {
-    "authors": ["thomas-aquinas"],
+    "authors": ["aquinas"],
     "date": "1240-01-01",
     "tags": ["orthodoxy"]
 }

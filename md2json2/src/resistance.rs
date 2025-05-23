@@ -6,7 +6,7 @@ pub fn generate_resistance_pages(cwd: &Path, meta: &MetaJson) -> Result<(), Stri
     // For each language, generate a resistance.html file
     for lang in meta.strings.keys() {
         let content = generate_resistance_html(lang, meta)?;
-        let output_path = cwd.join(lang).join("resistance.html");
+        let output_path = cwd.join("dist").join(lang).join("resistance.html");
 
         // Ensure the directory exists
         if let Some(parent) = output_path.parent() {

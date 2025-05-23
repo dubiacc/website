@@ -30,7 +30,7 @@ While the language and conceptual frameworks differ between East and West, both 
 
 ```
 {
-    "authors": ["thomas-aquinas"],
+    "authors": ["aquinas"],
     "date": "1230-01-01",
     "tags": ["orthodoxy"]
 }

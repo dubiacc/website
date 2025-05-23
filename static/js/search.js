@@ -70,12 +70,24 @@ function goToFirstArticle(e) {
     } else if (searchterm.length < 3) {
         return false;
     }
+    
     var results = searchArticlesLocal(searchterm);
     if (results.length < 1) {
         return false;
     }
-    let id = results[0]["id"];
-    window.location.href = "/$$LANG$$/" + id;
+    
+    const result = results[0];
+    let url;
+    
+    if (result.doc_type === "document") {
+        const parts = result.id.split('/');
+        const slug = parts[parts.length - 1];
+        url = "/$$LANG$$/docs/" + result.author + "/" + slug;
+    } else {
+        url = "/$$LANG$$/" + result.id;
+    }
+    
+    window.location.href = url;
     return false;
 }
 
@@ -83,6 +95,7 @@ function searchAndDisplayArticles(e) {
     var searchterm = document.getElementById("index-search-input").value;
     var target = document.getElementById("index-search-results");
     var no_results = "<p id='no-results' style='padding-left:10px;'>$$NO_RESULTS$$</p>"
+    
     if (searchterm.length == 0) {
         target.innerHTML = "";
         return false;
@@ -90,20 +103,33 @@ function searchAndDisplayArticles(e) {
         target.innerHTML = no_results;
         return false;
     }
+    
     var results = searchArticlesLocal(searchterm);
+    
     if (results.length < 1) {
         target.innerHTML = no_results;
         return false;
     } else {
         let a = "";
         for (let i = 0; i < results.length; i++) {
-            const element = results[i];
-            let id = element["id"];
-            let title = element["title"];
+            const result = results[i];
+            let id = result.id;
+            let title = result.title;
+            let url;
+            
+            // Generate correct URL based on result type
+            if (result.doc_type === "document") {
+                const parts = id.split('/');
+                const slug = parts[parts.length - 1];
+                url = "/$$LANG$$/docs/" + result.author + "/" + slug;
+            } else {
+                url = "/$$LANG$$/" + id;
+            }
+            
             a += "<li class='link-modified-recently-list-item dark-mode-invert'>";
-            a += "<p class='in-list first-graf block' style='--bsm: 0;''>";
-            a += "<a href='/$$LANG$$/" +id + "' id='sr-" + id;
-            a += "' class='link-annotated link-page in-list has-annotation spawns-popup' "
+            a += "<p class='in-list first-graf block' style='--bsm: 0;'>";
+            a += "<a href='" + url + "' id='sr-" + id;
+            a += "' class='link-annotated link-page in-list has-annotation spawns-popup' ";
             a += " data-attribute-title='" + title + "'>" + title + "</a>";
             a += "</p>";
             a += "</li>";
@@ -114,7 +140,6 @@ function searchAndDisplayArticles(e) {
 }
 
 function searchArticlesLocal(searchterm) {
-
     if (searchterm.length == 0) {
         return [];
     }
@@ -128,8 +153,11 @@ function searchArticlesLocal(searchterm) {
     for (q of TOREPLACE) {
         searchterm = searchterm.replaceAll(q, "");
     }
+    
     var results = [];
     var results_contains = {};
+    
+    // First search article/document slugs
     for (var id in window.articles.articles) {
         if (results.length > 3) {
             break;
@@ -137,13 +165,29 @@ function searchArticlesLocal(searchterm) {
         if (results_contains.hasOwnProperty(id)) {
             continue;
         }
+        
+        const item = window.articles.articles[id];
+        
         if (id.toLowerCase().includes(searchterm)) {
-            results.push({ "id": id, "title": window.articles.articles[id].title });
+            if (item.doc_type === "document") {
+                results.push({
+                    id: id, 
+                    title: item.title,
+                    doc_type: "document",
+                    author: item.author
+                });
+            } else {
+                results.push({
+                    id: id, 
+                    title: item.title
+                });
+            }
             results_contains[id] = "";
             continue;
         }
     }
 
+    // Then search article/document titles
     for (var id in window.articles.articles) {
         if (results.length > 3) {
             break;
@@ -151,14 +195,30 @@ function searchArticlesLocal(searchterm) {
         if (results_contains.hasOwnProperty(id)) {
             continue;
         }
-        var title = window.articles.articles[id].title;
+        
+        const item = window.articles.articles[id];
+        var title = item.title;
+        
         if (title.toLowerCase().includes(searchterm)) {
-            results.push({ id: id, title: window.articles.articles[id].title });
+            if (item.doc_type === "document") {
+                results.push({
+                    id: id, 
+                    title: item.title,
+                    doc_type: "document",
+                    author: item.author
+                });
+            } else {
+                results.push({
+                    id: id, 
+                    title: item.title
+                });
+            }
             results_contains[id] = "";
             continue;
         }
     }
 
+    // Finally search content
     for (var id in window.articles.articles) {
         if (results.length > 3) {
             break;
@@ -166,41 +226,66 @@ function searchArticlesLocal(searchterm) {
         if (results_contains.hasOwnProperty(id)) {
             continue;
         }
-        var sha256 = window.articles.articles[id].sha256;
+        
+        const item = window.articles.articles[id];
+        var sha256 = item.sha256;
         var mdfile = localStorage.getItem("b" + sha256);
+        
         if (!mdfile) {
+            // If document content not in localStorage, try to load it
+            if (item.doc_type === "document") {
+                loadDocumentContent(id, sha256);
+            }
             continue;
         }
+        
         if (mdfile.includes(searchterm)) {
-            results.push({ id: id, title: window.articles.articles[id].title });
+            if (item.doc_type === "document") {
+                results.push({
+                    id: id, 
+                    title: item.title,
+                    doc_type: "document",
+                    author: item.author
+                });
+            } else {
+                results.push({
+                    id: id, 
+                    title: item.title
+                });
+            }
             results_contains[id] = "";
         }
     }
 
     return results;
 }
-window.searchArticlesLocal = searchArticlesLocal;
+
+// Load document content when needed
+function loadDocumentContent(id, sha256) {
+    const item = window.articles.articles[id];
+    if (!item || item.doc_type !== "document") {
+        return;
+    }
+    
+    const parts = id.split('/');
+    const slug = parts[parts.length - 1];
+    const author = item.author;
+    
+    console.log("downloading document content for $$LANG$$/docs/" + author + "/" + slug);
+    doAjax({
+        location: `${location.origin}/docs/$$LANG$$/${author}/${slug}.md`,
+        onSuccess: function(event) {
+            let t = event.target.responseText.toLowerCase();
+            for (q of TOREPLACE) {
+                t = t.replaceAll(q, "");
+            }
+            localStorage.setItem("b" + sha256, t);
+        }
+    });
+}
 
 function checkArticlesAreInitialized(force) {
-
-    var do_force = false;
-    if (force && force === true) {
-        do_force = true;
-    }
-
-    // window.articles are the newest version
-    //
-    // localStorage.searchindex-articles = {
-    //   "git": "GIT_HASH_AT_TIME_OF_GENERATION", 
-    //   "articles": { 
-    //     "blah-id-of-article": {
-    //       "sha256": "SHA256OFARTICLE",
-    //       "title": "Blah Title of Article"
-    //     }
-    //   }
-    // }
-    // 
-    // localStorage[SHA256OFARTICLE] = index.md
+    var do_force = force === true;
 
     if (!(window.articles && window.articles != null && window.articles != undefined)) {
         console.error("checkArticlesAreInitialized called but window.articles not initialized!");
@@ -208,42 +293,55 @@ function checkArticlesAreInitialized(force) {
     }
 
     for (var id in window.articles.articles) {
-
-        let sha256 = window.articles.articles[id].sha256;
+        const item = window.articles.articles[id];
+        let sha256 = item.sha256;
         let cachedarticle = localStorage.getItem("b" + sha256);
-        if (!do_force) {
-            if (cachedarticle) {
-                continue;
-            } else {
-                console.log("cached article not found for sha256 " + sha256);
-            }
+        
+        if (!do_force && cachedarticle) {
+            continue;
         }
-
-        console.log("downloading index.md file for $$LANG$$/" + id);
-        doAjax({
-            location: `${location.origin}/articles/$$LANG$$/${id}/index.md`,
-            onSuccess: function(event) {
-                let t = event.target.responseText.toLowerCase();
-                for (q of TOREPLACE) {
-                    t = t.replaceAll(q, "");
+        
+        // For documents, use a different path scheme
+        if (item.doc_type === "document") {
+            const parts = id.split('/');
+            const slug = parts[parts.length - 1];
+            const author = item.author;
+            
+            console.log("downloading document for $$LANG$$/docs/" + author + "/" + slug);
+            doAjax({
+                location: `${location.origin}/docs/$$LANG$$/${author}/${slug}.md`,
+                onSuccess: function(event) {
+                    let t = event.target.responseText.toLowerCase();
+                    for (q of TOREPLACE) {
+                        t = t.replaceAll(q, "");
+                    }
+                    localStorage.setItem("b" + sha256, t);
                 }
-                localStorage.setItem("b" + sha256, t);
-            }
-        });
+            });
+        } else {
+            // Regular article
+            console.log("downloading index.md file for $$LANG$$/" + id);
+            doAjax({
+                location: `${location.origin}/articles/$$LANG$$/${id}/index.md`,
+                onSuccess: function(event) {
+                    let t = event.target.responseText.toLowerCase();
+                    for (q of TOREPLACE) {
+                        t = t.replaceAll(q, "");
+                    }
+                    localStorage.setItem("b" + sha256, t);
+                }
+            });
+        }
     }
 }
+
+window.searchArticlesLocal = searchArticlesLocal;
 window.checkArticlesAreInitialized = checkArticlesAreInitialized;
 
 function initSearchIndex(force) {
-
-    var do_force = false;
-    if (force && force === true) {
-        do_force = true;
-    }
-
+    var do_force = force === true;
     var version = "$$VERSION$$";
     var a = localStorage.getItem('articles');
-
 
     if (!do_force) {
         if (
@@ -254,22 +352,26 @@ function initSearchIndex(force) {
             checkArticlesAreInitialized(force);
             return;
         } else {
-            var b = JSON.parse(a);
-            if (
-                b && 
-                b != null && 
-                b != undefined && 
-                b.git == version) {
-                window.articles = b;
-                checkArticlesAreInitialized(force);
-                return;
+            try {
+                var b = JSON.parse(a);
+                if (
+                    b && 
+                    b != null && 
+                    b != undefined && 
+                    b.git == version) {
+                    window.articles = b;
+                    checkArticlesAreInitialized(force);
+                    return;
+                }
+            } catch(e) {
+                // JSON parsing failed, download new index
             }
         }
     }
 
     console.log("initSearchIndex: downloading /$$LANG$$/index.json");
 
-    // TODO: diff and delete outdated articles
+    // Download the unified index containing both articles and documents
     doAjax({
         location: `${location.origin}/$$LANG$$/index.json`,
         onSuccess: function(event) {
@@ -283,6 +385,7 @@ function initSearchIndex(force) {
         }
     });
 }
+
 window.initSearchIndex = initSearchIndex;
 
 initSearchIndex(false); 

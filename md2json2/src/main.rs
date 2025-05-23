@@ -1,5 +1,6 @@
 use rosary::RosaryMysteries;
 use rosary::RosaryTemplates;
+use docs::AnalyzedDocuments;
 use serde_derive::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
@@ -8,6 +9,7 @@ use std::path::Path;
 mod langtrain;
 mod resistance;
 mod rosary;
+mod docs;
 
 #[derive(Debug, Default)]
 struct LoadedArticles {
@@ -1519,7 +1521,7 @@ fn gen_sw_paths(cwd: &Path, articles: &AnalyzedArticles, meta: &MetaJson) -> Str
             lang,
             meta,
             &ArticlesByTag::default(),
-            &ArticlesByDate::default(),
+            &AnalyzedDocuments::default(),
         )
         .unwrap_or_default()
         {
@@ -1707,6 +1709,7 @@ fn generate_gitignore(articles: &LoadedArticles, meta: &MetaJson) -> String {
         filenames.insert(format!("/{lang}2"));
         filenames.insert(format!("{lang}.html"));
     }
+    filenames.insert("/dist".into());
     filenames.insert("/venv".into());
     filenames.insert("*.md.json".into());
     filenames.insert("sw.js".into());
@@ -1788,11 +1791,11 @@ fn get_description(
     a: &ParsedArticleAnalyzed,
     meta: &MetaJson,
 ) -> Result<String, String> {
-    let try1 = a.subtitle.get(0).map(|s| par2html(s)).unwrap_or_default();
+    let try1 = a.subtitle.get(0).map(|s| par2text(s)).unwrap_or_default();
     if !try1.trim().is_empty() {
         return Ok(try1.trim().to_string());
     }
-    let try1 = a.summary.get(0).map(par2html).unwrap_or_default();
+    let try1 = a.summary.get(0).map(par2text).unwrap_or_default();
     if !try1.trim().is_empty() {
         return Ok(try1.trim().to_string());
     }
@@ -1800,7 +1803,7 @@ fn get_description(
         .sections
         .get(0)
         .and_then(|s| s.pars.get(0))
-        .map(par2html)
+        .map(par2text)
         .unwrap_or_default();
     if !sec1.trim().is_empty() {
         return Ok(sec1.trim().to_string());
@@ -2049,17 +2052,18 @@ fn header_navigation(lang: &str, display_logo: bool, meta: &MetaJson) -> Result<
         &get_string(meta, lang, "nav-articles-link")?,
     );
     header_nav = header_nav.replace(
-        "$$NEWEST_DESC$$",
-        &get_string(meta, lang, "nav-newest-desc")?,
+        "$$DOCS_DESC$$",
+        &get_string(meta, lang, "special-docs-desc")?,
     );
     header_nav = header_nav.replace(
-        "$$NEWEST_TITLE$$",
-        &get_string(meta, lang, "nav-newest-title")?,
+        "$$DOCS_TITLE$$",
+        &get_string(meta, lang, "special-docs-title")?,
     );
     header_nav = header_nav.replace(
-        "$$NEWEST_LINK$$",
-        &get_string(meta, lang, "nav-newest-link")?,
+        "$$DOCS_LINK$$",
+        &(lang.to_string() + "/" + &get_string(meta, lang, "special-docs-path")?.replace(".html", "")),
     );
+
     header_nav = header_nav.replace("$$SHOP_DESC$$", &get_string(meta, lang, "nav-shop-desc")?);
     header_nav = header_nav.replace("$$SHOP_TITLE$$", &get_string(meta, lang, "nav-shop-title")?);
     header_nav = header_nav.replace("$$SHOP_LINK$$", &get_string(meta, lang, "nav-shop-link")?);
@@ -2119,6 +2123,7 @@ fn table_of_contents(
     a: &ParsedArticleAnalyzed,
     meta: &MetaJson,
 ) -> Result<String, String> {
+
     if a.is_prayer() {
         return Ok(String::new());
     }
@@ -2872,7 +2877,7 @@ fn rosary_template(lang: &str) -> rosary::RosaryTemplates {
 }
 
 fn rosary_mysteries() -> rosary::RosaryMysteries {
-    match serde_json::from_str(include_str!("../../mysteries.json")) {
+    match serde_json::from_str(include_str!("../../config/mysteries.json")) {
         Ok(o) => o,
         Err(e) => {
             println!("ERROR parsing mysteries.json: {}", e);
@@ -2886,7 +2891,6 @@ fn article2html(
     slug: &str,
     a: &ParsedArticleAnalyzed,
     articles_by_tag: &mut ArticlesByTag,
-    articles_by_date: &mut ArticlesByDate,
     meta: &MetaJson,
 ) -> Result<String, String> {
     static HTML: &str = include_str!("../../templates/lorem.html");
@@ -2906,30 +2910,6 @@ fn article2html(
                 title: a.title.to_string(),
                 id: None,
             });
-    }
-
-    if !a.is_prayer() {
-        match a.get_date() {
-            Some((y, m, d)) => {
-                articles_by_date
-                    .entry(lang.to_string())
-                    .or_insert_with(|| BTreeMap::new())
-                    .entry(y.to_string())
-                    .or_insert_with(|| BTreeMap::new())
-                    .entry(m.to_string())
-                    .or_insert_with(|| BTreeMap::new())
-                    .entry(d.to_string())
-                    .or_insert_with(|| Vec::new())
-                    .push(SectionLink {
-                        slug: slug.to_string(),
-                        title: a.title.to_string(),
-                        id: None,
-                    });
-            }
-            None => {
-                println!("article {lang}/{slug} has no date");
-            }
-        };
     }
 
     let title_id = lang.to_string() + "-" + slug;
@@ -3075,37 +3055,75 @@ struct SearchIndex {
 struct SearchIndexArticle {
     title: String,
     sha256: String,
+    // "document" for docs, None for regular articles
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    doc_type: Option<String>,
+    // author for documents
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    author: Option<String>,
 }
 
-fn generate_search_index(articles: &AnalyzedArticles, meta: &MetaJson) -> BTreeMap<Lang, SearchIndex> {
+fn generate_search_index(
+    articles: &AnalyzedArticles, 
+    documents: &docs::AnalyzedDocuments,
+    meta: &MetaJson
+) -> BTreeMap<Lang, SearchIndex> {
     let def = BTreeMap::new();
-    meta
-        .strings
-        .keys()
+    
+    meta.strings.keys()
         .map(|lang| {
-            let a = articles.map.get(lang).unwrap_or(&def);
-            let s = a
+            // Articles entries
+            let arts = articles.map.get(lang).unwrap_or(&def);
+            let article_entries = arts
+                .iter()
+                .map(|(slug, article)| {
+                    let sia = SearchIndexArticle {
+                        title: article.title.clone(),
+                        sha256: article.sha256.clone(),
+                        doc_type: None,
+                        author: None,
+                    };
+                    (slug.clone(), sia)
+                })
+                .collect::<BTreeMap<_, _>>();
+            
+            // Document entries
+            let mut doc_entries = BTreeMap::new();
+            if let Some(lang_docs) = documents.map.get(lang) {
+                for (author, docs) in lang_docs {
+                    for (slug, doc) in docs {
+                        // Create a special slug format for documents
+                        let doc_slug = format!("docs/{}/{}", author, slug);
+                        
+                        let sia = SearchIndexArticle {
+                            title: doc.title.clone(),
+                            sha256: doc.sha256.clone(),
+                            doc_type: Some("document".to_string()),
+                            author: Some(author.clone()),
+                        };
+                        
+                        doc_entries.insert(doc_slug, sia);
+                    }
+                }
+            }
+            
+            // Combine article and document entries
+            let mut all_entries = article_entries;
+            all_entries.extend(doc_entries);
+            
+            // Generate version hash including all content
+            let s = all_entries
                 .values()
                 .map(|r| r.sha256.clone())
                 .collect::<Vec<_>>()
                 .join(" ");
             let version = sha256(&s);
-            let articles = a
-                .iter()
-                .map(|(slug, readme)| {
-                    let sia = SearchIndexArticle {
-                        title: readme.title.clone(),
-                        sha256: readme.sha256.clone(),
-                    };
-                    (slug.clone(), sia)
-                })
-                .collect();
-
+            
             (
                 lang.clone(),
                 SearchIndex {
                     git: version,
-                    articles,
+                    articles: all_entries,
                 },
             )
         })
@@ -3115,30 +3133,51 @@ fn generate_search_index(articles: &AnalyzedArticles, meta: &MetaJson) -> BTreeM
 type SearchHtmlResult = BTreeMap<Lang, (String, String, String)>;
 
 // Lang => (SearchBarHtml, SearchJS)
-fn search_html(articles: &AnalyzedArticles, meta: &MetaJson) -> Result<SearchHtmlResult, String> {
+fn search_html(
+    articles: &AnalyzedArticles,
+    documents: &docs::AnalyzedDocuments,
+    meta: &MetaJson
+) -> Result<SearchHtmlResult, String> {
     let def = BTreeMap::new();
+    
     meta.strings.keys()
         .map(|lang| {
+            // Generate version hash that includes both articles and documents
             let a = articles.map.get(lang).unwrap_or(&def);
-            let s = a
+            let article_hashes = a
                 .values()
                 .map(|r| r.sha256.clone())
-                .collect::<Vec<_>>()
-                .join(" ");
+                .collect::<Vec<_>>();
+                
+            let mut document_hashes = Vec::new();
+            if let Some(lang_docs) = documents.map.get(lang) {
+                for (_, authors) in lang_docs {
+                    for (_, doc) in authors {
+                        document_hashes.push(doc.sha256.clone());
+                    }
+                }
+            }
+            
+            // Combine all hashes for version
+            let mut all_hashes = article_hashes;
+            all_hashes.extend(document_hashes);
+            let s = all_hashes.join(" ");
             let version = sha256(&s);
 
+            // Get translated strings
             let searchbar_placeholder = get_string(meta, lang, "searchbar-placeholder")?;
             let searchbar = get_string(meta, lang, "searchbar-text")?;
             let no_results = get_string(meta, lang, "search-no-results")?;
             let searchpage_title = get_string(meta, lang, "searchpage-title")?;
             let searchpage_desc = get_string(meta, lang, "searchpage-desc")?;
 
+            // Generate searchbar HTML
             let mut searchbar_html = include_str!("../../templates/searchbar.html").to_string();
             searchbar_html = searchbar_html.replace("$$VERSION$$", &version);
-            searchbar_html =
-                searchbar_html.replace("$$SEARCHBAR_PLACEHOLDER$$", &searchbar_placeholder);
+            searchbar_html = searchbar_html.replace("$$SEARCHBAR_PLACEHOLDER$$", &searchbar_placeholder);
             searchbar_html = searchbar_html.replace("$$SEARCH$$", &searchbar);
 
+            // Generate search page HTML
             let mut search_html = include_str!("../../templates/search.html").to_string();
             search_html = search_html.replace("<!-- SEARCH -->", &searchbar_html);
             search_html = search_html.replace(
@@ -3148,15 +3187,17 @@ fn search_html(articles: &AnalyzedArticles, meta: &MetaJson) -> Result<SearchHtm
             search_html = search_html.replace("$$LANG$$", lang);
             search_html = search_html.replace("$$ROOT_HREF$$", &get_root_href());
 
+            // Create a minimal article for the head template
             let parsed = ParsedArticleAnalyzed {
-                title: searchpage_title.to_string() + " - dubia.cc",
+                title: searchpage_title.clone() + " - dubia.cc",
                 summary: vec![Paragraph::Sentence {
                     s: vec![SentenceItem::Text {
-                        text: searchpage_desc.to_string(),
+                        text: searchpage_desc.clone(),
                     }],
                 }],
                 ..Default::default()
             };
+            
             search_html = search_html.replace(
                 "<!-- HEAD_TEMPLATE_HTML -->",
                 &head(&parsed, lang, &format!("{lang}-search"), meta)?,
@@ -3167,7 +3208,8 @@ fn search_html(articles: &AnalyzedArticles, meta: &MetaJson) -> Result<SearchHtm
             search_js = search_js.replace("$$LANG$$", lang);
             search_js = search_js.replace("$$VERSION$$", &version);
             search_js = search_js.replace("$$NO_RESULTS$$", &no_results);
-
+            
+            // Return the tuple for this language
             Ok((lang.clone(), (searchbar_html, search_html, search_js)))
         })
         .collect()
@@ -3186,16 +3228,15 @@ fn get_special_pages(
     lang: &str,
     meta: &MetaJson,
     by_tag: &ArticlesByTag,
-    by_date: &ArticlesByDate,
+    documents: &AnalyzedDocuments,
 ) -> Result<Vec<SpecialPage>, String> {
+
     let tags = meta
         .tags
         .get(lang)
         .ok_or_else(|| format!("unknown language {lang} not found in tags.json"))?;
 
     let default = BTreeMap::new();
-    let default2 = BTreeMap::new();
-
     let topics_content = render_index_sections(
         lang,
         by_tag
@@ -3210,42 +3251,21 @@ fn get_special_pages(
             .collect(),
     );
 
-    let newest_content = render_index_sections(
-        lang,
-        by_date
-            .get(lang)
-            .unwrap_or(&default2)
-            .iter()
-            .rev()
-            .map(|(year, months)| {
-                (
-                    (format!("y{year}"), year.clone()),
-                    months
-                        .iter()
-                        .flat_map(|(m, days)| {
-                            days.iter().flat_map(move |(d, a)| {
-                                a.iter().map(move |a| SectionLink {
-                                    slug: a.slug.to_string(),
-                                    title: format!("{m}-{d}: {}", a.title),
-                                    id: None,
-                                })
-                            })
-                        })
-                        .collect(),
-                )
-            })
-            .collect(),
-    );
+    let docs_content = docs::get_document_index_content(
+        lang, 
+        documents, 
+        meta,
+    )?;
 
     let topics_title = get_string(meta, lang, "special-topics-title")?;
     let topics_html = get_string(meta, lang, "special-topics-path")?;
     let topics_id = get_string(meta, lang, "special-topics-id")?;
     let topics_desc = get_string(meta, lang, "special-topics-desc")?;
 
-    let newest_title = get_string(meta, lang, "special-newest-title")?;
-    let newest_html = get_string(meta, lang, "special-newest-path")?;
-    let newest_id = get_string(meta, lang, "special-newest-id")?;
-    let newest_desc = get_string(meta, lang, "special-newest-desc")?;
+    let docs_title = get_string(meta, lang, "special-docs-title")?;
+    let docs_html = get_string(meta, lang, "special-docs-path")?;
+    let docs_id = get_string(meta, lang, "special-docs-id")?;
+    let docs_desc = get_string(meta, lang, "special-docs-desc")?;
 
     let tools_title = get_string(meta, lang, "special-tools-title")?;
     let tools_html = get_string(meta, lang, "special-tools-path")?;
@@ -3272,12 +3292,12 @@ fn get_special_pages(
             special_content: String::new(),
         },
         SpecialPage {
-            title: newest_title,
-            filepath: newest_html,
-            id: newest_id,
-            description: newest_desc,
-            content: newest_content,
-            special_content: String::new(),
+            title: docs_title,
+            filepath: docs_html,
+            id: docs_id,
+            description: docs_desc,
+            content: docs_content,
+            special_content: "<style>#special-contents { display: block; } #special-contents ul li { margin-bottom: 0px; }</style>".to_string(),
         },
         SpecialPage {
             title: tools_title,
@@ -3294,14 +3314,6 @@ fn get_special_pages(
             description: shop_desc,
             content: render_shop_sections(lang, &tags.shop, meta),
             special_content: site_author_donation(lang, meta).unwrap_or_default(),
-        },
-        SpecialPage {
-            title: about_title,
-            filepath: about_html,
-            id: about_id,
-            description: about_desc,
-            content: render_about_sections(&tags.about),
-            special_content: String::new(),
         },
     ])
 }
@@ -3762,6 +3774,9 @@ pub fn minify(input: &str) -> Vec<u8> {
     minified
 }
 
+const INDEX: &str = include_str!("../../index.html");
+const DEATH: &str = include_str!("../../templates/death.html");
+
 fn main() -> Result<(), String> {
     // Setup
     let mut cwd = std::env::current_dir().map_err(|e| e.to_string())?;
@@ -3773,20 +3788,29 @@ fn main() -> Result<(), String> {
             .to_path_buf();
     }
 
-    let meta = std::fs::read_to_string(&cwd.join("meta.json")).map_err(|e| e.to_string())?;
+    let meta = std::fs::read_to_string(&cwd.join("config").join("meta.json")).map_err(|e| e.to_string())?;
     let meta_map = read_meta_json(&meta);
 
     let dir = cwd.join("articles");
+
+    let _ = std::fs::create_dir_all(cwd.join("dist"));
 
     // Load, parse and analyze articles
     let articles = load_articles(&dir)?;
     let vectorized = articles.vectorize();
     let analyzed = vectorized.analyze();
-
+    
+    // Load and process documents
+    let docs_dir = cwd.join("docs");
+    let documents = if docs_dir.exists() {
+        docs::load_documents(&docs_dir)?
+    } else {
+        docs::LoadedDocuments::default()
+    };
+    let analyzed_documents = docs::process_documents(&documents)?;
+    
     // Render and write articles
     let mut articles_by_tag = ArticlesByTag::default();
-    let mut articles_by_date = ArticlesByDate::default();
-
     for (lang, articles) in analyzed.map.iter() {
         for (slug, a) in articles {
             let s = article2html(
@@ -3794,13 +3818,12 @@ fn main() -> Result<(), String> {
                 &slug,
                 &a,
                 &mut articles_by_tag,
-                &mut articles_by_date,
                 &meta_map,
             );
-
+            
             match s {
                 Ok(s) => {
-                    let path = cwd.join(lang);
+                    let path = cwd.join("dist").join(lang);
                     let _ = std::fs::create_dir_all(&path);
                     let _ = std::fs::write(path.join(slug.to_string() + ".html"), &minify(&s));
                 }
@@ -3810,46 +3833,97 @@ fn main() -> Result<(), String> {
         }
     }
 
+    // Render and write documents
+    for (lang, author_docs) in analyzed_documents.map.iter() {
+        let out_lang = get_string(&meta_map, lang, "special-docs-path")?;
+        for (author, docs) in author_docs {
+
+            // Render a /dist/[lang]/doc/[author].html showing only the documents by this author
+            let author_name = meta_map.authors.get(author)
+                .map(|a| a.displayname.clone())
+                .unwrap_or_else(|| author.clone());
+                
+            let author_file = cwd.join("dist").join(&out_lang).join(author.to_string() + ".html");
+
+            let docs_title = get_string(&meta_map, lang, "special-docs-title")?;
+            let docs_html = get_string(&meta_map, lang, "special-docs-path")?;
+            let docs_id = get_string(&meta_map, lang, "special-docs-id")?;
+            let docs_desc = get_string(&meta_map, lang, "special-docs-desc")?;
+
+            let mut docs_of_this_author = AnalyzedDocuments::default();
+            docs_of_this_author.map.entry(lang.clone())
+            .or_insert_with(|| BTreeMap::new())
+            .entry(author.clone())
+            .or_insert_with(|| docs.clone());
+
+            let docs_content = docs::get_document_index_content(
+                lang, 
+                &docs_of_this_author, 
+                &meta_map,
+            )?;
+
+            let sp = SpecialPage {
+                title: docs_title + " - " + &author_name,
+                filepath: docs_html,
+                id: docs_id,
+                description: docs_desc,
+                content: docs_content,
+                special_content: "<style>#special-contents { display: block; } #special-contents ul li { margin-bottom: 0px; }</style>".to_string(),
+            };
+            let (_, html) = special2html(&lang, &sp, &meta_map)?;
+            let _ = std::fs::write(author_file, html);
+
+            for (slug, doc) in docs {
+                let output_dir = cwd.join("dist").join(&out_lang).join(author);
+                let _ = std::fs::create_dir_all(&output_dir);
+                
+                let html = docs::document2html(lang, author, slug, doc, &meta_map)?;
+                let output_path = output_dir.join(slug.to_string() + ".html");
+                let _ = std::fs::write(output_path, &minify(&html));
+            }
+        }
+    }
+
     // Write author pages
     let author_pages = render_page_author_pages(&analyzed, &meta_map)?;
     for (lang, authors) in author_pages.iter() {
-        let _ = std::fs::create_dir_all(cwd.join(&lang).join("author"));
+        let _ = std::fs::create_dir_all(cwd.join("dist").join(&lang).join("author"));
         for (a, v) in authors {
             let _ = std::fs::write(
-                cwd.join(&lang).join("author").join(&format!("{a}.html")),
+                cwd.join("dist").join(&lang).join("author").join(&format!("{a}.html")),
                 &minify(&v),
             );
         }
     }
 
     // Generate search index
-    let si = generate_search_index(&analyzed, &meta_map);
+    let si = generate_search_index(&analyzed, &analyzed_documents, &meta_map);
     for (lang, si) in si.iter() {
         let json = serde_json::to_string(&si).unwrap_or_default();
-        let _ = std::fs::write(cwd.join(lang).join("index.json"), json);
+        let _ = std::fs::write(cwd.join("dist").join(lang).join("index.json"), json);
     }
-
+    
     // Write special pages
     let langs = meta_map.strings.keys().cloned().collect::<Vec<_>>();
     for l in langs.iter() {
-        let sp = get_special_pages(&l, &meta_map, &articles_by_tag, &articles_by_date)?;
+        let sp = get_special_pages(&l, &meta_map, &articles_by_tag, &analyzed_documents)?;
         for s in sp.iter() {
             let (mut path, html) = special2html(&l, s, &meta_map)?;
             if !path.ends_with(".html") {
                 path = path + ".html";
             }
-            let _ = std::fs::write(cwd.join(l).join(path), &&html);
+            let _ = std::fs::write(cwd.join("dist").join(l).join(path), &&html);
         }
     }
 
     // Write index + /search pages
-    let si = search_html(&analyzed, &meta_map)?;
+    let si = search_html(&analyzed, &analyzed_documents, &meta_map)?;
     for (lang, (_searchbar_html, search_html, search_js)) in si.iter() {
-        let _ = std::fs::create_dir_all(cwd.join(lang));
-        let _ = std::fs::write(cwd.join(lang).join("search.js"), search_js);
-        let _ = std::fs::write(cwd.join(lang).join("search.html"), &minify(&search_html));
+        let _ = std::fs::create_dir_all(cwd.join("dist").join(lang));
+        let _ = std::fs::write(cwd.join("dist").join(lang).join("search.js"), search_js);
+        let _ = std::fs::write(cwd.join("dist").join(lang).join("search.html"), &minify(&search_html));
         let index_html = render_index_html(lang, &analyzed, &meta_map, &si)?;
-        let _ = std::fs::write(cwd.join(&format!("{lang}.html")), &minify(&index_html));
+        let _ = std::fs::write(cwd.join("dist").join(&format!("{lang}.html")), &minify(&index_html));
     }
 
     // Generate map pages
@@ -3860,9 +3934,22 @@ fn main() -> Result<(), String> {
 
     // Write serviceworker
     let _ = std::fs::write(
-        cwd.join("sw.js"),
+        cwd.join("dist").join("sw.js"),
         gen_serviceworker_js(&cwd, &analyzed, &meta_map),
     );
 
+    // Write index.html and CNAME
+    let _ = std::fs::write(
+        cwd.join("dist").join("index.html"),
+        INDEX,
+    );
+    let _ = std::fs::write(
+        cwd.join("dist").join("death.html"),
+        DEATH,
+    );
+    let _ = std::fs::write(
+        cwd.join("dist").join("CNAME"),
+        "dubia.cc",
+    );
     Ok(())
 }

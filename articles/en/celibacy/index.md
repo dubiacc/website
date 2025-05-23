@@ -28,7 +28,7 @@ While defending the Western practice, Aquinas would acknowledge that clerical ce
 ```
 {
     "date": "1240-01-01",
-    "authors": ["thomas-aquinas"],
+    "authors": ["aquinas"],
     "tags": ["orthodoxy"]
 }
 ```

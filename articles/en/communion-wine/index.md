@@ -51,7 +51,7 @@ adaptation that preserved the essence of the sacrament.
 ```
 {
     "date": "2025-04-08",
-    "authors": ["thomas-aquinas"],
+    "authors": ["aquinas"],
     "tags": ["orthodoxy"]
 }
 ```

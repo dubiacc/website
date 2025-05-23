@@ -57,7 +57,7 @@ unity of the Church that Christ established.
 
 ```
 {
-    "authors": ["thomas-aquinas"],
+    "authors": ["aquinas"],
     "date": "1230-01-01",
     "tags": ["orthodoxy"]
 }

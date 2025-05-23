@@ -1071,21 +1071,16 @@ section.level1:nth-of-type(n+4) {
     position: relative;
     line-height: 1;
 }
-@media all and (min-width: 1180px) {
-    .heading {
-        margin-left: calc(-1 * var(--base-font-size));
-    }
-}
 
 /*  H1.
  */
 
 section.level1 > .heading {
-    text-align: right;
+    text-align: left;
     font-weight: 600;
     font-variant-caps: small-caps;
     letter-spacing: -0.75px;
-    padding: 0 0.05em 0.025em calc(1.25 * var(--base-font-size));
+    padding-bottom: 0.2em;
     border-bottom: 1px solid var(--GW-H1-border-color);
 }
 @media all and (max-width: 1179px) {
@@ -1227,6 +1222,14 @@ p.empty-graf {
 .markdownBody p,
 .markdownBody ol li {
     margin-bottom: 1em;
+}
+
+#special-contents-2 {
+    display: block;
+}
+
+#special-contents-2 ul li {
+    margin-bottom: 0px;
 }
 
 .markdownBody li.block, .markdownBody p.block {

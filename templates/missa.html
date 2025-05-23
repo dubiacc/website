@@ -1,0 +1,4356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sancta Missa - Improved Modular Application</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=Skranji:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Keep all the existing styles from your original */
+    :root {
+      --bg-color: #fdf5e6; 
+      --text-color: black;
+      --border-color: #bfa890; 
+      --latin-color: #C00000; 
+      --english-color: #505050;
+      --initial-color: #8B0000; 
+      --action-color: green;
+      --rubric-la-color: #800000; 
+      --rubric-en-color: #555555;
+      --heading-font: "Skranji", system-ui;
+      --body-font: "Uncial Antiqua", system-ui;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-color: #2b2b2b; 
+        --text-color: #e0e0e0; 
+        --border-color: #6d5c4b;
+        --latin-color: #ff7f7f; 
+        --english-color: #b0b0b0;
+        --initial-color: #ff6347; 
+        --action-color: #7fff7f; 
+        --rubric-la-color: #ff8c8c;
+        --rubric-en-color: #aaaaaa;
+      }
+      .pr-blk.priest {
+        background-color: rgba(255, 127, 127, 0.1);
+      }
+      .pr-blk.server {
+        background-color: rgba(176, 176, 176, 0.1);
+      }
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--body-font);
+      font-weight: 400;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    .mass-selector {
+      text-align: center;
+      padding: 20px;
+      background-color: var(--bg-color);
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .mass-selector select, .language-selector {
+      padding: 10px;
+      font-family: var(--heading-font);
+      font-size: 1.1em;
+      border: 2px solid var(--border-color);
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0 10px;
+    }
+
+    #page-container {
+      width: 90%;
+      max-width: 800px;
+      margin: 20px auto;
+    }
+
+    #page-container > h1 {
+      text-align: center;
+      font-weight: 700;
+      font-family: var(--heading-font);
+      color: var(--latin-color);
+      margin-bottom: 2em;
+      text-transform: uppercase;
+      font-size: 2em;
+    }
+
+    .pg-bdr { 
+      width: 90%;
+      max-width: 800px;
+      margin: 20px auto; 
+      border: 10px solid var(--border-color);
+      padding: 20px;
+      box-sizing: border-box;
+      background-color: var(--bg-color);
+    }
+
+    .p-ct { 
+      text-align: left;
+    }
+
+    h1, h2.pg-ttl { 
+      text-align: center;
+      font-weight: 700;
+      font-family: var(--heading-font);
+      color: var(--latin-color);
+      margin-bottom: 1em;
+      text-transform: uppercase;
+    }
+
+    h3.sub-ttl {
+      font-family: var(--heading-font);
+      color: var(--latin-color);
+      margin: 1em 0 0.5em 0;
+      font-size: 1.3em;
+    }
+
+    .act { 
+      color: var(--action-color);
+      font-style: normal;
+      font-family: var(--heading-font);
+      margin-top: 0.7em;
+      margin-bottom: 0.7em;
+      font-weight: 400;
+    }
+
+    .rb { 
+      margin-top: 0.7em;
+      margin-bottom: 1em;
+      font-size: 0.95em;
+      font-family: var(--heading-font);
+      font-weight: 400;
+    }
+    .rb-lt { 
+      color: var(--rubric-la-color);
+      font-style: italic;
+    }
+    .rb-et { 
+      color: var(--rubric-en-color);
+      font-style: italic;
+      font-size: 0.9em;
+    }
+
+    .pr-blk { 
+      margin-bottom: 1em;
+      position: relative;
+    }
+
+    .spk { 
+      display: none; /* Hide speakers */
+    }
+
+    /* Add new styles for priest/server blocks */
+    .pr-blk.priest {
+      background-color: rgba(192, 0, 0, 0.05);
+      border-left: 3px solid var(--latin-color);
+      padding-left: 10px;
+      margin-left: -13px;
+    }
+
+    .pr-blk.server {
+      background-color: rgba(80, 80, 80, 0.05);
+      border-left: 3px solid var(--english-color);
+      padding-left: 10px;
+      margin-left: -13px;
+    }
+
+
+
+    .pr-ln { 
+      margin-bottom: 0.1em;
+      line-height: 1.5;
+    }
+
+    .pr-ln.has-initial {
+      overflow: hidden;
+      display: inline;
+    }
+
+    .wg { 
+      display: inline-flex;
+      flex-direction: column;
+      margin-right: 0.4em; 
+      margin-bottom: 0.2em;
+    }
+
+    .lt { 
+      color: var(--latin-color);
+      font-weight: bold; 
+      font-size: 1.1em; 
+    }
+
+    .et { 
+      color: var(--english-color);
+      font-family: var(--heading-font);
+      font-size: 0.8em; 
+      margin-top: -0.1em; 
+    }
+
+    .init-lttr { 
+      font-size: 6em;
+      color: var(--initial-color);
+      float: left;
+      line-height: 1;
+      margin-right: 0.1em;
+      margin-top: -0.15em;
+      font-weight: normal;
+      padding: 0;
+    }
+        
+    .pr-txt-ctn::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    @media (max-width: 600px) {
+      .pg-bdr {
+        width: 98%;
+        margin: 10px auto;
+        padding: 10px;
+        border-width: 5px;
+      }
+      .lt {
+        font-size: 1em;
+      }
+      .et {
+        font-size: 0.75em;
+      }
+      .init-lttr {
+        font-size: 4em; 
+        line-height: 1;
+        margin-top: -0.05em;
+        margin-bottom: -0.2em;
+      }
+      .pr-ln {
+        line-height: 1.6;
+      }
+      .spk {
+        flex-basis: 2em; 
+        padding-right: 0.3em;
+      }
+      h2.pg-ttl, .act, .rb {
+        font-size: 1.1em;
+      }
+    }
+
+    .missing-translation {
+      background-color: #ffff99;
+      color: #cc0000;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mass-selector">
+    <label for="mass-select">Select Mass:</label>
+    <select id="mass-select">
+      <option value="easter-4">Fourth Sunday After Easter</option>
+      <option value="easter-5">Fifth Sunday After Easter (Example)</option>
+    </select>
+    
+    <label for="language-select">Language:</label>
+    <select id="language-select" class="language-selector">
+      <option value="en">English</option>
+      <option value="de">Deutsch</option>
+      <option value="fr">Français</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
+
+  <div id="page-container">
+    <div id="page-content">
+      Loading Mass...
+    </div>
+  </div>
+
+  <script>
+    // Current language for vernacular
+    let currentLanguage = "en";
+
+    // Rubric translations - making all rubrics translatable
+    const rubricTranslations = {
+      "rubric.paschaltide.vidi_aquam": {
+        "en": "During Paschaltide, the Asperges Me is replaced by the Vidi Aquam.",
+        "de": "Während der Osterzeit wird das Asperges Me durch das Vidi Aquam ersetzt.",
+        "fr": "Pendant le temps pascal, l'Asperges Me est remplacé par le Vidi Aquam.",
+        "es": "Durante el tiempo pascual, el Asperges Me es reemplazado por el Vidi Aquam."
+      },
+      "rubric.priest.sign_cross": {
+        "en": "The priest makes the Sign of the Cross and says:",
+        "de": "Der Priester macht das Kreuzzeichen und spricht:",
+        "fr": "Le prêtre fait le signe de la croix et dit:",
+        "es": "El sacerdote hace la señal de la cruz y dice:"
+      },
+      "rubric.priest.joining_hands": {
+        "en": "The priest joins his hands and prays silently for those for whom he intends to pray.",
+        "de": "Der Priester faltet die Hände und betet still für diejenigen, für die er beten möchte.",
+        "fr": "Le prêtre joint les mains et prie silencieusement pour ceux pour qui il a l'intention de prier.",
+        "es": "El sacerdote junta las manos y ora en silencio por aquellos por quienes tiene intención de orar."
+      },
+      "rubric.kiss_altar": {
+        "en": "He kisses the altar.",
+        "de": "Er küsst den Altar.",
+        "fr": "Il baise l'autel.",
+        "es": "Besa el altar."
+      },
+      "rubric.sign_host_chalice": {
+        "en": "He signs thrice over the Host and Chalice together, saying:",
+        "de": "Er macht dreimal das Kreuzzeichen über Hostie und Kelch zusammen und spricht:",
+        "fr": "Il fait trois fois le signe de la croix sur l'Hostie et le Calice ensemble, en disant:",
+        "es": "Hace tres veces la señal de la cruz sobre la Hostia y el Cáliz juntos, diciendo:"
+      },
+      "rubric.genuflect": {
+        "en": "Here all kneel.",
+        "de": "Hier knien alle nieder.",
+        "fr": "Ici tous s'agenouillent.",
+        "es": "Aquí todos se arrodillan."
+      },
+      "rubric.strike_breast": {
+        "en": "Here he strikes his breast thrice.",
+        "de": "Hier schlägt er dreimal an seine Brust.",
+        "fr": "Ici il se frappe trois fois la poitrine.",
+        "es": "Aquí se golpea el pecho tres veces."
+      },
+      "rubric.introit_repeated": {
+        "en": "The Introit antiphon is repeated.",
+        "de": "Die Introitus-Antiphon wird wiederholt.",
+        "fr": "L'antienne d'Introït est répétée.",
+        "es": "Se repite la antífona del Introito."
+      },
+      "rubric.sign_book_self": {
+        "en": "Make the sign of the cross on the book (or lectionary), then on your forehead, lips, and breast.",
+        "de": "Mache das Kreuzzeichen auf das Buch (oder Lektionar), dann auf deine Stirn, Lippen und Brust.",
+        "fr": "Faites le signe de la croix sur le livre (ou lectionnaire), puis sur votre front, vos lèvres et votre poitrine.",
+        "es": "Haz la señal de la cruz sobre el libro (o leccionario), luego en tu frente, labios y pecho."
+      },
+      "rubric.communion_faithful": {
+        "en": "[At this point, the faithful would receive Holy Communion if being distributed.]",
+        "de": "[An dieser Stelle würden die Gläubigen die heilige Kommunion empfangen, wenn sie ausgeteilt wird.]",
+        "fr": "[À ce moment, les fidèles recevraient la Sainte Communion si elle était distribuée.]",
+        "es": "[En este punto, los fieles recibirían la Sagrada Comunión si se estuviera distribuyendo.]"
+      }
+    };
+
+    // Action translations
+    const actionTranslations = {
+      "action.stand": {
+        "en": "STAND",
+        "de": "STEHEN",
+        "fr": "DEBOUT",
+        "es": "DE PIE"
+      },
+      "action.kneel": {
+        "en": "KNEEL",
+        "de": "KNIEN",
+        "fr": "À GENOUX",
+        "es": "DE RODILLAS"
+      },
+      "action.sit": {
+        "en": "SIT",
+        "de": "SITZEN",
+        "fr": "ASSIS",
+        "es": "SENTARSE"
+      },
+      "action.strike_breast": {
+        "en": "STRIKE BREAST",
+        "de": "AN DIE BRUST SCHLAGEN",
+        "fr": "FRAPPER LA POITRINE",
+        "es": "GOLPEAR EL PECHO"
+      },
+      "action.strike_breast_thrice": {
+        "en": "STRIKE BREAST THRICE",
+        "de": "DREIMAL AN DIE BRUST SCHLAGEN",
+        "fr": "FRAPPER TROIS FOIS LA POITRINE",
+        "es": "GOLPEAR EL PECHO TRES VECES"
+      }
+    };
+
+    // Enhanced lexicon with better coverage
+    const lexicon = {
+      // Articles, Pronouns, Basic Words
+      "a": "from",
+      "ab": "from",
+      "ad": "to",
+      "ante": "before",
+      "apud": "with",
+      "cum": "with",
+      "de": "from",
+      "ex": "from",
+      "in": "in",
+      "inter": "among",
+      "per": "through",
+      "pro": "for",
+      "sine": "without",
+      "sub": "under",
+      "super": "upon",
+      "et": "and",
+      "sed": "but",
+      "vel": "or",
+      "aut": "or",
+      "ut": "that",
+      "si": "if",
+      "quia": "because",
+      "quod": "that",
+      "qui": "who",
+      "quae": "which",
+      "quem": "whom",
+      "quorum": "whose",
+      "quibus": "to whom",
+      "me": "me",
+      "te": "you",
+      "se": "himself",
+      "nos": "us",
+      "vos": "you",
+      "ego": "I",
+      "tu": "you",
+      "is": "he",
+      "ea": "she",
+      "id": "it",
+      "hic": "this",
+      "haec": "this",
+      "hoc": "this",
+      "ille": "that",
+      "illa": "that",
+      "illud": "that",
+      
+      // Religious/Liturgical Terms
+      "deus": "God",
+      "dominus": "Lord",
+      "domine": "O Lord",
+      "christus": "Christ",
+      "jesus": "Jesus",
+      "jesu": "Jesus",
+      "spiritus": "Spirit",
+      "sanctus": "Holy",
+      "sanctus": "holy",
+      "sancta": "holy",
+      "sancti": "holy",
+      "sanctae": "holy",
+      "sancto": "holy",
+      "sanctum": "holy",
+      "pater": "Father",
+      "patris": "of the Father",
+      "patri": "to the Father",
+      "patre": "Father",
+      "filius": "Son",
+      "filii": "of the Son",
+      "filio": "to the Son",
+      "maria": "Mary",
+      "mariae": "of Mary",
+      "mariam": "Mary",
+      "virgine": "Virgin",
+      "virginis": "of the Virgin",
+      "virginem": "Virgin",
+      "beata": "blessed",
+      "beatae": "of blessed",
+      "beatam": "blessed",
+      "beati": "blessed",
+      "beato": "to blessed",
+      "beatum": "blessed",
+      "gloria": "glory",
+      "gloriae": "of glory",
+      "gloriam": "glory",
+      "angelus": "Angel",
+      "angeli": "of Angel",
+      "angelo": "to Angel",
+      "angelum": "Angel",
+      "caelum": "heaven",
+      "caeli": "of heaven",
+      "caelo": "in heaven",
+      "caelum": "heaven",
+      "caeli": "of heaven",
+      "caelo": "in heaven",
+      "terra": "earth",
+      "terrae": "of earth",
+      "terram": "earth",
+      
+      // Mass-specific Terms
+      "Missa": "Mass",
+      "Missae": "of Mass",
+      "Missam": "Mass",
+      "altare": "altar",
+      "altaris": "of altar",
+      "altari": "to altar",
+      "sacrificium": "sacrifice",
+      "sacrificii": "of sacrifice",
+      "sacrificio": "to sacrifice",
+      "hostia": "host",
+      "Hostia": "Host",
+      "Hostiae": "of Host",
+      "Hostiam": "Host",
+      "corpus": "body",
+      "Corpus": "Body",
+      "Corporis": "of Body",
+      "Corpore": "Body",
+      "sanguis": "blood",
+      "Sanguis": "Blood",
+      "Sanguinis": "of Blood",
+      "Sanguine": "Blood",
+      "Sanguinem": "Blood",
+      "panis": "bread",
+      "calix": "chalice",
+      "Calix": "Chalice",
+      "Calicem": "Chalice",
+      "Calicis": "of Chalice",
+      "vinum": "wine",
+      "aqua": "water",
+      "aquae": "of water",
+      "aquam": "water",
+      
+      // Action Words
+      "orate": "pray",
+      "oramus": "let us pray",
+      "oremus": "Let us pray",
+      "benedico": "I bless",
+      "benedicere": "to bless",
+      "benedicat": "may bless",
+      "benedicas": "bless",
+      "benedictus": "blessed",
+      "benedicta": "blessed",
+      "benedictum": "blessed",
+      "laudo": "I praise",
+      "laudamus": "we praise",
+      "laudare": "to praise",
+      "glorifico": "I glorify",
+      "glorificamus": "we glorify",
+      "adoro": "I adore",
+      "adoramus": "we adore",
+      "credo": "I believe",
+      "confiteor": "I confess",
+      "peto": "I ask",
+      "petimus": "we ask",
+      "quaesumus": "we beseech",
+      "quaesumus": "we beseech",
+      "rogo": "I ask",
+      "rogamus": "we ask",
+      "precor": "I pray",
+      "voco": "I call",
+      "invoco": "I call upon",
+      "invocabo": "I will call upon",
+      "do": "I give",
+      "damus": "we give",
+      "dare": "to give",
+      "da": "give",
+      "date": "give",
+      "offero": "I offer",
+      "offerimus": "we offer",
+      "offerre": "to offer",
+      "suscipe": "receive",
+      "suscipiat": "may receive",
+      "accipio": "I receive",
+      "accipere": "to receive",
+      "accepta": "acceptable",
+      "sumo": "I take",
+      "sumere": "to take",
+      "sumpsimus": "we have taken",
+      "facio": "I do",
+      "facere": "to do",
+      "facit": "he does",
+      "facimus": "we do",
+      "fiat": "may it be done",
+      "factus": "made",
+      "facta": "made",
+      "factum": "made",
+      "vivo": "I live",
+      "vivit": "he lives",
+      "vivimus": "we live",
+      "viverc": "to live",
+      "vita": "life",
+      "vitae": "of life",
+      "vitam": "life",
+      "vivo": "living",
+      "viva": "living",
+      "vivum": "living",
+      "regno": "I reign",
+      "regnat": "he reigns",
+      "regnamus": "we reign",
+      "regnum": "kingdom",
+      "regni": "of kingdom",
+      "regno": "in kingdom",
+      "venio": "I come",
+      "venit": "he comes",
+      "venimus": "we come",
+      "veniat": "let it come",
+      "adveniat": "let it come",
+      
+      // Time and Quantities
+      "semper": "always",
+      "nunc": "now",
+      "hodie": "today",
+      "eras": "tomorrow",
+      "heri": "yesterday",
+      "omnis": "all",
+      "omnes": "all",
+      "omnia": "all things",
+      "omnibus": "to all",
+      "omnium": "of all",
+      "totus": "whole",
+      "tota": "whole",
+      "totum": "whole",
+      "unus": "one",
+      "una": "one",
+      "unum": "one",
+      "primus": "first",
+      "prima": "first",
+      "primum": "first",
+      "secundus": "second",
+      "secunda": "second",
+      "secundum": "according to",
+      "tertius": "third",
+      "tertia": "third",
+      "multus": "much",
+      "multa": "much",
+      "multum": "much",
+      "multi": "many",
+      "multae": "many",
+      "multis": "to many",
+      "multorum": "of many",
+      "paucus": "few",
+      "pauca": "few",
+      "paucum": "few",
+      
+      // Common Adjectives
+      "magnus": "great",
+      "magna": "great",
+      "magnum": "great",
+      "magnam": "great",
+      "maximus": "greatest",
+      "maxima": "most great",
+      "maximum": "greatest",
+      "parvus": "small",
+      "parva": "small",
+      "parvum": "small",
+      "bonus": "good",
+      "bona": "good",
+      "bonum": "good",
+      "boni": "good",
+      "bonae": "good",
+      "bonis": "good",
+      "bonorum": "of good",
+      "malus": "evil",
+      "mala": "evil",
+      "malum": "evil",
+      "verus": "true",
+      "vera": "true",
+      "verum": "true",
+      "veri": "true",
+      "verae": "true",
+      "falsus": "false",
+      "falsa": "false",
+      "falsum": "false",
+      "novus": "new",
+      "nova": "new",
+      "novum": "new",
+      "antiquus": "ancient",
+      "antiqua": "ancient",
+      "antiquum": "ancient",
+      
+      // States and Conditions
+      "peccatum": "sin",
+      "peccata": "sins",
+      "peccatorum": "of sins",
+      "peccatis": "sins",
+      "justus": "just",
+      "justa": "just",
+      "justum": "just",
+      "misericordia": "mercy",
+      "misericordiae": "of mercy",
+      "misericordiam": "mercy",
+      "pax": "peace",
+      "pacis": "of peace",
+      "pacem": "peace",
+      "caritas": "charity",
+      "caritatis": "of charity",
+      "caritatem": "charity",
+      "fides": "faith",
+      "fidei": "of faith",
+      "fidem": "faith",
+      "spes": "hope",
+      "spei": "of hope",
+      "spem": "hope",
+      "amor": "love",
+      "amoris": "of love",
+      "amorem": "love",
+      "gaudium": "joy",
+      "gaudii": "of joy",
+      "gaudium": "joy",
+      "tristitia": "sorrow",
+      "tristitiae": "of sorrow",
+      "tristitiam": "sorrow",
+      "dolor": "pain",
+      "doloris": "of pain",
+      "dolorem": "pain",
+      "salus": "salvation",
+      "salutis": "of salvation",
+      "salutem": "salvation",
+      
+      // Body Parts
+      "corpus": "body",
+      "corporis": "of body",
+      "corpore": "body",
+      "anima": "soul",
+      "animae": "of soul",
+      "animam": "soul",
+      "cor": "heart",
+      "cordis": "of heart",
+      "corde": "heart",
+      "manus": "hand",
+      "manuum": "of hands",
+      "manibus": "hands",
+      "caput": "head",
+      "capitis": "of head",
+      "capite": "head",
+      "oculus": "eye",
+      "oculi": "eyes",
+      "oculorum": "of eyes",
+      "oculis": "eyes",
+      "os": "mouth",
+      "oris": "of mouth",
+      "ore": "mouth",
+      "labia": "lips",
+      "labiorum": "of lips",
+      "labiis": "lips",
+      "lingua": "tongue",
+      "linguae": "of tongue",
+      "linguam": "tongue",
+      "vox": "voice",
+      "vocis": "of voice",
+      "vocem": "voice",
+      
+      // Common Liturgical Phrases
+      "amen": "Amen",
+      "alleluja": "Alleluia",
+      "hosanna": "Hosanna",
+      "kyrie": "Lord",
+      "eleison": "have mercy",
+      "christe": "Christ",
+      "gloria": "Glory",
+      "sanctus": "Holy",
+      "benedictus": "Blessed",
+      "agnus": "Lamb",
+      "dei": "of God",
+      "dominus": "Lord",
+      "vobiscum": "be with you",
+      "spiritu": "spirit",
+      "tuo": "your",
+      
+      // Numbers
+      "unus": "one",
+      "duo": "two",
+      "tres": "three",
+      "quattuor": "four",
+      "quinque": "five",
+      "sex": "six",
+      "septem": "seven",
+      "octo": "eight",
+      "novem": "nine",
+      "decem": "ten",
+      
+      // Special characters and abbreviations
+      "+": "+",
+      "n.": "N.",
+      "etc.": "etc.",
+      
+      // Additional common words you might encounter
+      "mundo": "world",
+      "mundi": "of the world",
+      "mundum": "world",
+      "mundus": "world",
+      "homo": "man",
+      "hominis": "of man",
+      "hominem": "man",
+      "homines": "men",
+      "hominum": "of men",
+      "hominibus": "to men",
+      "mulier": "woman",
+      "mulieris": "of woman",
+      "mulierem": "woman",
+      "mulieres": "women",
+      "puer": "child",
+      "pueri": "of child",
+      "puerum": "child",
+      "pueri": "children",
+      "rex": "king",
+      "regis": "of king",
+      "regem": "king",
+      "reges": "kings",
+      "regina": "queen",
+      "reginae": "of queen",
+      "reginam": "queen",
+      "servus": "servant",
+      "servi": "of servant",
+      "servum": "servant",
+      "servi": "servants",
+      "famulus": "servant",
+      "famuli": "of servant",
+      "famulum": "servant",
+      "famuli": "servants",
+      "dominus": "master",
+      "domini": "of master",
+      "dominum": "master",
+      "domini": "masters",
+      
+      // More verbs
+      "sum": "I am",
+      "es": "you are",
+      "est": "he is",
+      "sumus": "we are",
+      "estis": "you are",
+      "sunt": "they are",
+      "erat": "was",
+      "erant": "were",
+      "erit": "will be",
+      "erunt": "will be",
+      "habeo": "I have",
+      "habes": "you have",
+      "habet": "he has",
+      "habemus": "we have",
+      "habetis": "you have",
+      "habent": "they have",
+      "habeas": "you may have",
+      "dico": "I say",
+      "dicis": "you say",
+      "dicit": "he says",
+      "dicimus": "we say",
+      "dicitis": "you say",
+      "dicunt": "they say",
+      "dixit": "he said",
+      "dixerunt": "they said",
+      "dic": "say",
+      "dicere": "to say",
+      "video": "I see",
+      "vides": "you see",
+      "videt": "he sees",
+      "videmus": "we see",
+      "videtis": "you see",
+      "vident": "they see",
+      "vidi": "I saw",
+      "viderunt": "they saw",
+      "videbo": "I will see",
+      "videbitis": "you will see",
+      "audio": "I hear",
+      "audis": "you hear",
+      "audit": "he hears",
+      "audimus": "we hear",
+      "auditis": "you hear",
+      "audiunt": "they hear",
+      "audivi": "I heard",
+      "scio": "I know",
+      "scis": "you know",
+      "scit": "he knows",
+      "scimus": "we know",
+      "scitis": "you know",
+      "sciunt": "they know",
+      "nescio": "I do not know",
+      "nescimus": "we do not know",
+      
+      // More prepositions and conjunctions
+      "ante": "before",
+      "post": "after",
+      "inter": "between",
+      "contra": "against",
+      "propter": "on account of",
+      "circa": "around",
+      "juxta": "near",
+      "trans": "across",
+      "ultra": "beyond",
+      "infra": "below",
+      "supra": "above",
+      "ergo": "therefore",
+      "igitur": "therefore",
+      "autem": "however",
+      "tamen": "nevertheless",
+      "quoque": "also",
+      "etiam": "also",
+      "item": "likewise",
+      "simul": "at the same time",
+      "statim": "immediately",
+      "mox": "soon",
+      "jam": "now",
+      "adhuc": "still",
+      "nondum": "not yet",
+      "olim": "once",
+      "modo": "only",
+      "tantum": "only",
+      "saltem": "at least",
+      "forte": "perhaps",
+      "forsitan": "perhaps",
+      "fortasse": "perhaps",
+      "certe": "certainly",
+      "profecto": "surely",
+      "vero": "truly",
+      "quidem": "indeed",
+      "sane": "indeed",
+      
+      // Negations
+      "non": "not",
+      "ne": "not",
+      "nihil": "nothing",
+      "nemo": "no one",
+      "nulla": "no",
+      "nullus": "no",
+      "nullum": "no",
+      "numquam": "never",
+      "nusquam": "nowhere",
+      
+      // Questions
+      "quis": "who",
+      "quid": "what",
+      "cur": "why",
+      "quare": "why",
+      "quando": "when",
+      "ubi": "where",
+      "quo": "where",
+      "unde": "whence",
+      "quomode": "how",
+      "quantum": "how much",
+      "quot": "how many",
+      
+      // More adjectives
+      "altus": "high",
+      "alta": "high",
+      "altum": "high",
+      "bassus": "low",
+      "bassa": "low",
+      "bassum": "low",
+      "longus": "long",
+      "longa": "long",
+      "longum": "long",
+      "brevis": "short",
+      "breve": "short",
+      "latus": "wide",
+      "lata": "wide",
+      "latum": "wide",
+      "angustus": "narrow",
+      "angusta": "narrow",
+      "angustum": "narrow",
+      "crassus": "thick",
+      "crassa": "thick",
+      "crassum": "thick",
+      "tenuis": "thin",
+      "tenue": "thin",
+      "durus": "hard",
+      "dura": "hard",
+      "durum": "hard",
+      "mollis": "soft",
+      "molle": "soft",
+      "calidus": "warm",
+      "calida": "warm",
+      "calidum": "warm",
+      "frigidus": "cold",
+      "frigida": "cold",
+      "frigidur": "cold",
+      "siccus": "dry",
+      "sicca": "dry",
+      "siccum": "dry",
+      "humidus": "wet",
+      "humida": "wet",
+      "humidum": "wet",
+      "clarus": "clear",
+      "clara": "clear",
+      "clarum": "clear",
+      "obscurus": "dark",
+      "obscura": "dark",
+      "obscurum": "dark",
+      "pulcher": "beautiful",
+      "pulchra": "beautiful",
+      "pulchrum": "beautiful",
+      "foedus": "ugly",
+      "foeda": "ugly",
+      "foedum": "ugly",
+      "jucundus": "pleasant",
+      "jucunda": "pleasant",
+      "jucundum": "pleasant",
+      "tristis": "sad",
+      "triste": "sad",
+      "laetus": "happy",
+      "laeta": "happy",
+      "laetum": "happy",
+      "fessus": "tired",
+      "fessa": "tired",
+      "fessum": "tired",
+      "validus": "strong",
+      "valida": "strong",
+      "validum": "strong",
+      "infirmus": "weak",
+      "infirma": "weak",
+      "infirmum": "weak",
+      "sanus": "healthy",
+      "sana": "healthy",
+      "sanum": "healthy",
+      "aeger": "sick",
+      "aegra": "sick",
+      "aegrum": "sick",
+      "juvenis": "young",
+      "juvenis": "young",
+      "senex": "old",
+      "divus": "divine",
+      "diva": "divine",
+      "divum": "divine",
+      "humanus": "human",
+      "humana": "human",
+      "humanum": "human",
+      "mortalis": "mortal",
+      "mortale": "mortal",
+      "immortalis": "immortal",
+      "immortale": "immortal",
+      "aeternus": "eternal",
+      "aeterna": "eternal",
+      "aeternum": "eternal",
+      "temporalis": "temporal",
+      "temporale": "temporal",
+      "perpetuus": "perpetual",
+      "perpetua": "perpetual",
+      "perpetuum": "perpetual",
+      "tuum": "your",
+
+      // More religious terms
+      "Ecclesia": "Church",
+      "Ecclesiae": "of Church",
+      "Ecclesiam": "Church",
+      "fideles": "faithful",
+      "fidelium": "of the faithful",
+      "fidelibus": "to the faithful",
+      "Christianus": "Christian",
+      "Christiana": "Christian",
+      "Christianum": "Christian",
+      "Christiani": "Christians",
+      "Christianae": "Christian women",
+      "Christianos": "Christians",
+      "Christianas": "Christian women",
+      "Apostolus": "Apostle",
+      "Apostoli": "of Apostle",
+      "Apostolo": "to Apostle",
+      "Apostolum": "Apostle",
+      "Apostoli": "Apostles",
+      "Apostolorum": "of Apostles",
+      "Apostolis": "to Apostles",
+      "Apostolos": "Apostles",
+      "Martyp": "Martyr",
+      "Martyris": "of Martyr",
+      "Martyre": "Martyr",
+      "Martyrem": "Martyr",
+      "Martyres": "Martyrs",
+      "Martyrum": "of Martyrs",
+      "Martyribus": "to Martyrs",
+      "Martyres": "Martyrs",
+      "Propheta": "Prophet",
+      "Prophetae": "of Prophet",
+      "Prophetam": "Prophet",
+      "Prophetae": "Prophets",
+      "Prophetarum": "of Prophets",
+      "Prophetis": "to Prophets",
+      "Prophetas": "Prophets",
+      "evangelium": "Gospel",
+      "Evangelii": "of Gospel",
+      "Evangelio": "to Gospel",
+      "evangelia": "Gospels",
+      "Scriptura": "Scripture",
+      "Scripturae": "of Scripture",
+      "Scripturam": "Scripture",
+      "Scripturae": "Scriptures",
+      "Scripturarum": "of Scriptures",
+      "sacerdos": "priest",
+      "sacerdotis": "of priest",
+      "sacerdoti": "to priest",
+      "sacerdotem": "priest",
+      "sacerdotes": "priests",
+      "episcopus": "bishop",
+      "episcopi": "of bishop",
+      "episcopum": "bishop",
+      "episcopi": "bishops",
+      "papa": "pope",
+      "papae": "of pope",
+      "papam": "pope",
+      "diaconus": "deacon",
+      "diaconi": "of deacon",
+      "diaconum": "deacon",
+      "diaconi": "deacons",
+      "presbyter": "priest",
+      "presbyteri": "of priest",
+      "presbyterum": "priest",
+      "presbyteri": "priests",
+      
+      // More places
+      "domus": "house",
+      "domus": "of house",
+      "domui": "to house",
+      "domum": "house",
+      "domo": "from house",
+      "templum": "temple",
+      "templi": "of temple",
+      "templo": "in temple",
+      "civitas": "city",
+      "civitatis": "of city",
+      "civitatem": "city",
+      "civitates": "cities",
+      "urbs": "city",
+      "urbis": "of city",
+      "urbem": "city",
+      "urbes": "cities",
+      "regio": "region",
+      "regionis": "of region",
+      "regionem": "region",
+      "regiones": "regions",
+      "patria": "fatherland",
+      "patriae": "of fatherland",
+      "patriam": "fatherland",
+      "ager": "field",
+      "agri": "of field",
+      "agrum": "field",
+      "agri": "fields",
+      "silva": "forest",
+      "silvae": "of forest",
+      "silvam": "forest",
+      "silvae": "forests",
+      "mons": "mountain",
+      "montis": "of mountain",
+      "montem": "mountain",
+      "montes": "mountains",
+      "flumen": "river",
+      "fluminis": "of river",
+      "flumen": "river",
+      "flumina": "rivers",
+      "mare": "sea",
+      "maris": "of sea",
+      "mare": "sea",
+      "maria": "seas",
+      
+      // More time expressions
+      "dies": "day",
+      "diei": "of day",
+      "diem": "day",
+      "dies": "days",
+      "dierum": "of days",
+      "diebus": "on days",
+      "nox": "night",
+      "noctis": "of night",
+      "noctem": "night",
+      "noctes": "nights",
+      "hora": "hour",
+      "horae": "of hour",
+      "horam": "hour",
+      "horae": "hours",
+      "tempus": "time",
+      "temporis": "of time",
+      "tempus": "time",
+      "tempora": "times",
+      "annus": "year",
+      "anni": "of year",
+      "annum": "year",
+      "anni": "years",
+      "mensis": "month",
+      "mensis": "of month",
+      "mensem": "month",
+      "menses": "months",
+      "saeculum": "age",
+      "saeculi": "of age",
+      "saeculum": "age",
+      "saecula": "ages",
+      "saeculorum": "of ages",
+      "aeternum": "eternity",
+      "aeternum": "eternal",
+      "aeterna": "eternal",
+      "aeternae": "eternal",
+      "aeterni": "eternal",
+      "aeternis": "eternal",
+      "aeternos": "eternal",
+      "aeternas": "eternal",
+      
+      // Colours
+      "albus": "white",
+      "alba": "white",
+      "album": "white",
+      "niger": "black",
+      "nigra": "black",
+      "nigrum": "black",
+      "ruber": "red",
+      "rubra": "red",
+      "rubrum": "red",
+      "caeruleus": "blue",
+      "caerulea": "blue",
+      "caeruleum": "blue",
+      "viridis": "green",
+      "viride": "green",
+      "flavus": "yellow",
+      "flava": "yellow",
+      "flavum": "yellow",
+      
+      // Nature
+      "sol": "sun",
+      "solis": "of sun",
+      "solem": "sun",
+      "luna": "moon",
+      "lunae": "of moon",
+      "lunam": "moon",
+      "stella": "star",
+      "stellae": "of star",
+      "stellam": "star",
+      "stellae": "stars",
+      "ignis": "fire",
+      "ignis": "of fire",
+      "ignem": "fire",
+      "ignes": "fires",
+      "lux": "light",
+      "lucis": "of light",
+      "lucem": "light",
+      "luces": "lights",
+      "tenebrae": "darkness",
+      "tenebrarum": "of darkness",
+      "tenebras": "darkness",
+      "ventus": "wind",
+      "venti": "of wind",
+      "ventum": "wind",
+      "venti": "winds",
+      "pluvia": "rain",
+      "pluviae": "of rain",
+      "pluviam": "rain",
+      "nix": "snow",
+      "nivis": "of snow",
+      "nivem": "snow",
+      "grando": "hail",
+      "grandinis": "of hail",
+      "grandinem": "hail",
+      "nubis": "cloud",
+      "nubis": "of cloud",
+      "nubem": "cloud",
+      "nubes": "clouds",
+      
+      // Animals
+      "animal": "animal",
+      "animalis": "of animal",
+      "animale": "animal",
+      "animalia": "animals",
+      "equus": "horse",
+      "equi": "of horse",
+      "equum": "horse",
+      "equi": "horses",
+      "canis": "dog",
+      "canis": "of dog",
+      "canem": "dog",
+      "canes": "dogs",
+      "felis": "cat",
+      "felis": "of cat",
+      "felem": "cat",
+      "feles": "cats",
+      "bos": "ox",
+      "bovis": "of ox",
+      "bovem": "ox",
+      "boves": "oxen",
+      "ovis": "sheep",
+      "ovis": "of sheep",
+      "ovem": "sheep",
+      "oves": "sheep",
+      "agnus": "lamb",
+      "agni": "of lamb",
+      "agnum": "lamb",
+      "agni": "lambs",
+      "porcus": "pig",
+      "porci": "of pig",
+      "porcum": "pig",
+      "porci": "pigs",
+      "gallus": "rooster",
+      "galli": "of rooster",
+      "gallum": "rooster",
+      "galli": "roosters",
+      "piscis": "fish",
+      "piscis": "of fish",
+      "piscem": "fish",
+      "pisces": "fish",
+      "avis": "bird",
+      "avis": "of bird",
+      "avem": "bird",
+      "aves": "birds",
+      
+      // Food and drink
+      "cibus": "food",
+      "cibi": "of food",
+      "cibum": "food",
+      "cibi": "foods",
+      "potus": "drink",
+      "potus": "of drink",
+      "potum": "drink",
+      "potus": "drinks",
+      "lac": "milk",
+      "lactis": "of milk",
+      "lac": "milk",
+      "mel": "honey",
+      "mellis": "of honey",
+      "mel": "honey",
+      "sal": "salt",
+      "salis": "of salt",
+      "sal": "salt",
+      "oleum": "oil",
+      "olei": "of oil",
+      "oleum": "oil",
+      "oleum": "oil",
+      "caseus": "cheese",
+      "casei": "of cheese",
+      "caseum": "cheese",
+      "ova": "eggs",
+      "ovorum": "of eggs",
+      "ova": "eggs",
+      "fructus": "fruit",
+      "fructus": "of fruit",
+      "fructum": "fruit",
+      "fructus": "fruits",
+      
+      // Family
+      "familia": "family",
+      "familiae": "of family",
+      "familiam": "family",
+      "familiae": "families",
+      "parens": "parent",
+      "parentis": "of parent",
+      "paretem": "parent",
+      "paretes": "parents",
+      "mater": "mother",
+      "matris": "of mother",
+      "matrem": "mother",
+      "matres": "mothers",
+      "pater": "father",
+      "patris": "of father",
+      "patrem": "father",
+      "patres": "fathers",
+      "filius": "son",
+      "filii": "of son",
+      "filium": "son",
+      "filii": "sons",
+      "filia": "daughter",
+      "filiae": "of daughter",
+      "filiam": "daughter",
+      "filiae": "daughters",
+      "frater": "brother",
+      "fratris": "of brother",
+      "fratrem": "brother",
+      "fratres": "brothers",
+      "soror": "sister",
+      "sororia": "of sister",
+      "sororem": "sister",
+      "sorores": "sisters",
+      "avus": "grandfather",
+      "avi": "of grandfather",
+      "avum": "grandfather",
+      "avi": "grandfathers",
+      "avia": "grandmother",
+      "aviae": "of grandmother",
+      "aviam": "grandmother",
+      "aviae": "grandmothers",
+      "nepos": "grandson",
+      "nepotis": "of grandson",
+      "nepotem": "grandson",
+      "nepotes": "grandsons",
+      "neptis": "granddaughter",
+      "neptis": "of granddaughter",
+      "neptem": "granddaughter",
+      "neptes": "granddaughters",
+      "maritus": "husband",
+      "mariti": "of husband",
+      "maritum": "husband",
+      "mariti": "husbands",
+      "uxor": "wife",
+      "uxoris": "of wife",
+      "uxorem": "wife",
+      "uxores": "wives",
+      "sponsus": "bridegroom",
+      "sponsi": "of bridegroom",
+      "sponsum": "bridegroom",
+      "sponsi": "bridegrooms",
+      "sponsa": "bride",
+      "sponsae": "of bride",
+      "sponsam": "bride",
+      "sponsae": "brides",
+      "amicus": "friend",
+      "amici": "of friend",
+      "amicum": "friend",
+      "amici": "friends",
+      "amica": "female friend",
+      "amicae": "of female friend",
+      "amicam": "female friend",
+      "amicae": "female friends",
+      "hostis": "enemy",
+      "hostis": "of enemy",
+      "hostem": "enemy",
+      "hostes": "enemies",
+      "inimicus": "enemy",
+      "inimici": "of enemy",
+      "inimicum": "enemy",
+      "inimici": "enemies",
+      
+      // Emotions and states
+      "gaudium": "joy",
+      "gaudii": "of joy",
+      "gaudium": "joy",
+      "gaudia": "joys",
+      "laetitia": "happiness",
+      "laetitiae": "of happiness",
+      "laetitiam": "happiness",
+      "timor": "fear",
+      "timoris": "of fear",
+      "timorem": "fear",
+      "timores": "fears",
+      "ira": "anger",
+      "irae": "of anger",
+      "iram": "anger",
+      "irae": "angers",
+      "odium": "hatred",
+      "odii": "of hatred",
+      "odium": "hatred",
+      "odiu": "hatreds",
+      "invidia": "envy",
+      "invidiae": "of envy",
+      "invidium": "envy",
+      "superbia": "pride",
+      "superbiae": "of pride",
+      "superbiam": "pride",
+      "humilitas": "humility",
+      "humilitatis": "of humility",
+      "humilitatem": "humility",
+      "patientia": "patience",
+      "patientiae": "of patience", 
+      "patientiam": "patience",
+      "fortitudo": "fortitude",
+      "fortitudinis": "of fortitude",
+      "fortitudinem": "fortitude",
+      "prudentia": "prudence",
+      "prudentiae": "of prudence",
+      "prudentiam": "prudence",
+      "justitia": "justice",
+      "justitiae": "of justice",
+      "justitiam": "justice",
+      "temperantia": "temperance",
+      "temperantiae": "of temperance",
+      "temperantiam": "temperance",
+      "virtus": "virtue",
+      "virtutis": "of virtue",
+      "virtutem": "virtue",
+      "virtutes": "virtues",
+      "vitium": "vice",
+      "vitii": "of vice",
+      "vitium": "vice",
+      "vitia": "vices",
+      
+      // More miscellaneous common words
+      "res": "thing",
+      "rei": "of thing",
+      "rem": "thing",
+      "res": "things",
+      "causa": "cause",
+      "causae": "of cause",
+      "causam": "cause",
+      "causae": "causes",
+      "finis": "end",
+      "finis": "of end",
+      "finem": "end",
+      "fines": "ends",
+      "initium": "beginning",
+      "initii": "of beginning",
+      "initium": "beginning",
+      "initia": "beginnings",
+      "medium": "middle",
+      "medii": "of middle",
+      "medium": "middle",
+      "media": "middles",
+      "locus": "place",
+      "loci": "of place",
+      "locum": "place",
+      "loci": "places",
+      "pars": "part",
+      "partis": "of part",
+      "partem": "part",
+      "partes": "parts",
+      "totum": "whole",
+      "toti": "of whole",
+      "totum": "whole",
+      "tota": "wholes",
+      "nomen": "name",
+      "nominis": "of name",
+      "nomen": "name",
+      "nomina": "names",
+      "verbum": "word",
+      "verbi": "of word",
+      "verbum": "word",
+      "verba": "words",
+      "sermo": "speech",
+      "sermonis": "of speech",
+      "sermonem": "speech",
+      "sermones": "speeches",
+      "signum": "sign",
+      "signi": "of sign",
+      "signum": "sign",
+      "signa": "signs",
+      "crux": "cross",
+      "crucis": "of cross",
+      "crucem": "cross",
+      "cruces": "crosses",
+      "liga": "law",
+      "ligis": "of law",
+      "ligem": "law",
+      "liges": "laws",
+      "jus": "right",
+      "juris": "of right",
+      "jus": "right",
+      "jura": "rights",
+      "opus": "work",
+      "operis": "of work",
+      "opus": "work",
+      "opera": "works",
+      "labor": "work",
+      "laboris": "of work",
+      "laborem": "work",
+      "labores": "works",
+      "otium": "leisure",
+      "otii": "of leisure",
+      "otium": "leisure",
+      "studium": "zeal",
+      "studii": "of zeal",
+      "studium": "zeal",
+      "studia": "zeals",
+      "scientia": "knowledge",
+      "scientiae": "of knowledge",
+      "scientiam": "knowledge",
+      "sapientia": "wisdom",
+      "sapientiae": "of wisdom",
+      "sapientiam": "wisdom",
+      "error": "error",
+      "erroris": "of error",
+      "errorem": "error",
+      "errores": "errors",
+      "veritas": "truth",
+      "veritatis": "of truth",
+      "veritatem": "truth",
+      "mendacium": "lie",
+      "mendacii": "of lie",
+      "mendacium": "lie",
+      "mendacia": "lies",
+      "spes": "hope",
+      "spei": "of hope",
+      "spem": "hope",
+      "spes": "hopes",
+      "timor": "fear",
+      "timoris": "of fear",
+      "timorem": "fear",
+      "timores": "fears",
+      "cura": "care",
+      "curae": "of care",
+      "curam": "care",
+      "curae": "cares",
+      "diligentia": "diligence",
+      "diligentiae": "of diligence",
+      "diligentiam": "diligence",
+      "neglegentia": "negligence",
+      "neglegentiae": "of negligence",
+      "neglegentiam": "negligence",
+      "celeritas": "speed",
+      "celeritatis": "of speed",
+      "celeritatem": "speed",
+      "tarditas": "slowness",
+      "tarditatis": "of slowness",
+      "tarditatem": "slowness",
+      "via": "way",
+      "viae": "of way",
+      "viam": "way",
+      "viae": "ways",
+      "semita": "path",
+      "semitae": "of path",
+      "semitam": "path",
+      "semitae": "paths",
+      "porta": "door",
+      "portae": "of door",
+      "portam": "door",
+      "portae": "doors",
+      "janua": "door",
+      "januae": "of door",
+      "januam": "door",
+      "januae": "doors",
+      "fenestra": "window",
+      "fenestrae": "of window",
+      "fenestram": "window",
+      "fenestrae": "windows",
+      "tectum": "roof",
+      "tecti": "of roof",
+      "tectum": "roof",
+      "tecta": "roofs",
+      "paries": "wall",
+      "parietis": "of wall",
+      "parietem": "wall",
+      "parietes": "walls",
+      "solum": "floor",
+      "soli": "of floor",
+      "solum": "floor",
+      "sola": "floors",
+      "gradus": "step",
+      "gradus": "of step",
+      "gradum": "step",
+      "gradus": "steps",
+      "scala": "stairs",
+      "scalae": "of stairs",
+      "scalam": "stairs",
+      "scalae": "stairs",
+      
+      // Added common Latin liturgical terms and phrases that were missing
+      "iterum": "again",
+      "igitur": "therefore",  
+      "modo": "manner",
+      "modicum": "a little",
+      "jamjam": "now",
+      "interim": "meanwhile",
+      "demum": "at last",
+      "postremo": "finally",
+      "pridie": "the day before",
+      "cras": "tomorrow",
+      "nudius": "the day before yesterday",
+      "mane": "in the morning",
+      "vespere": "in the evening",
+      "noctu": "at night",
+      "meridie": "at noon",
+      "continuo": "immediately",
+      "repente": "suddenly",
+      "paulatim": "gradually",
+      "sensim": "slowly",
+      "raptim": "quickly",
+      "cursim": "hastily",
+      "furtim": "secretly",
+      "clam": "secretly",
+      "palam": "openly",
+      "coram": "in the presence of",
+      "absens": "absent",
+      "praesens": "present",
+      "futurus": "future",
+      "praeteritus": "past",
+      "hodiemus": "today's",
+      "hesternus": "yesterday's",
+      "crastinus": "tomorrow's",
+      "quotidianus": "daily",
+      "sollemnis": "solemn",
+      "festus": "festive",
+      "ferialis": "weekday",
+      "dominicus": "of the Lord",
+      "dominica": "Sunday",
+      "sabbatum": "Sabbath",
+      "hebdomada": "week",
+      "hebdomadae": "of week",
+      "hebdomadam": "week",
+      "annus": "year",
+      "saeculum": "century",
+      "millennium": "millennium",
+      "aetas": "age",
+      "aetatis": "of age",
+      "aetatem": "age",
+      "juventus": "youth",
+      "juventutis": "of youth",
+      "juventutem": "youth",
+      "senectus": "old age",
+      "senectutis": "of old age",
+      "senectutem": "old age",
+      "infantia": "infancy",
+      "infantiae": "of infancy",
+      "infantiam": "infancy",
+      "pueritia": "childhood",
+      "pueritiae": "of childhood",
+      "pueritiam": "childhood",
+      "adolescentia": "adolescence",
+      "adolescentiae": "of adolescence",
+      "adolescentiam": "adolescence",
+      "maturitas": "maturity",
+      "maturitatis": "of maturity",
+      "maturitatem": "maturity",
+      
+      // Additional terms commonly found in liturgical contexts
+      "mysterium": "mystery",
+      "mysterii": "of mystery",
+      "mysterium": "mystery",
+      "mysteria": "mysteries",
+      "sacramentum": "sacrament",
+      "sacramenti": "of sacrament",
+      "sacramentum": "sacrament",
+      "sacramenta": "sacraments",
+      "ritus": "rite",
+      "ritus": "of rite",
+      "ritum": "rite",
+      "ritus": "rites",
+      "ceremonial": "ceremony",
+      "ceremonialis": "of ceremony",
+      "ceremoniam": "ceremony",
+      "ceremoniae": "ceremonies",
+      "processio": "procession",
+      "processionis": "of procession",
+      "processionem": "procession",
+      "processiones": "processions",
+      "cantus": "chant",
+      "cantus": "of chant",
+      "cantum": "chant",
+      "cantus": "chants",
+      "psalmus": "psalm",
+      "psalmi": "of psalm",
+      "psalmum": "psalm",
+      "psalmi": "psalms",
+      "hymnus": "hymn",
+      "hymni": "of hymn",
+      "hymnum": "hymn",
+      "hymni": "hymns",
+      "antiphona": "antiphon",
+      "antiphonae": "of antiphon",
+      "antiphonam": "antiphon",
+      "antiphonae": "antiphons",
+      "responsorium": "responsory",
+      "responsorii": "of responsory",
+      "responsorium": "responsory",
+      "responsoria": "responsories",
+      "versiculus": "versicle",
+      "versiculi": "of versicle",
+      "versiculum": "versicle",
+      "versiculi": "versicles",
+      "oratio": "prayer",
+      "orationis": "of prayer",
+      "orationem": "prayer",
+      "orationes": "prayers",
+      "prex": "prayer",
+      "precis": "of prayer",
+      "precem": "prayer",
+      "preces": "prayers",
+      "supplicatio": "supplication",
+      "supplicationis": "of supplication",
+      "supplicationem": "supplication",
+      "supplicationes": "supplications",
+      "litania": "litany",
+      "litaniae": "of litany",
+      "litaniam": "litany",
+      "litaniae": "litanies",
+      "benedictio": "blessing",
+      "benedictionis": "of blessing",
+      "benedictionem": "blessing",
+      "benedictiones": "blessings",
+      "consecratio": "consecration",
+      "consecrationis": "of consecration",
+      "consecrationem": "consecration",
+      "consecrationes": "consecrations",
+      "sanctificatio": "sanctification",
+      "sanctificationis": "of sanctification",
+      "sanctificationem": "sanctification",
+      "incensum": "incense",
+      "incensi": "of incense",
+      "incensum": "incense",
+      "thuribulum": "thurible",
+      "thuribuli": "of thurible",
+      "thuribulum": "thurible",
+      "thuribula": "thuribles",
+      "cereus": "candle",
+      "cerei": "of candle",
+      "cereum": "candle",
+      "cerei": "candles",
+      "luminar": "candle",
+      "luminaris": "of candle",
+      "luminare": "candle",
+      "luminaria": "candles",
+      "Stella": "Star",
+      "stellae": "of Star",
+      "stellam": "Star",
+      "coronel": "crown",
+      "coronae": "of crown",
+      "coronam": "crown",
+      "coronae": "crowns",
+      "regnum": "kingdom",
+      "regni": "of kingdom",
+      "regnum": "kingdom",
+      "regna": "kingdoms",
+      "imperium": "empire",
+      "imperii": "of empire",
+      "imperium": "empire",
+      "imperia": "empires",
+      "principatus": "principality",
+      "principatus": "of principality",
+      "principatum": "principality",
+      "principatus": "principalities",
+      "potestas": "power",
+      "potestatis": "of power",
+      "potestatem": "power",
+      "potestates": "powers",
+      "virtus": "virtue",
+      "virtutis": "of virtue",
+      "virtutem": "virtue",
+      "virtutes": "virtues",
+      "dominatio": "domination",
+      "dominationis": "of domination",
+      "dominationem": "domination",
+      "dominationes": "dominations",
+      "thronus": "throne",
+      "throni": "of throne",
+      "thronum": "throne",
+      "throni": "thrones",
+      "seraphim": "seraphim",
+      "cherubim": "cherubim",
+      "archangelus": "archangel",
+      "archangeli": "of archangel",
+      "archangelum": "archangel",
+      "archangeli": "archangels",
+      
+      // Various liturgical parts and responses
+      "Kyrie": "Lord",
+      "eleison": "have mercy",
+      "Christe": "Christ",
+      "Gloria": "Glory",
+      "excelsis": "in the highest",
+      "Sanctus": "Holy",
+      "Dominus": "Lord",
+      "Sabaoth": "of Hosts",
+      "Hosanna": "Hosanna",
+      "Benedictus": "Blessed",
+      "qui": "who",
+      "venit": "comes",
+      "nomine": "name",
+      "Domini": "of the Lord",
+      "Agnus": "Lamb",
+      "Dei": "of God",
+      "qui": "who",
+      "tollis": "take away",
+      "peccata": "sins",
+      "mundi": "of the world",
+      "miserere": "have mercy",
+      "nobis": "on us",
+      "dona": "grant",
+      "pacem": "peace",
+      "credo": "I believe",
+      "unum": "one",
+      "deum": "God",
+      "patrem": "Father",
+      "omnipotentem": "almighty",
+      "factorem": "maker",
+      "caeli": "of heaven",
+      "terrae": "of earth",
+      "visibilium": "of visible things",
+      "omnium": "all",
+      "invisibilium": "of invisible things",
+      "dominum": "Lord",
+      "jesum": "Jesus",
+      "christum": "Christ",
+      "filium": "Son",
+      "unigenitum": "only-begotten",
+      "patre": "Father",
+      "natum": "born",
+      "omnia": "all",
+      "saecula": "ages",
+      "lumen": "light",
+      "lumine": "light",
+      "verum": "true",
+      "vero": "true",
+      "genitum": "begotten",
+      "factum": "made",
+      "consubstantialem": "consubstantial",
+      "patri": "to the Father",
+      "quem": "whom",
+      "facta": "were made",
+      "sunt": "they are",
+      "propter": "for",
+      "homines": "men",
+      "nostram": "our",
+      "salutem": "salvation",
+      "descendit": "came down",
+      "caelis": "heaven",
+      "incarnatus": "incarnate",
+      "est": "he is",
+      "spiritu": "Spirit",
+      "sancto": "Holy",
+      "maria": "Mary",
+      "virgine": "Virgin",
+      "homo": "man",
+      "crucifixus": "crucified",
+      "etiam": "also",
+      "pontio": "Pontius",
+      "pilato": "Pilate",
+      "passus": "he suffered",
+      "sepultus": "was buried",
+      "resurrexit": "he rose again",
+      "tertia": "third",
+      "die": "day",
+      "secundum": "according to",
+      "scripturas": "the Scriptures",
+      "ascendit": "he ascended",
+      "caelum": "heaven",
+      "sedet": "he sits",
+      "dexteram": "right hand",
+      "patris": "of the Father",
+      "iterum": "again",
+      "venturus": "he will come",
+      "gloria": "glory",
+      "judicare": "to judge",
+      "vivos": "the living",
+      "mortuos": "the dead",
+      "cujus": "whose",
+      "regni": "kingdom",
+      "non": "not",
+      "erit": "will be",
+      "finis": "end",
+      "spiritum": "the Spirit",
+      "sanctum": "Holy",
+      "dominum": "Lord",
+      "vivificantem": "giver of life",
+      "ex": "from",
+      "patre": "the Father",
+      "filioque": "and the Son",
+      "procedit": "proceeds",
+      "cum": "with",
+      "patre": "the Father",
+      "et": "and",
+      "filio": "the Son",
+      "simul": "together",
+      "adoratur": "is adored",
+      "conglorificatur": "glorified",
+      "locutus": "spoke",
+      "per": "by",
+      "prophetas": "the Prophets",
+      "unam": "one",
+      "sanctam": "holy",
+      "catholicam": "catholic",
+      "apostolicam": "apostolic",
+      "Ecclesiam": "Church",
+      "confiteor": "I confess",
+      "baptisma": "baptism",
+      "remissionem": "the remission",
+      "peccatorum": "of sins",
+      "exspecto": "I expect",
+      "resurrectionem": "the resurrection",
+      "mortuorum": "of the dead",
+      "vitam": "the life",
+      "venturi": "of the coming",
+      "saeculi": "age",
+      "Amen": "Amen",
+      
+      // Terms for the offertory and canon
+      "Suscipe": "Accept",
+      "sancte": "holy",
+      "Pater": "Father",
+      "omnipotens": "almighty",
+      "aeterne": "eternal",
+      "hanc": "this",
+      "immaculatam": "immaculate",
+      "hostiam": "host",
+      "quam": "which",
+      "indigne": "unworthy",
+      "famulus": "servant",
+      "tuus": "your",
+      "offero": "I offer",
+      "tibi": "to you",
+      "deo": "God",
+      "meo": "my",
+      "vivo": "living",
+      "vero": "true",
+      "innumerabilibus": "innumerable",
+      "peccatis": "sins",
+      "offensionibus": "offenses",
+      "negligentiis": "negligences",
+      "meis": "my",
+      "omnibus": "all",
+      "circumstantibus": "standing around",
+      "sed": "but",
+      "fidelibus": "faithful",
+      "christianis": "Christians",
+      "vivis": "living",
+      "atque": "and",
+      "defunctis": "deceased",
+      "ut": "that",
+      "mihi": "to me",
+      "illis": "to them",
+      "proficiat": "it may profit",
+      "ad": "unto",
+      "salutem": "salvation",
+      "aeternam": "everlasting",
+      
+      // Terms for consecration and communion
+      "pridie": "the day before",
+      "pateretur": "he suffered",
+      "accepit": "took",
+      "panem": "bread",
+      "sanctas": "holy",
+      "venerabiles": "venerable",
+      "manus": "hands",
+      "suas": "his",
+      "elevatis": "with raised",
+      "oculis": "eyes",
+      "caelum": "heaven",
+      "gratias": "thanks",
+      "agens": "giving",
+      "benedixit": "he blessed",
+      "fregit": "broke",
+      "deditque": "and gave",
+      "discipulis": "to disciples",
+      "suis": "his",
+      "dicens": "saying",
+      "Accipite": "Take",
+      "manducate": "eat ye",
+      "hoc": "this",
+      "omnes": "all",
+      "HOC": "THIS",
+      "EST": "IS",
+      "ENIM": "FOR",
+      "CORPUS": "BODY",
+      "MEUM": "MY",
+      "Simili": "In like",
+      "modo": "manner",
+      "postquam": "after", 
+      "cenatum": "he had supped",
+      "accipiens": "taking",
+      "hunc": "this",
+      "praeclarum": "excellent",
+      "Calicem": "Chalice",
+      "item": "also",
+      "bibite": "drink ye",
+      "eo": "this",
+      "HIC": "THIS",
+      "CALIX": "CHALICE",
+      "SANGUINIS": "BLOOD",
+      "MEI": "MY",
+      "NOVI": "NEW",
+      "AETERNI": "ETERNAL",
+      "TESTAMENTI": "TESTAMENT",
+      "MYSTERIUM": "MYSTERY",
+      "FIDEI": "FAITH",
+      "QUI": "WHICH",
+      "PRO": "FOR",
+      "VOBIS": "YOU",
+      "ET": "AND",
+      "MULTIS": "MANY",
+      "EFFUNDETUR": "SHALL BE SHED",
+      "IN": "UNTO",
+      "REMISSIONEM": "REMISSION",
+      "PECCATORUM": "OF SINS",
+      "Haec": "As",
+      "quotiescumque": "often as",
+      "feceritis": "ye do these things",
+      "mei": "my",
+      "memoriam": "remembrance",
+      "facietis": "ye shall do them",
+      
+      // Terms for the conclusion and blessing
+      "Ite": "Go",
+      "Missa": "the Mass",
+      "est": "is ended",
+      "Benedicamus": "Let us bless",
+      "Domino": "the Lord",
+      "Deo": "To God",
+      "gratias": "thanks",
+      "Placeat": "May be pleasing",
+      "sancta": "holy",
+      "Trinitas": "Trinity",
+      "obsequium": "performance",
+      "servitutis": "of homage",
+      "meae": "my",
+      "praesta": "grant",
+      "sacrificium": "sacrifice",
+      "quod": "which",
+      "oculis": "sight",
+      "tuae": "your",
+      "majestatis": "majesty",
+      "indignus": "unworthy",
+      "obtuli": "I have offered up",
+      "sit": "may be",
+      "acceptabile": "acceptable",
+      "mihique": "for me",
+      "pro": "for",
+      "quibus": "whom",
+      "illud": "it",
+      "te": "you",
+      "miserante": "through your mercy",
+      "propitiabile": "a propitiation",
+      "Christum": "Christ",
+      "nostrum": "our",
+      "Benedicat": "May bless",
+      "vos": "you",
+      "Spiritus": "Spirit",
+      "Sanctus": "Holy",
+      
+      // Initial and last Gospel terms
+      "Initium": "The beginning",
+      "sancti": "of the holy",
+      "Evangelii": "Gospel",
+      "Joannem": "John",
+      "principio": "the beginning",
+      "erat": "was",
+      "Verbum": "the Word",
+      "apud": "with",
+      "ipsum": "him",
+      "sine": "without",
+      "ipso": "him",
+      "factum": "was made",
+      "nihil": "nothing",
+      "vita": "life",
+      "deficit": "lacking",
+      "lux": "light",
+      "hominum": "of men",
+      "tenebris": "darkness",
+      "lucet": "shineth",
+      "tenebrae": "darkness",
+      "eam": "it",
+      "comprehenderunt": "comprehend",
+      "Fuit": "There was",
+      "missus": "sent",
+      "cui": "whose",
+      "nomen": "name",
+      "Joannes": "John",
+      "Hic": "This man",
+      "testimonium": "witness",
+      "perhiberet": "to testify",
+      "lumine": "Light",
+      "crederent": "might believe",
+      "illum": "Him",
+      "Non": "He was not",
+      "ille": "he",
+      "Erat": "That was",
+      "vera": "true",
+      "quae": "which",
+      "illuminat": "enlighteneth",
+      "hominem": "man",
+      "venientem": "that cometh",
+      "hunc": "this",
+      "mundum": "world",
+      "mundo": "world",
+      "mundus": "world",
+      "factus": "was made",
+      "cognovit": "knew",
+      "propria": "His own",
+      "venit": "came",
+      "sui": "His own",
+      "receperunt": "received",
+      "Quotquot": "But as many",
+      "autem": "however",
+      "receperunt": "received",
+      "eum": "Him",
+      "dedit": "gave",
+      "eis": "to them",
+      "potestatem": "power",
+      "filios": "sons",
+      "fieri": "to become",
+      "his": "to them",
+      "credunt": "believe",
+      "sanguinibus": "blood",
+      "neque": "nor",
+      "voluntate": "will",
+      "carnis": "of the flesh",
+      "viri": "of man",
+      "nati": "are born",
+      "caro": "flesh",
+      "habitavit": "dwelt",
+      "vidimus": "we saw",
+      "gloriam": "glory",
+      "ejus": "his",
+      "quasi": "as",
+      "Unigeniti": "Only begotten",
+      "plenum": "full",
+      "gratiae": "of grace",
+      "veritatis": "truth",
+
+      // Common words that appear in various liturgical contexts
+      "saeculorum": "of ages",
+      "populus": "people",
+      "populi": "of people",
+      "populum": "people",
+      "plebs": "people",
+      "plebis": "of people",
+      "plebem": "people",
+      "gens": "nation",
+      "gentis": "of nation",
+      "gentem": "nation",
+      "gentes": "nations",
+      "gentium": "of nations",
+      "gentibus": "to nations",
+      "tribus": "tribe",
+      "tribus": "of tribe",
+      "tribum": "tribe",
+      "tribus": "tribes",
+      "familia": "family",
+      "familiae": "of family",
+      "familiam": "family",
+      "domus": "house",
+      "domus": "of house",
+      "domui": "to house",
+      "domum": "house",
+      "domo": "from house",
+      "civitas": "city",
+      "civitatis": "of city",
+      "civitati": "to city",
+      "civitatem": "city",
+      "civitate": "from city",
+      "urbs": "city",
+      "urbis": "of city",
+      "urbi": "to city",
+      "urbem": "city",
+      "urbe": "from city",
+      "regio": "region",
+      "regionis": "of region",
+      "regioni": "to region",
+      "regionem": "region",
+      "regione": "from region",
+      "provincia": "province",
+      "provinciae": "of province",
+      "provinciae": "to province",
+      "provinciam": "province",
+      "provincia": "from province",
+      "imperium": "empire",
+      "imperi": "of empire",
+      "imperio": "to empire",
+      "imperium": "empire",
+      "imperio": "from empire",
+      "exercitus": "army",
+      "exercitus": "of army",
+      "exercitui": "to army",
+      "exercitum": "army",
+      "exercitu": "from army",
+      "miles": "soldier",
+      "militis": "of soldier",
+      "militi": "to soldier",
+      "militem": "soldier",
+      "milite": "from soldier",
+
+      // Additional time-related terms
+      "quando": "when",
+      "dum": "while",
+      "cum": "when",
+      "postquam": "after",
+      "antequam": "before",
+      "priusquam": "before",
+      "donec": "until",
+      "quamdiu": "as long as",
+      "quotiens": "as often as",
+      "aliquando": "sometimes",
+      "numquam": "never",
+      "semper": "always",
+      "saepe": "often",
+      "raro": "rarely",
+      "interdum": "sometimes",
+      "subinde": "from time to time",
+      "continenter": "continuously",
+      "perpetuo": "perpetually",
+      "aeternaliter": "eternally",
+
+      // Additional commonly used words in liturgy
+      "benedico": "I bless",
+      "benedicas": "you may bless",
+      "benedicat": "may he bless",
+      "benedicamus": "let us bless",
+      "benedicite": "bless",
+      "benedicunt": "they bless",
+      "benedictus": "blessed",
+      "benedicta": "blessed",
+      "benedictum": "blessed",
+      "benedictio": "blessing",
+      "benedictionis": "of blessing",
+      "benedictioni": "to blessing",
+      "benedictionem": "blessing",
+      "benedictione": "from blessing",
+      "laudo": "I praise",
+      "laudas": "you praise",
+      "laudat": "he praises",
+      "laudamus": "we praise",
+      "laudatis": "you praise",
+      "laudant": "they praise",
+      "laudabo": "I will praise",
+      "laudabis": "you will praise",
+      "laudabit": "he will praise",
+      "laudabimus": "we will praise",
+      "laudabitis": "you will praise",
+      "laudabunt": "they will praise",
+      "adoro": "I adore",
+      "adoras": "you adore",
+      "adorat": "he adores",
+      "adoramus": "we adore",
+      "adoratis": "you adore",
+      "adorant": "they adore",
+      "magnifico": "I magnify",
+      "magnificas": "you magnify",
+      "magnificat": "magnifies",
+      "magnificamus": "we magnify",
+      "magnificatis": "you magnify",
+      "magnificant": "they magnify",
+      "glorifico": "I glorify",
+      "glorificas": "you glorify",
+      "glorificat": "he glorifies",
+      "glorificamus": "we glorify",
+      "glorificatis": "you glorify",
+      "glorificant": "they glorify",
+      "sanctifico": "I sanctify",
+      "sanctificas": "you sanctify",
+      "sanctificat": "he sanctifies",
+      "sanctificamus": "we sanctify",
+      "sanctificatis": "you sanctify",
+      "sanctificant": "they sanctify",
+      "purifico": "I purify",
+      "purificas": "you purify",
+      "purificat": "he purifies",
+      "purificamus": "we purify",
+      "purificatis": "you purify",
+      "purificant": "they purify",
+      "mundo": "I cleanse",
+      "mundas": "you cleanse",
+      "mundat": "he cleanses",
+      "mundamus": "we cleanse",
+      "mundatis": "you cleanse",
+      "mundant": "they cleanse",
+      "lustro": "I purify",
+      "lustras": "you purify",
+      "lustrat": "he purifies",
+      "lustramus": "we purify",
+      "lustratis": "you purify",
+      "lustrant": "they purify",
+      "emundo": "I cleanse",
+      "emundas": "you cleanse",
+      "emundat": "he cleanses",
+      "emundamus": "we cleanse",
+      "emundatis": "you cleanse",
+      "emundant": "they cleanse",
+      "aspergeo": "I sprinkle",
+      "asperges": "you sprinkle",
+      "aspergit": "he sprinkles",
+      "aspergimus": "we sprinkle",
+      "aspergitis": "you sprinkle",
+      "aspergunt": "they sprinkle",
+      "aspergo": "I sprinkle",
+      "aspergis": "you sprinkle",
+      "aspergit": "he sprinkles",
+      "aspergimus": "we sprinkle",
+      "aspergitis": "you sprinkle",
+      "aspergunt": "they sprinkle",
+      "consecro": "I consecrate",
+      "consecras": "you consecrate",
+      "consecrat": "he consecrates",
+      "consecramus": "we consecrate",
+      "consecratis": "you consecrate",
+      "consecrant": "they consecrate",
+      "egredientem": "going forth",
+      "latere": "side", 
+      "dextro": "right",
+      "alleluja": "alleluia",
+      "quos": "whom",
+      "pervenit": "reaches",
+      "ista": "this",
+      "salvi": "saved",
+      "facti": "made",
+      "dicent": "will say",
+      "exaudi": "Hear",
+      "mittere": "to send",
+      "digneris": "deign",
+      "custodiat": "may guard",
+      "foveat": "may cherish", 
+      "protegat": "may protect",
+      "visitet": "may visit",
+      "defendat": "may defend",
+      "habitantes": "dwelling",
+      "habitaculo": "dwelling place",
+      "introibo": "I will go",
+      "laetificat": "gladdens",
+      "juventutem": "youth",
+      "judica": "Judge",
+      "discerne": "discern",
+      "causam": "cause",
+      "gente": "people",
+      "homine": "man", 
+      "iniquo": "unjust",
+      "doloso": "deceitful",
+      "erue": "deliver",
+      "fortitudo": "strength",
+      "quare": "why",
+      "repulisti": "have rejected",
+      "incedo": "I walk",
+      "dum": "while",
+      "affligit": "afflicts",
+      "inimicus": "enemy",
+      "kyrie": "Lord",
+      "excelsis": "highest",
+      "hominibus": "to men",
+      "bonae": "good",
+      "voluntatis": "of will",
+      "laudamus": "We praise",
+      "benedicimus": "We bless", 
+      "adoramus": "We adore",
+      "glorificamus": "We glorify",
+      "gratias": "Thanks",
+      "agimus": "we give",
+      "tuam": "your",
+      "rex": "King",
+      "caelestis": "heavenly",
+      "fili": "Son",
+      "unigenite": "only-begotten",
+      "tollis": "take away",
+      "miserere": "have mercy",
+      "suscipe": "receive",
+      "deprecationem": "prayer",
+      "nostram": "our",
+      "sedes": "sit",
+      "dexteram": "right hand",
+      "quoniam": "Because",
+      "solus": "alone",
+      "altissimus": "Most High",
+      "omnipotentem": "almighty",
+      "factorem": "maker",
+      "visibilium": "visible",
+      "invisibilium": "invisible",
+      "unigenitum": "only-begotten",
+      "saecula": "ages",
+      "consubstantialem": "consubstantial",
+      "homines": "men",
+      "salutem": "salvation", 
+      "descendit": "descended",
+      "caelis": "heaven",
+      "incarnatus": "incarnate",
+      "passus": "suffered",
+      "sepultus": "buried",
+      "resurrexit": "rose again",
+      "tertia": "third",
+      "secundum": "according to",
+      "scripturas": "Scriptures",
+      "ascendit": "ascended",
+      "iterum": "again",
+      "venturus": "will come",
+      "judicare": "to judge",
+      "vivos": "living",
+      "mortuos": "dead",
+      "cujus": "whose",
+      "regni": "kingdom",
+      "vivificantem": "life-giving",
+      "filioque": "and the Son", 
+      "procedit": "proceeds",
+      "adoratur": "is adored",
+      "conglorificatur": "is glorified",
+      "locutus": "spoke",
+      "prophetas": "Prophets",
+      "catholicam": "catholic",
+      "apostolicam": "apostolic",
+      "ecclesiam": "Church",
+      "baptisma": "baptism",
+      "remissionem": "remission",
+      "peccatorum": "of sins",
+      "exspecto": "I await",
+      "resurrectionem": "resurrection",
+      "mortuorum": "of the dead",
+      "venturi": "to come",
+      "saeculi": "age",
+      "igitur": "therefore",
+      "clementissime": "most merciful",
+      "supplices": "humbly",
+      "rogamus": "we ask",
+      "petimus": "we beseech",
+      "accepta": "acceptable",
+      "habeas": "you may have",
+      "benedicas": "you may bless",
+      "munera": "gifts",
+      "illibata": "undefiled",
+      "memento": "Remember",
+      "famulorum": "of servants",
+      "famularumque": "and of handmaids",
+      "tuarum": "your",
+      "jubilate": "Rejoice",
+      "omnis": "all",
+      "psalmum": "psalm",
+      "dicite": "say",
+      "nomini": "to the name",
+      "ejus": "his",
+      "laudi": "to praise",
+      "errantibus": "to those who err",
+      "redire": "to return",
+      "justitiae": "of justice",
+      "veritatis": "of truth",
+      "ostendis": "you show",
+      "cunctis": "to all",
+      "christiana": "Christian",
+      "professione": "profession",
+      "censentur": "are counted",
+      "respuere": "to reject",
+      "huic": "to this",
+      "inimica": "hostile",
+      "nomini": "to the name",
+      "apta": "fitting",
+      "sectari": "to follow",
+      "tecum": "with you",
+      "unitate": "unity",
+      "dixisti": "you said",
+      "apostolis": "to the Apostles",
+      "relinquo": "I leave",
+      "respicias": "look upon",
+      "fidem": "faith",
+      "ecclesiae": "of the Church",
+      "eamque": "and it",
+      "voluntatem": "will",
+      "pacificare": "to pacify",
+      "coadunare": "to unite",
+      "vivis": "you live",
+      "regnas": "you reign",
+      "cooperante": "cooperating",
+      "mortem": "death",
+      "mundum": "world",
+      "vivificasti": "you gave life",
+      "libera": "free",
+      "sacrosanctum": "most sacred",
+      "sanguinem": "Blood",
+      "omnibus": "all",
+      "iniquitatibus": "iniquities",
+      "universis": "all",
+      "malis": "evils",
+      "inhaerere": "to cling",
+      "mandatis": "commandments",
+      "separari": "to be separated",
+      "permittas": "allow",
+      "eodem": "same",
+      "perceptio": "Reception",
+      "corporis": "of the Body",
+      "indignus": "unworthy",
+      "sumere": "to take",
+      "praesumo": "I presume",
+      "proveniat": "may it come",
+      "judicium": "judgment",
+      "condemnationem": "condemnation",
+      "pietate": "piety",
+      "prosit": "may it profit",
+      "tutamentum": "protection",
+      "mentis": "of mind",
+      "corporis": "of body",
+      "medelam": "healing",
+      "percipiendam": "to be received",
+      "panem": "Bread",
+      "caelestem": "heavenly",
+      "accipiam": "I will receive",
+      "invocabo": "I will call upon",
+      "dignus": "worthy",
+      "intres": "enter",
+      "tectum": "roof",
+      "tantum": "only",
+      "verbo": "word",
+      "sanabitur": "will be healed",
+      "anima": "soul",
+      "custodiat": "may guard",
+      "aeternam": "eternal",
+      "retribuam": "shall I repay",
+      "retribuit": "has given",
+      "calicem": "Chalice",
+      "salutaris": "of salvation",
+      "laudans": "Praising",
+      "inimicis": "enemies",
+      "salvus": "safe",
+      "sanguis": "Blood"
+    };
+
+    // Improved normalization function
+    function normalizeLatin(text) {
+      // First remove all punctuation
+      let cleaned = text.replace(/[.,;:!?¿¡'"«»()[\]{}—–-]/g, '');
+
+      // Then normalize to lowercase and remove diacritics
+      return cleaned
+        .toLowerCase()
+        .replace(/[áàâäãā]/g, 'a')
+        .replace(/[éèêëē]/g, 'e')
+        .replace(/[íìîïī]/g, 'i')
+        .replace(/[óòôöõō]/g, 'o')
+        .replace(/[úùûüū]/g, 'u')
+        .replace(/[ýỳŷÿȳ]/g, 'y')
+        .replace(/æ/g, 'ae')
+        .replace(/ǽ/g, 'ae')
+        .replace(/œ/g, 'oe')
+        .replace(/ç/g, 'c')
+        .replace(/ñ/g, 'n');
+    }
+
+    // Preserve capitalization in translation
+    function translateWord(latinWord) {
+      // Store original casing
+      const isCapitalized = latinWord.length > 0 && latinWord[0] === latinWord[0].toUpperCase();
+      const isAllCaps = latinWord === latinWord.toUpperCase();
+      
+      // Clean and normalize for lookup
+      const cleanWord = latinWord.replace(/[.,;:!?¿¡'"«»()[\]{}—–-]/g, '');
+      const normalizedWord = normalizeLatin(cleanWord).toLowerCase();
+      
+      // Get translation
+      let translation = lexicon[normalizedWord];
+      
+      if (!translation) {
+        return `[${latinWord}]`;
+      }
+      
+      // Apply original casing to translation
+      if (isAllCaps && translation.length > 1) {
+        translation = translation.toUpperCase();
+      } else if (isCapitalized) {
+        translation = translation.charAt(0).toUpperCase() + translation.slice(1);
+      }
+      
+      return translation;
+    }
+
+    // Get translated text for current language
+    function getTranslation(key, fallback = '') {
+      if (rubricTranslations[key]) {
+        return rubricTranslations[key][currentLanguage] || rubricTranslations[key]['en'] || fallback;
+      }
+      if (actionTranslations[key]) {
+        return actionTranslations[key][currentLanguage] || actionTranslations[key]['en'] || fallback;
+      }
+      return fallback;
+    }
+
+    // Enhanced catalog with proper priest markings
+    const catalog = {
+      "ordinary:vidi-aquam": [
+        { type: "action", key: "action.stand" },
+        { type: "rb", text_la: "Tempore Paschali, loco Ant. Asperges me, dicitur:" },
+        {
+          type: "pr_blk",
+          speaker: "Ant.", // Antiphon, usually sung by choir/cantor, or Priest
+          initial: "V",
+          lines: [
+            { segments: [ "Vidi aquam egrediéntem de templo a látere dextro, allelúja: et omnes ad quos pervénit aqua ista, salvi facti sunt, et dicent: allelúja, allelúja." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "Ps.", // Psalm verse, as above
+          lines: [
+            { segments: [ "Confitémini Dómino, quóniam bonus: quóniam in sǽculum misericórdia ejus." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "V", // Versicle (Priest or Cantor)
+          lines: [
+            { segments: [ "Glória Patri, et Fílio, et Spirítui Sancto." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "R", // Response (Server/People)
+          lines: [
+            { segments: [ "Sicut erat in princípio, et nunc, et semper, et in sǽcula sæculórum. Amen." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "Ant.",
+          initial: "V",
+          lines: [
+            { segments: [ "Vidi aquam egrediéntem de templo a látere dextro, allelúja: et omnes ad quos pervénit aqua ista, salvi facti sunt, et dicent: allelúja, allelúja." ] }
+          ]
+        },
+        { type: "rb", text_la: "Sacerdos, stans versus ad altare, dicit:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Osténde nobis, Dómine, misericórdiam tuam, allelúja." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et salutáre tuum da nobis, allelúja." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Dómine, exáudi oratiónem meam." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et clamor meus ad te véniat." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Dóminus vobíscum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et cum spíritu tuo." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "O",
+          lines: [
+            { segments: [ "rémus." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P", // Prayer by Priest
+          initial: "E",
+          lines: [
+            { segments: [ "xáudi nos, Dómine sancte, Pater omnípotens, ætérne Deus: et míttere dignéris sanctum Angelum tuum de cælis, qui custódiat, fóveat, prótegat, vísitet atque deféndat omnes habitántes in hoc habitáculo. Per Christum Dóminum nostrum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Amen." ] }
+          ]
+        }
+      ],
+
+      "ordinary:prayers-foot-altar": [
+        { type: "action", key: "action.kneel" },
+        { type: "rb", text_la: "Sacerdos paratus cum ingreditur ad Altare, facta illi debita reverentia, signat se signo crucis a fronte ad pectus, et clara voce dicit:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "I",
+          lines: [
+            { segments: [ "n nómine Patris, + et Fílii, et Spíritus Sancti. Amen." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Deinde, junctis manibus ante pectus, incipit Antiphonam:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Introíbo ad altáre Dei." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Ad Deum qui lætíficat juventútem meam." ] }
+          ]
+        },
+        { type: "rb", text_la: "Ps. 42. Judica me, Deus." },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "J",
+          lines: [
+            { segments: [ "údica me, Deus, et discérne causam meam de gente non sancta: ab hómine iníquo et dolóso érue me." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Quia tu es, Deus, fortitúdo mea: quare me repulísti, et quare tristis incédo, dum afflígit me inimícus?" ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Emítte lucem tuam et veritátem tuam: ipsa me deduxérunt, et adduxérunt in montem sanctum tuum et in tabernácula tua." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et introíbo ad altáre Dei: ad Deum, qui lætíficat juventútem meam." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Confitébor tibi in cíthara, Deus, Deus meus: quare tristis es, ánima mea, et quare contúrbas me?" ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Spera in Deo, quóniam adhuc confitébor illi: salutáre vultus mei, et Deus meus." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Glória Patri, et Fílio, et Spirítui Sancto." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Sicut erat in princípio, et nunc, et semper: et in sǽcula sæculórum. Amen." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Introíbo ad altáre Dei." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Ad Deum, qui lætíficat juventútem meam." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Adjutorium nostrum + in nomine Domini." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Qui fecit caelum et terram." ] }
+          ]
+        },
+        { type: "rb", text_la: "Sacerdos, profunde inclinatus, dicit Confiteor." },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "C",
+          lines: [
+            { segments: [ "onfíteor Deo omnipoténti, beátæ Maríæ semper Vírgini, beáto Michaéli Archángelo, beáto Joánni Baptístæ, sanctis Apóstolis Petro et Paulo, ómnibus Sanctis, et vobis, fratres: quia peccávi nimis cogitatióne, verbo et ópere:" ], po: true },
+            { type: "action", key: "action.strike_breast_thrice"},
+            { segments: [ "mea culpa, mea culpa, mea máxima culpa. Ideo precor beátam Maríam semper Vírginem, beátum Michaélem Archángelum, beátum Joánnem Baptístam, sanctos Apóstolos Petrum et Paulum, omnes Sanctos, et vos, fratres, oráre pro me ad Dóminum Deum nostrum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Misereátur tui omnípotens Deus, et, dimíssis peccátis tuis, perdúcat te ad vitam ætérnam." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Amen." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Ministri (vel Sacerdos si solus) dicunt Confiteor." },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          initial: "C",
+          lines: [
+            { segments: [ "onfíteor Deo omnipoténti, beátæ Maríæ semper Vírgini, beáto Michaéli Archángelo, beáto Joánni Baptístæ, sanctis Apóstolis Petro et Paulo, ómnibus Sanctis, et tibi, pater: quia peccávi nimis cogitatióne, verbo et ópere:" ] },
+            { type: "action", key: "action.strike_breast_thrice"},
+            { segments: [ "mea culpa, mea culpa, mea máxima culpa. Ideo precor beátam Maríam semper Vírginem, beátum Michaélem Archángelum, beátum Joánnem Baptístam, sanctos Apóstolos Petrum et Paulum, omnes Sanctos, et te, pater, oráre pro me ad Dóminum Deum nostrum." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Misereátur vestri omnípotens Deus, et, dimíssis peccátis vestris, perdúcat vos ad vitam ætérnam." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Amen." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Indulgéntiam, + absolutiónem et remissiónem peccatórum nostrórum tríbuat nobis omnípotens et miséricors Dóminus." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Amen." ] }
+          ]
+        },
+        { type: "rb", text_la: "Sacerdos, adhuc inclinatus, dicit:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Deus, tu convérsus vivificábis nos." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et plebs tua lætábitur in te." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Osténde nobis, Dómine, misericórdiam tuam." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et salutáre tuum da nobis." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Dómine, exáudi oratiónem meam." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et clamor meus ad te véniat." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Dóminus vobíscum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et cum spíritu tuo." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "O",
+          lines: [
+            { segments: [ "rémus." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Sacerdos ascendit ad altare, dicens secrete:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "A",
+          lines: [
+            { segments: [ "ufer a nobis, quǽsumus, Dómine, iniquitátes nostras: ut ad Sancta sanctórum puris mereámur méntibus introíre. Per Christum Dóminum nostrum. Amen." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Manibus junctis super Altare, inclinatus dicit:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "O",
+          lines: [
+            { segments: [ "rámus te, Dómine, per mérita Sanctórum tuórum," ], po: true },
+            { type: "rb", text_la: "Osculatur Altare in medio"},
+            { segments: [ "quorum relíquiæ hic sunt, et ómnium Sanctórum: ut indulgére dignéris ómnia peccáta mea. Amen." ], po: true }
+          ]
+        }
+      ],
+      "proper:introit:easter-4": [
+        { type: "action", key: "action.stand" },
+        { type: "rb", text_la: "Ps. 97, 1, 2" },
+        {
+          type: "pr_blk",
+          initial: "C", // Priest intones if no choir
+          lines: [
+            { segments: [ "antáte Dómino cánticum novum, allelúja: quia mirabília fecit Dóminus, allelúja; ante conspéctum géntium revelávit justítiam suam, allelúja, allelúja, allelúja." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          lines: [ // Choir or Priest
+            { segments: [ "Ps. Salvávit sibi déxtera ejus: et bráchium sanctum ejus." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [ // Priest leads
+            { segments: [ "Glória Patri, et Fílio, et Spirítui Sancto." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [ // Server/Choir responds
+            { segments: [ "Sicut erat in princípio, et nunc, et semper, et in sǽcula sæculórum. Amen." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          initial: "C", // Antiphon repeated
+          lines: [
+            { segments: [ "antáte Dómino cánticum novum, allelúja: quia mirabília fecit Dóminus, allelúja; ante conspéctum géntium revelávit justítiam suam, allelúja, allelúja, allelúja." ] }
+          ]
+        }
+      ],
+
+      "ordinary:kyrie": [
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [ { segments: [ "Kýrie, eléison." ], po: true } ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [ { segments: [ "Kýrie, eléison." ] } ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [ { segments: [ "Kýrie, eléison." ], po: true } ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [ { segments: [ "Christe, eléison." ] } ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [ { segments: [ "Christe, eléison." ], po: true } ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [ { segments: [ "Christe, eléison." ] } ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [ { segments: [ "Kýrie, eléison." ], po: true } ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [ { segments: [ "Kýrie, eléison." ] } ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [ { segments: [ "Kýrie, eléison." ], po: true } ]
+        }
+      ],
+
+      "ordinary:gloria": [
+        { type: "action", key: "action.stand" },
+        {
+          type: "pr_blk",
+          speaker: "P", // Priest intones
+          initial: "G",
+          lines: [
+            { segments: [ "lória in excélsis Deo." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk", // Priest and People continue
+          lines: [
+            { segments: [ "Et in terra pax homínibus bonæ voluntátis. Laudámus te. Benedícimus te. Adorámus te. Glorificámus te. Grátias ágimus tibi propter magnam glóriam tuam. Dómine Deus, Rex cæléstis, Deus Pater omnípotens. Dómine Fili unigénite, Jesu Christe. Dómine Deus, Agnus Dei, Fílius Patris. Qui tollis peccáta mundi, miserére nobis. Qui tollis peccáta mundi, súscipe deprecatiónem nostram. Qui sedes ad déxteram Patris, miserére nobis. Quóniam tu solus Sanctus. Tu solus Dóminus. Tu solus Altíssimus, Jesu Christe. Cum Sancto Spíritu, + in glória Dei Patris. Amen." ] }
+          ]
+        }
+      ],
+      "proper:collect:easter-4": [
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Dóminus vobíscum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et cum spíritu tuo." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "O",
+          lines: [
+            { segments: [ "rémus." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "D",
+          lines: [
+            { segments: [ "eus, qui fidélium mentes uníus éfficis voluntátis: da pópulis tuis id amáre quod prǽcipis, id desideráre quod promíttis; ut inter mundánas varietátes ibi nostra fixa sint corda, ubi vera sunt gáudia." ], po: true },
+            { segments: [ "Per Dóminum nostrum Jesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Amen." ] }
+          ]
+        }
+      ],
+      "proper:epistle:easter-4": [
+        { type: "action", key: "action.sit" },
+        { type: "rb", text_la: "Léctio Epístolæ beáti Jacóbi Apóstoli." },
+        { type: "rb", text_la: "Jac. 1, 17-21" },
+        {
+          type: "pr_blk",
+          initial: "C", // Lector reads this
+          lines: [
+            { segments: [ "aríssimi: Omne datum óptimum, et omne donum perféctum desúrsum est, descéndens a Patre lúminum, apud quem non est transmutátio nec vicissitúdinis obumbrátio. Voluntárie enim génuit nos verbo veritátis, ut simus inítium áliquod creatúræ ejus. Scitis, fratres mei dilectíssimi. Sit autem omnis homo velox ad audiéndum: tardus autem ad loquéndum et tardus ad iram. Ira enim viri justítiam Dei non operátur. Propter quod abjiciéntes omnem immundítiam et abundántiam malítiæ, in mansuetúdine suscípite ínsitum verbum, quod potest salváre ánimas vestras." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Deo grátias." ] }
+          ]
+        }
+      ],
+      "proper:alleluia:easter-4": [
+        { type: "action", key: "action.stand" },
+        {
+          type: "pr_blk", // Choir/People
+          lines: [
+            { segments: [ "Allelúja, allelúja." ] }
+          ]
+        },
+        { type: "rb", text_la: "Ps. 117, 16" },
+        {
+          type: "pr_blk", // Choir/People
+          initial: "D",
+          lines: [
+            { segments: [ "éxtera Dómini fecit virtútem: déxtera Dómini exaltávit me. Allelúja." ] }
+          ]
+        },
+        { type: "rb", text_la: "Rom. 6, 9" },
+        {
+          type: "pr_blk", // Choir/People
+          initial: "C",
+          lines: [
+            { segments: [ "hristus resúrgens ex mórtuis jam non móritur: mors illi ultra non dominábitur. Allelúja." ] }
+          ]
+        }
+      ],
+      "proper:gospel:easter-4": [
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Dóminus vobíscum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et cum spíritu tuo." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P", // Deacon or Priest
+          initial: "S",
+          lines: [
+            { segments: [ "equéntia ++ sancti Evangélii secúndum Joánnem." ], po: true }
+          ]
+        },
+        { type: "rb", key: "rubric.sign_book_self" },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Glória tibi, Dómine." ] }
+          ]
+        },
+        { type: "rb", text_la: "Joann. 16, 5-14" },
+        {
+          type: "pr_blk", // Deacon or Priest
+          initial: "I",
+          lines: [
+            { segments: [ "n illo témpore: Dixit Jesus discípulis suis: Vado ad eum, qui misit me: et nemo ex vobis intérrogat me: Quo vadis? Sed quia hæc locútus sum vobis, tristítia implévit cor vestrum. Sed ego veritátem dico vobis: expédit vobis, ut ego vadam: si enim non abíero, Paráclitus non véniet ad vos: si autem abíero, mittam eum ad vos. Et cum vénerit ille, árguet mundum de peccáto et de justítia et de judício. De peccáto quidem, quia non credidérunt in me: de justítia vero, quia ad Patrem vado, et jam non vidébitis me: de judício autem, quia princeps hujus mundi jam judicátus est. Adhuc multa hábeo vobis dícere: sed non potéstis portáre modo. Cum autem vénerit ille Spíritus veritátis, docébit vos omnem veritátem. Non enim loquétur a semetípso: sed quæcúmque áudiet, loquétur, et quæ ventúra sunt, annuntiábit vobis. Ille me clarificábit: quia de meo accípiet et annuntiábit vobis." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Laus tibi, Christe." ] }
+          ]
+        }
+      ],
+      "ordinary:credo": [
+        { type: "action", key: "action.stand" },
+        {
+          type: "pr_blk",
+          speaker: "P", // Priest intones
+          initial: "C",
+          lines: [
+            { segments: [ "redo in unum Deum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk", // Priest and People continue
+          lines: [
+            { segments: [ "Patrem omnipoténtem, factórem cæli et terræ, visibílium ómnium et invisibílium. Et in unum Dóminum Jesum Christum, Fílium Dei unigénitum. Et ex Patre natum ante ómnia sǽcula. Deum de Deo, lumen de lúmine, Deum verum de Deo vero. Génitum, non factum, consubstantiálem Patri: per quem ómnia facta sunt. Qui propter nos hómines et propter nostram salútem descéndit de cælis." ] },
+            { type: "action", key: "action.kneel" },
+            { segments: [ "Et incarnátus est de Spíritu Sancto ex María Vírgine: Et homo factus est." ] },
+            { type: "action", key: "action.stand" },
+            { segments: [ "Crucifíxus étiam pro nobis: sub Póntio Piláto passus, et sepúltus est. Et resurréxit tértia die, secúndum Scriptúras. Et ascéndit in cælum: sedet ad déxteram Patris. Et íterum ventúrus est cum glória judicáre vivos et mórtuos: cujus regni non erit finis. Et in Spíritum Sanctum, Dóminum et vivificántem: qui ex Patre Filióque procédit. Qui cum Patre et Fílio simul adorátur et conglorificátur: qui locútus est per Prophétas. Et unam sanctam cathólicam et apostólicam Ecclésiam. Confíteor unum baptísma in remissiónem peccatórum. Et exspécto resurrectiónem mortuórum. Et vitam ventúri sǽculi. Amen." ] }
+          ]
+        }
+      ],
+      "proper:offertory:easter-4": [
+        { type: "action", key: "action.sit" }, // People sit after Credo usually
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Dóminus vobíscum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et cum spíritu tuo." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "O",
+          lines: [
+            { segments: [ "rémus." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Ps. 65, 1-2, 16" },
+        {
+          type: "pr_blk", // Choir or Priest
+          initial: "J",
+          lines: [
+            { segments: [ "ubiláte Deo, univérsa terra, psalmum dícite nómini ejus: veníte et audíte, et narrábo vobis, omnes qui timétis Deum, quanta fecit Dóminus ánimæ meæ, allelúja." ] }
+          ]
+        }
+      ],
+      "proper:secret:easter-4": [
+        {
+          type: "pr_blk",
+          speaker: "P", // Secret prayers are priest only
+          initial: "D",
+          lines: [
+            { segments: [ "eus, qui nos, per hujus sacrifícii veneránda commércia, uníus summæ divinitátis partícipes effecísti: præsta, quǽsumus; ut, sicut tuam cognóscimus veritátem, sic eam dignis móribus assequámur." ], po: true },
+            { segments: [ "Per Dóminum nostrum Jesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus," ], po: true }
+          ]
+        }
+      ],
+      "ordinary:preface-easter": [
+        { type: "action", key: "action.stand" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Per ómnia sǽcula sæculórum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Amen." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Dóminus vobíscum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et cum spíritu tuo." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Sursum corda." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Habémus ad Dóminum." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Grátias agámus Dómino Deo nostro." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Dignum et justum est." ] }
+          ]
+        },
+        { type: "rb", text_la: "Præfatio Paschalis" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "V",
+          lines: [
+            { segments: [ "ere dignum et justum est, æquum et salutáre: Te quidem, Dómine, omni témpore, sed in hoc potíssimum gloriósius prædicáre, cum Pascha nostrum immolátus est Christus. Ipse enim verus est Agnus, qui ábstulit peccáta mundi. Qui mortem nostram moriéndo destrúxit et vitam resurgéndo reparávit. Et ídeo cum Angelis et Archángelis, cum Thronis et Dominatiónibus cumque omni milítia cœléstis exércitus hymnum glóriæ tuæ cánimus, sine fine dicéntes:" ], po: true }
+          ]
+        }
+      ],
+      "ordinary:sanctus": [
+        { type: "action", key: "action.kneel" }, // People kneel for Sanctus
+        {
+          type: "pr_blk", // Priest and People
+          initial: "S",
+          lines: [
+            { segments: [ "anctus, Sanctus, Sanctus Dóminus Deus Sábaoth. Pleni sunt cæli et terra glória tua. Hosánna in excélsis. Benedíctus qui venit in nómine Dómini. Hosánna in excélsis." ] }
+          ]
+        }
+      ],
+
+      "ordinary:canon": [
+        { type: "rb", text_la: "Sacerdos, profunde inclinatus ante Altare, manibus super eo positis, dicit:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "T",
+          lines: [
+            { segments: [ "e ígitur, clementíssime Pater, per Jesum Christum, Fílium tuum, Dóminum nostrum, súpplices rogámus, ac pétimus," ], po: true },
+            { type: "rb", text_la: "Osculatur Altare et, junctis manibus ante pectus, dicit:" },
+            { segments: [ "uti accépta hábeas et benedícas," ], po: true },
+            { type: "rb", text_la: "Signat ter super Hostiam et Calicem simul, dicens:" },
+            { segments: [ "hæc + dona, hæc + múnera, hæc + sancta sacrifícia illibáta," ], po: true },
+            { type: "rb", text_la: "Extensis manibus prosequitur:" },
+            { segments: [ "in primis, quæ tibi offérimus pro Ecclésia tua sancta cathólica: quam pacificáre, custodíre, adunáre et régere dignéris toto orbe terrárum: una cum fámulo tuo Papa nostro N. et Antístite nostro N. et ómnibus orthodóxis, atque cathólicæ et apostólicæ fídei cultóribus." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Commemoratio pro vivis." },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "M",
+          lines: [
+            { segments: [ "eménto, Dómine, famulórum famularúmque tuarum N. et N." ], po: true },
+            { type: "rb", text_la: "Jungit manus, orat aliquantulum pro quibus orare intendit: deinde manibus extensis prosequitur:" },
+            { segments: [ "et ómnium circumstántium, quorum tibi fides cógnita est et nota devótio, pro quibus tibi offérimus: vel qui tibi ófferunt hoc sacrifícium laudis, pro se suísque ómnibus: pro redemptióne animárum suárum, pro spe salútis et incolumitátis suæ: tibíque reddunt vota sua ætérno Deo, vivo et vero." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Infra Actionem." },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "C",
+          lines: [
+            { segments: [ "ommunicántes, et memóriam venerántes, in primis gloriósæ semper Vírginis Maríæ, Genetrícis Dei et Dómini nostri Jesu Christi: sed et beáti Joseph, ejúsdem Vírginis Sponsi, et beatórum Apostolórum ac Mártyrum tuórum, Petri et Pauli, Andréæ, Jacóbi, Joánnis, Thomæ, Jacóbi, Philíppi, Bartholomǽi, Matthǽi, Simónis et Thaddǽi: Lini, Cleti, Cleméntis, Xysti, Cornélii, Cypriáni, Lauréntii, Chrysógoni, Joánnis et Pauli, Cosmæ et Damiáni: et ómnium Sanctórum tuórum; quorum méritis precibúsque concédas, ut in ómnibus protectiónis tuæ muniámur auxílio." ], po: true },
+            { type: "rb", text_la: "Jungit manus." },
+            { segments: [ "Per eúndem Christum, Dóminum nostrum. Amen." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "H",
+          lines: [
+            { type: "rb", text_la: "Tenens manus expansas super Oblata, dicit:" },
+            { segments: [ "anc ígitur oblatiónem servitútis nostræ, sed et cunctæ famíliæ tuæ, quǽsumus, Dómine, ut placátus accípias: diésque nostros in tua pace dispónas, atque ab ætérna damnatióne nos éripi, et in electórum tuórum júbeas grege numerári." ], po: true },
+            { type: "rb", text_la: "Jungit manus." },
+            { segments: [ "Per Christum, Dóminum nostrum. Amen." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "Q",
+          lines: [
+            { segments: [ "uam oblatiónem tu, Deus, in ómnibus, quǽsumus," ], po: true },
+            { type: "rb", text_la: "Signat ter super Oblata," },
+            { segments: [ "bene+díctam, adscríp+tam, ra+tam, rationábilem, acceptabilémque fácere dignéris:" ], po: true },
+            { type: "rb", text_la: "Signat semel super Hostiam," },
+            { segments: [ "ut nobis Cor+pus," ], po: true },
+            { type: "rb", text_la: "et semel super Calicem," },
+            { segments: [ "et San+guis fiat dilectíssimi Fílii tui," ], po: true },
+            { type: "rb", text_la: "Jungit manus," },
+            { segments: [ "Dómini nostri Jesu Christi." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "Q",
+          lines: [
+            { segments: [ "ui prídie quam paterétur," ], po: true },
+            { type: "rb", text_la: "Accipit Hostiam," },
+            { segments: [ "accépit panem in sanctas ac venerábiles manus suas," ], po: true },
+            { type: "rb", text_la: "Elevat oculos ad cælum," },
+            { segments: [ "elevátis óculis in cælum ad te Deum, Patrem suum omnipoténtem," ], po: true },
+            { type: "rb", text_la: "Caput inclinat," },
+            { segments: [ "tibi grátias agens," ], po: true },
+            { type: "rb", text_la: "Signat super Hostiam," },
+            { segments: [ "bene+díxit, fregit, dedítque discípulis suis, dicens: Accípite, et manducáte ex hoc omnes." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Tenens ambabus manibus Hostiam inter indices et pollices, profert verba consecrationis secrete, distincte et attente super Hostiam." },
+            { segments: [ "HOC EST ENIM CORPUS MEUM." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Quibus verbis prolatis, statim Hostiam consecratam genuflexus adorat: surgit, ostendit populo, reponit super Corporale, et genuflexus iterum adorat." },
+        { type: "rb", text_la: "Tunc, detecto Calice, dicit:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "S",
+          lines: [
+            { segments: [ "ímili modo postquam cenátum est," ], po: true },
+            { type: "rb", text_la: "Ambabus manibus accipit Calicem," },
+            { segments: [ "accípiens et hunc præclárum Cálicem in sanctas ac venerábiles manus suas:" ], po: true },
+            { type: "rb", text_la: "item Caput inclinat," },
+            { segments: [ "item tibi grátias agens," ], po: true },
+            { type: "rb", text_la: "Sinistra tenens Calicem, dextera signat super eum," },
+            { segments: [ "bene+díxit, dedítque discípulis suis, dicens: Accípite, et bíbite ex eo omnes." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Profert verba consecrationis super Calicem, attente, continuate, et secrete, tenens illum parum elevatum." },
+            { segments: [ "HIC EST ENIM CALIX SANGUINIS MEI, NOVI ET ÆTERNI TESTAMENTI: MYSTERIUM FIDEI: QUI PRO VOBIS ET PRO MULTIS EFFUNDETUR IN REMISSIONEM PECCATORUM." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Quibus verbis prolatis, deponit Calicem super Corporale, et dicens secrete:" },
+            { segments: [ "Hæc quotiescúmque fecéritis, in mei memóriam faciétis." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Genuflexus adorat: surgit, ostendit populo, deponit, cooperit, et genuflexus iterum adorat." },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "U",
+          lines: [
+            { type: "rb", text_la: "Deinde disjunctis manibus dicit:" },
+            { segments: [ "nde et mémores, Dómine, nos servi tui, sed et plebs tua sancta, ejúsdem Christi Fílii tui, Dómini nostri, tam beátæ passiónis, nec non et ab ínferis resurrectiónis, sed et in cælos gloriósæ ascensiónis: offérimus præcláræ majestáti tuæ de tuis donis ac datis," ], po: true },
+            { type: "rb", text_la: "Jungit manus, et signat ter super Hostiam, et Calicem simul, dicens:" },
+            { segments: [ "Hóstiam + puram, Hóstiam + sanctam, Hóstiam + immaculátam," ], po: true },
+            { type: "rb", text_la: "Signat semel super Hostiam, dicens:" },
+            { segments: [ "Panem + sanctum vitæ ætérnæ," ], po: true },
+            { type: "rb", text_la: "et semel super Calicem, dicens:" },
+            { segments: [ "et Cálicem + salútis perpétuæ." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "S",
+          lines: [
+            { type: "rb", text_la: "Extensis manibus prosequitur:" },
+            { segments: [ "upra quæ propítio ac seréno vultu respícere dignéris: et accépta habére, sicúti accépta habére dignátus es múnera púeri tui justi Abel, et sacrifícium Patriárchæ nostri Abrahæ: et quod tibi óbtulit summus sacérdos tuus Melchísedech, sanctum sacrifícium, immaculátam hóstiam." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "S",
+          lines: [
+            { type: "rb", text_la: "Profunde inclinatus, junctis manibus et super Altare positis, dicit:" },
+            { segments: [ "úpplices te rogámus, omnípotens Deus: jube hæc perférri per manus sancti Angeli tui in sublíme altáre tuum, in conspéctu divínæ majestátis tuæ: ut, quotquot" ], po: true },
+            { type: "rb", text_la: "Osculatur Altare," },
+            { segments: [ "ex hac altáris participatióne sacrosánctum Fílii tui" ], po: true },
+            { type: "rb", text_la: "Jungit manus, et signat semel super Hostiam, et semel super Calicem," },
+            { segments: [ "Cor+pus, et Sán+guinem sumpsérimus," ], po: true },
+            { type: "rb", text_la: "Seipsum signat, dicens:" },
+            { segments: [ "omni benedictióne cælésti et grátia repleámur." ], po: true },
+            { type: "rb", text_la: "Jungit manus." },
+            { segments: [ "Per eúndem Christum, Dóminum nostrum. Amen." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Commemoratio pro defunctis." },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "M",
+          lines: [
+            { segments: [ "eménto étiam, Dómine, famulórum famularúmque tuárum N. et N., qui nos præcessérunt cum signo fídei, et dórmiunt in somno pacis." ], po: true },
+            { type: "rb", text_la: "Jungit manus, orat aliquantulum pro iis defunctis, pro quibus orare intendit, deinde extensis manibus prosequitur:" },
+            { segments: [ "Ipsis, Dómine, et ómnibus in Christo quiescéntibus locum refrigérii, lucis, et pacis, ut indúlgeas, deprecámur." ], po: true },
+            { type: "rb", text_la: "Jungit manus, et caput inclinat, dicens:" },
+            { segments: [ "Per eúndem Christum, Dóminum nostrum. Amen." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "N",
+          lines: [
+            { type: "rb", text_la: "Manu dextera percutit sibi pectus, elata aliquantulum voce dicens:" },
+            { segments: [ "obis quoque peccatóribus" ], po: true },
+            { type: "rb", text_la: "Extensis manibus ut prius, secrete prosequitur:" },
+            { segments: [ "fámulis tuis, de multitúdine miseratiónum tuárum sperántibus, partem áliquam et societátem donáre dignéris, cum tuis sanctis Apóstolis et Martýribus: cum Joánne, Stéphano, Matthía, Bárnaba, Ignátio, Alexándro, Marcellíno, Petro, Felicitáte, Perpétua, Agatha, Lúcia, Agnéte, Cæcília, Anastásia, et ómnibus Sanctis tuis: intra quorum nos consórtium, non æstimátor mériti, sed véniæ, quǽsumus, largítor admítte." ], po: true },
+            { type: "rb", text_la: "Jungit manus." },
+            { segments: [ "Per Christum, Dóminum nostrum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "P",
+          lines: [
+            { segments: [ "er quem hæc ómnia, Dómine, semper bona creas," ], po: true },
+            { type: "rb", text_la: "Signat ter super Hostiam, et Calicem simul, dicens:" },
+            { segments: [ "sanctí+ficas, viví+ficas, bene+dícis et præstas nobis." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Discooperit Calicem, genuflectit, accipit Hostiam inter pollicem et indicem manus dexteræ: et tenens sinistra Calicem, cum Hostia signat ter a labio ad labium Calicis, dicens:" },
+            { segments: [ "Per Ip+sum, et cum Ip+so, et in Ip+so," ], po: true },
+            { type: "rb", text_la: "Cum ipsa Hostia signat bis inter se et Calicem, dicens:" },
+            { segments: [ "est tibi Deo Patri + omnipoténti, in unitáte Spíritus + Sancti," ], po: true },
+            { type: "rb", text_la: "Elevans parum Calicem cum Hostia, dicit:" },
+            { segments: [ "omnis honor, et glória." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Ponit Hostiam, Calicem Palla cooperit, genuflectit, surgit, et dicit intellegibili voce vel cantat:" },
+            { segments: [ "Per ómnia sǽcula sæculórum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Amen." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "O",
+          lines: [
+            { segments: [ "rémus: Præcéptis salutáribus móniti, et divína institutióne formáti audémus dícere:" ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk", // Priest and People
+          initial: "P",
+          lines: [
+            { segments: [ "ater noster, qui es in cælis. Sanctificétur nomen tuum. Advéniat regnum tuum. Fiat volúntas tua, sicut in cælo et in terra. Panem nostrum quotidiánum da nobis hódie. Et dimítte nobis débita nostra, sicut et nos dimíttimus debitóribus nostris. Et ne nos indúcas in tentatiónem:" ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Sed líbera nos a malo." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Amen." ], po: true } // Priest says Amen secretly
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "L",
+          lines: [
+            { type: "rb", text_la: "Deinde manu dextera accipit inter indicem et medium digitos Patenam, quam tenens super Altare erectam, dicit secrete:" },
+            { segments: [ "íbera nos, quǽsumus, Dómine, ab ómnibus malis, prætéritis, præséntibus et futúris: et intercedénte beáta et gloriósa semper Vírgine Dei Genetríce María, cum beátis Apóstolis tuis Petro et Paulo, atque Andréa, et ómnibus Sanctis," ], po: true },
+            { type: "rb", text_la: "Signat se cum Patena a fronte ad pectus," },
+            { segments: [ "da propítius pacem in diébus nostris:" ], po: true },
+            { type: "rb", text_la: "Patenam osculatur," },
+            { segments: [ "ut, ope misericórdiæ tuæ adjúti, et a peccáto simus semper líberi et ab omni perturbatióne secúri." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Submittit Patenam Hostiæ, discooperit Calicem, genuflectit, surgit, accipit Hostiam, et eam super Calicem tenens utraque manu, frangit per medium, dicens:" },
+            { segments: [ "Per eúndem Dóminum nostrum Jesum Christum, Fílium tuum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Et mediam partem, quam in dextera manu tenet, ponit super Patenam. Deinde ex parte, quæ in sinistra remanserat, frangit particulam, dicens:" },
+            { segments: [ "Qui tecum vivit et regnat in unitáte Spíritus Sancti Deus." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Aliam mediam partem, quam in sinistra manu habet, adjungit mediæ super Patenam positæ, et particulam parvam dextera retinens super Calicem, quem sinistra per nodum infra cuppam tenet, dicit intellegibili voce vel cantat:" },
+            { segments: [ "Per ómnia sǽcula sæculórum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Amen." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "P",
+          lines: [
+            { type: "rb", text_la: "Cum ipsa particula signat ter super Calicem, dicens:" },
+            { segments: [ "ax Dómini sit + semper vobís+cum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et cum spíritu tuo." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "H",
+          lines: [
+            { type: "rb", text_la: "Particulam ipsam immittit in Calicem, dicens secrete:" },
+            { segments: [ "æc commíxtio, et consecrátio Córporis et Sánguinis Dómini nostri Jesu Christi, fiat accipiéntibus nobis in vitam ætérnam. Amen." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Cooperit Calicem, genuflectit, surgit, et inclinatus Sacramento, junctis manibus, et ter pectus percutiens, intellegibili voce dicit:" },
+        {
+          type: "pr_blk", // Priest and People
+          initial: "A",
+          lines: [
+            { type: "action", key: "action.strike_breast_thrice"},
+            { segments: [ "gnus Dei, qui tollis peccáta mundi: miserére nobis." ] },
+            { segments: [ "Agnus Dei, qui tollis peccáta mundi: miserére nobis." ] },
+            { segments: [ "Agnus Dei, qui tollis peccáta mundi: dona nobis pacem." ] }
+          ]
+        }
+      ],
+
+      "ordinary:prayers-before-communion": [
+        { type: "rb", text_la: "Deinde, junctis manibus super Altare, inclinatus dicit secrete sequentes Orationes:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "D",
+          lines: [
+            { segments: [ "ómine Jesu Christe, qui dixísti Apóstolis tuis: Pacem relínquo vobis, pacem meam do vobis: ne respícias peccáta mea, sed fidem Ecclésiæ tuæ; eámque secúndum voluntátem tuam pacificáre et coadunáre dignéris: Qui vivis et regnas Deus per ómnia sǽcula sæculórum. Amen." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "D",
+          lines: [
+            { segments: [ "ómine Jesu Christe, Fili Dei vivi, qui ex voluntáte Patris, cooperánte Spíritu Sancto, per mortem tuam mundum vivificásti: líbera me per hoc sacrosánctum Corpus et Sánguinem tuum ab ómnibus iniquitátibus meis, et univérsis malis: et fac me tuis semper inhærére mandátis, et a te numquam separári permíttas: Qui cum eódem Deo Patre et Spíritu Sancto vivis et regnas Deus in sǽcula sæculórum. Amen." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "P",
+          lines: [
+            { segments: [ "ercéptio Córporis tui, Dómine Jesu Christe, quod ego indígnus súmere præsúmo, non mihi provéniat in judícium et condemnatiónem: sed pro tua pietáte prosit mihi ad tutaméntum mentis et córporis, et ad medélam percipiéndam: Qui vivis et regnas cum Deo Patre in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum. Amen." ], po: true }
+          ]
+        }
+      ],
+
+      "ordinary:priest-communion": [
+        { type: "rb", text_la: "Genuflectit, surgit, et dicit:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "P",
+          lines: [
+            { segments: [ "anem cæléstem accípiam, et nomen Dómini invocábo." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Deinde parum inclinatus, accipit ambas partes Hostiæ inter pollicem et indicem sinistræ manus, et Patenam inter eundem indicem et medium supponit, et dextera tribus vicibus percutiens pectus, elata aliquantulum voce, ter dicit devote et humiliter:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Dómine, non sum dignus, ut intres sub tectum meum: sed tantum dic verbo, et sanábitur ánima mea." ], po: true }, // Repeated 3x
+            { segments: [ "Dómine, non sum dignus, ut intres sub tectum meum: sed tantum dic verbo, et sanábitur ánima mea." ], po: true },
+            { segments: [ "Dómine, non sum dignus, ut intres sub tectum meum: sed tantum dic verbo, et sanábitur ánima mea." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Postea dextera se signans cum Hostia super Patenam, dicit:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "C",
+          lines: [
+            { segments: [ "orpus Dómini nostri Jesu Christi custódiat ánimam meam in vitam ætérnam. Amen." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Et se inclinans, reverenter sumit ambas partes Hostiæ." },
+        { type: "rb", text_la: "Deinde discooperit Calicem, genuflectit, colligit fragmenta, si quæ sint, extergit Patenam super Calicem, interim dicens:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "Q",
+          lines: [
+            { segments: [ "uid retríbuam Dómino pro ómnibus, quæ retríbuit mihi? Cálicem salutáris accípiam, et nomen Dómini invocábo. Laudans invocábo Dóminum, et ab inimícis meis salvus ero." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Accipit Calicem manu dextera, et eo se signans, dicit:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "S",
+          lines: [
+            { segments: [ "anguis Dómini nostri Jesu Christi custódiat ánimam meam in vitam ætérnam. Amen." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Et sinistra supponens Patenam Calici, reverenter sumit totum Sanguinem cum particula." },
+        { type: "rb", key: "rubric.communion_faithful" }
+      ],
+      "proper:communion:easter-4": [
+        { type: "action", key: "action.stand" }, // For priest, people may remain kneeling
+        { type: "rb", text_la: "Joann. 16, 8" },
+        {
+          type: "pr_blk", // Choir or Priest
+          initial: "C",
+          lines: [
+            { segments: [ "um vénerit Paráclitus Spíritus veritátis, ille árguet mundum de peccáto et de justítia et de judício, allelúja, allelúja." ] }
+          ]
+        }
+      ],
+      "proper:postcommunion:easter-4": [
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Dóminus vobíscum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et cum spíritu tuo." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "O",
+          lines: [
+            { segments: [ "rémus." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "A",
+          lines: [
+            { segments: [ "désto nobis, Dómine, Deus noster: ut per hæc, quæ fidéliter súmpsimus, et purgémur a vítiis et a perículis ómnibus eruámur." ], po: true },
+            { segments: [ "Per Dóminum nostrum Jesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Amen." ] }
+          ]
+        }
+      ],
+      "ordinary:conclusion": [
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Dóminus vobíscum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et cum spíritu tuo." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P", // Deacon or Priest
+          lines: [
+            { segments: [ "Ite, Missa est." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Deo grátias." ] }
+          ]
+        },
+        { type: "rb", text_la: "Tunc celebrans inclinat se ante medium altaris, et manibus junctis super illud, dicit secrete:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "P",
+          lines: [
+            { segments: [ "láceat tibi, sancta Trínitas, obséquium servitútis meæ: et præsta; ut sacrifícium, quod óculis tuæ majestátis indígnus óbtuli, tibi sit acceptábile, mihíque et ómnibus, pro quibus illud óbtuli, sit, te miseránte, propitiábile. Per Christum, Dóminum nostrum. Amen." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Deinde osculatur Altare: et elevatis oculis, extendens, elevans et jungens manus, caputque Cruci inclinans, dicit:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "B",
+          lines: [
+            { segments: [ "enedícat vos omnípotens Deus," ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "et versus ad populum, semel tantum benedicens. Deinde prosequitur:"},
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: "P",
+          lines: [
+            { segments: [ "ater, et Fílius, + et Spíritus Sanctus." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Amen." ] }
+          ]
+        }
+      ],
+      "ordinary:last-gospel": [
+        { type: "action", key: "action.stand" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Dóminus vobíscum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et cum spíritu tuo." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P", // Deacon or Priest
+          initial: "I",
+          lines: [
+            { segments: [ "nítium ++ sancti Evangélii secúndum Joánnem." ], po: true }
+          ]
+        },
+        { type: "rb", key: "rubric.sign_book_self" },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Glória tibi, Dómine." ] }
+          ]
+        },
+        { type: "rb", text_la: "Joann. 1, 1-14" },
+        {
+          type: "pr_blk",
+          speaker: "P", // Priest (or Deacon)
+          initial: "I",
+          lines: [
+            { segments: [ "n princípio erat Verbum, et Verbum erat apud Deum, et Deus erat Verbum. Hoc erat in princípio apud Deum. Omnia per ipsum facta sunt: et sine ipso factum est nihil, quod factum est: in ipso vita erat, et vita erat lux hóminum: et lux in ténebris lucet, et ténebræ eam non comprehendérunt." ], po: true },
+            { segments: [ "Fuit homo missus a Deo, cui nomen erat Joánnes. Hic venit in testimónium, ut testimónium perhibéret de lúmine, ut omnes créderent per illum. Non erat ille lux, sed ut testimónium perhibéret de lúmine." ], po: true },
+            { segments: [ "Erat lux vera, quæ illúminat omnem hóminem veniéntem in hunc mundum. In mundo erat, et mundus per ipsum factus est, et mundus eum non cognóvit. In própria venit, et sui eum non recepérunt. Quotquot autem recepérunt eum, dedit eis potestátem fílios Dei fíeri, his, qui credunt in nómine ejus: qui non ex sanguínibus, neque ex voluntáte carnis, neque ex voluntáte viri, sed ex Deo nati sunt." ], po: true },
+            { type: "action", key: "action.kneel" },
+            { segments: [ "Et Verbum caro factum est," ], po: true },
+            { type: "action", key: "action.stand" },
+            { segments: [ "et habitávit in nobis: et vídimus glóriam ejus, glóriam quasi Unigéniti a Patre, plenum grátiæ et veritátis." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Deo grátias." ] }
+          ]
+        }
+      ]
+    };
+    
+    // Section name translations
+    const sectionNames = {
+      "vidi-aquam": {
+        "en": "Vidi Aquam",
+        "de": "Vidi Aquam", 
+        "fr": "Vidi Aquam",
+        "es": "Vidi Aquam"
+      },
+      "prayers-foot-altar": {
+        "en": "Prayers at the Foot of the Altar",
+        "de": "Gebete am Fuße des Altars",
+        "fr": "Prières au pied de l'autel", 
+        "es": "Oraciones al pie del altar"
+      },
+      "introit": {
+        "en": "Introit",
+        "de": "Introitus",
+        "fr": "Introït",
+        "es": "Introito"
+      },
+      "kyrie": {
+        "en": "Kyrie",
+        "de": "Kyrie",
+        "fr": "Kyrie", 
+        "es": "Kyrie"
+      },
+      "gloria": {
+        "en": "Gloria",
+        "de": "Gloria",
+        "fr": "Gloria",
+        "es": "Gloria"
+      },
+      "collect": {
+        "en": "Collect",
+        "de": "Tagesgebet",
+        "fr": "Collecte",
+        "es": "Colecta"
+      },
+      "epistle": {
+        "en": "Epistle", 
+        "de": "Epistel",
+        "fr": "Épître",
+        "es": "Epístola"
+      },
+      "alleluia": {
+        "en": "Alleluia",
+        "de": "Alleluja", 
+        "fr": "Alléluia",
+        "es": "Aleluya"
+      },
+      "gospel": {
+        "en": "Gospel",
+        "de": "Evangelium",
+        "fr": "Évangile", 
+        "es": "Evangelio"
+      },
+      "credo": {
+        "en": "Credo",
+        "de": "Credo",
+        "fr": "Credo",
+        "es": "Credo"
+      },
+      "offertory": {
+        "en": "Offertory",
+        "de": "Offertorium", 
+        "fr": "Offertoire",
+        "es": "Ofertorio"
+      },
+      "secret": {
+        "en": "Secret",
+        "de": "Stillgebet",
+        "fr": "Secrète",
+        "es": "Secreta"
+      },
+      "preface": {
+        "en": "Preface",
+        "de": "Präfation",
+        "fr": "Préface",
+        "es": "Prefacio"
+      },
+      "sanctus": {
+        "en": "Sanctus",
+        "de": "Sanctus",
+        "fr": "Sanctus", 
+        "es": "Sanctus"
+      },
+      "canon": {
+        "en": "Canon of the Mass",
+        "de": "Hochgebet",
+        "fr": "Canon de la Messe",
+        "es": "Canon de la Misa"
+      },
+      "prayers-before-communion": {
+        "en": "Prayers Before Communion",
+        "de": "Gebete vor der Kommunion",
+        "fr": "Prières avant la Communion",
+        "es": "Oraciones antes de la Comunión"
+      },
+      "priest-communion": {
+        "en": "Priest's Communion",
+        "de": "Kommunion des Priesters",
+        "fr": "Communion du Prêtre",
+        "es": "Comunión del Sacerdote"
+      },
+      "communion": {
+        "en": "Communion",
+        "de": "Kommunion",
+        "fr": "Communion",
+        "es": "Comunión" 
+      },
+      "postcommunion": {
+        "en": "Postcommunion",
+        "de": "Schlussgebet",
+        "fr": "Postcommunion", 
+        "es": "Postcomunión"
+      },
+      "conclusion": {
+        "en": "Conclusion",
+        "de": "Schluss",
+        "fr": "Conclusion",
+        "es": "Conclusión"
+      },
+      "last-gospel": {
+        "en": "Last Gospel",
+        "de": "Schlussevangelium",
+        "fr": "Dernier Évangile",
+        "es": "Último Evangelio"
+      }
+    };
+
+    // Mass configurations
+    const massConfigs = {
+      "easter-4": {
+        name: "Fourth Sunday After Easter",
+        season: "easter",
+        sections: [
+          { key: "vidi-aquam", type: "ordinary", id: "vidi-aquam" },
+          { key: "prayers-foot-altar", type: "ordinary", id: "prayers-foot-altar" },
+          { key: "introit", type: "proper", id: "introit:easter-4" },
+          { key: "kyrie", type: "ordinary", id: "kyrie" },
+          { key: "gloria", type: "ordinary", id: "gloria" },
+          { key: "collect", type: "proper", id: "collect:easter-4" },
+          { key: "epistle", type: "proper", id: "epistle:easter-4" },
+          { key: "alleluia", type: "proper", id: "alleluia:easter-4" },
+          { key: "gospel", type: "proper", id: "gospel:easter-4" },
+          { key: "credo", type: "ordinary", id: "credo" },
+          { key: "offertory", type: "proper", id: "offertory:easter-4" },
+          { key: "secret", type: "proper", id: "secret:easter-4" },
+          { key: "preface", type: "ordinary", id: "preface-easter" },
+          { key: "sanctus", type: "ordinary", id: "sanctus" },
+          { key: "canon", type: "ordinary", id: "canon" },
+          { key: "prayers-before-communion", type: "ordinary", id: "prayers-before-communion" },
+          { key: "priest-communion", type: "ordinary", id: "priest-communion" },
+          { key: "communion", type: "proper", id: "communion:easter-4" },
+          { key: "postcommunion", type: "proper", id: "postcommunion:easter-4" },
+          { key: "conclusion", type: "ordinary", id: "conclusion" },
+          { key: "last-gospel", type: "ordinary", id: "last-gospel" }
+        ]
+      }
+    };
+
+    // Parse Latin text into word segments
+    function parseLatinText(latinText) {
+      const words = latinText.split(/\s+/);
+      return words.map(word => {
+        const translation = translateWord(word);
+        return {
+          lt: word,
+          et: translation,
+          missing: translation.startsWith('[') && translation.endsWith(']')
+        };
+      });
+    }
+
+    // Render element function
+    function renderElement(element, container) {
+      if (element.type === 'action') {
+        const actionEl = document.createElement('p');
+        actionEl.className = 'act';
+        actionEl.textContent = element.key ? getTranslation(element.key, element.text) : element.text;
+        container.appendChild(actionEl);
+        
+      } else if (element.type === 'rb') {
+        const rubricDiv = document.createElement('div');
+        rubricDiv.className = 'rb';
+        
+        if (element.key) {
+          const p = document.createElement('p');
+          p.className = 'rb-et';
+          p.textContent = getTranslation(element.key);
+          rubricDiv.appendChild(p);
+        } else {
+          if (element.text_la) {
+            const pLa = document.createElement('p');
+            pLa.className = 'rb-lt';
+            pLa.textContent = element.text_la;
+            rubricDiv.appendChild(pLa);
+          }
+          
+          if (element.text_en) {
+            const pEn = document.createElement('p');
+            pEn.className = 'rb-et';
+            pEn.textContent = element.text_en;
+            rubricDiv.appendChild(pEn);
+          }
+        }
+        
+        container.appendChild(rubricDiv);
+        
+      } else if (element.type === 'pr_blk') {
+
+  const prayerBlockDiv = document.createElement('div');
+  prayerBlockDiv.className = 'pr-blk';
+  
+  // Apply highlighting based on speaker
+  if (element.speaker === 'P') {
+    prayerBlockDiv.classList.add('priest');
+  } else if (element.speaker === 'S') {
+    prayerBlockDiv.classList.add('server');
+  }
+  
+  // Check if any lines have po: true to mark entire block as priest
+  if (!element.speaker && element.lines) {
+    const hasPriestLines = element.lines.some(line => 
+      line.po === true || (line.segments && line.po === true)
+    );
+    if (hasPriestLines) {
+      prayerBlockDiv.classList.add('priest');
+    }
+  }
+
+  // Skip speaker element creation since we're using highlighting instead
+  
+  const prayerTextContentDiv = document.createElement('div');
+  prayerTextContentDiv.className = 'pr-txt-ctn';
+
+  let initialLetterRendered = false;
+
+  if (element.initial && element.lines && element.lines.length > 0) {
+    const firstLine = element.lines[0];
+    if (firstLine.segments && firstLine.segments.length > 0) {
+      const firstSegmentText = Array.isArray(firstLine.segments[0]) 
+        ? firstLine.segments[0][0] 
+        : firstLine.segments[0];
+      
+      if (typeof firstSegmentText === 'string' && 
+          firstSegmentText.toUpperCase().startsWith(element.initial.toUpperCase())) {
+        const initialEl = document.createElement('span');
+        initialEl.className = 'init-lttr';
+        initialEl.textContent = element.initial.toUpperCase();
+        prayerTextContentDiv.appendChild(initialEl);
+        initialLetterRendered = true;
+      }
+    }
+  }
+
+        if (element.lines && Array.isArray(element.lines)) {
+          element.lines.forEach((line, lineIndex) => {
+            if (line.type === 'rb' || line.type === 'action') {
+              renderElement(line, prayerTextContentDiv);
+            } else if (line.segments && Array.isArray(line.segments)) {
+              const lineDiv = document.createElement('div');
+              lineDiv.className = 'pr-ln';
+
+              if (initialLetterRendered && lineIndex === 0) {
+                lineDiv.classList.add('has-initial');
+              }
+
+              line.segments.forEach((segment, segIndex) => {
+                let segments;
+                
+                if (typeof segment === 'string') {
+                  segments = parseLatinText(segment);
+                  // Apply priest-only marking if specified
+                  if (line.po) {
+                    segments.forEach(s => s.po = true);
+                  }
+                } else if (Array.isArray(segment)) {
+                  segments = [];
+                  segment.forEach(str => {
+                    const parsed = parseLatinText(str);
+                    if (line.po) {
+                      parsed.forEach(s => s.po = true);
+                    }
+                    segments = segments.concat(parsed);
+                  });
+                } else {
+                  segments = [segment];
+                }
+
+                segments.forEach((wordSegment, wordIndex) => {
+                  const wordGroupDiv = document.createElement('div');
+                  wordGroupDiv.className = 'wg';
+
+                  const latinSpan = document.createElement('span');
+                  latinSpan.className = 'lt';
+                  if (wordSegment.po) {
+                    latinSpan.classList.add('po-mrk');
+                  }
+                  if (wordSegment.missing) {
+                    latinSpan.classList.add('missing-translation');
+                  }
+
+                  let latinText = wordSegment.lt;
+
+                  if (initialLetterRendered && segIndex === 0 && wordIndex === 0 && lineIndex === 0) {
+                    if (latinText.toUpperCase().startsWith(element.initial.toUpperCase())) {
+                      latinText = latinText.substring(element.initial.length);
+                    }
+                  }
+
+                  latinSpan.textContent = latinText;
+                  wordGroupDiv.appendChild(latinSpan);
+
+                  const englishSpan = document.createElement('span');
+                  englishSpan.className = 'et';
+                  if (wordSegment.po) {
+                    englishSpan.classList.add('po-mrk');
+                  }
+                  englishSpan.textContent = wordSegment.et;
+                  wordGroupDiv.appendChild(englishSpan);
+
+                  lineDiv.appendChild(wordGroupDiv);
+                });
+              });
+              
+              prayerTextContentDiv.appendChild(lineDiv);
+            }
+          });
+        }
+
+        prayerBlockDiv.appendChild(prayerTextContentDiv);
+        container.appendChild(prayerBlockDiv);
+      }
+    }
+
+    // Render a Mass
+    function renderMass(massId) {
+      const pageContainerEl = document.getElementById('page-container');
+      pageContainerEl.innerHTML = '';
+      
+      const config = massConfigs[massId];
+      if (!config) {
+        pageContainerEl.innerHTML = '<p>Mass configuration not found.</p>';
+        return;
+      }
+
+      const mainTitleEl = document.createElement('h1');
+      mainTitleEl.textContent = config.name;
+      pageContainerEl.appendChild(mainTitleEl);
+
+      const pageContent = document.createElement('div');
+      pageContent.id = 'page-content';
+      pageContainerEl.appendChild(pageContent);
+
+      config.sections.forEach(sectionConfig => {
+        const catalogKey = sectionConfig.type === 'ordinary' ? 
+          `ordinary:${sectionConfig.id}` : 
+          `proper:${sectionConfig.id}`;
+          
+        const catalogSection = catalog[catalogKey];
+        if (!catalogSection) {
+          const errorEl = document.createElement('p');
+          errorEl.textContent = `Missing catalog entry: ${catalogKey}`;
+          errorEl.style.color = 'red';
+          pageContent.appendChild(errorEl);
+          return;
+        }
+
+        const sectionContainer = document.createElement('div');
+        sectionContainer.className = 'pg-bdr';
+        
+        const sectionContent = document.createElement('div');
+        sectionContent.className = 'p-ct';
+        
+        const sectionTitle = document.createElement('h2');
+        sectionTitle.className = 'pg-ttl';
+        const sectionName = sectionNames[sectionConfig.key];
+        sectionTitle.textContent = sectionName ? sectionName[currentLanguage] : sectionConfig.key;
+        sectionContent.appendChild(sectionTitle);
+
+        catalogSection.forEach(element => {
+          renderElement(element, sectionContent);
+        });
+        
+        sectionContainer.appendChild(sectionContent);
+        pageContent.appendChild(sectionContainer);
+      });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      const massSelect = document.getElementById('mass-select');
+      const languageSelect = document.getElementById('language-select');
+      
+      // Load initial Mass
+      renderMass('easter-4');
+      
+      // Handle Mass selection changes
+      massSelect.addEventListener('change', function() {
+        renderMass(this.value);
+      });
+      
+      // Handle language changes
+      languageSelect.addEventListener('change', function() {
+        currentLanguage = this.value;
+        renderMass(massSelect.value);
+      });
+    });
+
+  </script>
+
+</body>
+</html>
