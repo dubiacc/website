@@ -38,6 +38,7 @@ jobs:
           rm -rf ./templates
           rm -rf ./.gitignore
           rm -rf ./gen.py
+          cp -r ./static ./dist
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
