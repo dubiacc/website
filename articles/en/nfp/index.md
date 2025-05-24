@@ -1,7 +1,6 @@
-
-NFP changes marriage's primary end from procreation to subjective "love" or 
-"unity", makes marriage as a contract undefinable, replaces divine providence 
-with human calculation and subtly promotes sin, ultimately destroying the family.
+NFP changes marriage's primary end from procreation to subjective 'love' or 'unity.' 
+It renders the marriage contract undefinable, replaces divine providence with 
+human calculation, subtly promotes sin, and ultimately destroys the family.
 
 # Is Natural Family Planning Catholic?
 
@@ -60,10 +59,11 @@ but procreation is the defining purpose of the institution and the conjugal act 
 > 
 > -- [Casti Conubii, 54](https://archive.is/boRjM#selection-695.170-695.411). 
 
-Now, the sedevacantist Bishop Pivarunas (CMRI), argues that "NFP is not a deliberate 
-frustration, as the timing of NFP cannot be perfect" - while partially true, he makes
-no distinction between unintentional and intentional NFP. He completely ignores that 
-it was definitely seen as sinful by the Sacred Penitentiary in the 1880s:
+Now, the sedevacantist Bishop Pivarunas (CMRI) argues that 'NFP is not a deliberate 
+frustration, as the timing of NFP cannot be perfect.' While this statement holds 
+partial truth, he makes no distinction between unintentional and intentional NFP. 
+He completely ignores that it was definitely seen as sinful by the Sacred Penitentiary 
+in the 1880s:
 
 > Q1: Whether married couples may have intercourse during such sterile periods 
 > without committing mortal or venial sin?
@@ -88,11 +88,11 @@ sterile periods in itself is not a sin, but intercourse during sterile periods
 that is, masturbation. 
 
 If NFP was truly without sinfulness, why would the answer from the S.P. include 
-terms such as "cautiously" and "to dissuade of onanism"? There is absolutely zero "endorsement" 
-here, only a toleration to prevent the worse sin of onanism, which Bishop Pivarunas gets 
-completely wrong and then cites the modernist Fr. Halligan (1917 - 1997) in order to back 
-up the claim that "NFP is lawful given sufficient reason", who in turn cites "common teaching 
-of theologians" for his justification:
+terms such as "cautiously" and "to dissuade from onanism"? There is absolutely zero "endorsement" 
+here, only a toleration to prevent the worse sin of onanism, which Bishop Pivarunas completely 
+misinterprets. He then cites the modernist Fr. Halligan (1917–1997) to support the claim that 
+'NFP is lawful given sufficient reason,' who in turn cites 'common teaching of theologians' 
+for his justification:
 
 > Deliberately to limit the use of marital relations exclusively to the sterile periods 
 > in order to avoid conception (i.e., to practice periodic continence or rhythm) is, according 
@@ -115,7 +115,7 @@ given by the Sacred Penitentiary in 1853:
 > -- [Sacred Apostolic Penitentiary, 1853](https://archive.is/6sktD#selection-607.0-612.0)
 
 The latter half is the crucial distinction: Whether NFP done by accident or with the 
-intention of shrinking the family. Only the first one is not a sin: this is advised to 
+intention of limiting family size. Only the first one is not a sin: this is advised to 
 calm the conscience of scrupulous couples who worry whether they're sinning on certain 
 days and not on others. However, it is not an endorsement of NFP and, even if it were 
 considered one, it was superseded by the teaching of Pius XI later on.
@@ -137,8 +137,8 @@ because they use NFP rather than condoms:
 This "exaggerated physiological education" addresses intentional NFP directly: with 
 its various methods, trackers, apps, etc. - all done with the intention of lust 
 without consequences. Therefore, it is definitely a "subtle sin" to act as this 
-modernist "Catholic" woman recalls her sadness about not being able to interact
-with her "engaged boyfriend" (remember, for modernists, even NFP is seen as hard):
+modernist "Catholic" woman does - recalling her sadness about not being able to use 
+contraception, but having to use NFP instead:
 
 > NFP (for avoiding pregnancy) is the complete opposite of a woman's natural 
 > sex drive cycle. Basically I would not be able to have sex when I most want it 
@@ -153,23 +153,24 @@ with her "engaged boyfriend" (remember, for modernists, even NFP is seen as hard
 >
 > -- ["nfp" topic on r/Catholicism](https://archive.is/Gf2ec#selection-1413.2-1413.206)
 
-Now, obviously she here complains from the modernist perspective not being able to use 
-regular contraception -- but even she recognizes that it goes directly against her 
+Now, obviously she here complains from the modernist perspective, lamenting her inability 
+to use regular contraception -- but even she recognizes that it goes directly against her 
 nature as a woman to *only* have relations on non-fertile days (in order to contracept).
 
 This is the result of what you eventually end up with when practicing NFP: tracking mucus, 
 Marquette method, temperatures, ovulation cycles, etc. - all of that effort in order to 
-**intentionally prevent** Gods will - and Bishop Pivarunas still argues that this elaborate 
-scheme is not a "deliberate frustration" and does not "impede contraception"?!
+**intentionally prevent** God's will - and Bishop Pivarunas still argues that this elaborate 
+scheme is not a "deliberate frustration" and does not "impede contraception"?
 
 This simply flies in the face of Pius XI's warning: whether the frustration is achieved 
 chemically, mechanically, or chronologically is irrelevant to the intrinsic disordering 
 of the act from its God-given end. Intentional NFP, as practiced above, is most definitely 
 intentional contra-ception. 
 
-The softness on NFP by Pius XII later on led to his successor Paul VI getting really hard 
-pressed on justifying his teaching against contraception: if chronological contraception is allowed, 
-then there is no moral difference to artificial contraception, since the *intention* is the same.
+The softness on NFP by Pius XII (with his "grave reasons" justification) later on led 
+to his successor Paul VI Paul VI facing great difficulty in justifying his teaching 
+against contraception: if chronological contraception is allowed, then there is absolutely 
+no moral difference to artificial contraception, since the *intention* is the same.
 
 NFP substitutes scientific knowledge and technique for the virtue of chastity and 
 trust in God's Providence, it subtly shifts the focus from openness to God's 
@@ -212,12 +213,12 @@ still, he foresaw their practice of observing cycles being rooted in passions:
 
 The idea that "using the Marquette method to avoid conception is traditional Catholic teaching" 
 is simply untenable, at least since 388 AD - if Augustine and Pius XI would truly "allow NFP", 
-why do they both write about continence as an alternative - and not just "if a couple cannot 
-contain themselves, they should simply watch the days of the menses"? It is obvious that only 
+why do they both write about continence as an alternative - and not : if a couple cannot 
+contain themselves, they should simply "watch the days of the menses?" It is obvious that only 
 licit and Catholic option is continence, not calculated avoidance, justified by out-of-context 
-and out-of-meaning quotes of the 20th century.
+quotes from the 20th century that distort their original meaning.
 
-### Rejection of Divine providence
+### Rejection of Divine Providence
 
 The entire NFP enterprise rests on the "overrated independence of 
 private judgment and that false autonomy of human reason", which Pius XI condemned:
@@ -310,7 +311,7 @@ By making procreation optional and secondary, NFP provides the theological under
 for the feminist rejection of traditional family roles. Whenever lust becomes primary, the woman,
 usually having less sexual drive and being in the "chief place of love", now holds the keys
 over the entire marriage, until it slowly erodes to a lustful debate about "rendering the obligation"
-and "living out ones sexuality".
+and "living out one's sexuality".
 
 NFP facilitates this "false liberty and unnatural equality" that ultimately debases 
 womanhood and destroys family order:
@@ -368,8 +369,8 @@ It is an "art of sinning subtly," an "idolatry of the flesh" disguised as respon
 Catholics seeking to live in accordance with God's plan for marriage must reject this illusion 
 and embrace the fullness of the Church's perennial teaching: marriage ordered unreservedly 
 to the blessing of children, with complete trust in God's grace and Providence. Only by 
-returning to this objective truth can the "depraved marriage", fostered by 
-modern errors be overcome, and true Christian marriage be restored.
+returning to this objective truth can the "depraved marriage" that is fostered by 
+modern errors be overcome - and true Christian marriage be restored.
 
 > They will, in a great measure, turn and be turned away from these abominable 
 > opinions which to the dishonor of man's dignity are now spread about in speech 

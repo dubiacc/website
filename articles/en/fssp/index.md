@@ -1,14 +1,14 @@
 The FSSP is in "full communion" with the Pope, has seemingly the full support
-of the Vatican and celebrates the Latin Mass - so what's wrong with their
+of the Vatican and celebrates the Latin Mass -- so what's wrong with their
 approach? Why not just try to reform the Church from the inside instead
 of risking a schism?
 
-# FSSP: Betrayal of Faith in exchange for Communion
+# FSSP: Betraying the Faith for "full communion"
 
 In traditional Catholic circles, it is often not understood that the "schism" 
 between the Novus Ordo and the Latin Mass isn't just about the Mass; it's 
 about the Faith itself. As nobody can please God without having the Catholic Faith 
-(Hebrews 11:6) or go to heaven without the faith, maintaining the purity of the faith
+(Hebrews 11:6) or go to heaven without it, maintaining the purity of the faith
 is of supreme importance. 
 
 But what actually *is* the Catholic Church? It is the body of people holding 
@@ -30,27 +30,47 @@ of man to the place of God. Consider the infamous line from *Gaudium et Spes* 12
 >
 > -- [Gaudium et Spes, 12](https://archive.is/jI78Q#selection-417.4-417.153)
 
-A Catholic cannot sign this document. Everything on earth should have **God** at its 
-center and goal, not man! Many people have invented marvelously creative ways to try 
-to weasel their way out of calling it "heresy", trying to call it a "seeming contradiction",
-to "understand it in the light of Tradition", to "engage in dialectic", to build a 
-"hermeneutic of continuity". 
+A Catholic cannot sign this document, as it's both heresy and blasphemy (putting man in 
+the place of God). Everything on earth should have **God** at its center and goal, not man! 
+Many people have invented marvelously creative ways to try to weasel their way out of 
+calling it "heresy", trying to call it only a "seeming contradiction", to "understand it 
+in the light of Tradition", to build a "hermeneutic of continuity".
 
-This is the rotten fruit of Vatican II's new philosophy: "Man is made in the image of God, 
-therefore we will celebrate man, and as a result celebrate God." This insidious inversion 
-places the worship of Gods glory second, a mere byproduct of man's glory. "But", say the 
-modernists, "we do celebrate the glory of God - inside of man!" Such nonsense is the very 
-essence of modernism. 
+There are many other heretical sentences, but this one alone reflects the new insidious 
+philosophy of Vatican II (and the Novus Ordo): "Man is made in the image of God, therefore 
+we will celebrate man, and as a byproduct we also celebrate God."[^1] 
+
+[^1]: See: ["Prometheus - The Religion of Man" by Fr. Calderon](https://angeluspress.org/products/prometheus)
+
+This insidious inversion places the worship of God's inner glory second, a mere byproduct of man's 
+glory. Religion therefore becomes a product of man to serve man in managing his existential dread - 
+a work of human hands. Doctrinal truth becomes secondary, as all humans can have their versions of "truth" and 
+their own "religious experiences" and obviously they're all equally good (as no one may judge anyone or 
+anything to be good or evil). Therefore, we must discuss ad nauseam and understand each other and 
+no one may claim to know the truth, as we're all searching for it.
+
+As Gaudium et Spes continues:
+
+> Christ, the final Adam, by the revelation of the mystery of the Father and His love, 
+> **fully reveals man to man himself** and makes his supreme calling clear.
+>
+> -- [Gaudium et Spes, 22](https://archive.is/jI78Q#selection-537.193-537.347)
+
+"Christ came down from Heaven, to reveal man to himself." - not to reveal God to man, no, 
+but just man to himself. Such absolute nonsense is the very essence of modernism. And sadly, 
+this nonsensical philosophy of centering all efforts on pleasing man instead of pleasing God 
+is continued by the future popes (ex. JPII's *Redemptor hominis*).
 
 Priests who, under the guise of obedience, endorse such statements are not shepherds; 
 they are, at best, misguided, and at worst, traitors to the Faith, like Judas, selling 
 out Truth for a marble altar.
 
 Many are quick to condemn the Society of St. Pius X (SSPX) or the Resistance, claiming 
-"there is no salvation in the SSPX". While an easy polemic adaption of "Outside of the 
-Church there is no Salvation", we have to look at "Who belongs to the Catholic Church?".
+"there is no salvation in the SSPX" or "they don't have jurisdiction". While an easy polemic 
+adaptation of "Outside of the Church there is no Salvation", we have to look at "Who belongs 
+to the Catholic Church?".
 
-What is certain, is that there is no salvation for people who knowingly sign off on heresy. 
+What is certain is that there is no salvation for people who knowingly sign off on heresy. 
 This applies directly to priests of the FSSP, ICKSP, and any who operate under the banner 
 of "Ecclesia Dei" or celebrate the Novus Ordo Missae while endorsing or being silent on 
 the Council that birthed its errors.
@@ -71,7 +91,7 @@ True Mass (which simply expresses the faith).
 >
 > Why did Our Lord Jesus Christ institute Saint Peter as the head of the Church? 
 > What did He require of Saint Peter? - "Keep the faith, and keep it for the others." 
-> And the Vatican which is nothing else but the residence of the successor of the apostles 
+> And the Vatican, which is nothing else but the residence of the successor of the apostles,
 > is not destined for any other purpose. 
 > 
 > The Holy Roman Church is the mother and mistress of all truth: Mater et Magistra omnium 
@@ -104,7 +124,7 @@ True Mass (which simply expresses the faith).
 Being "outside of the Catholic Church" therefore doesn't mean to be excommunicated from 
 people who believe that man should be the center of everything: because such an excommunication
 is nothing but an abuse of power directed at those who put God first. Effectively, the
-accusation of "excommunication" is nothing else as what the Jews told St. Peter:
+accusation of "excommunication" is nothing else than what the Jews told St. Peter:
 
 > And when they had brought them, they set them before the council. And the high priest 
 > asked them, saying: Commanding we commanded you, that you should not teach in this name; 
@@ -142,7 +162,7 @@ by Vatican II.
 > and the New Rite is against the Divine Law. Therefore, I'm not allowed to
 > celebrate it. I commit a sin if I celebrate it.
 >
-> -- [Fr. Gregorius Hesse]() -- [On the SSPX, FSSP, ICKSP and sedevacantists](https://youtu.be/tjckUEBkkBI?t=2170)
+> -- [Fr. Gregorius Hesse](https://archive.is/PqF6f) -- [On the SSPX, FSSP, ICKSP and sedevacantists](https://youtu.be/tjckUEBkkBI?t=2170)
 
 The New Mass, designed with the explicit intention of appealing to Protestants, necessarily 
 waters down or excises Catholic doctrine, particularly concerning the sacrificial nature of 
@@ -161,7 +181,7 @@ His 1974 Declaration was a line in the sand:
 > neo-Modernist and neo-Protestant tendencies which were clearly evident in the
 > Second Vatican Council and, after the Council, in all the reforms which issued from it.
 >
-> -- [Abp. Lefebvre](https://en.wikipedia.org/wiki/Marcel_Lefebvre) -- [Declaration of November 21, 1974]()
+> -- [Abp. Lefebvre](https://en.wikipedia.org/wiki/Marcel_Lefebvre) -- [Declaration of November 21, 1974](https://archive.is/DMoEX#selection-271.0-280.0)
 
 His decision to consecrate bishops in 1988, an act of sheer necessity, was 
 born from the realization that dialogue with modernist Rome was a trap:
@@ -172,12 +192,12 @@ born from the realization that dialogue with modernist Rome was a trap:
 > will help us to protect ourselves against the spirit of Vatican II and the
 > spirit of Assisi.
 >
-> -- [Abp. Lefebvre](https://en.wikipedia.org/wiki/Marcel_Lefebvre) -- [Letter to Pope John Paul II, June 2, 1988]()
+> -- [Abp. Lefebvre](https://en.wikipedia.org/wiki/Marcel_Lefebvre) -- [Letter to Cdl. Ratzinger, May 24, 1988](https://archive.is/1p6Xi#selection-203.0-203.142)
 
 The same story can be told about the Resistance: After the SSPX had to resist 
 Rome, Bishop Williamson had to resist the other SSPX bishops, after Bishop Fellay
 started to try to "reunite" the SSPX with Rome under the pretext of a practical
-agreement in 2012. As neither Pope Francis or Pope Benedict condemned the errors 
+agreement in 2012. As neither Pope Francis nor Pope Benedict condemned the errors 
 of Vatican II and restored order in the Church, we cannot make practical agreements 
 with people who put man first, God second. Instead of repenting, Rome doubled down 
 on their error - with a lot of elaborate or less elaborate dialectic.
@@ -192,7 +212,7 @@ it. As Bishop Williamson bluntly stated, the FSSP became an opportunity for Conc
 > Conciliar Rome welcomed them with open arms. Because it had converted to 
 > Tridentinism? Of course not. 
 > 
-> Rather, it saw in these refugees from the Society of St. Plus X an opportunity 
+> Rather, it saw in these refugees from the Society of St. Pius X an opportunity 
 > to set up under Rome's control an alternative "Traditional" movement to keep 
 > souls away from the real Traditional movement henceforth "excommunicated" and 
 > so out of Rome's control, except by the silence and marginalisation, or calumny 
@@ -218,23 +238,30 @@ for *Summorum Pontificum* being "to get them away from [Archbishop Marcel] Lefeb
 Without the SSPX, there would be no FSSP. The FSSP exists as **controlled opposition**, designed 
 to offer a veneer of tradition while ensuring loyalty to the Conciliar revolution, lest people 
 get "too radical" by actually holding firm to the entirety of the Faith, without compromise under 
-the guise of false obedience.
+the guise of false obedience. The FSSP and its ilk made a **fatal compromise**: they accepted 
+Vatican II and the legitimacy of the New Mass. This means they implicitly accept the man-centered 
+heresies that underpin them.
 
-The FSSP and its ilk made a **fatal compromise**: they accepted Vatican II and the legitimacy 
-of the New Mass. This means they implicitly accept the man-centered heresies that underpin them. 
-Fr. Peter Scott pointed out how the FSSP was forced to accept liberal leadership "of a mind to 
-accept and promote the New Mass and to be integrated into the post-Conciliar church."
+Fr. Peter Scott in his 1995 Angelus article points out how the FSSP was forced to accept liberal 
+leadership "of a mind to accept and promote the New Mass and to be integrated into the post-Conciliar 
+church."[^2]
 
-> The Fraternity of Saint Peter officially agrees with Vatican II, and officially agrees
-> with the present pope's encyclicals. So **they are not Catholics, officially, objectively**.
-> They are formally not Catholics... **Formally, they're in heresy** because they sign and 
-> affirm, officially, formally, objectively, heresy, which means Vatican II.
+[^2]: [Fr. Peter R. Scott: The FSSP’s tragedy of 2000](https://archive.is/Jb7Xk#selection-1109.221-1109.317)
+
+> The Fraternity of Saint Peter officially agrees with Vatican II, 
+> and officially agrees with the present pope's encyclicals. 
+> So **they are not Catholics, officially, objectively**.
+> They are formally not Catholics... **Formally, they're in heresy** because 
+> they sign and affirm, officially, formally, objectively, heresy, which 
+> means Vatican II.
 >
-> -- [Fr. Gregorius Hesse](https://archive.is/PpbnV) -- [Talks: On the SSPX, FSSP, ICKSP and sedevacantists](https://youtu.be/tjckUEBkkBI?t=1986)
+> -- [Fr. Gregorius Hesse](https://archive.is/PpbnV) -- [On the SSPX, FSSP, ICKSP and Sedevacantists](https://youtu.be/tjckUEBkkBI?t=1986)
 
 This also explains why this site does not link to Latin Masses "in communion"
-with the modernist popes: Because all these communities (and there are lots of them),
-had to sign an agreement of either silence in order to get recognition from modernist Rome.
+with the modernist popes: Because all these communities — and there are lots of 
+them — had to sign an agreement requiring silence in order to get recognition that 
+they are "Catholic" from modernist Rome. But what worth is this "recognition" - to be 
+recognized and encouraged by people who put God into second place?
 
 ## The Real Question of Salvation
 
@@ -246,9 +273,9 @@ final judgement be pleased with that and allow these people, or anyone who stays
 silent, entry to heaven?
 
 Who will get to heaven: those "in communion" with a hierarchy that has betrayed the 
-Faith, remained silent or even promoted error, or those who, though perhaps temporarily 
-"outside the Church's structures," fight to maintain the unadulterated doctrine 
-of Christ? May the reader discern wisely.
+Faith, remained silent or even promoted error, or those who, though perhaps 
+temporarily 'outside the Church's structures,' fight to maintain the unadulterated 
+doctrine of Christ? May the reader discern wisely.
 
 Operating outside compromised official structures becomes a **sacred duty** when 
 those structures demand adherence to error or silence in the face of it. One cannot 
@@ -283,10 +310,21 @@ If the FSSP truly stood for tradition, they would be standing with those who res
 not appeasing those who dismantle. While they offer the Traditional Latin Mass, their 
 "full communion" (a term introduced by the modernist pope Benedict XVI) with post-Conciliar 
 Rome is built on a catastrophic compromise: the acceptance of Vatican II's doctrinal 
-deviations in exchange to keep the marble altars and nice churches. 
+deviations in exchange for keeping the marble altars and nice churches. 
 
 And this is why we, the dubia.cc editorial team, have to advise against attending the Masses 
 of the FSSP / ICKSP or the Novus Ordo, even for pastoral reasons: If the goal of attending
 a Mass is to get sanctifying grace from God, being at an adulterous FSSP Mass is a waste of time.
 We care about saying and teaching the truth, even if we have to be falsely labeled 
-"disobedient", "schismatic" and other terms.
+"disobedient", "schismatic" or other terms.
+
+```
+{
+    "authors": ["github:fschutt", "fr-hesse"],
+    "date": "2025-05-24",
+    "tags": ["canon-law"],
+    "translations": {
+        "fr": "fssp"
+    }
+}
+```

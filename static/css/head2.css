@@ -853,6 +853,9 @@ ul.list-level-3 {
 
 
 
+ol {
+    padding: 0px 1em;
+}
 
 ol > li {
     counter-increment: list-item;
@@ -862,9 +865,8 @@ ol > li::before {
     position: absolute;
     z-index: 15;
     display: block;
-    left: 0;
+    left: -1em;
     top: 0;
-    width: calc(var(--list-left-padding) - 0.375em);
     text-align: right;
 }
 

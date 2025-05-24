@@ -1,4 +1,5 @@
-This summary details the life of Martin Luther, as outlined by "Luther - volume 1 - 6" by Hartmann Grisar, S.J., Professor at the University of Insbruck, 1913.
+This summary details the life of Martin Luther, as outlined by "Luther - volume 1 - 6" 
+by Hartmann Grisar, S.J., Professor at the University of Insbruck, 1913.
 
 # The Life of Martin Luther
 

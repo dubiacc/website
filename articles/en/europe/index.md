@@ -38,7 +38,7 @@ More fundamentally, by rejecting the Catholic understanding of Church authority,
 
 According to the liberal, the European wars of religion demonstrate the inherent danger of religious commitment itself. These conflicts serve as cautionary tales about the violence that supposedly results when people take theological differences seriously. The Peace of Westphalia (1648) represents a triumph of pragmatism over religious fanaticism—the first step toward religious tolerance and secular governance.
 
-The terrible conflicts that followed the Reformation—particularly the devastating Thirty Years' War (1618-1648)—were not caused by religious zeal but by its fracturing. Catholics fought to preserve the religious unity upon which European civilization depended. As the saying goes, "Every war is fundamentally a religious war," and when Europe's shared faith splintered, profound violence inevitably followed.
+The terrible conflicts that followed the Reformation—particularly the devastating Thirty Years' War (1618-1648)—were not caused by religious zeal but by its fracturing. Catholics fought to preserve the religious unity upon which European civilization depended. "Every war is fundamentally a religious war," and when Europe's shared faith splintered, profound violence inevitably followed.
 
 The Peace of Westphalia, which ended the Thirty Years' War, represented not a triumph but a tragic compromise. By establishing the principle of *cuius regio, eius religio* (whose realm, his religion), it acknowledged the de facto religious division of Europe while attempting to contain its consequences. Catholic territories would remain Catholic, Protestant territories Protestant, with citizens expected to conform to their ruler's faith or relocate.
 

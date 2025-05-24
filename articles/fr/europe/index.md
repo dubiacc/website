@@ -10,7 +10,7 @@ La vision libérale rejette le Moyen Âge comme les "Âges Sombres" — une pér
 
 En réalité, le Moyen Âge représentait l'apogée de la civilisation chrétienne — une société ordonnée autour du Christ comme son souverain. Bien que loin d'être parfaite (comme aucune société humaine ne peut l'être), la chrétienté médiévale reconnaissait l'autorité divine comme le fondement de toute autorité humaine légitime. Ce n'était pas simplement théorique ; cela se manifestait dans les institutions, les lois, les arts, l'économie et les structures sociales qui reflétaient et renforçaient les principes chrétiens.
 
-La personne médiévale, qu'elle soit paysanne ou noble, vivait dans une vision du monde cohérente. Le péché existait abondamment (comme l'illustre vivement la _Divine Comédie_ de Dante), mais la reconnaissance du péché en tant que péché préservait la clarté morale. La nature déchue de l'homme était reconnue sans être célébrée ou redéfinie comme vertu. Le catholicisme fournissait l'architecture intellectuelle et spirituelle qui unifiait la civilisation européenne, établissant l'harmonie sociale grâce à une compréhension partagée de la vérité, de la bonté et de la beauté.
+La personne médiévale, qu'elle soit paysanne ou noble, vivait dans une vision du monde cohérente; le péché existait abondamment (comme l'illustre vivement la _Divine Comédie_ de Dante), mais la reconnaissance du péché en tant que péché préservait la clarté morale. La nature déchue de l'homme était reconnue sans être célébrée ou redéfinie comme vertu. Le catholicisme fournissait l'architecture intellectuelle et spirituelle qui unifiait la civilisation européenne, établissant l'harmonie sociale grâce à une compréhension partagée de la vérité, de la bonté et de la beauté.
 
 La conception médiévale de l'autorité différait fondamentalement des notions modernes. Le pouvoir politique descendait de Dieu par des canaux appropriés (le plus visiblement dans l'onction sacrée des rois), et non pas de bas en haut à partir de la souveraineté populaire. Cette investiture divine de l'autorité créait une stabilité et une légitimité qui transcendaient les qualités personnelles des dirigeants individuels. Lorsqu'un roi était oint par l'Archevêque, les gens assistaient à l'attribution visible de l'autorité divine — même si le roi lui-même était imparfait — et l'ordre social fonctionnait en conséquence.
 
@@ -38,7 +38,7 @@ Plus fondamentalement, en rejetant la compréhension catholique de l'autorité d
 
 Selon le libéral, les guerres de religion européennes démontrent le danger inhérent à l'engagement religieux lui-même. Ces conflits servent d'avertissements sur la violence qui résulterait prétendument lorsque les gens prennent au sérieux les différences théologiques. La Paix de Westphalie (1648) représente un triomphe du pragmatisme sur le fanatisme religieux — le premier pas vers la tolérance religieuse et la gouvernance séculière.
 
-Les terribles conflits qui ont suivi la Réforme — particulièrement la dévastatrice Guerre de Trente Ans (1618-1648) — n'ont pas été causés par le zèle religieux mais par sa fracture. Les catholiques ont combattu pour préserver l'unité religieuse sur laquelle dépendait la civilisation européenne. Comme dit le dicton, "Chaque guerre est fondamentalement une guerre religieuse", et lorsque la foi partagée de l'Europe s'est fragmentée, une violence profonde a inévitablement suivi.
+Les terribles conflits qui ont suivi la Réforme — particulièrement la dévastatrice Guerre de Trente Ans (1618-1648) — n'ont pas été causés par le zèle religieux mais par sa fracture. Les catholiques ont combattu pour préserver l'unité religieuse sur laquelle dépendait la civilisation européenne. "Chaque guerre est fondamentalement une guerre religieuse", et lorsque la foi partagée de l'Europe s'est fragmentée, une violence profonde a inévitablement suivi.
 
 La Paix de Westphalie, qui a mis fin à la Guerre de Trente Ans, représentait non pas un triomphe mais un compromis tragique. En établissant le principe de *cuius regio, eius religio* (à chaque région sa religion), elle a reconnu la division religieuse de facto de l'Europe tout en tentant d'en contenir les conséquences. Les territoires catholiques resteraient catholiques, les territoires protestants protestants, les citoyens étant censés se conformer à la foi de leur dirigeant ou déménager.
 
@@ -92,10 +92,6 @@ La voie à suivre exige le courage de rejeter le récit dominant du progrès et 
 {
     "date": "2025-01-04",
     "authors": ["bishop-williamson"],
-    "tags": ["history"],
-    "translations": {
-        "de": "europa",
-        "en": "europe"
-    }
+    "tags": ["history"]
 }
 ```
