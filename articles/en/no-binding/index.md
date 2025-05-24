@@ -1,4 +1,4 @@
-# The Novus Ordo Mass: An Obligation for Traditional Catholics?
+# Is the New Mass obligatory for Catholics?
 
 For traditional Catholics, the question of attending the Novus Ordo Mass (NOM)
 is not merely one of preference but of fidelity to the unchanging Catholic Faith.
