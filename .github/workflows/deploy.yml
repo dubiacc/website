@@ -39,6 +39,8 @@ jobs:
           rm -rf ./.gitignore
           rm -rf ./gen.py
           cp -r ./static ./dist
+      - name: Debug dist
+        run: tree ./dist
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
