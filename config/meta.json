@@ -2825,6 +2825,9 @@
         }
     },
     "authors": {
+        "cdl-ottaviani": {
+            "displayname": "Abp. Cdl. Ottaviani"
+        },
         "bishop-williamson": {
             "displayname": "Bp. R. Williamson"
         },
