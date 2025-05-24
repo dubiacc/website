@@ -3,7 +3,7 @@
 We live in times of unparalleled confusion, where, as Abbé Roche foresaw, the 
 "heresy, that the Pope can do everything" (hyperpapalism) has taken root in many minds.
 On the other side of the aisle stand those that dispose of the pope (sedevacantists, 
-see [Does a pope espousing heresy lose his office?](/en/sede-vacante)). 
+see [Does a heretical pope lose his office?](/en/sede-vacante)). 
 
 This site, run with the approval of the SSPX Resistance priests, stands in the middle 
 position, which is often overlooked. But as we will see, moderation is a virtue, even 

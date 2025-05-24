@@ -1,4 +1,4 @@
-# Does a pope espousing heresy lose his office?
+# Does a heretical pope lose his office?
 
 We live in times of unparalleled confusion and scandalous popes. On the other side 
 of the aisle stand those that seem to think we must follow the pope always and 
