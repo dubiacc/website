@@ -48,6 +48,10 @@ fn generate_resistance_html(lang: &str, meta: &MetaJson) -> Result<String, Strin
 
     template = template.replace("$$TITLE$$", &title);
     template = template.replace("$$DESCRIPTION$$", &desc);
+    
+    // Replace contact URL using the new approach
+    let contact = crate::get_special_page_link(lang, "about", meta)?;
+    template = template.replace("$$CONTACT_URL$$", &contact);
 
     Ok(template)
 }

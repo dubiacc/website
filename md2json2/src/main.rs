@@ -1933,6 +1933,11 @@ fn minify_css(s: &str) -> String {
     s
 }
 
+pub fn get_special_page_link(lang: &str, page: &str, meta: &MetaJson) -> Result<String, String> {
+    let path = get_string(meta, lang, &format!("special-{}-path", page))?;
+    Ok(format!("{}/{}", lang, path))
+}
+
 fn get_string(meta: &MetaJson, lang: &str, key: &str) -> Result<String, String> {
     Ok(meta
         .strings
@@ -2028,47 +2033,33 @@ fn header_navigation(lang: &str, display_logo: bool, meta: &MetaJson) -> Result<
 
     header_nav = header_nav.replace("$$HOMEPAGE_LOGO$$", &logo);
     header_nav = header_nav.replace("$$TOOLS_DESC$$", &get_string(meta, lang, "nav-tools-desc")?);
-    header_nav = header_nav.replace(
-        "$$TOOLS_TITLE$$",
-        &get_string(meta, lang, "nav-tools-title")?,
-    );
-    header_nav = header_nav.replace("$$TOOLS_LINK$$", &get_string(meta, lang, "nav-tools-link")?);
+    header_nav = header_nav.replace("$$TOOLS_TITLE$$", &get_string(meta, lang, "nav-tools-title")?);
+    header_nav = header_nav.replace("$$TOOLS_LINK$$", &get_nav_link(meta, lang, "tools")?);
     header_nav = header_nav.replace("$$ABOUT_DESC$$", &get_string(meta, lang, "nav-about-desc")?);
-    header_nav = header_nav.replace(
-        "$$ABOUT_TITLE$$",
-        &get_string(meta, lang, "nav-about-title")?,
-    );
-    header_nav = header_nav.replace("$$ABOUT_LINK$$", &get_string(meta, lang, "nav-about-link")?);
-    header_nav = header_nav.replace(
-        "$$ALL_ARTICLES_TITLE$$",
-        &get_string(meta, lang, "nav-articles-title")?,
-    );
-    header_nav = header_nav.replace(
-        "$$ALL_ARTICLES_DESC$$",
-        &get_string(meta, lang, "nav-articles-desc")?,
-    );
-    header_nav = header_nav.replace(
-        "$$ALL_ARTICLES_LINK$$",
-        &get_string(meta, lang, "nav-articles-link")?,
-    );
-    header_nav = header_nav.replace(
-        "$$DOCS_DESC$$",
-        &get_string(meta, lang, "special-docs-desc")?,
-    );
-    header_nav = header_nav.replace(
-        "$$DOCS_TITLE$$",
-        &get_string(meta, lang, "special-docs-title")?,
-    );
-    header_nav = header_nav.replace(
-        "$$DOCS_LINK$$",
-        &(lang.to_string() + "/" + &get_string(meta, lang, "special-docs-path")?.replace(".html", "")),
-    );
-
+    header_nav = header_nav.replace("$$ABOUT_TITLE$$", &get_string(meta, lang, "nav-about-title")?);
+    header_nav = header_nav.replace("$$ABOUT_LINK$$", &get_nav_link(meta, lang, "about")?);
+    header_nav = header_nav.replace("$$ALL_ARTICLES_TITLE$$", &get_string(meta, lang, "nav-articles-title")?);
+    header_nav = header_nav.replace("$$ALL_ARTICLES_DESC$$", &get_string(meta, lang, "nav-articles-desc")?);
+    header_nav = header_nav.replace("$$ALL_ARTICLES_LINK$$", &get_nav_link(meta, lang, "articles")?);
+    header_nav = header_nav.replace("$$DOCS_DESC$$", &get_string(meta, lang, "special-docs-desc")?);
+    header_nav = header_nav.replace("$$DOCS_TITLE$$", &get_string(meta, lang, "special-docs-title")?);
+    header_nav = header_nav.replace("$$DOCS_LINK$$", &get_nav_link(meta, lang, "docs")?);
     header_nav = header_nav.replace("$$SHOP_DESC$$", &get_string(meta, lang, "nav-shop-desc")?);
     header_nav = header_nav.replace("$$SHOP_TITLE$$", &get_string(meta, lang, "nav-shop-title")?);
-    header_nav = header_nav.replace("$$SHOP_LINK$$", &get_string(meta, lang, "nav-shop-link")?);
+    header_nav = header_nav.replace("$$SHOP_LINK$$", &get_nav_link(meta, lang, "shop")?);
 
     Ok(header_nav)
+}
+
+fn get_nav_link(meta: &MetaJson, lang: &str, page: &str) -> Result<String, String> {
+    // First try the nav-{page}-link key
+    if let Ok(link) = get_string(meta, lang, &format!("nav-{}-link", page)) {
+        Ok(link)
+    } else {
+        // Fallback to constructing from special-{page}-path
+        let path = get_string(meta, lang, &format!("special-{}-path", page))?;
+        Ok(format!("{}/{}", lang, path))
+    }
 }
 
 fn link_tags(lang: &str, tags: &[String], meta: &MetaJson) -> Result<String, String> {
@@ -3230,7 +3221,6 @@ fn get_special_pages(
     by_tag: &ArticlesByTag,
     documents: &AnalyzedDocuments,
 ) -> Result<Vec<SpecialPage>, String> {
-
     let tags = meta
         .tags
         .get(lang)
@@ -3257,35 +3247,25 @@ fn get_special_pages(
         meta,
     )?;
 
-    let topics_title = get_string(meta, lang, "special-topics-title")?;
-    let topics_html = get_string(meta, lang, "special-topics-path")?;
-    let topics_id = get_string(meta, lang, "special-topics-id")?;
-    let topics_desc = get_string(meta, lang, "special-topics-desc")?;
+    // Helper function to get special page info
+    let get_page_info = |page: &str| -> Result<(String, String, String, String), String> {
+        let title = get_string(meta, lang, &format!("special-{}-title", page))?;
+        let path = get_string(meta, lang, &format!("special-{}-path", page))?;
+        let id = get_string(meta, lang, &format!("special-{}-id", page))?;
+        let desc = get_string(meta, lang, &format!("special-{}-desc", page))?;
+        Ok((title, path, id, desc))
+    };
 
-    let docs_title = get_string(meta, lang, "special-docs-title")?;
-    let docs_html = get_string(meta, lang, "special-docs-path")?;
-    let docs_id = get_string(meta, lang, "special-docs-id")?;
-    let docs_desc = get_string(meta, lang, "special-docs-desc")?;
-
-    let tools_title = get_string(meta, lang, "special-tools-title")?;
-    let tools_html = get_string(meta, lang, "special-tools-path")?;
-    let tools_id = get_string(meta, lang, "special-tools-id")?;
-    let tools_desc = get_string(meta, lang, "special-tools-desc")?;
-
-    let shop_title = get_string(meta, lang, "special-shop-title")?;
-    let shop_html = get_string(meta, lang, "special-shop-path")?;
-    let shop_id = get_string(meta, lang, "special-shop-id")?;
-    let shop_desc = get_string(meta, lang, "special-shop-desc")?;
-
-    let about_title = get_string(meta, lang, "special-about-title")?;
-    let about_html = get_string(meta, lang, "special-about-path")?;
-    let about_id = get_string(meta, lang, "special-about-id")?;
-    let about_desc = get_string(meta, lang, "special-about-desc")?;
+    let (topics_title, topics_path, topics_id, topics_desc) = get_page_info("topics")?;
+    let (docs_title, docs_path, docs_id, docs_desc) = get_page_info("docs")?;
+    let (tools_title, tools_path, tools_id, tools_desc) = get_page_info("tools")?;
+    let (shop_title, shop_path, shop_id, shop_desc) = get_page_info("shop")?;
+    let (about_title, about_path, about_id, about_desc) = get_page_info("about")?;
 
     Ok(vec![
         SpecialPage {
             title: topics_title,
-            filepath: topics_html,
+            filepath: topics_path,
             id: topics_id,
             description: topics_desc,
             content: topics_content,
@@ -3293,7 +3273,7 @@ fn get_special_pages(
         },
         SpecialPage {
             title: docs_title,
-            filepath: docs_html,
+            filepath: docs_path,
             id: docs_id,
             description: docs_desc,
             content: docs_content,
@@ -3301,7 +3281,7 @@ fn get_special_pages(
         },
         SpecialPage {
             title: tools_title,
-            filepath: tools_html,
+            filepath: tools_path,
             id: tools_id,
             description: tools_desc,
             content: render_resources_sections(lang, &tags.ressources),
@@ -3309,11 +3289,19 @@ fn get_special_pages(
         },
         SpecialPage {
             title: shop_title,
-            filepath: shop_html,
+            filepath: shop_path,
             id: shop_id,
             description: shop_desc,
             content: render_shop_sections(lang, &tags.shop, meta),
             special_content: site_author_donation(lang, meta).unwrap_or_default(),
+        },
+        SpecialPage {
+            title: about_title,
+            filepath: about_path,
+            id: about_id,
+            description: about_desc,
+            content: render_about_sections(&tags.about),
+            special_content: String::new(),
         },
     ])
 }
@@ -3348,9 +3336,9 @@ fn special2html(
     special = special.replace("$$ROOT_HREF$$", &get_root_href());
     special = special.replace(
         "$$PAGE_HREF$$",
-        &(get_root_href().to_string() + "/" + lang + "/" + &page.filepath.replace(".html", "")),
+        &format!("{}/{}/{}", get_root_href(), lang, page.filepath),
     );
-    Ok((page.filepath.to_string(), special))
+    Ok((format!("{}.html", page.filepath), special))
 }
 
 fn render_section_items_texts(texts: &[String]) -> String {
@@ -3764,6 +3752,8 @@ fn render_index_html(
     Ok(index_html)
 }
 
+
+
 pub fn minify(input: &str) -> Vec<u8> {
     let s = include_str!("../../templates/sw-inject.js");
     // let input = input.replace("<!-- INJECT_SW -->", &format!("<script>{s}</script>"));
@@ -3833,17 +3823,22 @@ fn main() -> Result<(), String> {
         }
     }
 
-    // Render and write documents
     for (lang, author_docs) in analyzed_documents.map.iter() {
-        let out_lang = get_string(&meta_map, lang, "special-docs-path")?;
+
+        let docs_path = get_string(&meta_map, lang, "special-docs-path")?;
+        let docs_dir = cwd.join("dist").join(lang).join(&docs_path);
+        
         for (author, docs) in author_docs {
 
-            // Render a /dist/[lang]/doc/[author].html showing only the documents by this author
+            // Ensure the directory exists
+            let _ = std::fs::create_dir_all(&docs_dir);
+            
+            // Render author index page
             let author_name = meta_map.authors.get(author)
                 .map(|a| a.displayname.clone())
                 .unwrap_or_else(|| author.clone());
                 
-            let author_file = cwd.join("dist").join(&out_lang).join(author.to_string() + ".html");
+            let author_file = docs_dir.join(format!("{}.html", author));
 
             let docs_title = get_string(&meta_map, lang, "special-docs-title")?;
             let docs_html = get_string(&meta_map, lang, "special-docs-path")?;
@@ -3874,11 +3869,11 @@ fn main() -> Result<(), String> {
             let _ = std::fs::write(author_file, html);
 
             for (slug, doc) in docs {
-                let output_dir = cwd.join("dist").join(&out_lang).join(author);
+                let output_dir = docs_dir.join(author);
                 let _ = std::fs::create_dir_all(&output_dir);
                 
                 let html = docs::document2html(lang, author, slug, doc, &meta_map)?;
-                let output_path = output_dir.join(slug.to_string() + ".html");
+                let output_path = output_dir.join(format!("{}.html", slug));
                 let _ = std::fs::write(output_path, &minify(&html));
             }
         }
@@ -3908,11 +3903,9 @@ fn main() -> Result<(), String> {
     for l in langs.iter() {
         let sp = get_special_pages(&l, &meta_map, &articles_by_tag, &analyzed_documents)?;
         for s in sp.iter() {
-            let (mut path, html) = special2html(&l, s, &meta_map)?;
-            if !path.ends_with(".html") {
-                path = path + ".html";
-            }
-            let _ = std::fs::write(cwd.join("dist").join(l).join(path), &&html);
+            let (filename, html) = special2html(&l, s, &meta_map)?;
+            let path = cwd.join("dist").join(l).join(filename);
+            let _ = std::fs::write(path, &minify(&html));
         }
     }
 

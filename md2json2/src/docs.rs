@@ -196,7 +196,7 @@ pub fn document2html(
     let html = html.replace("$$ROOT_HREF$$", root_href);
     let html = html.replace(
         "$$PAGE_HREF$$",
-        &(root_href.to_string() + "/" + lang + "/docs/" + author + "/" + slug),
+        &format!("{}/{}/docs/{}/{}", root_href, lang, author, slug),
     );
     
     Ok(html)
