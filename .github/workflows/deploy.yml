@@ -35,7 +35,7 @@ jobs:
           rm -rf ./*.DS_Store
           rm -rf ./.git
           rm -rf ./md2json
-          cp ./templates/missa ./dist/en/missa
+          cp ./templates/missa.html ./dist/en/missa.html
           rm -rf ./templates
           rm -rf ./.gitignore
           rm -rf ./gen.py
