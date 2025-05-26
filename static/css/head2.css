@@ -1321,9 +1321,7 @@ margin-top: 10px;
 overflow: hidden;
 overflow-y: auto;
 }
-.default-links#index-search-results, 
-.default-links#index-search-results > ul, 
-.default-links#index-search-results > p {
+.default-links#index-search-results {
 height: auto;
 min-height: auto;
 max-height: auto;
