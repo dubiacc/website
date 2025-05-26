@@ -17,7 +17,7 @@ const DEFAULT_LINKS_CONFIG = {
     ],
     'fr': [
         { emoji: '👥', title: 'Qui nous sommes?', url: '/fr/qui-nous-sommes' },
-        { emoji: '📍', title: 'Où nous sommes?', url: '/fr/resistance' },
+        { emoji: '📍', title: 'Où nous sommes?', url: '/fr/fidelite' },
         { emoji: '📖', title: 'Missel', url: '/fr/missel' },
         { emoji: '📿', title: 'Rosaire', url: '/fr/rosaire' },
         { emoji: '📚', title: 'Latin', url: '/fr/latin' }

@@ -840,6 +840,10 @@ ul.list li {
     line-height: 2em;
 }
 
+ul.default-links li {
+    line-height: unset;
+}
+
 #first-section h2 {
     display: none;
 }
@@ -1323,6 +1327,13 @@ overflow-y: auto;
 height: 120px;
 min-height: 120px;
 max-height: 120px;
+}
+.default-links#index-search-results, 
+.default-links#index-search-results > ul, 
+.default-links#index-search-results > p {
+height: auto;
+min-height: auto;
+max-height: auto;
 }
 #index-search-results li {
 margin-top: 0 !important;
