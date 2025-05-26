@@ -2603,11 +2603,10 @@
             "displayname": "Felix Schütt",
             "contact": "info@dubia.cc",
             "donate": {
-                "paypal": "paypal.me/fschutt554",
+                "paypal": "https://paypal.me/fschutt554",
                 "wise": "https://wise.com/pay/me/felixs1176",
-                "ko-fi": "ko-fi.com/fschutt",
-                "github": "https://github.com/sponsors/fschutt",
-                "pledge": "https://www.pledge.to/dubiacc"
+                "ko-fi": "https://ko-fi.com/fschutt",
+                "github": "https://github.com/sponsors/fschutt"
             }
         }
     },
