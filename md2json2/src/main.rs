@@ -3174,7 +3174,8 @@ fn search_html(
             search_js = search_js.replace("$$LANG$$", lang);
             search_js = search_js.replace("$$VERSION$$", &version);
             search_js = search_js.replace("$$NO_RESULTS$$", &no_results);
-            
+            search_js = search_js.replace("$$DOC_FOLDER$$", &get_string(meta, lang, "special-docs-path")?);
+
             // Return the tuple for this language
             Ok((lang.clone(), (searchbar_html, search_html, search_js)))
         })

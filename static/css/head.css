@@ -1355,6 +1355,18 @@ blockquote,
 /* LISTS */
 /*********/
 
+.list.default-links {
+    max-width: 350px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.list.default-links li {
+    margin: 10px;
+}
+
 .list {
     --text-alignment: left;
     --list-left-padding: 0em;

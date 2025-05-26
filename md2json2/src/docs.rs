@@ -187,7 +187,8 @@ pub fn document2html(
     let html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", &skip);
     let contact = crate::get_special_page_link(lang, "about", meta)?;
     let root_href = get_root_href();
-    
+    let docs_folder = get_string(meta, lang, "special-docs-path")?;
+
     let html = html.replace("$$CONTACT_URL$$", &contact);
     let html = html.replace("$$TITLE$$", &doc.title);
     let html = html.replace("$$TITLE_ID$$", &title_id);
@@ -196,7 +197,7 @@ pub fn document2html(
     let html = html.replace("$$ROOT_HREF$$", root_href);
     let html = html.replace(
         "$$PAGE_HREF$$",
-        &format!("{}/{}/docs/{}/{}", root_href, lang, author, slug),
+        &format!("{}/{}/{}/{}/{}", root_href, lang, docs_folder, author, slug),
     );
     
     Ok(html)
@@ -210,6 +211,8 @@ pub fn get_document_index_content(
     // Create a page that lists all documents by author
     let mut content = String::new();
     
+    let docs_folder = get_string(meta, lang, "special-docs-path")?;
+
     // Group documents by author
     if let Some(lang_docs) = documents.map.get(lang) {
         for (author, docs) in lang_docs {
@@ -224,8 +227,8 @@ pub fn get_document_index_content(
             // Add all documents for this author
             for (slug, doc) in docs {
                 content.push_str(&format!(
-                    "<li class='link-modified-recently-list-item dark-mode-invert'><p class='in-list first-graf block'><a href='/{}/docs/{}/{}' class='link-annotated link-page'>{}</a></p></li>",
-                    lang, author, slug, doc.title
+                    "<li class='link-modified-recently-list-item dark-mode-invert'><p class='in-list first-graf block'><a href='/{}/{}/{}/{}' class='link-annotated link-page'>{}</a></p></li>",
+                    lang, docs_folder, author, slug, doc.title
                 ));
             }
             

@@ -4,11 +4,13 @@ const TOREPLACE = [
     "-", "_", "[", "]", "(", ")", ",", ".", 
 ];
 
+const DOC_LINK = "$$DOC_FOLDER$$";
+
 // Configuration for default links by language
 const DEFAULT_LINKS_CONFIG = {
     'de': [
-        { emoji: '👥', title: 'Wer wir sind?', url: '/de/wer-wir-sind' },
-        { emoji: '📍', title: 'Wo wir sind?', url: '/de/resistance' },
+        { emoji: '👥', title: 'Wer sind wir?', url: '/de/wer-wir-sind' },
+        { emoji: '📍', title: 'Wo sind wir?', url: '/de/resistance' },
         { emoji: '📖', title: 'Messbuch', url: '/de/missale' },
         { emoji: '📿', title: 'Rosenkranz', url: '/de/rosenkranz' },
         { emoji: '📚', title: 'Latein', url: '/de/latein' }
@@ -43,8 +45,8 @@ const DEFAULT_LINKS_CONFIG = {
     ],
     // Fallback for unsupported languages
     'fallback': [
-        { emoji: '👥', title: 'Who we are?', url: '/en/who-we-are' },
-        { emoji: '📍', title: 'Where we are?', url: '/en/resistance' },
+        { emoji: '👥', title: 'Who are we?', url: '/en/who-we-are' },
+        { emoji: '📍', title: 'Where are we?', url: '/en/resistance' },
         { emoji: '📖', title: 'Missal', url: '/en/missal' },
         { emoji: '📿', title: 'Rosary', url: '/en/rosary' },
         { emoji: '📚', title: 'Latin', url: '/en/latin' }
@@ -52,6 +54,10 @@ const DEFAULT_LINKS_CONFIG = {
 };
 
 const getCurrentLanguage = () => {
+    const lang = "$$LANG$$";
+    if (lang.length == 2) {
+        return lang;
+    }
     const path = window.location.pathname;
     const langMatch = path.match(/^\/([a-z]{2})\//);
     return langMatch ? langMatch[1] : 'en';
@@ -162,7 +168,7 @@ function goToFirstArticle(e) {
     if (result.doc_type === "document") {
         const parts = result.id.split('/');
         const slug = parts[parts.length - 1];
-        url = "/$$LANG$$/docs/" + result.author + "/" + slug;
+        url = "/$$LANG$$/$$DOC_FOLDER$$/" + result.author + "/" + slug;
     } else {
         url = "/$$LANG$$/" + result.id;
     }
@@ -176,18 +182,15 @@ function searchAndDisplayArticles(e) {
     var target = document.getElementById("index-search-results");
     var no_results = "<p id='no-results' style='padding-left:10px;'>$$NO_RESULTS$$</p>"
     
-    if (searchterm.length == 0) {
-        target.innerHTML = "";
+    if (searchterm.length < 3) {
+        displayDefaultLinks(target);
         return false;
-    } else if (searchterm.length < 3) {
-        target.innerHTML = no_results;
-        return false;
-    }
-    
+    } 
+
     var results = searchArticlesLocal(searchterm);
     
     if (results.length < 1) {
-        displayDefaultLinks(target);
+        target.innerHTML = no_results;
         return false;
     }
     
@@ -202,7 +205,7 @@ function searchAndDisplayArticles(e) {
         if (result.doc_type === "document") {
             const parts = id.split('/');
             const slug = parts[parts.length - 1];
-            url = "/$$LANG$$/docs/" + result.author + "/" + slug;
+            url = "/$$LANG$$/$$DOC_FOLDER$$/" + result.author + "/" + slug;
         } else {
             url = "/$$LANG$$/" + id;
         }
@@ -352,7 +355,7 @@ function loadDocumentContent(id, sha256) {
     const slug = parts[parts.length - 1];
     const author = item.author;
     
-    console.log("downloading document content for $$LANG$$/docs/" + author + "/" + slug);
+    console.log("downloading document content for $$LANG$$/$$DOC_FOLDER$$/" + author + "/" + slug);
     doAjax({
         location: `${location.origin}/docs/$$LANG$$/${author}/${slug}.md`,
         onSuccess: function(event) {
@@ -388,7 +391,7 @@ function checkArticlesAreInitialized(force) {
             const slug = parts[parts.length - 1];
             const author = item.author;
             
-            console.log("downloading document for $$LANG$$/docs/" + author + "/" + slug);
+            console.log("downloading document for $$LANG$$/$$DOC_FOLDER$$/" + author + "/" + slug);
             doAjax({
                 location: `${location.origin}/docs/$$LANG$$/${author}/${slug}.md`,
                 onSuccess: function(event) {
