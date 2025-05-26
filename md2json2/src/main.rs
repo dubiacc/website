@@ -2011,7 +2011,7 @@ fn head(
         "$$SKIP_TO_MAIN_CONTENT$$",
         &get_string(meta, lang, "page-smc")?,
     );
-    head = head.replace("$$CONTACT_URL$$", &get_string(meta, lang, "link-about")?);
+    head = head.replace("$$CONTACT_URL$$", &get_special_page_link(lang, "about", meta)?);
     head = head.replace("$$SLUG$$", title_id);
 
     Ok(head)
@@ -2034,19 +2034,19 @@ fn header_navigation(lang: &str, display_logo: bool, meta: &MetaJson) -> Result<
     header_nav = header_nav.replace("$$HOMEPAGE_LOGO$$", &logo);
     header_nav = header_nav.replace("$$TOOLS_DESC$$", &get_string(meta, lang, "nav-tools-desc")?);
     header_nav = header_nav.replace("$$TOOLS_TITLE$$", &get_string(meta, lang, "nav-tools-title")?);
-    header_nav = header_nav.replace("$$TOOLS_LINK$$", &get_nav_link(meta, lang, "tools")?);
+    header_nav = header_nav.replace("$$TOOLS_LINK$$", &get_special_page_link(lang, "tools", meta)?);
     header_nav = header_nav.replace("$$ABOUT_DESC$$", &get_string(meta, lang, "nav-about-desc")?);
     header_nav = header_nav.replace("$$ABOUT_TITLE$$", &get_string(meta, lang, "nav-about-title")?);
-    header_nav = header_nav.replace("$$ABOUT_LINK$$", &get_nav_link(meta, lang, "about")?);
+    header_nav = header_nav.replace("$$ABOUT_LINK$$", &get_special_page_link(lang, "about", meta)?);
     header_nav = header_nav.replace("$$ALL_ARTICLES_TITLE$$", &get_string(meta, lang, "nav-articles-title")?);
     header_nav = header_nav.replace("$$ALL_ARTICLES_DESC$$", &get_string(meta, lang, "nav-articles-desc")?);
-    header_nav = header_nav.replace("$$ALL_ARTICLES_LINK$$", &get_nav_link(meta, lang, "articles")?);
+    header_nav = header_nav.replace("$$ALL_ARTICLES_LINK$$", &get_special_page_link(lang, "topics", meta)?);
     header_nav = header_nav.replace("$$DOCS_DESC$$", &get_string(meta, lang, "special-docs-desc")?);
     header_nav = header_nav.replace("$$DOCS_TITLE$$", &get_string(meta, lang, "special-docs-title")?);
-    header_nav = header_nav.replace("$$DOCS_LINK$$", &get_nav_link(meta, lang, "docs")?);
+    header_nav = header_nav.replace("$$DOCS_LINK$$", &get_special_page_link(lang, "docs", meta)?);
     header_nav = header_nav.replace("$$SHOP_DESC$$", &get_string(meta, lang, "nav-shop-desc")?);
     header_nav = header_nav.replace("$$SHOP_TITLE$$", &get_string(meta, lang, "nav-shop-title")?);
-    header_nav = header_nav.replace("$$SHOP_LINK$$", &get_nav_link(meta, lang, "shop")?);
+    header_nav = header_nav.replace("$$SHOP_LINK$$", &get_special_page_link(lang, "shop", meta)?);
 
     Ok(header_nav)
 }
@@ -2066,7 +2066,7 @@ fn link_tags(lang: &str, tags: &[String], meta: &MetaJson) -> Result<String, Str
     let root_href = get_root_href();
 
     let t_descr_string = get_string(meta, lang, "link-tags-descr")?;
-    let t_url = get_string(meta, lang, "nav-articles-link")?;
+    let t_url = get_special_page_link(lang, "topics", meta)?;
     
     // Get the tag display names mapping for this language
     let tag_display_names = meta
@@ -2909,32 +2909,7 @@ fn article2html(
 
     let mut a = a.clone();
 
-    let content = match (lang, slug) {
-        ("de", "rosenkranz") => {
-            rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries(), &meta)
-        }
-        ("en", "rosary") => {
-            rosary::generate_rosary(lang, &rosary_template(lang), &rosary_mysteries(), &meta)
-        }
-        ("en", "online-latin-trainer") => {
-            let l = langtrain::TrainLang::Latin;
-            let grammar_lessons = l.get_grammar_lessons(lang);
-            a.sections.push(ArticleSection {
-                title: format!("V01: 1000 words"),
-                indent: 2,
-                pars: Vec::new(),
-            });
-            for gl in grammar_lessons.sections.iter() {
-                a.sections.push(ArticleSection {
-                    title: gl.title.clone(),
-                    indent: 2,
-                    pars: Vec::new(),
-                });
-            }
-            langtrain::generate_langtrain_content(lang, l, &meta)?
-        }
-        _ => body_content(lang, &slug, &a.sections, meta)?,
-    };
+    let content = body_content(lang, &slug, &a.sections, meta)?;
 
     let a = &a;
     let html = HTML.replace(
@@ -2968,7 +2943,7 @@ fn article2html(
 
     let skip = get_string(meta, lang, "page-smc")?;
     let html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", &skip);
-    let contact = get_string(meta, lang, "link-about")?;
+    let contact = get_special_page_link(lang, "about", meta)?;
     let root_href = get_root_href();
 
     let html = html.replace("$$CONTACT_URL$$", &contact);
@@ -3461,7 +3436,7 @@ fn render_index_section_img(
 ) -> String {
     let mut section_html = include_str!("../../templates/index.section.html").to_string();
     section_html = section_html.replace("$$SECTION_ID$$", id);
-    let nav_shop_link = get_string(meta, lang, "nav-shop-link").unwrap_or_default();
+    let nav_shop_link = get_special_page_link(lang, "shop", meta).unwrap_or_default();
     section_html = section_html.replace("$$LANG$$", &nav_shop_link);
     section_html =
         section_html.replace("$$PAGE_HREF$$", &(get_root_href().to_string() + "/" + lang));
@@ -3766,6 +3741,7 @@ pub fn minify(input: &str) -> Vec<u8> {
 
 const INDEX: &str = include_str!("../../index.html");
 const DEATH: &str = include_str!("../../templates/death.html");
+const MISSAL: &str = include_str!("../../templates/missa.html");
 
 fn main() -> Result<(), String> {
     // Setup
@@ -3907,6 +3883,88 @@ fn main() -> Result<(), String> {
             let path = cwd.join("dist").join(l).join(filename);
             let _ = std::fs::write(path, &minify(&html));
         }
+
+        let missal_path = cwd.join("dist").join(l).join(match l.as_str() {
+            "de" => "missale.html",
+            "en" => "missal.html",
+            "fr" => "missel.html",
+            "es" => "misal.html",
+            "br" => "missal.html",
+            "pl" => "mszal.html",
+            _ => "missal.html",
+        });
+
+        // Write missal
+        let _ = std::fs::write(missal_path, MISSAL.replace(
+            "let currentLanguage = \"en\"", 
+            &format!("let currentLanguage = \"{l}\""),
+        ));
+
+        // Write rosary
+        let r = match l.as_str() {
+            "de" => "rosenkranz.html",
+            "en" => "rosary.html",
+            "fr" => "rosaire.html",
+            "es" => "rosario.html",
+            "br" => "rosario.html",
+            "pl" => "rozaniec.html",
+            _ => "rosary.html",
+        };
+
+        let rosary_path = cwd.join("dist").join(l).join(r);
+        let rosary_content = rosary::generate_rosary(
+            l, &rosary_template(l), 
+            &rosary_mysteries(), &meta_map
+        );
+        let special_page = SpecialPage {
+            id: r.replace(".html", ""),
+            filepath: r.to_string(),
+            title: r.replace(".html", ""),
+            description: r.replace(".html", ""),
+            content: rosary_content,
+            special_content: String::new(),
+        };
+        let (filename, html) = special2html(l, &special_page, &meta_map).unwrap_or_default();
+        let _ = std::fs::write(rosary_path, &html);
+
+        // Write latin trainer
+        let latin_file = match l.as_str() {
+            "de" => "latein.html",
+            "en" => "latin.html",
+            "br" => "latim.html",
+            "pl" => "laciny.html",
+            "es" => "latin.html",
+            "fr" => "latin.html",
+            _ => "latin.html",
+        };
+        let latin_path = cwd.join("dist").join(l).join(latin_file);
+        let tl = langtrain::TrainLang::Latin;
+        /* 
+        let grammar_lessons = tl.get_grammar_lessons(l);
+        a.sections.push(ArticleSection {
+            title: format!("V01: 1000 words"),
+            indent: 2,
+            pars: Vec::new(),
+        });
+        for gl in grammar_lessons.sections.iter() {
+            a.sections.push(ArticleSection {
+                title: gl.title.clone(),
+                indent: 2,
+                pars: Vec::new(),
+            });
+        }
+        */
+        let latin_content = langtrain::generate_langtrain_content(l, tl, &meta_map)?;
+        let special_page = SpecialPage {
+            id: latin_file.replace(".html", ""),
+            filepath: latin_file.to_string(),
+            title: latin_file.replace(".html", ""),
+            description: latin_file.replace(".html", ""),
+            content: latin_content,
+            special_content: String::new(),
+        };
+        let (filename, html) = special2html(l, &special_page, &meta_map).unwrap_or_default();
+        let _ = std::fs::write(latin_path, &html);
     }
 
     // Write index + /search pages

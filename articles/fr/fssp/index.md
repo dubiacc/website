@@ -17,7 +17,7 @@ tradition de l'Église, transmise par les apôtres et leurs successeurs. Ainsi,
 si un pape contredit directement la tradition en matière de foi, sommes-nous tenus de 
 lui obéir ? Devrions-nous craindre qu'une telle personne nous excommunie ? 
 
-Il ne s'agit pas d'un simple désaccord de stratégie entre la FSSP / FSSPX / Résistance : c'est 
+Il ne s'agit pas d'un simple désaccord de stratégie entre la FSSP / FSSPX / Fidélité : c'est 
 une bataille pour l'âme du catholicisme, la foi catholique.
 
 ## L'Hérésie Anthropocentrique de Vatican II
@@ -67,7 +67,7 @@ Les prêtres qui, sous couvert d'obéissance, approuvent de telles déclarations
 ils sont, au mieux, égarés, et au pire, des traîtres à la Foi, comme Judas, vendant 
 la Vérité pour un autel de marbre.
 
-Beaucoup sont prompts à condamner la Fraternité Saint-Pie X (FSSPX) ou la Résistance, affirmant 
+Beaucoup sont prompts à condamner la Fraternité Saint-Pie X (FSSPX) ou la Fidélité, affirmant 
 "il n'y a pas de salut dans la FSSPX" ou "ils n'ont pas de juridiction". Bien que ce soit une facile adaptation polémique 
 de "Hors de l'Église point de Salut", nous devons nous interroger sur "Qui appartient 
 à l'Église catholique ?".
@@ -195,7 +195,7 @@ née de la prise de conscience que le dialogue avec la Rome moderniste était un
 >
 > -- [Mgr Lefebvre](https://en.wikipedia.org/wiki/Marcel_Lefebvre) -- [Lettre au Cdl. Ratzinger, 24 mai 1988](https://archive.is/1p6Xi#selection-203.0-203.142)
 
-La même histoire peut être racontée à propos de la Résistance : Après que la FSSPX eut à résister 
+La même histoire peut être racontée à propos de la Fidélité : Après que la FSSPX eut à résister 
 à Rome, Mgr Williamson dut résister aux autres évêques de la FSSPX, après que Mgr Fellay
 eut commencé à essayer de "réunir" la FSSPX avec Rome sous prétexte d'un accord pratique 
 en 2012. Comme ni le Pape François ni le Pape Benoît n'ont condamné les erreurs 
@@ -203,7 +203,7 @@ de Vatican II et restauré l'ordre dans l'Église, nous ne pouvons pas conclure 
 avec des gens qui mettent l'homme en premier, Dieu en second. Au lieu de se repentir, Rome s'est entêtée 
 dans son erreur - avec beaucoup de dialectique élaborée ou moins élaborée.
 
-Voir aussi : [Qu'est-ce que la Résistance FSSPX ?](/fr/resistance-timeline) (Note : lien /en/resistance-timeline adapté en /fr/)
+Voir aussi : [Qu'est-ce que la Fidélité FSSPX ?](/fr/qui-nous-sommes)
 
 ## FSSP : Opposition Contrôlée et Compromis Fatal
 
@@ -265,7 +265,7 @@ reconnu et encouragé par des gens qui mettent Dieu à la deuxième place ?
 
 ## La Vraie Question du Salut
 
-Maintenant, pourrait-on se demander, n'y a-t-il "pas de salut hors de la Résistance" ? Eh bien, la 
+Maintenant, pourrait-on se demander, n'y a-t-il "pas de salut hors de la Fidélité" ? Eh bien, la 
 terrifiante et réelle question est : Y a-t-il un salut pour ceux qui, au nom de la 
 "régularisation" ou de l'"obéissance" à des autorités compromises, approuvent ou gardent 
 le silence sur des hérésies qui placent l'homme au centre au lieu de Dieu ? Dieu, dans son 

@@ -4,6 +4,86 @@ const TOREPLACE = [
     "-", "_", "[", "]", "(", ")", ",", ".", 
 ];
 
+// Configuration for default links by language
+const DEFAULT_LINKS_CONFIG = {
+    'de': [
+        { emoji: '👥', title: 'Wer wir sind?', url: '/de/wer-wir-sind' },
+        { emoji: '📍', title: 'Wo wir sind?', url: '/de/resistance' },
+        { emoji: '📖', title: 'Messbuch', url: '/de/missale' },
+        { emoji: '📿', title: 'Rosenkranz', url: '/de/rosenkranz' },
+        { emoji: '📚', title: 'Latein', url: '/de/latein' }
+    ],
+    'fr': [
+        { emoji: '👥', title: 'Qui nous sommes?', url: '/fr/qui-nous-sommes' },
+        { emoji: '📍', title: 'Où nous sommes?', url: '/fr/resistance' },
+        { emoji: '📖', title: 'Missel', url: '/fr/missel' },
+        { emoji: '📿', title: 'Rosaire', url: '/fr/rosaire' },
+        { emoji: '📚', title: 'Latin', url: '/fr/latin' }
+    ],
+    'es': [
+        { emoji: '👥', title: '¿Quiénes somos?', url: '/es/quienes-somos' },
+        { emoji: '📍', title: '¿Dónde estamos?', url: '/es/resistance' },
+        { emoji: '📖', title: 'Misal', url: '/es/misal' },
+        { emoji: '📿', title: 'Rosario', url: '/es/rosario' },
+        { emoji: '📚', title: 'Latín', url: '/es/latin' }
+    ],
+    'br': [
+        { emoji: '👥', title: 'Quem somos?', url: '/br/quem-somos' },
+        { emoji: '📍', title: 'Onde estamos?', url: '/br/resistance' },
+        { emoji: '📖', title: 'Missal', url: '/br/missal' },
+        { emoji: '📿', title: 'Rosário', url: '/br/rosario' },
+        { emoji: '📚', title: 'Latim', url: '/br/latim' }
+    ],
+    'pl': [
+        { emoji: '👥', title: 'Kim jesteśmy?', url: '/pl/kim-jestesmy' },
+        { emoji: '📍', title: 'Gdzie jesteśmy?', url: '/pl/resistance' },
+        { emoji: '📖', title: 'Mszał', url: '/pl/mszal' },
+        { emoji: '📿', title: 'Różaniec', url: '/pl/rozaniec' },
+        { emoji: '📚', title: 'Łacina', url: '/pl/laciny' }
+    ],
+    // Fallback for unsupported languages
+    'fallback': [
+        { emoji: '👥', title: 'Who we are?', url: '/en/who-we-are' },
+        { emoji: '📍', title: 'Where we are?', url: '/en/resistance' },
+        { emoji: '📖', title: 'Missal', url: '/en/missal' },
+        { emoji: '📿', title: 'Rosary', url: '/en/rosary' },
+        { emoji: '📚', title: 'Latin', url: '/en/latin' }
+    ]
+};
+
+const getCurrentLanguage = () => {
+    const path = window.location.pathname;
+    const langMatch = path.match(/^\/([a-z]{2})\//);
+    return langMatch ? langMatch[1] : 'en';
+};
+
+const getDefaultLinksForLanguage = () => {
+    const lang = getCurrentLanguage();
+    return DEFAULT_LINKS_CONFIG[lang] || DEFAULT_LINKS_CONFIG['fallback'] || [];
+};
+
+const createDefaultLinksHTML = () => {
+    const links = getDefaultLinksForLanguage();
+    if (links.length === 0) return '';
+    
+    const linkItems = links.map(link => 
+        `<li class='link-modified-recently-list-item dark-mode-invert'>
+            <p class='in-list first-graf block' style='--bsm: 0;'>
+                <a href='${link.url}' class='link-annotated link-page in-list has-annotation spawns-popup default-link' 
+                   data-attribute-title='${link.title}'>
+                    ${link.emoji} ${link.title}
+                </a>
+            </p>
+        </li>`
+    ).join('');
+    
+    return `<ul class='list default-links'>${linkItems}</ul>`;
+};
+
+const displayDefaultLinks = (target) => {
+    target.innerHTML = createDefaultLinksHTML();
+};
+
 function doAjax(options) {
     options = Object.assign({
         location: document.location,
@@ -107,36 +187,37 @@ function searchAndDisplayArticles(e) {
     var results = searchArticlesLocal(searchterm);
     
     if (results.length < 1) {
-        target.innerHTML = no_results;
-        return false;
-    } else {
-        let a = "";
-        for (let i = 0; i < results.length; i++) {
-            const result = results[i];
-            let id = result.id;
-            let title = result.title;
-            let url;
-            
-            // Generate correct URL based on result type
-            if (result.doc_type === "document") {
-                const parts = id.split('/');
-                const slug = parts[parts.length - 1];
-                url = "/$$LANG$$/docs/" + result.author + "/" + slug;
-            } else {
-                url = "/$$LANG$$/" + id;
-            }
-            
-            a += "<li class='link-modified-recently-list-item dark-mode-invert'>";
-            a += "<p class='in-list first-graf block' style='--bsm: 0;'>";
-            a += "<a href='" + url + "' id='sr-" + id;
-            a += "' class='link-annotated link-page in-list has-annotation spawns-popup' ";
-            a += " data-attribute-title='" + title + "'>" + title + "</a>";
-            a += "</p>";
-            a += "</li>";
-        }
-        target.innerHTML = "<ul class='list'>" + a + "</ul>";
+        displayDefaultLinks(target);
         return false;
     }
+    
+    let a = "";
+    for (let i = 0; i < results.length; i++) {
+        const result = results[i];
+        let id = result.id;
+        let title = result.title;
+        let url;
+        
+        // Generate correct URL based on result type
+        if (result.doc_type === "document") {
+            const parts = id.split('/');
+            const slug = parts[parts.length - 1];
+            url = "/$$LANG$$/docs/" + result.author + "/" + slug;
+        } else {
+            url = "/$$LANG$$/" + id;
+        }
+        
+        a += "<li class='link-modified-recently-list-item dark-mode-invert'>";
+        a += "<p class='in-list first-graf block' style='--bsm: 0;'>";
+        a += "<a href='" + url + "' id='sr-" + id;
+        a += "' class='link-annotated link-page in-list has-annotation spawns-popup' ";
+        a += " data-attribute-title='" + title + "'>" + title + "</a>";
+        a += "</p>";
+        a += "</li>";
+    }
+
+    target.innerHTML = "<ul class='list'>" + a + "</ul>";
+    return false;
 }
 
 function searchArticlesLocal(searchterm) {
@@ -386,9 +467,20 @@ function initSearchIndex(force) {
     });
 }
 
+window.displayDefaultLinks = displayDefaultLinks;
+window.getDefaultLinksForLanguage = getDefaultLinksForLanguage;
 window.initSearchIndex = initSearchIndex;
 
 initSearchIndex(false); 
+
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById("index-search-input");
+    const target = document.getElementById("index-search-results");
+    
+    if (searchInput && target && searchInput.value.length === 0) {
+        displayDefaultLinks(target);
+    }
+});
 document.getElementById("index-search-form").onsubmit = function(event) { goToFirstArticle(event); return false; };
 document.getElementById("index-search-input").onkeyup = function(event) { searchAndDisplayArticles(event); return false; };
 document.getElementById("index-search-button").onclick = function(event) { goToFirstArticle(event); return false; };

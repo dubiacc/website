@@ -261,7 +261,7 @@ fin spécifique ([CC, 59](https://archive.is/boRjM#selection-735.814-735.926))
 > -- [Pie XI](https://en.wikipedia.org/wiki/Pope_Pius_XI) -- [Casti Connubii, 78](https://archive.is/boRjM#selection-887.5-887.357)
 
 Notamment, cet enseignement hérétique est même épousé par les "Orthodoxes" orientaux, voir 
-[Les Annulations sont-elles Catholiques ?](/fr/annulations). (Note : le lien pointe vers /en/annulments, je le laisse tel quel comme demandé)
+[Les Annulations sont-elles Catholiques ?](/fr/annulations).
 
 Augustin va encore plus loin, après avoir condamné les Manichéens pour leurs épouses-maîtresses :
 

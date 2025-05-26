@@ -1,12 +1,16 @@
 use std::path::Path;
 
-use crate::MetaJson;
+use crate::{get_string, MetaJson};
 
 pub fn generate_resistance_pages(cwd: &Path, meta: &MetaJson) -> Result<(), String> {
     // For each language, generate a resistance.html file
     for lang in meta.strings.keys() {
         let content = generate_resistance_html(lang, meta)?;
-        let output_path = cwd.join("dist").join(lang).join("resistance.html");
+        let mut resistance_link = get_string(meta, lang, "resistance-link")?;
+        if !resistance_link.ends_with(".html") {
+            resistance_link += ".html";
+        }
+        let output_path = cwd.join("dist").join(lang).join(&resistance_link);
 
         // Ensure the directory exists
         if let Some(parent) = output_path.parent() {

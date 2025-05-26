@@ -185,7 +185,7 @@ pub fn document2html(
     // Standard replacements
     let skip = get_string(meta, lang, "page-smc")?;
     let html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", &skip);
-    let contact = get_string(meta, lang, "link-about")?;
+    let contact = crate::get_special_page_link(lang, "about", meta)?;
     let root_href = get_root_href();
     
     let html = html.replace("$$CONTACT_URL$$", &contact);
