@@ -258,7 +258,7 @@ fin spécifique ([CC, 59](https://archive.is/boRjM#selection-735.814-735.926))
 > par lequel mari et femme sont unis, lorsqu'elle cesse, le mariage est complètement 
 > dissous. Qu'est-ce donc, sinon bâtir une maison sur le sable ?
 >
-> -- [Pie XI](https://en.wikipedia.org/wiki/Pope_Pius_XI) -- [Casti Connubii, 78](https://archive.is/boRjM#selection-887.5-887.357)
+> -- [Pie XI](https://fr.wikipedia.org/wiki/Pie_XI) -- [Casti Connubii, 78](https://archive.is/boRjM#selection-887.5-887.357)
 
 Notamment, cet enseignement hérétique est même épousé par les "Orthodoxes" orientaux, voir 
 [Les Annulations sont-elles Catholiques ?](/fr/annulations).
@@ -395,6 +395,6 @@ corrosive pour le tissu même du mariage et de la vie de famille.
 {
     "date": "2025-05-14",
     "authors": ["john-farrell"],
-    "tags": ["morality"]
+    "tags": ["morale"]
 }
 ```

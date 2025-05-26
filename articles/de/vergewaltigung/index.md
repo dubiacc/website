@@ -88,7 +88,7 @@ Vergewaltigung, statt von Verführung, die Rede ist.
 ```
 {
     "date": "2024-11-13",
-    "tags": ["frage"],
+    "tags": ["moral"],
     "authors": ["discord:1236084336340762656"]
 }
 ```

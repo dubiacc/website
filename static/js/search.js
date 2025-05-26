@@ -68,22 +68,25 @@ const getDefaultLinksForLanguage = () => {
     return DEFAULT_LINKS_CONFIG[lang] || DEFAULT_LINKS_CONFIG['fallback'] || [];
 };
 
+const createLinkHTML = (link) => 
+    `<li class='link-modified-recently-list-item dark-mode-invert'>
+        <p class='in-list first-graf block' style='--bsm: 0;'>
+            <a href='${link.url}' class='link-annotated link-page in-list has-annotation spawns-popup default-link' 
+               data-attribute-title='${link.title}'>
+                ${link.emoji} ${link.title}
+            </a>
+        </p>
+    </li>`;
+
 const createDefaultLinksHTML = () => {
     const links = getDefaultLinksForLanguage();
     if (links.length === 0) return '';
     
-    const linkItems = links.map(link => 
-        `<li class='link-modified-recently-list-item dark-mode-invert'>
-            <p class='in-list first-graf block' style='--bsm: 0;'>
-                <a href='${link.url}' class='link-annotated link-page in-list has-annotation spawns-popup default-link' 
-                   data-attribute-title='${link.title}'>
-                    ${link.emoji} ${link.title}
-                </a>
-            </p>
-        </li>`
-    ).join('');
+    const topRowLinks = links.slice(0, 2).map(createLinkHTML).join('');
+    const bottomRowLinks = links.slice(2).map(createLinkHTML).join('');
     
-    return `<ul class='list default-links'>${linkItems}</ul>`;
+    return `<ul class='list default-links top-row'>${topRowLinks}</ul>
+            <ul class='list default-links bottom-row'>${bottomRowLinks}</ul>`;
 };
 
 const displayDefaultLinks = (target) => {

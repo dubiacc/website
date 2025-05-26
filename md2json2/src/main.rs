@@ -2021,7 +2021,7 @@ fn header_navigation(lang: &str, display_logo: bool, meta: &MetaJson) -> Result<
     let homepage_logo = include_str!("../../static/img/logo/logo-smooth-path.svg");
     let logo = if display_logo {
         let homepage_link = get_root_href().to_string() + "/" + lang;
-        let hpd = get_string(meta, lang, "nav-homepage-desc")?;
+        let hpd = get_string(meta, lang, "special-homepage-desc")?;
         let logo1 = format!("<a class='logo has-content' rel='home me contents' href='{homepage_link}' data-attribute-title='{hpd}'>");
         let logo2 = format!("<svg class='logo-image' viewBox='0 0 40 75'>{homepage_logo}</svg>");
         vec![logo1, logo2, "</a>".to_string()].join("")
@@ -2032,34 +2032,23 @@ fn header_navigation(lang: &str, display_logo: bool, meta: &MetaJson) -> Result<
     let mut header_nav = include_str!("../../templates/header-navigation.html").to_string();
 
     header_nav = header_nav.replace("$$HOMEPAGE_LOGO$$", &logo);
-    header_nav = header_nav.replace("$$TOOLS_DESC$$", &get_string(meta, lang, "nav-tools-desc")?);
-    header_nav = header_nav.replace("$$TOOLS_TITLE$$", &get_string(meta, lang, "nav-tools-title")?);
+    header_nav = header_nav.replace("$$TOOLS_DESC$$", &get_string(meta, lang, "special-tools-desc")?);
+    header_nav = header_nav.replace("$$TOOLS_TITLE$$", &get_string(meta, lang, "special-tools-title")?);
     header_nav = header_nav.replace("$$TOOLS_LINK$$", &get_special_page_link(lang, "tools", meta)?);
-    header_nav = header_nav.replace("$$ABOUT_DESC$$", &get_string(meta, lang, "nav-about-desc")?);
-    header_nav = header_nav.replace("$$ABOUT_TITLE$$", &get_string(meta, lang, "nav-about-title")?);
+    header_nav = header_nav.replace("$$ABOUT_DESC$$", &get_string(meta, lang, "special-about-desc")?);
+    header_nav = header_nav.replace("$$ABOUT_TITLE$$", &get_string(meta, lang, "special-about-title")?);
     header_nav = header_nav.replace("$$ABOUT_LINK$$", &get_special_page_link(lang, "about", meta)?);
-    header_nav = header_nav.replace("$$ALL_ARTICLES_TITLE$$", &get_string(meta, lang, "nav-articles-title")?);
-    header_nav = header_nav.replace("$$ALL_ARTICLES_DESC$$", &get_string(meta, lang, "nav-articles-desc")?);
+    header_nav = header_nav.replace("$$ALL_ARTICLES_TITLE$$", &get_string(meta, lang, "special-articles-title")?);
+    header_nav = header_nav.replace("$$ALL_ARTICLES_DESC$$", &get_string(meta, lang, "special-articles-desc")?);
     header_nav = header_nav.replace("$$ALL_ARTICLES_LINK$$", &get_special_page_link(lang, "topics", meta)?);
     header_nav = header_nav.replace("$$DOCS_DESC$$", &get_string(meta, lang, "special-docs-desc")?);
     header_nav = header_nav.replace("$$DOCS_TITLE$$", &get_string(meta, lang, "special-docs-title")?);
     header_nav = header_nav.replace("$$DOCS_LINK$$", &get_special_page_link(lang, "docs", meta)?);
-    header_nav = header_nav.replace("$$SHOP_DESC$$", &get_string(meta, lang, "nav-shop-desc")?);
-    header_nav = header_nav.replace("$$SHOP_TITLE$$", &get_string(meta, lang, "nav-shop-title")?);
+    header_nav = header_nav.replace("$$SHOP_DESC$$", &get_string(meta, lang, "special-shop-desc")?);
+    header_nav = header_nav.replace("$$SHOP_TITLE$$", &get_string(meta, lang, "special-shop-title")?);
     header_nav = header_nav.replace("$$SHOP_LINK$$", &get_special_page_link(lang, "shop", meta)?);
 
     Ok(header_nav)
-}
-
-fn get_nav_link(meta: &MetaJson, lang: &str, page: &str) -> Result<String, String> {
-    // First try the nav-{page}-link key
-    if let Ok(link) = get_string(meta, lang, &format!("nav-{}-link", page)) {
-        Ok(link)
-    } else {
-        // Fallback to constructing from special-{page}-path
-        let path = get_string(meta, lang, &format!("special-{}-path", page))?;
-        Ok(format!("{}/{}", lang, path))
-    }
 }
 
 fn link_tags(lang: &str, tags: &[String], meta: &MetaJson) -> Result<String, String> {
@@ -2668,7 +2657,11 @@ fn render_donate_section_internal(
             let id = match id.as_str() {
                 "ko-fi" => "Ko-Fi",
                 "paypal" => "PayPal",
-                "github" => "GitHub Sponsors",
+                "github" => "GitHub",
+                "wise" => "Wise",
+                "pledge" => "Pledge.to",
+                "subscribestar" => "SubscribeStar",
+                "patreon" => "Patreon",
                 o => o,
             };
             format!("<a href='{link}'>{}</a>", id)
@@ -2827,7 +2820,7 @@ fn bibliography(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Resul
 }
 
 fn body_footer(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
-    let home = get_string(meta, lang, "nav-homepage-desc")?;
+    let home = get_string(meta, lang, "special-homepage-desc")?;
     let top = get_string(meta, lang, "go-to-top")?;
     let search = get_string(meta, lang, "searchpage-title")?;
 
@@ -2976,11 +2969,15 @@ fn render_page_author_pages(
             for (platform, link) in v.donate.iter() {
                 let s = match platform.as_str() {
                     "paypal" => format!("<p><a href='{link}'>PayPal</a></p>"),
-                    "github" => format!("<p><a href='{link}'>GitHub Sponsors</a></p>"),
+                    "github" => format!("<p><a href='{link}'>GitHub</a></p>"),
                     "ko-fi" => format!("<p><a href='{link}'>Ko-Fi</a></p>"),
+                    "pledge" => format!("<p><a href='{link}'>Pledge.to</a></p>"),
+                    "wise" => format!("<p><a href='{link}'>Wise</a></p>"),
+                    "subscribestar" => format!("<p><a href='{link}'>SubscribeStar</a></p>"),
+                    "patreon" => format!("<p><a href='{link}'>Patreon</a></p>"),
                     _ => {
                         return Err(format!(
-                            "unknown platform {platform} for user {id} in authors.json"
+                            "unknown platform {platform} for user {id} in meta.json authors"
                         ))
                     }
                 };
@@ -3333,20 +3330,6 @@ fn render_section_items_texts(texts: &[String]) -> String {
         .join("\r\n")
 }
 
-fn render_section_items_img(link: &str, img: &str, title: &str) -> String {
-    let s1 =
-        "justify-content: flex-end;margin-top:10px;width: 100%;min-height: 440px;display: flex;";
-    let s2 = "flex-direction:column;height: 100%;background-size: cover;";
-    let style = format!("{s1}{s2}background-image: url({img});");
-
-    let p1 = "font-variant-caps: small-caps;background: var(--background-color);border-radius:5px;";
-    let p2 = "border: 2px solid var(--GW-H1-border-color); text-align: center; text-decoration: underline;";
-    let p3 = "text-indent: 0px;margin: 10px;padding: 10px 20px;";
-    let p_style = p1.to_string() + p2 + p3;
-
-    format!("<a href='{link}' style='{style}'><p style='{p_style}'>{title}</p></a>")
-}
-
 fn render_section_items(lang: &str, links: &[SectionLink]) -> String {
     links.iter().enumerate().map(|(i, l)| {
         let first = i == 0;
@@ -3437,16 +3420,27 @@ fn render_index_section_img(
 ) -> String {
     let mut section_html = include_str!("../../templates/index.section.html").to_string();
     section_html = section_html.replace("$$SECTION_ID$$", id);
+    
     let nav_shop_link = get_special_page_link(lang, "shop", meta).unwrap_or_default();
     section_html = section_html.replace("$$LANG$$", &nav_shop_link);
-    section_html =
-        section_html.replace("$$PAGE_HREF$$", &(get_root_href().to_string() + "/" + lang));
+    section_html = section_html.replace("$$PAGE_HREF$$", &(get_root_href().to_string() + "/" + lang));
     section_html = section_html.replace("$$SECTION_CLASSES$$", "");
     section_html = section_html.replace("$$SECTION_NAME$$", title);
     section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title);
+
+    let s1 = "justify-content: flex-end;margin-top:10px;width: 100%;min-height: 440px;";
+    let s2 = "display: flex;flex-direction:column;height: 100%;background-size: cover;";
+    let style = format!("{s1}{s2}background-image: url({img});");
+
+    let p1 = "font-variant-caps: small-caps;background: var(--background-color);border-radius:5px;";
+    let p2 = "border: 2px solid var(--GW-H1-border-color); text-align: center; text-decoration: underline;";
+    let p3 = "text-indent: 0px;margin: 10px;padding: 10px 20px;";
+    let p_style = p1.to_string() + p2 + p3;
+
+
     section_html = section_html.replace(
         "<!-- SECTION_ITEMS -->",
-        &&render_section_items_img(link, img, t),
+        &format!("<a href='{link}' style='{style}'><p style='{p_style}'>{t}</p></a>"),
     );
     section_html
 }
@@ -3923,7 +3917,7 @@ fn main() -> Result<(), String> {
             title: r.replace(".html", ""),
             description: r.replace(".html", ""),
             content: rosary_content,
-            special_content: String::new(),
+            special_content: "<style>#special-contents { display:block !important; }</style>".to_string(),
         };
         let (filename, html) = special2html(l, &special_page, &meta_map).unwrap_or_default();
         let _ = std::fs::write(rosary_path, &html);
@@ -3962,7 +3956,7 @@ fn main() -> Result<(), String> {
             title: latin_file.replace(".html", ""),
             description: latin_file.replace(".html", ""),
             content: latin_content,
-            special_content: String::new(),
+            special_content: "<style>#special-contents { display:block !important; }</style>".to_string(),
         };
         let (filename, html) = special2html(l, &special_page, &meta_map).unwrap_or_default();
         let _ = std::fs::write(latin_path, &html);

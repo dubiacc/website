@@ -2,6 +2,8 @@
     "owner": "github:fschutt",
     "strings": {
         "de": {
+            "special-articles-title": "Themen",
+            "special-articles-desc": "Durchsuche alle deutschen Artikel",
             "special-docs-title": "Dokumente",
             "special-docs-path": "dok", 
             "special-docs-id": "dokumente",
@@ -64,17 +66,7 @@
             "index-help-7": "Ecke (<span class='icon-gear-solid'></span>)",
             "index-select-faith": "Glauben auswählen",
             "page-smc": "Zum Hauptinhalt springen",
-            "nav-homepage-desc": "Startseite",
-            "nav-articles-desc": "Durchsuche alle deutschen Artikel",
-            "nav-articles-title": "Themen",
-            "nav-shop-desc": "Unterstütze unser Apostolat mit deinem Einkauf in unserem Shop!",
-            "nav-shop-title": "Shop",
-            "nav-about-desc": "Über diese Seite, Kontakt und Rechtliches",
-            "nav-about-title": "Impressum",
-            "nav-tools-desc": "Software und Hilfsmittel zum Latein-Lernen, Gebetssammlungen, Online Mess- und Bibelbücher, Online-Bücherei u.v.m",
-            "nav-tools-title": "Ressourcen",
-            "nav-newest-desc": "Artikel sortiert nach Datum",
-            "nav-newest-title": "Neues",
+            "special-homepage-desc": "Startseite",
             "link-tags-descr": "Link zum Thema $$TAG$$",
             "collapse-button-title": "Inhaltsverzeichnis zusammenklappen",
             "footnotes-title": "Fußnoten",
@@ -158,6 +150,8 @@
             "title-brother": "Br."
         },
         "en": {
+            "special-articles-title": "Topics",
+            "special-articles-desc": "Search all English articles by category / tag",
             "special-docs-title": "Documents",
             "special-docs-path": "docs",
             "special-docs-id": "documents",
@@ -220,17 +214,7 @@
             "index-help-7": "corner (<span class='icon-gear-solid'></span>)</p>",
             "index-select-faith": "Select faith",
             "page-smc": "Skip to main content",
-            "nav-homepage-desc": "Homepage",
-            "nav-articles-desc": "Search all English articles by category / tag",
-            "nav-articles-title": "Topics",
-            "nav-shop-desc": "Support our apostolate with your purchase in our store!",
-            "nav-shop-title": "Shop",
-            "nav-about-desc": "Imprint, contact and legal information",
-            "nav-about-title": "About",
-            "nav-tools-desc": "Software and aids for learning Latin, prayer collections, online Mass and Bible books, online library and much more",
-            "nav-tools-title": "Tools",
-            "nav-newest-desc": "Articles sorted by date",
-            "nav-newest-title": "Newest",
+            "special-homepage-desc": "Homepage",
             "link-tags-descr": "Link to $$TAG$$ tag",
             "collapse-button-title": "Collapse table of contents",
             "footnotes-title": "Footnotes",
@@ -314,6 +298,8 @@
             "title-brother": "Br."
         },
         "fr": {
+            "special-articles-title": "Sujets",
+            "special-articles-desc": "Parcourir tous les articles en français",
             "special-docs-title": "Documents",
             "special-docs-path": "docs",
             "special-docs-id": "documents",
@@ -376,17 +362,7 @@
             "index-help-7": "(<span class='icon-gear-solid'></span>)",
             "index-select-faith": "Sélectionner la foi",
             "page-smc": "Aller au contenu principal",
-            "nav-homepage-desc": "Page d'accueil",
-            "nav-articles-desc": "Parcourir tous les articles en français",
-            "nav-articles-title": "Sujets",
-            "nav-shop-desc": "Soutenez notre apostolat avec vos achats dans notre boutique !",
-            "nav-shop-title": "Boutique",
-            "nav-about-desc": "À propos de ce site, contact et informations légales",
-            "nav-about-title": "Mentions légales",
-            "nav-tools-desc": "Logiciels et outils pour apprendre le latin, collections de prières, livres de messe et bibles en ligne, bibliothèque en ligne, etc.",
-            "nav-tools-title": "Ressources",
-            "nav-newest-desc": "Articles classés par date",
-            "nav-newest-title": "Nouveau",
+            "special-homepage-desc": "Page d'accueil",
             "link-tags-descr": "Lien vers le sujet $$TAG$$",
             "collapse-button-title": "Réduire la table des matières",
             "footnotes-title": "Notes de bas de page",
@@ -470,6 +446,8 @@
             "title-brother": "Fr."
         },
         "pl": {
+            "special-articles-title": "Tematy",
+            "special-articles-desc": "Przeglądaj wszystkie polskie artykuły",
             "special-docs-title": "Dokumenty",
             "special-docs-path": "dok",
             "special-docs-id": "documents",
@@ -532,17 +510,7 @@
             "index-help-7": "rogu (<span class='icon-gear-solid'></span>)",
             "index-select-faith": "Wybierz wiarę",
             "page-smc": "Przejdź do głównej treści",
-            "nav-homepage-desc": "Strona główna",
-            "nav-articles-desc": "Przeglądaj wszystkie polskie artykuły",
-            "nav-articles-title": "Tematy",
-            "nav-shop-desc": "Wesprzyj nasze apostolstwo, robiąc zakupy w naszym sklepie!",
-            "nav-shop-title": "Sklep",
-            "nav-about-desc": "O tej stronie, kontakt i informacje prawne",
-            "nav-about-title": "Informacje",
-            "nav-tools-desc": "Oprogramowanie i narzędzia do nauki łaciny, zbiory modlitw, mszały i Biblie online, biblioteka cyfrowa i wiele więcej",
-            "nav-tools-title": "Zasoby",
-            "nav-newest-desc": "Artykuły posortowane według daty",
-            "nav-newest-title": "Najnowsze",
+            "special-homepage-desc": "Strona główna",
             "link-tags-descr": "Link do tematu $$TAG$$",
             "collapse-button-title": "Zwiń spis treści",
             "footnotes-title": "Przypisy",
@@ -626,6 +594,8 @@
             "title-brother": "Br."
         },
         "br": {
+            "special-articles-title": "Tópicos",
+            "special-articles-desc": "Explore todos os artigos em português",
             "special-docs-title": "Documentos",
             "special-docs-path": "docs",
             "special-docs-id": "documents",
@@ -688,17 +658,7 @@
             "index-help-7": "(<span class='icon-gear-solid'></span>)",
             "index-select-faith": "Selecione a fé",
             "page-smc": "Ir para o conteúdo principal",
-            "nav-homepage-desc": "Página inicial",
-            "nav-articles-desc": "Explore todos os artigos em português",
-            "nav-articles-title": "Tópicos",
-            "nav-shop-desc": "Apoie nosso apostolado comprando em nossa loja!",
-            "nav-shop-title": "Loja",
-            "nav-about-desc": "Sobre este site, contato e informações legais",
-            "nav-about-title": "Informações legais",
-            "nav-tools-desc": "Software e ferramentas para aprender latim, coleções de orações, missais e bíblias online, biblioteca virtual e muito mais",
-            "nav-tools-title": "Recursos",
-            "nav-newest-desc": "Artigos ordenados por data",
-            "nav-newest-title": "Novidades",
+            "special-homepage-desc": "Página inicial",
             "link-tags-descr": "Link para o tópico $$TAG$$",
             "collapse-button-title": "Recolher o índice",
             "footnotes-title": "Notas de rodapé",
@@ -782,6 +742,8 @@
             "title-brother": "Ir."
         },
         "es": {
+            "special-articles-title": "Temas",
+            "special-articles-desc": "Explora todos los artículos en español",
             "special-docs-title": "Documentos",
             "special-docs-path": "docs",
             "special-docs-id": "documents",
@@ -844,17 +806,7 @@
             "index-help-7": "(<span class='icon-gear-solid'></span>)",
             "index-select-faith": "Seleccionar la fe",
             "page-smc": "Saltar al contenido principal",
-            "nav-homepage-desc": "Página de inicio",
-            "nav-articles-desc": "Explora todos los artículos en español",
-            "nav-articles-title": "Temas",
-            "nav-shop-desc": "¡Apoya nuestro apostolado con tus compras en nuestra tienda!",
-            "nav-shop-title": "Tienda",
-            "nav-about-desc": "Acerca de este sitio, contacto e información legal",
-            "nav-about-title": "Aviso legal",
-            "nav-tools-desc": "Software y herramientas para aprender latín, colecciones de oraciones, misales y Biblias en línea, biblioteca en línea, etc.",
-            "nav-tools-title": "Recursos",
-            "nav-newest-desc": "Artículos ordenados por fecha",
-            "nav-newest-title": "Novedades",
+            "special-homepage-desc": "Página de inicio",
             "link-tags-descr": "Enlace al tema $$TAG$$",
             "collapse-button-title": "Contraer la tabla de contenido",
             "footnotes-title": "Notas a pie de página",
@@ -938,6 +890,8 @@
             "title-brother": "Hno."
         },
         "it": {
+            "special-articles-title": "Argomenti",
+            "special-articles-desc": "Cerca tutti gli articoli italiani per categoria / tag",
             "special-docs-title": "Documenti",
             "special-docs-path": "documenti",
             "special-docs-id": "documents",
@@ -1000,17 +954,7 @@
             "index-help-7": "(<span class='icon-gear-solid'></span>)",
             "index-select-faith": "Seleziona la fede",
             "page-smc": "Salta al contenuto principale",
-            "nav-homepage-desc": "Pagina iniziale",
-            "nav-articles-desc": "Cerca tutti gli articoli italiani per categoria / tag",
-            "nav-articles-title": "Argomenti",
-            "nav-shop-desc": "Sostieni il nostro apostolato con il tuo acquisto nel nostro negozio!",
-            "nav-shop-title": "Negozio",
-            "nav-about-desc": "Informazioni sul sito, contatti e note legali",
-            "nav-about-title": "Informazioni",
-            "nav-tools-desc": "Software e aiuti per l'apprendimento del latino, raccolte di preghiere, messali e bibbie online, biblioteca online e molto altro",
-            "nav-tools-title": "Strumenti",
-            "nav-newest-desc": "Articoli ordinati per data",
-            "nav-newest-title": "Novità",
+            "special-homepage-desc": "Pagina iniziale",
             "link-tags-descr": "Link al tag $$TAG$$",
             "collapse-button-title": "Comprimi l'indice",
             "footnotes-title": "Note a piè di pagina",
@@ -1094,6 +1038,8 @@
             "title-brother": "Fr."
         },
         "ru": {
+            "special-articles-title": "Темы",
+            "special-articles-desc": "Искать все русские статьи по категориям / тегам",
             "special-docs-title": "Документы",
             "special-docs-path": "docs",
             "special-docs-id": "documents",
@@ -1156,17 +1102,7 @@
             "index-help-7": "углу (<span class='icon-gear-solid'></span>)</p>",
             "index-select-faith": "Выберите веру",
             "page-smc": "Перейти к основному содержанию",
-            "nav-homepage-desc": "Главная страница",
-            "nav-articles-desc": "Искать все русские статьи по категориям / тегам",
-            "nav-articles-title": "Темы",
-            "nav-shop-desc": "Поддержите наше апостольство покупкой в нашем магазине!",
-            "nav-shop-title": "Магазин",
-            "nav-about-desc": "Выходные данные, контакты и юридическая информация",
-            "nav-about-title": "О нас",
-            "nav-tools-desc": "Программное обеспечение и пособия для изучения латыни, сборники молитв, онлайн-миссалы и Библии, онлайн-библиотека и многое другое",
-            "nav-tools-title": "Инструменты",
-            "nav-newest-desc": "Статьи, отсортированные по дате",
-            "nav-newest-title": "Новейшее",
+            "special-homepage-desc": "Главная страница",
             "link-tags-descr": "Ссылка на тег $$TAG$$",
             "collapse-button-title": "Свернуть оглавление",
             "footnotes-title": "Сноски",
@@ -1250,6 +1186,8 @@
             "title-brother": "бр."
         },
         "tr": {
+            "special-articles-title": "Konular",
+            "special-articles-desc": "Tüm Türkçe makaleleri kategori / etikete göre arayın",
             "special-docs-title": "Belgeler",
             "special-docs-path": "belgeler",
             "special-docs-id": "documents",
@@ -1312,17 +1250,7 @@
             "index-help-7": "köşe (<span class='icon-gear-solid'></span>)</p>",
             "index-select-faith": "İnanç seçin",
             "page-smc": "Ana içeriğe geç",
-            "nav-homepage-desc": "Anasayfa",
-            "nav-articles-desc": "Tüm Türkçe makaleleri kategori / etikete göre arayın",
-            "nav-articles-title": "Konular",
-            "nav-shop-desc": "Mağazamızdan yapacağınız alışverişle hizmetimize destek olun!",
-            "nav-shop-title": "Mağaza",
-            "nav-about-desc": "Künye, iletişim ve yasal bilgiler",
-            "nav-about-title": "Hakkında",
-            "nav-tools-desc": "Latince öğrenmek için yazılım ve yardımcılar, dua koleksiyonları, çevrimiçi Ayin ve İncil kitapları, çevrimiçi kütüphane ve çok daha fazlası",
-            "nav-tools-title": "Araçlar",
-            "nav-newest-desc": "Tarihe göre sıralanmış makaleler",
-            "nav-newest-title": "En Yeni",
+            "special-homepage-desc": "Anasayfa",
             "link-tags-descr": "$$TAG$$ etiketine bağlantı",
             "collapse-button-title": "İçindekiler tablosunu daralt",
             "footnotes-title": "Dipnotlar",
@@ -1406,6 +1334,8 @@
             "title-brother": "Bir."
         },
         "el": {
+            "special-articles-title": "Θέματα",
+            "special-articles-desc": "Αναζητήστε όλα τα ελληνικά άρθρα κατά κατηγορία / ετικέτα",
             "special-docs-title": "Έγγραφα",
             "special-docs-path": "engrafa",
             "special-docs-id": "documents",
@@ -1468,17 +1398,7 @@
             "index-help-7": "γωνία (<span class='icon-gear-solid'></span>)</p>",
             "index-select-faith": "Επιλέξτε πίστη",
             "page-smc": "Μετάβαση στο κύριο περιεχόμενο",
-            "nav-homepage-desc": "Αρχική σελίδα",
-            "nav-articles-desc": "Αναζητήστε όλα τα ελληνικά άρθρα κατά κατηγορία / ετικέτα",
-            "nav-articles-title": "Θέματα",
-            "nav-shop-desc": "Υποστηρίξτε το αποστολάτο μας με την αγορά σας στο κατάστημά μας!",
-            "nav-shop-title": "Κατάστημα",
-            "nav-about-desc": "Αποτύπωμα, επικοινωνία και νομικές πληροφορίες",
-            "nav-about-title": "Σχετικά",
-            "nav-tools-desc": "Λογισμικό και βοηθήματα για την εκμάθηση λατινικών, συλλογές προσευχών, διαδικτυακά βιβλία Λειτουργίας και Βίβλου, διαδικτυακή βιβλιοθήκη και πολλά άλλα",
-            "nav-tools-title": "Εργαλεία",
-            "nav-newest-desc": "Άρθρα ταξινομημένα κατά ημερομηνία",
-            "nav-newest-title": "Νεότερα",
+            "special-homepage-desc": "Αρχική σελίδα",
             "link-tags-descr": "Σύνδεσμος προς την ετικέτα $$TAG$$",
             "collapse-button-title": "Σύμπτυξη πίνακα περιεχομένων",
             "footnotes-title": "Υποσημειώσεις",
@@ -1562,6 +1482,8 @@
             "title-brother": "Αδ."
         },
         "ar": {
+            "special-articles-title": "المواضيع",
+            "special-articles-desc": "ابحث في جميع المقالات العربية حسب الفئة / العلامة",
             "special-docs-title": "الوثائق",
             "special-docs-path": "docs",
             "special-docs-id": "documents",
@@ -1624,17 +1546,7 @@
             "index-help-7": "(<span class='icon-gear-solid'></span>)</p>",
             "index-select-faith": "اختر الإيمان",
             "page-smc": "تخطى إلى المحتوى الرئيسي",
-            "nav-homepage-desc": "الصفحة الرئيسية",
-            "nav-articles-desc": "ابحث في جميع المقالات العربية حسب الفئة / العلامة",
-            "nav-articles-title": "المواضيع",
-            "nav-shop-desc": "ادعم خدمتنا الرسولية بشرائك من متجرنا!",
-            "nav-shop-title": "المتجر",
-            "nav-about-desc": "البيانات القانونية، الاتصال والمعلومات القانونية",
-            "nav-about-title": "حول",
-            "nav-tools-desc": "برامج ومساعدات لتعلم اللاتينية، مجموعات صلاة، كتب قداس وإنجيل عبر الإنترنت، مكتبة عبر الإنترنت وغير ذلك الكثير",
-            "nav-tools-title": "أدوات",
-            "nav-newest-desc": "المقالات مرتبة حسب التاريخ",
-            "nav-newest-title": "الأحدث",
+            "special-homepage-desc": "الصفحة الرئيسية",
             "link-tags-descr": "رابط إلى العلامة $$TAG$$",
             "collapse-button-title": "طي جدول المحتويات",
             "footnotes-title": "الحواشي السفلية",
@@ -1718,6 +1630,8 @@
             "title-brother": "أخ."
         },
         "tl": {
+            "special-articles-title": "Mga Paksa",
+            "special-articles-desc": "Maghanap sa lahat ng artikulo sa Tagalog ayon sa kategorya / tag",
             "special-docs-title": "Dokumento",
             "special-docs-path": "dokumento",
             "special-docs-id": "documents",
@@ -1780,17 +1694,7 @@
             "index-help-7": "sulok (<span class='icon-gear-solid'></span>)</p>",
             "index-select-faith": "Piliin ang pananampalataya",
             "page-smc": "Laktawan sa pangunahing nilalaman",
-            "nav-homepage-desc": "Homepage",
-            "nav-articles-desc": "Maghanap sa lahat ng artikulo sa Tagalog ayon sa kategorya / tag",
-            "nav-articles-title": "Mga Paksa",
-            "nav-shop-desc": "Suportahan ang aming apostolado sa iyong pagbili sa aming tindahan!",
-            "nav-shop-title": "Tindahan",
-            "nav-about-desc": "Imprint, kontak at legal na impormasyon",
-            "nav-about-title": "Tungkol Sa",
-            "nav-tools-desc": "Software at tulong para sa pag-aaral ng Latin, mga koleksyon ng panalangin, online na Misa at mga aklat ng Bibliya, online na library at marami pang iba",
-            "nav-tools-title": "Mga Kasangkapan",
-            "nav-newest-desc": "Mga artikulo na pinagsunod-sunod ayon sa petsa",
-            "nav-newest-title": "Pinakabago",
+            "special-homepage-desc": "Homepage",
             "link-tags-descr": "Link sa tag na $$TAG$$",
             "collapse-button-title": "Itago ang talaan ng nilalaman",
             "footnotes-title": "Mga talababa",
@@ -1874,6 +1778,8 @@
             "title-brother": "Bro."
         },
         "zh": {
+            "special-articles-title": "主题",
+            "special-articles-desc": "按类别/标签搜索所有中文文章",
             "special-docs-title": "文档",
             "special-docs-path": "wendang",
             "special-docs-id": "documents",
@@ -1936,17 +1842,7 @@
             "index-help-7": "图标 (<span class='icon-gear-solid'></span>)</p>",
             "index-select-faith": "选择信仰",
             "page-smc": "跳至主内容",
-            "nav-homepage-desc": "主页",
-            "nav-articles-desc": "按类别/标签搜索所有中文文章",
-            "nav-articles-title": "主题",
-            "nav-shop-desc": "通过在我们的商店购物来支持我们的使徒工作！",
-            "nav-shop-title": "商店",
-            "nav-about-desc": "版本说明、联系方式和法律信息",
-            "nav-about-title": "关于",
-            "nav-tools-desc": "学习拉丁语的软件和辅助工具、祈祷文集、在线弥撒和圣经书籍、在线图书馆等等",
-            "nav-tools-title": "工具",
-            "nav-newest-desc": "按日期排序的文章",
-            "nav-newest-title": "最新",
+            "special-homepage-desc": "主页",
             "link-tags-descr": "链接到标签 $$TAG$$",
             "collapse-button-title": "折叠目录",
             "footnotes-title": "脚注",
@@ -2030,6 +1926,8 @@
             "title-brother": "修士."
         },
         "ko": {
+            "special-articles-title": "주제",
+            "special-articles-desc": "카테고리/태그별 모든 한국어 기사 검색",
             "special-docs-title": "문서",
             "special-docs-path": "docs",
             "special-docs-id": "documents",
@@ -2092,17 +1990,7 @@
             "index-help-7": "모서리 (<span class='icon-gear-solid'></span>)</p>",
             "index-select-faith": "신앙 선택",
             "page-smc": "주요 콘텐츠로 건너뛰기",
-            "nav-homepage-desc": "홈페이지",
-            "nav-articles-desc": "카테고리/태그별 모든 한국어 기사 검색",
-            "nav-articles-title": "주제",
-            "nav-shop-desc": "저희 상점에서 구매하여 저희 사도직을 지원해주세요!",
-            "nav-shop-title": "상점",
-            "nav-about-desc": "인쇄물, 연락처 및 법적 정보",
-            "nav-about-title": "정보",
-            "nav-tools-desc": "라틴어 학습용 소프트웨어 및 보조 자료, 기도 모음집, 온라인 미사 및 성경 책, 온라인 도서관 등",
-            "nav-tools-title": "도구",
-            "nav-newest-desc": "날짜별 정렬된 기사",
-            "nav-newest-title": "최신",
+            "special-homepage-desc": "홈페이지",
             "link-tags-descr": "태그 $$TAG$$ 링크",
             "collapse-button-title": "목차 접기",
             "footnotes-title": "각주",
@@ -2186,6 +2074,8 @@
             "title-brother": "수사."
         },
         "ja": {
+            "special-articles-title": "トピック",
+            "special-articles-desc": "カテゴリ/タグ別にすべての日本語記事を検索",
             "special-docs-title": "文書",
             "special-docs-path": "docs",
             "special-docs-id": "documents",
@@ -2248,17 +2138,7 @@
             "index-help-7": "隅 (<span class='icon-gear-solid'></span>)</p>",
             "index-select-faith": "信仰を選択",
             "page-smc": "メインコンテンツへスキップ",
-            "nav-homepage-desc": "ホームページ",
-            "nav-articles-desc": "カテゴリ/タグ別にすべての日本語記事を検索",
-            "nav-articles-title": "トピック",
-            "nav-shop-desc": "当店でのご購入で私たちのアポстоラートをサポートしてください！",
-            "nav-shop-title": "ショップ",
-            "nav-about-desc": "インプリント、連絡先、および法的情報",
-            "nav-about-title": "約",
-            "nav-tools-desc": "ラテン語学習のためのソフトウェアと補助具、祈りのコレクション、オンラインミサと聖書の本、オンラインライブラリなど",
-            "nav-tools-title": "ツール",
-            "nav-newest-desc": "日付順にソートされた記事",
-            "nav-newest-title": "最新",
+            "special-homepage-desc": "ホームページ",
             "link-tags-descr": "タグ$$TAG$$へのリンク",
             "collapse-button-title": "目次を折りたたむ",
             "footnotes-title": "脚注",
@@ -2342,6 +2222,8 @@
             "title-brother": "ブラザー."
         },
         "ro": {
+            "special-articles-title": "Teme",
+            "special-articles-desc": "Caută toate articolele în română după categorie/etichetă",
             "special-docs-title": "Documente",
             "special-docs-path": "docs",
             "special-docs-id": "documents",
@@ -2404,17 +2286,7 @@
             "index-help-7": "(<span class='icon-gear-solid'></span>)</p>",
             "index-select-faith": "Selectează credința",
             "page-smc": "Sari la conținutul principal",
-            "nav-homepage-desc": "Pagina principală",
-            "nav-articles-desc": "Caută toate articolele în română după categorie/etichetă",
-            "nav-articles-title": "Teme",
-            "nav-shop-desc": "Sprijiniți apostolatul nostru cu achiziția dvs. în magazinul nostru!",
-            "nav-shop-title": "Magazin",
-            "nav-about-desc": "Imprimatur, contact și informații legale",
-            "nav-about-title": "Despre",
-            "nav-tools-desc": "Software și ajutoare pentru învățarea latinei, colecții de rugăciuni, cărți online pentru Liturghie și Biblie, bibliotecă online și multe altele",
-            "nav-tools-title": "Instrumente",
-            "nav-newest-desc": "Articole sortate după dată",
-            "nav-newest-title": "Noutăți",
+            "special-homepage-desc": "Pagina principală",
             "link-tags-descr": "Link către eticheta $$TAG$$",
             "collapse-button-title": "Restrânge tabla de materii",
             "footnotes-title": "Note de subsol",
@@ -2498,6 +2370,8 @@
             "title-brother": "Fr."
         },
         "pt": {
+            "special-articles-title": "Tópicos",
+            "special-articles-desc": "Pesquise todos os artigos em português por categoria/etiqueta",
             "special-docs-title": "Documentos",
             "special-docs-path": "docs",
             "special-docs-id": "documents",
@@ -2560,17 +2434,7 @@
             "index-help-7": "(<span class='icon-gear-solid'></span>)",
             "index-select-faith": "Selecione a fé",
             "page-smc": "Saltar para o conteúdo principal",
-            "nav-homepage-desc": "Página inicial",
-            "nav-articles-desc": "Pesquise todos os artigos em português por categoria/etiqueta",
-            "nav-articles-title": "Tópicos",
-            "nav-shop-desc": "Apoie o nosso apostolado com a sua compra na nossa loja!",
-            "nav-shop-title": "Loja",
-            "nav-about-desc": "Impressão, contacto e informações legais",
-            "nav-about-title": "Sobre",
-            "nav-tools-desc": "Software e ajudas para aprender latim, colecções de orações, livros online de Missa e Bíblia, biblioteca online e muito mais",
-            "nav-tools-title": "Ferramentas",
-            "nav-newest-desc": "Artigos ordenados por data",
-            "nav-newest-title": "Novidades",
+            "special-homepage-desc": "Página inicial",
             "link-tags-descr": "Link para a etiqueta $$TAG$$",
             "collapse-button-title": "Colapsar a tabela de conteúdos",
             "footnotes-title": "Notas de rodapé",
@@ -2737,9 +2601,13 @@
         },
         "github:fschutt": {
             "displayname": "Felix Schütt",
-            "contact": "https://github.com/fschutt",
+            "contact": "info@dubia.cc",
             "donate": {
-                "github": "https://github.com/sponsors/fschutt"
+                "paypal": "paypal.me/fschutt554",
+                "wise": "https://wise.com/pay/me/felixs1176",
+                "ko-fi": "ko-fi.com/fschutt",
+                "github": "https://github.com/sponsors/fschutt",
+                "pledge": "https://www.pledge.to/dubiacc"
             }
         }
     },
@@ -2860,8 +2728,7 @@
                 "moral": "Morallehre",
                 "gnostizismus": "Gnostizismus",
                 "fruehkirche": "Frühkirche",
-                "gebet": "Gebete",
-                "frage": "Frage"
+                "gebet": "Gebete"
             },
             "ressources": [
                 {
@@ -2877,7 +2744,7 @@
                             "title": "➽ Warum nicht zu FSSP gehen?"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "wer-wir-sind",
                             "title": "➽ Warum nicht (mehr) zur SSPX gehen?"
                         }
                     ]
@@ -2912,7 +2779,7 @@
                         },
                         {
                             "slug": "https://catenabible.com/",
-                            "title": "Catena Bible (mit Fußnoten von Kirchenvätern)"
+                            "title": "Catena Bible - Fußnoten d. Kirchenvätern"
                         },
                         {
                             "slug": "https://ccel.org/",
@@ -2933,11 +2800,11 @@
                             "title": "Angelus"
                         },
                         {
-                            "slug": "morgengruss",
+                            "slug": "gebet-morgens",
                             "title": "Morgengruß zum Herzen Jesu"
                         },
                         {
-                            "slug": "abendgruss",
+                            "slug": "gebet-abends",
                             "title": "Abendgruß zum Herzen Jesu"
                         },
                         {
@@ -2945,15 +2812,15 @@
                             "title": "Weihe des Menschengeschlechtes"
                         },
                         {
-                            "slug": "arbeitergebet",
+                            "slug": "gebet-arbeiter",
                             "title": "Arbeitergebet zum Hl. Josef"
                         },
                         {
-                            "slug": "mutter-der-hilfe",
+                            "slug": "gebet-mutter-der-hilfe",
                             "title": "Zur Mutter der immerwährenden Hilfe"
                         },
                         {
-                            "slug": "hl-josef-schutzherr",
+                            "slug": "gebet-hl-josef",
                             "title": "Heiliger Joseph, Schutzherr der Kirche"
                         },
                         {
@@ -2961,7 +2828,7 @@
                             "title": "Salve Regina"
                         },
                         {
-                            "slug": "gebet-fuer-papst",
+                            "slug": "gebet-papst",
                             "title": "Gebet für den Papst"
                         },
                         {
@@ -3184,11 +3051,11 @@
                             "title": "Map of Resistance Masses"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ Why not attend FSSP Masses?"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ Why not attend SSPX Masses (anymore)?"
                         }
                     ]
@@ -3223,7 +3090,7 @@
                         },
                         {
                             "slug": "https://catenabible.com/",
-                            "title": "Catena Bible - Church Fathers by bible verse"
+                            "title": "Catena Bible - Church Fathers"
                         },
                         {
                             "slug": "https://ccel.org/",
@@ -3430,7 +3297,6 @@
                 "islam": "Islam",
                 "judaisme": "Judaïsme",
                 "orthodoxie": "Orthodoxie Orientale",
-                "orthodoxie-orientale-ancienne": "Orthodoxie Orientale Ancienne",
                 "atheisme": "Athéisme",
                 "histoire": "Histoire",
                 "polytheisme": "Polythéisme",
@@ -3440,7 +3306,7 @@
                 "moyen-age": "Moyen Âge",
                 "peres-eglise": "Pères de l'Église",
                 "evolution": "Évolution",
-                "morale-catholique": "Morale Catholique",
+                "morale": "Morale Catholique",
                 "gnosticisme": "Gnosticisme",
                 "eglise-primitive": "Église Primitive",
                 "prieres": "Prières",
@@ -3456,11 +3322,11 @@
                             "title": "Carte des Messes de la Fidélité"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ Pourquoi ne pas assister aux messes FSSP ?"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ Pourquoi ne pas assister aux messes FSSPX (désormais) ?"
                         }
                     ]
@@ -3495,7 +3361,7 @@
                         },
                         {
                             "slug": "https://catenabible.com/",
-                            "title": "Catena Bible - Pères de l'Église par verset biblique"
+                            "title": "Catena Bible - Pères de l'Église"
                         },
                         {
                             "slug": "https://ccel.org/",
@@ -3729,11 +3595,11 @@
                             "title": "Mapa Mszy Ruchu Oporu"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ Dlaczego nie uczestniczyć we Mszach FSSP?"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ Dlaczego nie uczestniczyć (już) we Mszach FSSPX?"
                         }
                     ]
@@ -3768,7 +3634,7 @@
                         },
                         {
                             "slug": "https://catenabible.com/",
-                            "title": "Catena Bible - Ojcowie Kościoła wg wersetów biblijnych"
+                            "title": "Catena Bible - Ojcowie Kościoła"
                         },
                         {
                             "slug": "https://ccel.org/",
@@ -4001,11 +3867,11 @@
                             "title": "Mapa das Missas da Resistência"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ Por que não assistir às Missas da FSSP?"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ Por que não assistir (mais) às Missas da FSSPX?"
                         }
                     ]
@@ -4040,7 +3906,7 @@
                         },
                         {
                             "slug": "https://catenabible.com/",
-                            "title": "Catena Bible - Pais da Igreja por versículo bíblico"
+                            "title": "Catena Bible - Pais da Igreja"
                         },
                         {
                             "slug": "https://ccel.org/",
@@ -4273,11 +4139,11 @@
                             "title": "Mapa de Misas de la Resistencia"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ ¿Por qué no asistir a las Misas de la FSSP?"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ ¿Por qué no asistir (ya) a las Misas de la FSSPX?"
                         }
                     ]
@@ -4312,7 +4178,7 @@
                         },
                         {
                             "slug": "https://catenabible.com/",
-                            "title": "Catena Bible - Padres de la Iglesia por versículo bíblico"
+                            "title": "Catena Bible - Padres d. Iglesia"
                         },
                         {
                             "slug": "https://ccel.org/",
@@ -4545,11 +4411,11 @@
                             "title": "Mappa delle Messe della Resistenza"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ Perché non partecipare alle Messe della FSSP?"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ Perché non partecipare (più) alle Messe della FSSPX?"
                         }
                     ]
@@ -4584,7 +4450,7 @@
                         },
                         {
                             "slug": "https://catenabible.com/",
-                            "title": "Catena Bible - Padri della Chiesa per versetto biblico"
+                            "title": "Catena Bible - Padri della Chiesa"
                         },
                         {
                             "slug": "https://ccel.org/",
@@ -4817,11 +4683,11 @@
                             "title": "Карта Месс Сопротивления"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ Почему не стоит посещать Мессы FSSP?"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ Почему не стоит (больше) посещать Мессы FSSPX?"
                         }
                     ]
@@ -4856,7 +4722,7 @@
                         },
                         {
                             "slug": "https://catenabible.com/",
-                            "title": "Catena Bible - Отцы Церкви по стихам Библии"
+                            "title": "Catena Bible - Отцы Церкви"
                         },
                         {
                             "slug": "https://ccel.org/",
@@ -5089,11 +4955,11 @@
                             "title": "Direniş Ayinleri Haritası"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ Neden FSSP Ayinlerine katılmamalı?"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ Neden SSPX Ayinlerine (artık) katılmamalı?"
                         }
                     ]
@@ -5128,7 +4994,7 @@
                         },
                         {
                             "slug": "https://catenabible.com/",
-                            "title": "Catena Bible - Ayete göre Kilise Babaları"
+                            "title": "Catena Bible - Kilise Babaları"
                         },
                         {
                             "slug": "https://ccel.org/",
@@ -5361,11 +5227,11 @@
                             "title": "Χάρτης Λειτουργιών της Αντίστασης"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ Γιατί να μην παρακολουθείτε Λειτουργίες FSSP;"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ Γιατί να μην παρακολουθείτε (πλέον) Λειτουργίες FSSPX;"
                         }
                     ]
@@ -5400,7 +5266,7 @@
                         },
                         {
                             "slug": "https://catenabible.com/",
-                            "title": "Catena Bible - Πατέρες της Εκκλησίας ανά Βιβλικό εδάφιο"
+                            "title": "Catena Bible - Πατέρες της Εκκλησίας"
                         },
                         {
                             "slug": "https://ccel.org/",
@@ -5633,11 +5499,11 @@
                             "title": "خريطة قداسات المقاومة"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ لماذا لا تحضر قداسات FSSP؟"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ لماذا لا تحضر قداسات FSSPX (بعد الآن)؟"
                         }
                     ]
@@ -5672,7 +5538,7 @@
                         },
                         {
                             "slug": "https://catenabible.com/",
-                            "title": "Catena Bible - آباء الكنيسة حسب آيات الكتاب المقدس"
+                            "title": "Catena Bible - آباء الكنيسة"
                         },
                         {
                             "slug": "https://ccel.org/",
@@ -5905,11 +5771,11 @@
                             "title": "Mapa ng mga Misa ng Paglaban"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ Bakit hindi dumalo sa mga Misa ng FSSP?"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ Bakit hindi (na) dumalo sa mga Misa ng SSPX?"
                         }
                     ]
@@ -5944,7 +5810,7 @@
                         },
                         {
                             "slug": "https://catenabible.com/",
-                            "title": "Catena Bible - Mga Ama ng Simbahan ayon sa talata ng bibliya"
+                            "title": "Catena Bible - Mga Ama ng Simbahan"
                         },
                         {
                             "slug": "https://ccel.org/",
@@ -6177,11 +6043,11 @@
                             "title": "抵抗派弥撒地图"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ 为什么不参加 FSSP 弥撒？"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ 为什么不（再）参加 SSPX 弥撒？"
                         }
                     ]
@@ -6449,11 +6315,11 @@
                             "title": "저항 운동 미사 지도"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ 왜 FSSP 미사에 참석하지 않는가?"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ 왜 SSPX 미사에 (더 이상) 참석하지 않는가?"
                         }
                     ]
@@ -6721,11 +6587,11 @@
                             "title": "抵抗運動のミサの地図"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ なぜFSSPミサに参加しないのですか？"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ なぜSSPXミサに(もう)参加しないのですか？"
                         }
                     ]
@@ -6993,11 +6859,11 @@
                             "title": "Hartă Liturghii Rezistență"
                         },
                         {
-                            "slug": "on-ecclesia-dei-groups",
+                            "slug": "fssp",
                             "title": "➽ De ce să nu participați la Liturghiile FSSP?"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ De ce să nu (mai) participați la Liturghiile FSSPX?"
                         }
                     ]
@@ -7032,7 +6898,7 @@
                         },
                         {
                             "slug": "https://catenabible.com/",
-                            "title": "Catena Bible - Părinții Bisericii pe versete biblice"
+                            "title": "Catena Bible - Părinții Bisericii"
                         },
                         {
                             "slug": "https://ccel.org/",
@@ -7269,7 +7135,7 @@
                             "title": "➽ Porquê não assistir às Missas da FSSP?"
                         },
                         {
-                            "slug": "resistance-timeline",
+                            "slug": "who-are-we",
                             "title": "➽ Porquê não assistir (mais) às Missas da FSSPX?"
                         }
                     ]
@@ -7304,7 +7170,7 @@
                         },
                         {
                             "slug": "https://catenabible.com/",
-                            "title": "Catena Bible - Pais da Igreja por versículo bíblico"
+                            "title": "Catena Bible - Pais da Igreja"
                         },
                         {
                             "slug": "https://ccel.org/",
