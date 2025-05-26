@@ -3419,29 +3419,38 @@ fn render_index_section_img(
     meta: &MetaJson,
 ) -> String {
     let mut section_html = include_str!("../../templates/index.section.html").to_string();
-    section_html = section_html.replace("$$SECTION_ID$$", id);
+    
+    let style = {
+        let s1 = "justify-content: flex-end;margin-top:10px;width: 100%;min-height: 440px;";
+        let s2 = "display: flex;flex-direction:column;height: 100%;background-size: cover;";
+        format!("{s1}{s2}background-image: url({img});")
+    };
+
+    let p_style = {
+
+        let p1 = "font-variant-caps: small-caps;background: var(--background-color);border-radius:5px;";
+        let p2 = "border: 2px solid var(--GW-H1-border-color); text-align: center; text-decoration: underline;";
+        let p3 = "text-indent: 0px;margin: 10px;padding: 10px 20px;";
+
+        p1.to_string() + p2 + p3
+    };
+
+    let r = format!("<a href='{link}' style='{style}'><p style='{p_style}'>{t}</p></a>");
+
+    section_html = section_html.replace(
+        "<!-- SECTION_ITEMS-2 -->",
+        &r,
+    );
     
     let nav_shop_link = get_special_page_link(lang, "shop", meta).unwrap_or_default();
-    section_html = section_html.replace("$$LANG$$", &nav_shop_link);
-    section_html = section_html.replace("$$PAGE_HREF$$", &(get_root_href().to_string() + "/" + lang));
+
     section_html = section_html.replace("$$SECTION_CLASSES$$", "");
     section_html = section_html.replace("$$SECTION_NAME$$", title);
     section_html = section_html.replace("$$SECTION_NAME_TITLE$$", title);
-
-    let s1 = "justify-content: flex-end;margin-top:10px;width: 100%;min-height: 440px;";
-    let s2 = "display: flex;flex-direction:column;height: 100%;background-size: cover;";
-    let style = format!("{s1}{s2}background-image: url({img});");
-
-    let p1 = "font-variant-caps: small-caps;background: var(--background-color);border-radius:5px;";
-    let p2 = "border: 2px solid var(--GW-H1-border-color); text-align: center; text-decoration: underline;";
-    let p3 = "text-indent: 0px;margin: 10px;padding: 10px 20px;";
-    let p_style = p1.to_string() + p2 + p3;
-
-
-    section_html = section_html.replace(
-        "<!-- SECTION_ITEMS -->",
-        &format!("<a href='{link}' style='{style}'><p style='{p_style}'>{t}</p></a>"),
-    );
+    section_html = section_html.replace("$$LANG$$", &lang);
+    section_html = section_html.replace("$$PAGE_HREF$$", &nav_shop_link);
+    section_html = section_html.replace("$$SECTION_ID$$", id);
+    
     section_html
 }
 
