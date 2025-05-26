@@ -457,12 +457,8 @@ body.page-index #markdownBody section ul ul {
     --GW-popups-popup-max-height: 480px;
     --GW-popups-popup-with-footer-min-width: 480px;
     --GW-popups-popup-with-full-title-bar-min-width: 360px;
-    --GW-popups-popup-with-full-title-bar-min-height: 120px;
     --GW-popups-annotation-popup-min-width: 480px;
-    --GW-popups-annotation-popup-min-height: 120px;
     --GW-popups-wikipedia-entry-popup-min-width: 480px;
-    --GW-popups-wikipedia-entry-popup-min-height: 120px;
-    --GW-popups-tweet-popup-min-height: 120px;
     --GW-popups-tweet-avatar-size: 75px;
     --GW-popups-aux-links-popup-min-width: 480px;
     --GW-popups-aux-links-popup-min-height: 240px;
@@ -482,7 +478,6 @@ body.page-index #markdownBody section ul ul {
     --GW-popups-image-popup-min-size: 70px;
 
     --GW-popins-popin-max-height: 75vh;
-    --GW-popins-popin-min-height: 120px;
     --GW-popins-popin-border-width: 3px;
     --GW-popins-popin-title-bar-height: calc(1rem * 16/9);
     --GW-popins-popin-footer-bar-height: calc(1rem * 16/9);
