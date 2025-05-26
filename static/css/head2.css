@@ -791,8 +791,6 @@ blockquote,
 }
 
 .list.default-links {
-    max-width: 350px;
-    margin: 10px auto;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -1322,11 +1320,6 @@ padding: 0px;
 margin-top: 10px;
 overflow: hidden;
 overflow-y: auto;
-}
-#index-search-results, #index-search-results > ul, #index-search-results > p {
-height: 120px;
-min-height: 120px;
-max-height: 120px;
 }
 .default-links#index-search-results, 
 .default-links#index-search-results > ul, 

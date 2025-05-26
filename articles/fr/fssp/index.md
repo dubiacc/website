@@ -3,7 +3,7 @@ du Vatican et célèbre la Messe en latin -- alors, qu'est-ce qui ne va pas dans
 approche ? Pourquoi ne pas simplement essayer de réformer l'Église de l'intérieur au lieu
 de risquer un schisme ?
 
-# FSSP : Trahir la Foi pour la "pleine communion"
+# FSSP : Trahir la Foi pour la "communion"
 
 Dans les cercles catholiques traditionnels, il n'est souvent pas compris que le "schisme" 
 entre le Novus Ordo et la Messe latine ne concerne pas seulement la Messe ; il concerne 
