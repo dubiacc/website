@@ -4,9 +4,9 @@ le calcul humain, promeut subtilement le péché et, en fin de compte, détruit 
 
 # La Planification Familiale Naturelle est-elle Catholique ?
 
-À une époque saturée de compromis et de confusion, même au sein de l'Église, 
-peu de déviations par rapport à l'enseignement pérenne sont devenues aussi normalisées et acceptées 
-que la pratique communément appelée Planification Familiale "Naturelle" (PFN).
+En une époque saturée de compromis et de confusion, même au sein de l'Église, peu de 
+déviations par rapport à l'enseignement pérenne sont devenues aussi normalisées et 
+acceptées que la pratique communément appelée Planification Familiale "Naturelle" (PFN).
 
 La Planification Familiale Naturelle (PFN), malgré son acceptation généralisée, 
 contredit l'enseignement historique de l'Église sur le mariage et la procréation. 

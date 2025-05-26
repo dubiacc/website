@@ -11,9 +11,9 @@ husband starts flirting with women). Infidelity, emotional abuse, financial ruin
 or a complete abandonment of his / her duties. 
 
 You’re trying to hold it together for the kids, your job, your sanity, but you're stuck. 
-Secular advice screams "take your power back, divorce her!" and some groups says 
+Secular advice screams "take your power back, divorce her!" and some groups say
 "See, that's why it's bad to get married in the first place!". How does the Church 
-answer this problem - do we have to just suffer or does the Church permits a 
+answer this problem - do we have to just suffer or does the Church permit a 
 "divorce with extra steps"?
 
 ## Does Jesus allow divorce?
@@ -100,9 +100,9 @@ Both Presbyterian and Orthodox heretics therefore undermine the sanctity of marr
 ignoring the spirit of the law in favor of their own personal feeling. The Latin Canon 
 Law is therefore the ONLY one who actually adheres to Jesus' teaching in 
 Luke 16:18 and distinguishes between "putting away / physical separation" (divortium 
-imperfectum) and "anullment / true divorce" (divortium perfectum).
+imperfectum) and "annulment / true divorce" (divortium perfectum).
 
-Modern anullments are completely invalid by any Church standards. However, as we will now 
+Modern annulments are completely invalid by any Church standards. However, as we will now 
 see, the Church does have a remedy against adulterous spouses.
 
 ## Requirements for a valid marriage
@@ -213,8 +213,8 @@ is validly married, even if the rite wasn't Catholic.
 
 ## Valid marriages cannot be undone
 
-The primary end of marriage, which defines the marriage **contract**, is merely 
-procreation. That's it. If secondary ends such as "love" (often confused with "lust" 
+The only *primary* end of marriage, which defines the marriage **contract**, is merely 
+procreation, and that's it. If secondary ends such as "love" (often confused with "lust" 
 or romantic feelings or emotional fulfillment) or "unity of the spouses" is the measure, then marriage 
 becomes invalid the moment feelings fade - or, according to the modernist writings "Theology of the Body" (JPII) isn't 
 being "lived out" to someone's satisfaction ("you didn't do the dishes enough"). 
@@ -288,10 +288,10 @@ Generally, the Church requires pre-Cana to make sure these conditions never aris
 
 Additionally, under §3, a marriage may be suspended under "lawful future conditions", 
 such as "I marry you if you convert to Catholicism within one year" - however, 
-in this case, the marriage is not invalid, but merely the point at which the 
-marriage is valid, is shifted. If the person then doesn't convert within one year, 
-this would invalidate the marriage under §4. The Church has been traditionally 
-very careful about conditional marriages, as this would create "limbo marriages".
+in this case, the marriage becomes valid once that point is reached. If the person, 
+for example, then doesn't convert within one year, this would invalidate the marriage 
+under §4. The Church has been traditionally very careful about conditional marriages, 
+as this would create "limbo marriages".
 
 "I didn't know he was a serial cheater" doesn't invalidate the consent given 
 on condition, and wasn't expressed as a condition at the point of the wedding. 
@@ -358,7 +358,7 @@ Remaining with an abusive person is not virtuous; it is "foolish and wicked".
 >
 > -- [Proverbs 18:22 DRA](https://www.drbo.org/cgi-bin/s?q=Proverbs+18%3A22&x=0&y=0&b=drb)
 
-Note that the last part of the verse has been suspiciously dropped from Protestant 
+Note that the last part of the verse has been suspiciously absent from Protestant 
 bibles, make sure to select the correct translation.
 
 In Matthew 19:9, Jesus does never allow for remarriage or divorce, he does however
