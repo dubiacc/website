@@ -123,6 +123,7 @@ impl VectorizedArticles {
                         lang.clone(),
                         v.iter()
                             .map(|(slug, vectorized)| {
+
                                 let similar = get_similar_articles(vectorized, slug, v);
 
                                 // gather all links of other sites that link here
@@ -163,7 +164,7 @@ impl VectorizedArticles {
                                         sha256: vectorized.parsed.sha256.clone(),
                                         img: vectorized.parsed.img.clone(),
                                         subtitle: vectorized.parsed.summary.clone(),
-                                        summary: vectorized.parsed.article_abstract.clone(),
+                                        summary: normalize_first_char(&vectorized.parsed.article_abstract),
                                         sections: vectorized.parsed.sections.clone(),
                                         similar: similar,
                                         backlinks: backlinks,
@@ -178,6 +179,45 @@ impl VectorizedArticles {
                 .collect(),
         }
     }
+}
+
+
+fn normalize_first_char(c: &[Paragraph]) -> Vec<Paragraph> {
+    let mut v = c.to_vec();
+    if let Some(Paragraph::Sentence { s }) = v.first_mut() {
+        if let Some(SentenceItem::Text { text }) = s.first_mut() {
+            *text = nfc(text);
+        }
+    }
+    v
+}
+
+use unicode_normalization::UnicodeNormalization;
+
+fn normalize_char_to_string(c: char) -> String {
+    if c.is_ascii() {
+        return c.to_string();
+    }
+    
+    match c {
+        'ß' => "ss".to_string(),
+        'Æ' | 'æ' => "ae".to_string(),
+        'Œ' | 'œ' => "oe".to_string(),
+        _ => c.nfd()
+            .find(|&ch| ch.is_ascii() && ch.is_alphabetic())
+            .map(|ch| ch.to_string())
+            .unwrap_or_else(|| c.to_string()),
+    }
+}
+
+fn nfc(s: &str) -> String {
+    let mut chars = s.chars();
+    let first = match chars.next() {
+        Some(c) => normalize_char_to_string(c),
+        None => return String::new(),
+    };
+    
+    format!("{}{}", first, chars.as_str())
 }
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
@@ -3427,15 +3467,13 @@ fn render_index_section_img(
     };
 
     let p_style = {
-
         let p1 = "font-variant-caps: small-caps;background: var(--background-color);border-radius:5px;";
         let p2 = "border: 2px solid var(--GW-H1-border-color); text-align: center; text-decoration: underline;";
         let p3 = "text-indent: 0px;margin: 10px;padding: 10px 20px;";
-
         p1.to_string() + p2 + p3
     };
 
-    let r = format!("<a href='{link}' style='{style}'><p style='{p_style}'>{t}</p></a>");
+    let r = format!("<a href='{link}' style='{style}'><div style='{p_style}'>{t}</div></a>");
 
     section_html = section_html.replace(
         "<!-- SECTION_ITEMS -->",
