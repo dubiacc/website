@@ -3438,7 +3438,7 @@ fn render_index_section_img(
     let r = format!("<a href='{link}' style='{style}'><p style='{p_style}'>{t}</p></a>");
 
     section_html = section_html.replace(
-        "<!-- SECTION_ITEMS-2 -->",
+        "<!-- SECTION_ITEMS -->",
         &r,
     );
     
