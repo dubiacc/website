@@ -97,7 +97,7 @@ Der Weg nach vorne erfordert Mut, die vorherrschende Fortschrittserzählung abzu
 ```
 {
     "date": "2025-02-04",
-    "authors": ["bishop-williamson"],
+    "authors": ["williamson"],
     "tags": ["geschichte"],
     "translations": {
         "en": "europe",

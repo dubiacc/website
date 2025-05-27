@@ -320,7 +320,7 @@ We care about saying and teaching the truth, even if we have to be falsely label
 
 ```
 {
-    "authors": ["github:fschutt", "fr-hesse"],
+    "authors": ["github:fschutt", "hesse"],
     "date": "2025-05-24",
     "tags": ["canon-law"],
     "translations": {

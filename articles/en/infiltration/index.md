@@ -394,7 +394,7 @@ Providence for the eventual restoration of Holy Mother Church.
 
 ```
 {
-    "authors": ["fr-hesse"],
+    "authors": ["hesse"],
     "date": "2000-01-01",
     "tags": ["history", "vatican-ii"]
 }

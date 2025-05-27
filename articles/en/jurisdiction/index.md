@@ -155,7 +155,7 @@ for the salvation of souls.
 
 ```
 {
-    "authors": ["bishop-williamson"],
+    "authors": ["williamson"],
     "date": "2019-01-01",
     "tags": ["resistance"]
 }

@@ -194,7 +194,7 @@ intervenes to restore His Church.
 ```
 {
     "date": "2016-11-01",
-    "authors": ["bishop-williamson"],
+    "authors": ["williamson"],
     "tags": ["philosophy"]
 }
 ```

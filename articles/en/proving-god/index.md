@@ -135,7 +135,7 @@ and what implications this has for how we should live.
 ```
 {
     "date": "2025-04-08",
-    "authors": ["fr-hesse"],
+    "authors": ["hesse"],
     "tags": ["atheism"]
 }
 ```

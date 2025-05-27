@@ -91,7 +91,7 @@ La voie à suivre exige le courage de rejeter le récit dominant du progrès et 
 ```
 {
     "date": "2025-01-04",
-    "authors": ["mgr-williamson"],
+    "authors": ["williamson"],
     "tags": ["histoire"]
 }
 ```

@@ -91,7 +91,7 @@ The path forward requires courage to reject the dominant narrative of progress a
 ```
 {
     "date": "2025-01-04",
-    "authors": ["bishop-williamson"],
+    "authors": ["williamson"],
     "tags": ["history"],
     "translations": {
         "de": "europa",

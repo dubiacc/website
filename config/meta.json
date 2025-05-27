@@ -2519,29 +2519,29 @@
         }
     },
     "authors": {
-        "cdl-ottaviani": {
+        "ottaviani": {
             "displayname": "Abp. Cdl. Ottaviani"
         },
-        "bishop-williamson": {
+        "williamson": {
             "displayname": "Bp. R. Williamson"
         },
-        "bischof-williamson": {
-            "displayname": "Bf. R. Williamson"
-        },
-        "mgr-williamson": {
-            "displayname": "Mgr. R. Williamson"
-        },
-
-        "fr-hesse": {
+        "hesse": {
             "displayname": "Fr. G. Hesse"
         },
-        "pater-hesse": {
-            "displayname": "P. G. Hesse"
+        "gustave-bord": {
+            "displayname": "Gustave Bord"
         },
-        "abbe-hesse": {
-            "displayname": "M. l'Abbe Hesse"
+        "lefebvre": {
+            "displayname": "Mgr. M. Lefebvre"
         },
-
+        "john-farrell": {
+            "displayname": "John Farrell",
+            "contact": "https://www.youtube.com/@AnnulmentProof"
+        },
+        "aquinas": {
+            "displayname": "St. Thomas Aquinas"
+        },
+        
         "hl-pius-x": {
             "displayname": "Hl. Pius X"
         },
@@ -2562,20 +2562,6 @@
             "displayname": "Unknown"
         },
 
-        "gustave-bord": {
-            "displayname": "Gustave Bord"
-        },
-        "lefebvre": {
-            "displayname": "Mgr. M. Lefebvre"
-        },
-
-        "john-farrell": {
-            "displayname": "John Farrell",
-            "contact": "https://www.youtube.com/@AnnulmentProof"
-        },
-        "aquinas": {
-            "displayname": "St. Thomas Aquinas"
-        },
         "greg-taylor": {
             "displayname": "Greg Taylor"
         },
@@ -3335,8 +3321,8 @@
                     "title": "Pères de l'Église",
                     "links": [
                         {
-                            "slug": "https://www.bibledrumont.com/",
-                            "title": "Bible de Crampon en ligne"
+                            "slug": "https://gratis.bible/fr/dejer/",
+                            "title": " La Bible de Jérusalem"
                         },
                         {
                             "slug": "https://vulgata.online/",
@@ -3608,8 +3594,8 @@
                     "title": "Ojcowie Kościoła",
                     "links": [
                         {
-                            "slug": "https://biblia.deon.pl/",
-                            "title": "Biblia Tysiąclecia Online"
+                            "slug": "https://biblia-online.pl/Biblia/ListaKsiag/JakubaWujka",
+                            "title": "Biblia Jakuba Wujka (1599) Online"
                         },
                         {
                             "slug": "https://vulgata.online/",
@@ -3880,8 +3866,8 @@
                     "title": "Pais da Igreja",
                     "links": [
                         {
-                            "slug": "https://www.bibliacatolica.com.br/",
-                            "title": "Bíblia Católica Online"
+                            "slug": "https://www.bibliacatolica.com.br/biblia-matos-soares-1956/genesis/1/",
+                            "title": "Bíblia Online (Soares 1956)"
                         },
                         {
                             "slug": "https://vulgata.online/",
@@ -4152,8 +4138,8 @@
                     "title": "Padres de la Iglesia",
                     "links": [
                         {
-                            "slug": "https://www.bibliacatolica.online/",
-                            "title": "Biblia Católica Online (Nácar-Colunga)"
+                            "slug": "https://www.bibliatodo.com/la-biblia/version/Torres-amat",
+                            "title": "Biblia Católica (Torres-Amat 1825)"
                         },
                         {
                             "slug": "https://vulgata.online/",
@@ -4424,8 +4410,8 @@
                     "title": "Padri della Chiesa",
                     "links": [
                         {
-                            "slug": "https://www.bibbiaedu.it/",
-                            "title": "Bibbia CEI Online"
+                            "slug": "https://www.laparola.net/bibbia/",
+                            "title": "Bibbia Online (Martini 1781)"
                         },
                         {
                             "slug": "https://vulgata.online/",
