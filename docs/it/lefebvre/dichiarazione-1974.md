@@ -28,8 +28,10 @@ Nessuna autorità, nemmeno la più elevata nella gerarchia, può costringerci ad
 abbandonare o diminuire la nostra fede cattolica chiaramente espressa e professata 
 dal magistero della Chiesa da diciannove secoli.
 
-«Se accadesse, dice san Paolo, che NOI STESSI o un Angelo venuto dal cielo vi 
-insegnasse altra cosa da quello che vi ho insegnato, sia anatema.» (Gal. 1, 8.)
+>  Ma quand'anche noi, o un Angelo del cielo evangelizzi a voi oltre quello, 
+> che abbiamo a voi evangelizzato, sia anatema. 
+>
+> -- [Gal. 1, 8.](https://www.laparola.net/testo.php?riferimento=Galati1&versioni[]=Martini)
 
 Non è forse questo che ci ripete il Santo Padre oggi? E se una certa contraddizione 
 si manifestasse nelle sue parole e nei suoi atti così come negli atti dei dicasteri, 
