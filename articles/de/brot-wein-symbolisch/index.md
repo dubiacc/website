@@ -136,6 +136,6 @@ eine bloße symbolische Bedeutung.
 {
     "date": "1680-01-01",
     "tags": ["evangelisch"],
-    "authors": ["github:fschutt"]
+    "authors": ["schuett"]
 }
 ```

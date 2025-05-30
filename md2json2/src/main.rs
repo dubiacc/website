@@ -1661,15 +1661,6 @@ fn gen_sw_paths(cwd: &Path, articles: &AnalyzedArticles, meta: &MetaJson) -> Str
         sha256(include_str!("../../static/js/head.js"))
     ));
     a.push(format!(
-        "    {{ url: '/static/css/head.css', revision: '{}' }}",
-        sha256(include_str!("../../static/css/head.css"))
-    ));
-    a.push(format!(
-        "    {{ url: '/static/css/style.css', revision: '{}' }}",
-        sha256(include_str!("../../static/css/style.css"))
-    ));
-
-    a.push(format!(
         "    {{ url: '/static/img/logo/logo-smooth.svg', revision: '1' }}"
     ));
     a.push(format!(

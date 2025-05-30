@@ -1,10 +1,6 @@
-
-
 #page-toolbar .widgets:empty ~ * {
     display: none;
 }
-
-
 
 #page-toolbar > button {
     color: var(--GW-page-toolbar-control-button-color);
@@ -14,25 +10,9 @@
 }
 #page-toolbar > button svg {
     display: block;
-
-    
     width: intrinsic;
     height: intrinsic;
 }
-
-
-#page-toolbar.desktop > button.collapse-button {
-    display: none;
-}
-
-
-#page-toolbar.mobile > button.collapse-button {
-    order: 1;
-    padding: 0 12px;
-    outline: 1px dotted currentColor;
-    background-color: var(--background-color);
-}
-
 
 #page-toolbar > button.main-toggle-button {
     order: -1;
@@ -44,20 +24,12 @@
 @media all and (hover: hover) {
     #page-toolbar > button.main-toggle-button:hover {
         opacity: 1.0;
-        transition:
-            opacity 0.15s ease;
+        transition: opacity 0.15s ease;
     }
     #page-toolbar:not(.collapsed):not(.expanded-temp) > button.main-toggle-button {
         opacity: 1.0;
     }
 }
-
-
-#page-toolbar.vertical > button.main-toggle-button {
-    padding: 3px;
-}
-
-
 
 #page-toolbar {
     position: fixed;
@@ -71,8 +43,7 @@
     align-items: stretch;
     max-height: 100vh;
     max-width: 100vw;
-    transition:
-        transform 0.25s ease-out;
+    transition: transform 0.25s ease-out;
 }
 
 #page-toolbar .widget {
@@ -99,8 +70,7 @@
     height: 100%;
     box-sizing: border-box;
     color: var(--GW-page-toolbar-button-icon-color);
-    transition:
-        color 0.1s ease;
+    transition: color 0.1s ease;
 }
 #page-toolbar .widget button.selectable .icon {
     color: var(--GW-page-toolbar-button-selectable-icon-color);
@@ -117,211 +87,265 @@
     transform: scale(0.95);
 }
 
-
 #page-toolbar.button-labels-not .widget button .label,
 #page-toolbar.button-labels-not .widget a .label {
     display: none;
 }
 
+/* Desktop styles (768px and above) */
+@media (min-width: 768px) {
+    #page-toolbar {
+        --toolbar-button-size: 4vmin;
+        flex-flow: column;
+        width: var(--toolbar-button-size);
+        top: 5px;
+        right: 4px;
+    }
 
-#page-toolbar.vertical {
-    --toolbar-button-size: 4vmin;
+    #page-toolbar > button.collapse-button {
+        display: none;
+    }
 
-    flex-flow: column;
-    width: var(--toolbar-button-size);
-    top: 5px;
-    right: 4px;
-}
+    #page-toolbar > button.main-toggle-button {
+        padding: 3px;
+    }
 
-#page-toolbar.vertical .widgets {
-    flex-flow: column;
-    transform-origin: top;
-}
+    #page-toolbar .widgets {
+        flex-flow: column;
+        transform-origin: top;
+    }
 
-#page-toolbar.vertical .widget {
-    --widget-box-shadow-double-outline:
-            0 0 0 1px var(--GW-page-toolbar-border-color),
-            0 0 0 2px var(--background-color),
-            0 0 0 3px var(--GW-page-toolbar-border-color);
+    #page-toolbar .widget {
+        --widget-box-shadow-double-outline:
+                0 0 0 1px var(--GW-page-toolbar-border-color),
+                0 0 0 2px var(--background-color),
+                0 0 0 3px var(--GW-page-toolbar-border-color);
 
-    flex-flow: column;
-    outline: 1px dotted var(--GW-page-toolbar-border-color);
-    margin-top: 8px;
-    transition:
-        box-shadow 0.1s ease;
-}
-@media all and (hover: hover) {
-    #page-toolbar.vertical .widget:hover {
+        flex-flow: column;
+        outline: 1px dotted var(--GW-page-toolbar-border-color);
+        margin-top: 8px;
+        transition: box-shadow 0.1s ease;
+    }
+    
+    @media all and (hover: hover) {
+        #page-toolbar .widget:hover {
+            box-shadow: var(--widget-box-shadow-double-outline);
+        }
+    }
+    
+    #page-toolbar .widget.flashing {
         box-shadow: var(--widget-box-shadow-double-outline);
+        transition: box-shadow var(--GW-page-toolbar-widget-flash-rise-duration) ease-out;
     }
-}
-#page-toolbar.vertical .widget.flashing {
-    box-shadow: var(--widget-box-shadow-double-outline);
-    transition:
-        box-shadow var(--GW-page-toolbar-widget-flash-rise-duration) ease-out;
-}
-#page-toolbar.vertical .widget.flashing-fade {
-    transition:
-        box-shadow var(--GW-page-toolbar-widget-flash-fall-duration) ease-in;
-}
-
-#page-toolbar.vertical .widget button,
-#page-toolbar.vertical .widget a {
-    position: relative;
-    height: var(--toolbar-button-size);
-}
-#page-toolbar.vertical .widget button .icon,
-#page-toolbar.vertical .widget a .icon {
-    padding: 4px;
-}
-#page-toolbar.vertical .widget button .label,
-#page-toolbar.vertical .widget a .label {
-    position: absolute;
-    right: calc(100% + 5px);
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-    padding: 0 10px;
-    font-variant-caps: small-caps;
-    background-color: var(--background-color);
-    box-shadow:
-        0 0 0 2px var(--background-color),
-        0 0 0 3px var(--GW-page-toolbar-border-color);
-    opacity: 0;
-    transition:
-        opacity 0.1s ease;
-    pointer-events: none;
-}
-@media all and (hover: hover) {
-    #page-toolbar.vertical .widget:not(.flashing) button:hover .label,
-    #page-toolbar.vertical .widget.show-selected-button-label button.selected .label,
-    #page-toolbar.vertical .widget:not(.flashing) a:hover .label,
-    #page-toolbar.vertical .widget.show-selected-button-label a .label {
-        opacity: 1;
+    
+    #page-toolbar .widget.flashing-fade {
+        transition: box-shadow var(--GW-page-toolbar-widget-flash-fall-duration) ease-in;
     }
-    #page-toolbar.vertical .widget.highlight-selected-button-label button.selected .label {
-        color: var(--GW-page-toolbar-button-highlighted-text-color);
+
+    #page-toolbar .widget button,
+    #page-toolbar .widget a {
+        position: relative;
+        height: var(--toolbar-button-size);
     }
-    #page-toolbar.vertical .widget.highlight-selected-button-label button.selected .label::after {
-        content: "!";
+    
+    #page-toolbar .widget button .icon,
+    #page-toolbar .widget a .icon {
+        padding: 4px;
     }
-}
-
-
-#page-toolbar.mobile {
-    --toolbar-button-size: 46px;
-
-    flex-flow: column-reverse;
-    width: var(--toolbar-button-size);
-    bottom: 0.5em;
-    right: 0.5em;
-}
-
-#page-toolbar.mobile .widgets {
-    flex-flow: column;
-    margin: 0 0 0.75em 0;
-    transform-origin: bottom;
-}
-
-#page-toolbar.mobile .widget {
-    --widget-box-shadow-double-outline:
-            0 0 0 1px var(--GW-page-toolbar-border-color),
+    
+    #page-toolbar .widget button .label,
+    #page-toolbar .widget a .label {
+        position: absolute;
+        right: calc(100% + 5px);
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        padding: 0 10px;
+        font-variant-caps: small-caps;
+        background-color: var(--background-color);
+        box-shadow:
             0 0 0 2px var(--background-color),
             0 0 0 3px var(--GW-page-toolbar-border-color);
+        opacity: 0;
+        transition: opacity 0.1s ease;
+        pointer-events: none;
+    }
+    
+    @media all and (hover: hover) {
+        #page-toolbar .widget:not(.flashing) button:hover .label,
+        #page-toolbar .widget.show-selected-button-label button.selected .label,
+        #page-toolbar .widget:not(.flashing) a:hover .label,
+        #page-toolbar .widget.show-selected-button-label a .label {
+            opacity: 1;
+        }
+        #page-toolbar .widget.highlight-selected-button-label button.selected .label {
+            color: var(--GW-page-toolbar-button-highlighted-text-color);
+        }
+        #page-toolbar .widget.highlight-selected-button-label button.selected .label::after {
+            content: "!";
+        }
+    }
 
-    flex-flow: column;
-    outline: 1px dotted var(--GW-page-toolbar-border-color);
-    margin-top: 0.5em;
-    transition:
-        box-shadow 0.15s ease;
-}
-#page-toolbar.mobile .widget.flashing {
-    box-shadow: var(--widget-box-shadow-double-outline);
-    transition:
-        box-shadow var(--GW-page-toolbar-widget-flash-rise-duration) ease-out;
-}
-#page-toolbar.mobile .widget.flashing-fade {
-    transition:
-        box-shadow var(--GW-page-toolbar-widget-flash-fall-duration) ease-in;
+    #page-toolbar .mode-selector {
+        padding: 2px 0;
+    }
+    
+    #page-toolbar .mode-selector button + button {
+        margin-top: 3px;
+    }
+
+    #page-toolbar .extracts-mode-selector button.select-mode-on .icon {
+        padding: 5px;
+    }
+    
+    #page-toolbar .extracts-mode-selector button.select-mode-off .icon {
+        padding: 2px;
+    }
+
+    /* Desktop collapse animations */
+    #page-toolbar.collapsed > button.main-toggle-button {
+        transform: rotateZ(0.5turn);
+    }
+    
+    #page-toolbar.collapsed > button.main-toggle-button:active {
+        transform: rotateZ(0.5turn) scale(0.95);
+    }
+
+    #page-toolbar.collapsed .widgets {
+        transform: rotateX(-0.25turn);
+        max-height: 0;
+        transition:
+            transform var(--GW-page-toolbar-collapse-duration) ease-out,
+            max-height 0s ease-out var(--GW-page-toolbar-collapse-duration);
+    }
+
+    #page-toolbar.collapsed.collapsed-slowly .widgets {
+        transition:
+            transform var(--GW-page-toolbar-slow-collapse-duration) ease-out,
+            max-height 0s ease-out var(--GW-page-toolbar-slow-collapse-duration);
+    }
 }
 
-#page-toolbar.mobile .widget button {
-    height: var(--toolbar-button-size);
+/* Mobile styles (below 768px) */
+@media (max-width: 767px) {
+    #page-toolbar {
+        --toolbar-button-size: 46px;
+        flex-flow: column-reverse;
+        width: var(--toolbar-button-size);
+        bottom: 0.5em;
+        right: 0.5em;
+    }
+
+    #page-toolbar > button.collapse-button {
+        order: 1;
+        padding: 0 12px;
+        outline: 1px dotted currentColor;
+        background-color: var(--background-color);
+        transition: opacity var(--GW-page-toolbar-fade-after-collapse-duration) ease-out var(--GW-page-toolbar-collapse-duration);
+    }
+
+    #page-toolbar > button.main-toggle-button {
+        opacity: 1.0;
+    }
+
+    #page-toolbar .widgets {
+        flex-flow: column;
+        margin: 0 0 0.75em 0;
+        transform-origin: bottom;
+    }
+
+    #page-toolbar .widget {
+        --widget-box-shadow-double-outline:
+                0 0 0 1px var(--GW-page-toolbar-border-color),
+                0 0 0 2px var(--background-color),
+                0 0 0 3px var(--GW-page-toolbar-border-color);
+
+        flex-flow: column;
+        outline: 1px dotted var(--GW-page-toolbar-border-color);
+        margin-top: 0.5em;
+        transition: box-shadow 0.15s ease;
+    }
+    
+    #page-toolbar .widget.flashing {
+        box-shadow: var(--widget-box-shadow-double-outline);
+        transition: box-shadow var(--GW-page-toolbar-widget-flash-rise-duration) ease-out;
+    }
+    
+    #page-toolbar .widget.flashing-fade {
+        transition: box-shadow var(--GW-page-toolbar-widget-flash-fall-duration) ease-in;
+    }
+
+    #page-toolbar .widget button {
+        height: var(--toolbar-button-size);
+    }
+    
+    #page-toolbar .widget button .icon {
+        padding: 7px;
+    }
+
+    #page-toolbar .mode-selector {
+        padding: 2px 0;
+    }
+
+    #page-toolbar .extracts-mode-selector button.select-mode-on .icon {
+        padding: 7px;
+    }
+    
+    #page-toolbar .extracts-mode-selector button.select-mode-off .icon {
+        padding: 4px;
+    }
+
+    /* Mobile collapse animations */
+    #page-toolbar.collapsed > button.main-toggle-button {
+        opacity: 0.65;
+        transform: rotateZ(-0.5turn);
+    }
+    
+    #page-toolbar.collapsed > button.main-toggle-button:active {
+        transform: rotateZ(-0.5turn) scale(0.95);
+    }
+
+    #page-toolbar.collapsed > button.collapse-button {
+        opacity: 0;
+        transition: opacity var(--GW-page-toolbar-collapse-duration) ease-out;
+    }
+
+    #page-toolbar.collapsed .widgets {
+        transform: rotateX(0.25turn);
+        max-height: 0;
+        transition:
+            transform var(--GW-page-toolbar-collapse-duration) ease-out,
+            max-height 0s ease-out var(--GW-page-toolbar-collapse-duration);
+    }
+
+    #page-toolbar.collapsed.collapsed-slowly .widgets {
+        transition:
+            transform var(--GW-page-toolbar-slow-collapse-duration) ease-out,
+            max-height 0s ease-out var(--GW-page-toolbar-slow-collapse-duration);
+    }
 }
-#page-toolbar.mobile .widget button .icon {
-    padding: 7px;
-}
 
-
-
+/* Common collapse styles */
 #page-toolbar.collapsed {
-    transition:
-        opacity 2s ease-out;
+    transition: opacity 2s ease-out;
 }
+
 #page-toolbar.collapsed.faded {
     opacity: 0;
 }
+
 #page-toolbar.collapsed:hover {
-    transition:
-        opacity 0.15s ease;
+    transition: opacity 0.15s ease;
 }
-
-
 
 #page-toolbar.animating > button.main-toggle-button {
     transition:
         opacity var(--GW-page-toolbar-collapse-duration) ease-out,
         transform var(--GW-page-toolbar-collapse-duration) ease-out;
 }
-
-
-#page-toolbar.vertical.collapsed > button.main-toggle-button {
-    transform: rotateZ(0.5turn);
-}
-#page-toolbar.vertical.collapsed > button.main-toggle-button:active {
-    transform: rotateZ(0.5turn) scale(0.95);
-}
-
-#page-toolbar.vertical.collapsed .widgets {
-    transform: rotateX(-0.25turn);
-    max-height: 0;
-    transition:
-        transform var(--GW-page-toolbar-collapse-duration) ease-out,
-        max-height 0s ease-out var(--GW-page-toolbar-collapse-duration);
-}
-
-
-#page-toolbar.mobile > button.main-toggle-button {
-    opacity: 1.0;
-}
-#page-toolbar.mobile.collapsed > button.main-toggle-button {
-    opacity: 0.65;
-    transform: rotateZ(-0.5turn);
-}
-#page-toolbar.mobile.collapsed > button.main-toggle-button:active {
-    transform: rotateZ(-0.5turn) scale(0.95);
-}
-#page-toolbar.mobile > button.collapse-button {
-    transition:
-        opacity var(--GW-page-toolbar-fade-after-collapse-duration) ease-out var(--GW-page-toolbar-collapse-duration);
-}
-#page-toolbar.mobile.collapsed > button.collapse-button {
-    opacity: 0;
-    transition:
-        opacity var(--GW-page-toolbar-collapse-duration) ease-out;
-}
-
-#page-toolbar.mobile.collapsed .widgets {
-    transform: rotateX(0.25turn);
-    max-height: 0;
-    transition:
-        transform var(--GW-page-toolbar-collapse-duration) ease-out,
-        max-height 0s ease-out var(--GW-page-toolbar-collapse-duration);
-}
-
 
 #page-toolbar.collapsed.collapsed-slowly > button.main-toggle-button {
     transition:
@@ -330,32 +354,13 @@
 }
 
 #page-toolbar.collapsed.collapsed-slowly .widgets {
-    transition:
-        transform var(--GW-page-toolbar-slow-collapse-duration) ease-out;
+    transition: transform var(--GW-page-toolbar-slow-collapse-duration) ease-out;
 }
 
-
-#page-toolbar.vertical.collapsed.collapsed-slowly .widgets {
-    transition:
-        transform var(--GW-page-toolbar-slow-collapse-duration) ease-out,
-        max-height 0s ease-out var(--GW-page-toolbar-slow-collapse-duration);
-}
-
-
-#page-toolbar.mobile.collapsed.collapsed-slowly .widgets {
-    transition:
-        transform var(--GW-page-toolbar-slow-collapse-duration) ease-out,
-        max-height 0s ease-out var(--GW-page-toolbar-slow-collapse-duration);
-}
-
-
-
+/* Mode selector styles */
 .mode-selector button:disabled {
     cursor: default;
 }
-
-
-
 
 #page-toolbar .dark-mode-selector {
     order: 1;
@@ -382,35 +387,7 @@
     text-decoration: dotted underline from-font;
 }
 
-
-#page-toolbar.vertical .mode-selector {
-    padding: 2px 0;
-}
-#page-toolbar.vertical .mode-selector button + button {
-    margin-top: 3px;
-}
-
-
-#page-toolbar.mobile .mode-selector {
-    padding: 2px 0;
-}
-
-
-#page-toolbar.vertical .extracts-mode-selector button.select-mode-on .icon {
-    padding: 5px;
-}
-#page-toolbar.vertical .extracts-mode-selector button.select-mode-off .icon {
-    padding: 2px;
-}
-#page-toolbar.mobile .extracts-mode-selector button.select-mode-on .icon {
-    padding: 7px;
-}
-#page-toolbar.mobile .extracts-mode-selector button.select-mode-off .icon {
-    padding: 4px;
-}
-
-
-
+/* Inline mode selector */
 .mode-selector-inline {
     display: inline-flex;
     position: relative;
@@ -425,8 +402,7 @@
 }
 @media all and (hover: hover) {
     .mode-selector-inline button .icon {
-        transition:
-            opacity 0.1s ease;
+        transition: opacity 0.1s ease;
     }
     .mode-selector-inline button:hover .icon {
         opacity: 1.0;
@@ -464,24 +440,18 @@
     transform: translateY(-2px);
 }
 
-
-
-
-
-
+/* Search widget */
 #page-toolbar #gcse-search a {
     display: block;
     color: var(--GW-page-toolbar-button-selected-icon-color);
 }
 #page-toolbar #gcse-search a .icon {
-	padding: 5px;
-	width: 100%;
-	height: 100%;
-	display: flex;
-	box-sizing: border-box;
+    padding: 5px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    box-sizing: border-box;
 }
 #page-toolbar #gcse-search a svg {
     display: block;
 }
-
-

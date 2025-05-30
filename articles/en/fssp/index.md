@@ -3,7 +3,7 @@ of the Vatican and celebrates the Latin Mass -- so what's wrong with their
 approach? Why not just try to reform the Church from the inside instead
 of risking a schism?
 
-# FSSP: Betraying the Faith for "full communion"
+# FSSP: Betraying the Faith for "communion"
 
 In traditional Catholic circles, it is often not understood that the "schism" 
 between the Novus Ordo and the Latin Mass isn't just about the Mass; it's 
@@ -320,7 +320,7 @@ We care about saying and teaching the truth, even if we have to be falsely label
 
 ```
 {
-    "authors": ["github:fschutt", "hesse"],
+    "authors": ["schuett", "hesse"],
     "date": "2025-05-24",
     "tags": ["canon-law"],
     "translations": {

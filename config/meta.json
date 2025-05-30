@@ -1,5 +1,5 @@
 {
-    "owner": "github:fschutt",
+    "owner": "schuett",
     "strings": {
         "de": {
             "special-articles-title": "Themen",
@@ -2528,6 +2528,9 @@
         "hesse": {
             "displayname": "Fr. G. Hesse"
         },
+        "bezerra": {
+            "displayname": "Prof. Carlos Bezerra"
+        },
         "gustave-bord": {
             "displayname": "Gustave Bord"
         },
@@ -2585,7 +2588,7 @@
                 "github": "https://github.com/sponsors/GabrielAmatorDei"
             }
         },
-        "github:fschutt": {
+        "schuett": {
             "displayname": "Felix Schütt",
             "contact": "info@dubia.cc",
             "donate": {
@@ -2883,7 +2886,7 @@
                         "",
                         "<strong><em>Korrekturen und Fehler</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -3154,7 +3157,7 @@
                         "",
                         "<strong><em>Corrections and suggestions</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -3254,11 +3257,11 @@
                     "featured": []
                 },
                 "apotres": {
-                    "title": "Apôtres et Église Primitive",
+                    "title": "Église Primitive",
                     "featured": []
                 },
                 "morale-catholique": {
-                    "title": "Enseignement Moral et Social",
+                    "title": "Moral et Social",
                     "featured": []
                 },
                 "histoire": {
@@ -3426,7 +3429,7 @@
                         "",
                         "<strong><em>Corrections et suggestions</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -3699,7 +3702,7 @@
                         "",
                         "<strong><em>Poprawki i sugestie</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -3971,7 +3974,7 @@
                         "",
                         "<strong><em>Correções e sugestões</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -4243,7 +4246,7 @@
                         "",
                         "<strong><em>Correcciones y sugerencias</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -4515,7 +4518,7 @@
                         "",
                         "<strong><em>Correzioni e suggerimenti</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -4787,7 +4790,7 @@
                         "",
                         "<strong><em>Исправления и предложения</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -5059,7 +5062,7 @@
                         "",
                         "<strong><em>Düzeltmeler ve öneriler</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -5331,7 +5334,7 @@
                         "",
                         "<strong><em>Διορθώσεις και προτάσεις</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -5603,7 +5606,7 @@
                         "",
                         "<strong><em>تصحيحات واقتراحات</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -5875,7 +5878,7 @@
                         "",
                         "<strong><em>Mga Pagwawasto at suhestiyon</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -6147,7 +6150,7 @@
                         "",
                         "<strong><em>更正与建议</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -6419,7 +6422,7 @@
                         "",
                         "<strong><em>수정 및 제안</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -6691,7 +6694,7 @@
                         "",
                         "<strong><em>修正と提案</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -6963,7 +6966,7 @@
                         "",
                         "<strong><em>Corecturi și sugestii</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {
@@ -7235,7 +7238,7 @@
                         "",
                         "<strong><em>Correções e sugestões</em></strong>",
                         "",
-                        "<a href='https://github.com/fschutt/dubiacc/issues' rel='nofollow' >https://github.com/fschutt/dubiacc/issues</a>"
+                        "<a href='mailto:info@dubia.cc' rel='nofollow' >info@dubia.cc</a>"
                     ]
                 },
                 {

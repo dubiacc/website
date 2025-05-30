@@ -152,7 +152,7 @@ Tradition. The Church of Christ will endure, for the gates of hell shall not pre
 
 ```
 {
-    "authors": ["github:fschutt"],
+    "authors": ["schuett"],
     "date": "2025-05-17"
 }
 ```

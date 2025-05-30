@@ -1,8 +1,30 @@
-Since the early 2000s, secret meetings between groups in the Vatican
-and the SSPX worked to slowly make the faithful accept "papal authority"
-again, depite that authority working to destroy the Church.
+The SSPX Resistance is the traditionalist core of the work of Archbishop 
+Lefebvre. For people new to the traditionalist cause, this document 
+explains why we exist and why the fight for the Catholic faith, not just
+the Catholic Mass, is important.
 
 # What is the SSPX Resistance?
+
+In the 1960s, the Second Vatican Council introduced severe changes to the 
+Catholic philosophy that directly contradict previous Catholic teaching,
+leading to widespread confusion and the moral decay of general society.
+While this might seem unusual for the "bastion of morality" called the 
+Catholic Church, it was not unexpected, as the liberal infiltration started
+latest in the early 1900s. Liberals and communists (in the broad sense) slowly 
+worked to take over seminaries, key positions and infiltrate the Church 
+"from within", as it was a heavy bulwark against their influences on society.
+
+Out of 3500 bishops at the Council, only 3 opposed the changes, the rest 
+compromised or fell silent, in order to keep their seats. Sadly, one of the 
+main 
+
+. The dissenters were 
+kicked out, "excommunicated". One of them, Archbishop Lefebvre, was the most 
+fierce opponent: in 1988 he co
+
+could not work with the Vatican anymore, despite 
+trying, and consecrated four
+new bishops
 
 In 2012, a seismic event rocked traditional Catholic circles when a significant portion 
 of clergy and faithful broke from the Society of St. Pius X (SSPX) to form what became 
@@ -187,6 +209,6 @@ through compromise, the Resistance maintained his unwavering stance against mode
 {
     "date": "2025-05-04",
     "authors": ["greg-taylor"],
-    "tags": ["resistance"]
+    "tags": ["canon-law"]
 }
 ```

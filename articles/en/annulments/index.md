@@ -460,7 +460,7 @@ within God's law - and fight for justice for your family and your Faith.
 ```
 {
     "date": "2025-05-14",
-    "authors": ["john-farrell", "github:fschutt"],
+    "authors": ["john-farrell", "schuett"],
     "tags": ["morality"]
 }
 ```

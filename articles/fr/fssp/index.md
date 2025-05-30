@@ -320,7 +320,7 @@ Nous nous soucions de dire et d'enseigner la vérité, même si nous devons êtr
 
 ```
 {
-    "authors": ["github:fschutt", "hesse"],
+    "authors": ["schuett", "hesse"],
     "date": "2025-05-24",
     "tags": ["droit-canon"]
 }

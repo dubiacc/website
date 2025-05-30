@@ -451,7 +451,7 @@ dans la loi de Dieu - et en luttant pour la justice pour votre famille et votre 
 ```
 {
     "date": "2025-05-14",
-    "authors": ["john-farrell", "github:fschutt"],
+    "authors": ["john-farrell", "schuett"],
     "tags": ["morale"]
 }
 ```

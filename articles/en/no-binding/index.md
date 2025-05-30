@@ -275,7 +275,7 @@ with people who are heretical (nevermind that my local NO is mostly attended by 
 
 ```
 {
-    "authors": ["github:fschutt"],
+    "authors": ["schuett"],
     "date": "2025-05-17"
 }
 ```

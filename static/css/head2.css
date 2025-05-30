@@ -1590,7 +1590,10 @@ p#page-help {
     padding:5px 10px;
     padding-right:35px;
     margin-top: 5px; 
-    text-align:right;
+    text-align:right !important;
+    text-align-last: right !important;
+    -webkit-text-align-last: right;
+    -moz-text-align-last: right;
     background-color: var(--GW-body-color);
     color:var(--GW-text-color);
     flex-grow:1;
@@ -1598,6 +1601,11 @@ p#page-help {
     max-width:300px;
     font-size:1rem;
   }
+
+  #select-faith option {
+    text-align: right;
+  }
+
   @media (max-width: 649px) { 
     #select-faith-wrapper { flex-direction: column; } 
     #select-faith { max-width: none; }
