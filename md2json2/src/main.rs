@@ -2063,9 +2063,9 @@ fn header_navigation(lang: &str, display_logo: bool, meta: &MetaJson) -> Result<
     let mut header_nav = include_str!("../../templates/header-navigation.html").to_string();
 
     header_nav = header_nav.replace("$$HOMEPAGE_LOGO$$", &logo);
-    header_nav = header_nav.replace("$$TOOLS_DESC$$", &get_string(meta, lang, "special-tools-desc")?);
-    header_nav = header_nav.replace("$$TOOLS_TITLE$$", &get_string(meta, lang, "special-tools-title")?);
-    header_nav = header_nav.replace("$$TOOLS_LINK$$", &get_special_page_link(lang, "tools", meta)?);
+    header_nav = header_nav.replace("$$resources_DESC$$", &get_string(meta, lang, "special-resources-desc")?);
+    header_nav = header_nav.replace("$$resources_TITLE$$", &get_string(meta, lang, "special-resources-title")?);
+    header_nav = header_nav.replace("$$resources_LINK$$", &get_special_page_link(lang, "resources", meta)?);
     header_nav = header_nav.replace("$$ABOUT_DESC$$", &get_string(meta, lang, "special-about-desc")?);
     header_nav = header_nav.replace("$$ABOUT_TITLE$$", &get_string(meta, lang, "special-about-title")?);
     header_nav = header_nav.replace("$$ABOUT_LINK$$", &get_special_page_link(lang, "about", meta)?);
@@ -3262,7 +3262,7 @@ fn get_special_pages(
 
     let (topics_title, topics_path, topics_id, topics_desc) = get_page_info("topics")?;
     let (docs_title, docs_path, docs_id, docs_desc) = get_page_info("docs")?;
-    let (tools_title, tools_path, tools_id, tools_desc) = get_page_info("tools")?;
+    let (resources_title, resources_path, resources_id, resources_desc) = get_page_info("resources")?;
     let (shop_title, shop_path, shop_id, shop_desc) = get_page_info("shop")?;
     let (about_title, about_path, about_id, about_desc) = get_page_info("about")?;
 
@@ -3284,10 +3284,10 @@ fn get_special_pages(
             special_content: "<style>#special-contents { display: block; } #special-contents ul li { margin-bottom: 0px; }</style>".to_string(),
         },
         SpecialPage {
-            title: tools_title,
-            filepath: tools_path,
-            id: tools_id,
-            description: tools_desc,
+            title: resources_title,
+            filepath: resources_path,
+            id: resources_id,
+            description: resources_desc,
             content: render_resources_sections(lang, &tags.ressources),
             special_content: String::new(),
         },
