@@ -2720,6 +2720,16 @@
             },
             "ressources": [
                 {
+                    "id": "flyer",
+                    "title": "Flyer",
+                    "links": [
+                        {
+                            "slug": "https://dubia.cc/static/pdf/RosenkranzAnleitungDE.pdf",
+                            "title": "Flyer Rosenkranz (PDF)"
+                        }
+                    ]
+                },
+                {
                     "id": "messe",
                     "title": "Lateinischen Messen",
                     "links": [
@@ -3031,6 +3041,16 @@
             },
             "ressources": [
                 {
+                    "id": "flyer",
+                    "title": "Flyer",
+                    "links": [
+                        {
+                            "slug": "https://dubia.cc/static/pdf/RosaryInstructionsEN.pdf",
+                            "title": "Flyer Rosary (PDF, 2 pages)"
+                        }
+                    ]
+                },
+                {
                     "id": "mass",
                     "title": "Latin Mass Locations",
                     "links": [
@@ -3301,6 +3321,16 @@
                 "question": "Question"
             },
             "ressources": [
+                {
+                    "id": "depliant",
+                    "title": "Dépliants",
+                    "links": [
+                        {
+                            "slug": "https://dubia.cc/static/pdf/LeChapeletFr.pdf",
+                            "title": "Dépliant Chapelet (PDF, 2 pages)"
+                        }
+                    ]
+                },
                 {
                     "id": "mass",
                     "title": "Lieux de Messe Latine",
@@ -3846,6 +3876,20 @@
                 "question": "Pergunta"
             },
             "ressources": [
+                {
+                    "id": "folhetos",
+                    "title": "Folhetos",
+                    "links": [
+                        {
+                            "slug": "https://dubia.cc/static/pdf/OTercoBR.pdf",
+                            "title": "Folheto Rosário (PDF, 2 páginas)"
+                        },
+                        {
+                            "slug": "https://dubia.cc/static/pdf/SantificaoDoDomingoFSSPX.pdf",
+                            "title": "Santificaçãodo Domingo (PDF)"
+                        }
+                    ]
+                },
                 {
                     "id": "mass",
                     "title": "Locais de Missa Latina",
@@ -5750,6 +5794,16 @@
                 "question": "Tanong"
             },
             "ressources": [
+                {
+                    "id": "polyeto",
+                    "title": "Polyeto",
+                    "links": [
+                        {
+                            "slug": "https://dubia.cc/static/pdf/AngRosaryoPH.pdf",
+                            "title": "Ang Rosaryo (PDF, 2 pahina)"
+                        }
+                    ]
+                },
                 {
                     "id": "mass",
                     "title": "Mga Lokasyon ng Misa sa Latin",
