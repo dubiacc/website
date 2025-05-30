@@ -2063,9 +2063,9 @@ fn header_navigation(lang: &str, display_logo: bool, meta: &MetaJson) -> Result<
     let mut header_nav = include_str!("../../templates/header-navigation.html").to_string();
 
     header_nav = header_nav.replace("$$HOMEPAGE_LOGO$$", &logo);
-    header_nav = header_nav.replace("$$resources_DESC$$", &get_string(meta, lang, "special-resources-desc")?);
-    header_nav = header_nav.replace("$$resources_TITLE$$", &get_string(meta, lang, "special-resources-title")?);
-    header_nav = header_nav.replace("$$resources_LINK$$", &get_special_page_link(lang, "resources", meta)?);
+    header_nav = header_nav.replace("$$RESOURCES_DESC$$", &get_string(meta, lang, "special-resources-desc")?);
+    header_nav = header_nav.replace("$$RESOURCES_TITLE$$", &get_string(meta, lang, "special-resources-title")?);
+    header_nav = header_nav.replace("$$RESOURCES_LINK$$", &get_special_page_link(lang, "resources", meta)?);
     header_nav = header_nav.replace("$$ABOUT_DESC$$", &get_string(meta, lang, "special-about-desc")?);
     header_nav = header_nav.replace("$$ABOUT_TITLE$$", &get_string(meta, lang, "special-about-title")?);
     header_nav = header_nav.replace("$$ABOUT_LINK$$", &get_special_page_link(lang, "about", meta)?);
