@@ -69,7 +69,7 @@ const getDefaultLinksForLanguage = () => {
 };
 
 const createLinkHTML = (link) => 
-    `<li class='link-modified-recently-list-item dark-mode-invert'>
+    `<li class='block link-modified-recently-list-item dark-mode-invert'>
         <p class='in-list first-graf block' style='--bsm: 0;'>
             <a href='${link.url}' class='link-annotated link-page in-list has-annotation spawns-popup default-link' 
                data-attribute-title='${link.title}'>

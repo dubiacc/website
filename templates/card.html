@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dubia.cc Business Card Generator</title>
+</head>
+<body>
+    <div class="controls">
+        <h2>Business Card Generator</h2>
+        <div id="loading">Loading resources...</div>
+        <div id="control-panel" style="display: none;">
+            <div class="control-group">
+                <label for="language">Language:</label>
+                <select id="language">
+                    <option value="de">Deutsch</option>
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="it">Italiano</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="width">Width (mm):</label>
+                <input type="number" id="width" value="85" min="50" max="150">
+                <label for="height">Height (mm):</label>
+                <input type="number" id="height" value="55" min="30" max="100">
+            </div>
+            <div class="control-group">
+                <label for="darkIndices">Dark word indices (comma-separated):</label>
+                <input type="text" id="darkIndices" value="1,3,5,8,12,15,18,22,25,28" style="width: 300px;">
+            </div>
+            <div class="control-group">
+                <button onclick="generatePDFs()">Generate PDFs</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="preview-container">
+        <div class="card-wrapper">
+            <h3>Front</h3>
+            <div id="card-front-preview"></div>
+        </div>
+        
+        <div class="card-wrapper">
+            <h3>Back</h3>
+            <div id="card-back-preview"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Resources storage
+        const resources = {
+            watercolor: null,
+            qrcode: null,
+            logo: null,
+            dubiaText: null,
+            fontCSS: null,
+            oswaldFontCSS: null
+        };
+        
+        // CSS as JS variable
+        const baseCSS = `
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                font-family: Arial, sans-serif;
+                padding: 20px;
+                background-color: #f0f0f0;
+            }
+            
+            .controls {
+                max-width: 800px;
+                margin: 0 auto 30px;
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            .control-group {
+                margin-bottom: 15px;
+            }
+            
+            label {
+                display: inline-block;
+                width: 150px;
+                font-weight: bold;
+            }
+            
+            input, select {
+                padding: 5px;
+                margin-right: 10px;
+            }
+            
+            button {
+                background-color: #333;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+            
+            button:hover {
+                background-color: #555;
+            }
+            
+            .preview-container {
+                max-width: 800px;
+                margin: 0 auto;
+                display: flex;
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .card-wrapper {
+                background: white;
+                padding: 10px;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            }
+            
+            .card-wrapper h3 {
+                margin-bottom: 10px;
+                text-align: center;
+            }
+            
+            #loading {
+                font-style: italic;
+                color: #666;
+            }
+        `;
+        
+        const cardCSS = `
+            .business-card {
+                position: relative;
+                overflow: hidden;
+                background: white;
+                display: inline-block;
+            }
+            
+            .watercolor {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                opacity: 0.8;
+                z-index: 1;
+            }
+            
+            .watercolor-back {
+                transform: rotate(180deg);
+            }
+            
+            .card-content {
+                position: relative;
+                z-index: 2;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+            
+            .front-content {
+                text-align: center;
+            }
+            
+            .logo {
+                width: 60%;
+                max-width: 200px;
+                height: auto;
+                margin-bottom: 10px;
+            }
+            
+            .dubia-text {
+                width: 40%;
+                max-width: 150px;
+                height: auto;
+            }
+            
+            .back-content {
+                text-align: center;
+                width: 100%;
+            }
+            
+            .tagline {
+                font-family: 'EB Garamond', serif;
+                font-size: 24px;
+                font-weight: 600;
+                color: #333;
+                text-align: center;
+                margin-bottom: 10px;
+                line-height: 1.3;
+            }
+            
+            .qr-and-text {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 20px;
+                margin-top: 10px;
+            }
+            
+            .qr-code {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .background-text {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+                opacity: 0.3;
+                font-family: 'Oswald', sans-serif;
+                font-size: 14px;
+                line-height: 1.4;
+                padding: 10px;
+                overflow: hidden;
+                word-wrap: break-word;
+            }
+            
+            .bg-word-light {
+                color: #ccc;
+            }
+            
+            .bg-word-dark {
+                color: #666;
+                font-weight: 600;
+            }
+            
+            @media print {
+                body {
+                    margin: 0;
+                    padding: 0;
+                }
+                .business-card {
+                    page-break-inside: avoid;
+                }
+            }
+        `;
+        
+        const translations = {
+            de: {
+                tagline: "Entdecke die wahre<br>katholische Kirche.",
+                keywords: [
+                    "ATHEISMUS", "BIOETHIK", "EVANGELISCH", "MITTELALTER", "ISLAM", "GESCHICHTE", "JUDENTUM", "MORAL",
+                    "EVOLUTION", "FRZ-REVOLUTION", "THOMISMUS", "FRUEHKIRCHE", "OST-ORTHODOXIE", "PHILOSOPHIE",
+                    "SEDISVAKANZ", "KIRCHENVAETER", "ANGLIKANISCH", "LUTHER", "TOD", "SEELE", "PROTESTANTISMUS",
+                    "AUGUSTINUS", "ISLAM", "KIRCHENVAETER", "GESCHICHTE", "WISSENSCHAFT", "MORAL", "EVANGELISCH"
+                ]
+            },
+            en: {
+                tagline: "Discover the true<br>Catholic Church.",
+                keywords: [
+                    "ATHEISM", "BIOETHICS", "PROTESTANT", "MIDDLE AGES", "ISLAM", "HISTORY", "JUDAISM", "MORALITY",
+                    "EVOLUTION", "FRENCH REVOLUTION", "THOMISM", "EARLY CHURCH", "EASTERN ORTHODOXY", "PHILOSOPHY",
+                    "SEDEVACANTISM", "CHURCH FATHERS", "ANGLICAN", "LUTHER", "DEATH", "SOUL", "PROTESTANTISM",
+                    "AUGUSTINE", "ISLAM", "CHURCH FATHERS", "HISTORY", "SCIENCE", "MORALITY", "PROTESTANT"
+                ]
+            },
+            es: {
+                tagline: "Descubre la verdadera<br>Iglesia Católica.",
+                keywords: [
+                    "ATEÍSMO", "BIOÉTICA", "EVANGÉLICO", "EDAD MEDIA", "ISLAM", "HISTORIA", "JUDAÍSMO", "MORAL",
+                    "EVOLUCIÓN", "REVOLUCIÓN FRANCESA", "TOMISMO", "IGLESIA PRIMITIVA", "ORTODOXIA ORIENTAL", "FILOSOFÍA",
+                    "SEDEVACANTISMO", "PADRES DE LA IGLESIA", "ANGLICANO", "LUTERO", "MUERTE", "ALMA", "PROTESTANTISMO",
+                    "AGUSTÍN", "ISLAM", "PADRES DE LA IGLESIA", "HISTORIA", "CIENCIA", "MORAL", "EVANGÉLICO"
+                ]
+            },
+            fr: {
+                tagline: "Découvrez la vraie<br>Église catholique.",
+                keywords: [
+                    "ATHÉISME", "BIOÉTHIQUE", "ÉVANGÉLIQUE", "MOYEN ÂGE", "ISLAM", "HISTOIRE", "JUDAÏSME", "MORALE",
+                    "ÉVOLUTION", "RÉVOLUTION FRANÇAISE", "THOMISME", "ÉGLISE PRIMITIVE", "ORTHODOXIE ORIENTALE", "PHILOSOPHIE",
+                    "SÉDÉVACANTISME", "PÈRES DE L'ÉGLISE", "ANGLICAN", "LUTHER", "MORT", "ÂME", "PROTESTANTISME",
+                    "AUGUSTIN", "ISLAM", "PÈRES DE L'ÉGLISE", "HISTOIRE", "SCIENCE", "MORALE", "ÉVANGÉLIQUE"
+                ]
+            },
+            it: {
+                tagline: "Scopri la vera<br>Chiesa Cattolica.",
+                keywords: [
+                    "ATEISMO", "BIOETICA", "EVANGELICO", "MEDIOEVO", "ISLAM", "STORIA", "GIUDAISMO", "MORALE",
+                    "EVOLUZIONE", "RIVOLUZIONE FRANCESE", "TOMISMO", "CHIESA PRIMITIVA", "ORTODOSSIA ORIENTALE", "FILOSOFIA",
+                    "SEDEVACANTISMO", "PADRI DELLA CHIESA", "ANGLICANO", "LUTERO", "MORTE", "ANIMA", "PROTESTANTESIMO",
+                    "AGOSTINO", "ISLAM", "PADRI DELLA CHIESA", "STORIA", "SCIENZA", "MORALE", "EVANGELICO"
+                ]
+            }
+        };
+        
+        // Apply base CSS
+        const styleEl = document.createElement('style');
+        styleEl.textContent = baseCSS;
+        document.head.appendChild(styleEl);
+        
+        // Fetch and convert to base64
+        async function fetchAsBase64(url) {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+        
+        // Fetch SVG as text and convert to base64
+        async function fetchSVGAsBase64(url) {
+            const response = await fetch(url);
+            const svgText = await response.text();
+            const base64 = btoa(unescape(encodeURIComponent(svgText)));
+            return `data:image/svg+xml;base64,${base64}`;
+        }
+        
+        // Load all resources
+        async function loadResources() {
+            try {
+                // Load images
+                resources.watercolor = await fetchAsBase64('https://dubia.cc/static/pdf/watercolor.png');
+                resources.qrcode = await fetchAsBase64('https://dubia.cc/static/pdf/qrcode.png');
+                resources.logo = await fetchSVGAsBase64('https://dubia.cc/static/img/logo/full.svg');
+                resources.dubiaText = await fetchSVGAsBase64('https://dubia.cc/static/img/logo/dubia2.svg');
+                
+                // Load EB Garamond font
+                const ebGaramondResponse = await fetch('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&display=swap');
+                const ebGaramondCSS = await ebGaramondResponse.text();
+                
+                // Load Oswald font
+                const oswaldResponse = await fetch('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&display=swap');
+                const oswaldCSS = await oswaldResponse.text();
+                
+                // Extract font URLs and convert to base64
+                resources.fontCSS = await processFontCSS(ebGaramondCSS);
+                resources.oswaldFontCSS = await processFontCSS(oswaldCSS);
+                
+                // Show controls
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('control-panel').style.display = 'block';
+                
+                updatePreview();
+            } catch (error) {
+                console.error('Error loading resources:', error);
+                document.getElementById('loading').textContent = 'Error loading resources. Please refresh.';
+            }
+        }
+        
+        async function processFontCSS(fontCSS) {
+            const fontUrls = fontCSS.match(/url\([^)]+\)/g);
+            let modifiedFontCSS = fontCSS;
+            
+            for (const urlMatch of fontUrls || []) {
+                const url = urlMatch.match(/url\(["']?([^"')]+)["']?\)/)[1];
+                const fontData = await fetchAsBase64(url);
+                modifiedFontCSS = modifiedFontCSS.replace(urlMatch, `url(${fontData})`);
+            }
+            
+            return modifiedFontCSS;
+        }
+        
+        function generateBackgroundText(keywords, darkIndices) {
+            const shuffled = [...keywords];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            
+            const repeatedKeywords = [];
+            while (repeatedKeywords.length < 100) {
+                repeatedKeywords.push(...shuffled);
+            }
+            
+            return repeatedKeywords.map((word, index) => {
+                const isDark = darkIndices.includes(index);
+                return `<span class="${isDark ? 'bg-word-dark' : 'bg-word-light'}">${word} </span>`;
+            }).join('');
+        }
+        
+        function generateCardHTML(config) {
+            const { side, width, height, language, darkIndices = [] } = config;
+            const translation = translations[language];
+            
+            if (side === 'front') {
+                return `
+                    <div class="business-card" style="width: ${width}mm; height: ${height}mm;">
+                        <img src="${resources.watercolor}" class="watercolor" alt="">
+                        <div class="card-content front-content">
+                            <img src="${resources.logo}" class="logo" alt="dubia.cc logo">
+                            <img src="${resources.dubiaText}" class="dubia-text" alt="dubia.cc">
+                        </div>
+                    </div>
+                `;
+            } else if (side === 'back') {
+                const backgroundHTML = generateBackgroundText(translation.keywords, darkIndices);
+                
+                return `
+                    <div class="business-card" style="width: ${width}mm; height: ${height}mm;">
+                        <img src="${resources.watercolor}" class="watercolor watercolor-back" alt="">
+                        <div class="background-text">${backgroundHTML}</div>
+                        <div class="card-content back-content">
+                            <h2 class="tagline">${translation.tagline}</h2>
+                            <div class="qr-and-text">
+                                <img src="${resources.qrcode}" class="qr-code" alt="QR Code">
+                                <img src="${resources.dubiaText}" class="dubia-text" alt="dubia.cc">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        function updatePreview() {
+            const width = parseInt(document.getElementById('width').value);
+            const height = parseInt(document.getElementById('height').value);
+            const language = document.getElementById('language').value;
+            const darkIndicesStr = document.getElementById('darkIndices').value;
+            const darkIndices = darkIndicesStr.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+            
+            const config = { width, height, language, darkIndices };
+            
+            const frontHTML = generateCardHTML({ ...config, side: 'front' });
+            const backHTML = generateCardHTML({ ...config, side: 'back' });
+            
+            document.getElementById('card-front-preview').innerHTML = frontHTML;
+            document.getElementById('card-back-preview').innerHTML = backHTML;
+        }
+        
+        async function generatePDFs() {
+            const width = document.getElementById('width').value;
+            const height = document.getElementById('height').value;
+            const darkIndicesStr = document.getElementById('darkIndices').value;
+            const darkIndices = darkIndicesStr.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+            
+            // Generate PDFs for all languages
+            for (const lang of Object.keys(translations)) {
+                const config = { width, height, language: lang, darkIndices };
+                
+                const frontHTML = generateCardHTML({ ...config, side: 'front' });
+                const backHTML = generateCardHTML({ ...config, side: 'back' });
+                
+                // Create HTML content
+                const htmlParts = [];
+                htmlParts.push('<!DOCTYPE html>');
+                htmlParts.push('<html>');
+                htmlParts.push('<head>');
+                htmlParts.push(`<title>Business Card - ${lang.toUpperCase()}</title>`);
+                htmlParts.push('<style>');
+                htmlParts.push(resources.fontCSS);
+                htmlParts.push(resources.oswaldFontCSS);
+                htmlParts.push(cardCSS);
+                htmlParts.push('@media print {');
+                htmlParts.push('  @page { size: auto; margin: 0; }');
+                htmlParts.push('  body { margin: 0; padding: 0; background: white; }');
+                htmlParts.push('  .business-card { page-break-after: always; margin: 0; }');
+                htmlParts.push('}');
+                htmlParts.push('</style>');
+                htmlParts.push('</head>');
+                htmlParts.push('<body>');
+                htmlParts.push(frontHTML);
+                htmlParts.push(backHTML);
+                htmlParts.push('</body>');
+                htmlParts.push('</html>');
+                
+                const pdfHtml = htmlParts.join('\n');
+                
+                // Create iframe for printing (similar to generateCalendarPDF approach)
+                const iframe = document.createElement('iframe');
+                iframe.style.position = 'absolute';
+                iframe.style.top = '-10000px';
+                iframe.style.left = '-10000px';
+                iframe.style.width = '0';
+                iframe.style.height = '0';
+                document.body.appendChild(iframe);
+                
+                // Write content to iframe
+                iframe.contentDocument.open();
+                iframe.contentDocument.write(pdfHtml);
+                iframe.contentDocument.close();
+                
+                // Wait for content to load
+                iframe.onload = function() {
+                    setTimeout(() => {
+                        iframe.contentWindow.print();
+                        // Remove iframe after a delay
+                        setTimeout(() => {
+                            document.body.removeChild(iframe);
+                        }, 1000);
+                    }, 500);
+                };
+            }
+        }
+        
+        // Initialize
+        document.getElementById('width').addEventListener('input', updatePreview);
+        document.getElementById('height').addEventListener('input', updatePreview);
+        document.getElementById('language').addEventListener('change', updatePreview);
+        document.getElementById('darkIndices').addEventListener('input', updatePreview);
+        
+        // Load resources on page load
+        loadResources();
+    </script>
+</body>
+</html>
