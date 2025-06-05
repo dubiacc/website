@@ -560,7 +560,7 @@
     }
     
     .priest-marker {
-      background-color: #cc0000;
+      background-color: #003399;  /* Blue for priests */
       border-radius: 50%;
       border: 2px solid white;
       text-align: center;
@@ -568,13 +568,13 @@
     }
     
     .parish-marker {
-      background-color: #003399;
+      background-color: #cc0000;  /* Red for parishes */
       border-radius: 50%;
       border: 2px solid white;
       text-align: center;
       box-shadow: 0 0 10px rgba(0,0,0,0.5);
     }
-    
+
     /* For the pulsing effect */
     .pulse {
       animation: pulse 1.5s infinite;
@@ -1132,16 +1132,16 @@ window.CONFIG = {
   defaultLng: 2.3522,
   defaultZoom: 4,
   
-  // Styling
-  priestMarkerColor: '#cc0000',
-  parishMarkerColor: '#003399',
+  // Styling - Fixed colors: parishes red, priests blue
+  priestMarkerColor: '#003399',  // Blue for priests
+  parishMarkerColor: '#cc0000',  // Red for parishes
   lineColor: '#ccc',
   lineWeight: 2,
   lineOpacity: 0.7,
   
-  // Marker sizes
-  priestMarkerSize: 10,
-  parishMarkerSize: 7,
+  // Marker sizes - standardized
+  priestMarkerSize: 8,    // Smaller blue dots for priests
+  parishMarkerSize: 10,   // Consistent red dots for parishes
   
   // Google Sheet ID
   sheetId: "16wO1gTdilEcdqsWfJ0mZn-hgYD2MRJ1SCKSAHzcDj18",
@@ -1153,6 +1153,7 @@ window.CONFIG = {
   minZoom: 2,
   maxZoom: 18,
 };
+
 
 // Data storage
 window.locations = [];
@@ -2443,62 +2444,34 @@ async function fetchSheetData() {
   validateData();
 }
 
-// Update map markers
+// Update map markers - completely rewritten approach
 function updateMapMarkers() {
   // Clear existing markers and lines
   priestMarkers.clearLayers();
   parishMarkers.clearLayers();
   connectionLines.clearLayers();
   
-  // Process locations
+  // Create all parish markers first (all red, same size)
   window.locations.forEach(location => {
-    // Create parish marker
     createParishMarker(location);
-    
-    // Create connection lines between religious and their locations
-    createConnectionLines(location);
   });
   
-  // Process religious who don't have an assigned location
-  window.religious.forEach(person => {
-    const hasLocation = window.locations.some(location => 
-      location.ReligiousIdArray.includes(person.ReligiousID)
-    );
-    
-    if (!hasLocation && person['Location/Area']) {
-      // Extract coordinates from Location field if available
-      const geoMatch = person['Location/Area']?.match(/(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)/);
-      if (geoMatch) {
-        const lat = parseFloat(geoMatch[1]);
-        const lng = parseFloat(geoMatch[2]);
-        
-        if (!isNaN(lat) && !isNaN(lng)) {
-          createPriestMarker(person, lat, lng);
-        }
-      } else {
-        // Use location approximation based on country/area
-        const coords = approximateLocationFromName(person['Location/Area']);
-        if (coords) {
-          createPriestMarker(person, coords.lat, coords.lng);
-        }
-      }
-    }
-  });
+  // Create connection patterns for each priest
+  createConnectionPatternsForAllPriests();
 }
 
-// Create parish marker
+// Fixed parish marker creation - all red, same size
 function createParishMarker(location) {
   if (!location.Latitude || !location.Longitude || 
       isNaN(location.Latitude) || isNaN(location.Longitude)) {
-    // console.warn(`Invalid coordinates for location: ${location.Name}`);
     return;
   }
   
-  // Create marker
+  // All parishes are red dots of the same size
   const markerSize = CONFIG.parishMarkerSize;
   const icon = L.divIcon({
     className: 'parish-marker',
-    html: `<div style="width:${markerSize}px; height:${markerSize}px;"></div>`,
+    html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color:${CONFIG.parishMarkerColor};"></div>`,
     iconSize: [markerSize, markerSize],
     iconAnchor: [markerSize/2, markerSize/2]
   });
@@ -2509,7 +2482,7 @@ function createParishMarker(location) {
   // Store location data with marker
   marker.locationData = location;
   
-  // Add click handler (no popup)
+  // Add click handler
   marker.on('click', function() {
     showLocationInfo(location);
   });
@@ -2517,13 +2490,108 @@ function createParishMarker(location) {
   return marker;
 }
 
-// Create priest marker
+// Create connection patterns for all priests
+function createConnectionPatternsForAllPriests() {
+  window.religious.forEach(priest => {
+    // Find all locations this priest serves
+    const priestLocations = window.locations.filter(location => 
+      location.ReligiousIdArray && location.ReligiousIdArray.includes(priest.ReligiousID)
+    );
+    
+    if (priestLocations.length === 0) return;
+    
+    // Check if priest has a usual location ID
+    const usualLocation = priest.UsualLocationID ? 
+      window.locationMap.get(priest.UsualLocationID) : null;
+    
+    if (usualLocation && priestLocations.some(loc => loc.LocationID === priest.UsualLocationID)) {
+      // Case 1: Priest has usual location - draw lines from usual location to all others
+      createStarPatternFromUsualLocation(priest, usualLocation, priestLocations);
+    } else if (priestLocations.length > 1) {
+      // Case 2: No usual location, multiple locations - create center point with star pattern
+      createCenterPointStarPattern(priest, priestLocations);
+    } else {
+      // Case 3: Single location - just create priest marker at that location
+      const location = priestLocations[0];
+      createPriestMarker(priest, location.Latitude, location.Longitude);
+    }
+  });
+}
+
+// Create star pattern from usual location
+function createStarPatternFromUsualLocation(priest, usualLocation, allLocations) {
+  // Create priest marker at usual location
+  createPriestMarker(priest, usualLocation.Latitude, usualLocation.Longitude);
+  
+  // Draw lines from usual location to all other locations
+  allLocations.forEach(location => {
+    if (location.LocationID !== usualLocation.LocationID) {
+      const line = L.polyline([
+        [usualLocation.Latitude, usualLocation.Longitude],
+        [location.Latitude, location.Longitude]
+      ], {
+        color: CONFIG.lineColor,
+        weight: CONFIG.lineWeight,
+        opacity: CONFIG.lineOpacity
+      }).addTo(connectionLines);
+      
+      // Store data with the line
+      line.religiousId = priest.ReligiousID;
+      line.fromLocation = usualLocation.LocationID;
+      line.toLocation = location.LocationID;
+    }
+  });
+}
+
+// Create center point star pattern
+function createCenterPointStarPattern(priest, locations) {
+  // Calculate center point (average of all coordinates)
+  let totalLat = 0;
+  let totalLng = 0;
+  let validCount = 0;
+  
+  locations.forEach(location => {
+    if (!isNaN(location.Latitude) && !isNaN(location.Longitude)) {
+      totalLat += location.Latitude;
+      totalLng += location.Longitude;
+      validCount++;
+    }
+  });
+  
+  if (validCount === 0) return;
+  
+  const centerLat = totalLat / validCount;
+  const centerLng = totalLng / validCount;
+  
+  // Create priest marker at center point
+  createPriestMarker(priest, centerLat, centerLng);
+  
+  // Draw lines from center to all locations
+  locations.forEach(location => {
+    if (!isNaN(location.Latitude) && !isNaN(location.Longitude)) {
+      const line = L.polyline([
+        [centerLat, centerLng],
+        [location.Latitude, location.Longitude]
+      ], {
+        color: CONFIG.lineColor,
+        weight: CONFIG.lineWeight,
+        opacity: CONFIG.lineOpacity
+      }).addTo(connectionLines);
+      
+      // Store data with the line
+      line.religiousId = priest.ReligiousID;
+      line.fromLocation = 'center';
+      line.toLocation = location.LocationID;
+    }
+  });
+}
+
+// Updated priest marker creation - small blue dots
 function createPriestMarker(priest, lat, lng) {
-  // Create marker
   const markerSize = CONFIG.priestMarkerSize;
   const icon = L.divIcon({
     className: 'priest-marker pulse',
-    html: `<div style="width:${markerSize}px; height:${markerSize}px;"></div>`,
+    html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color:${CONFIG.priestMarkerColor};"></div>`,
     iconSize: [markerSize, markerSize],
     iconAnchor: [markerSize/2, markerSize/2]
   });
@@ -2534,21 +2602,14 @@ function createPriestMarker(priest, lat, lng) {
   // Store priest data with marker
   marker.priestData = priest;
   
-  // Add click handler (no popup)
+  // Add click handler
   marker.on('click', function() {
-    // Get containing parish (if any)
-    const containingParish = findParishAtCoordinates(lat, lng);
-    
-    // If there's a parish at these exact coordinates, prioritize showing it
-    if (containingParish) {
-      showLocationInfo(containingParish);
-    } else {
-      showPriestInfo(priest);
-    }
+    showPriestInfo(priest);
   });
   
   return marker;
 }
+
 
 // Create connection lines between religious and their locations
 function createConnectionLines(location) {
@@ -4323,162 +4384,110 @@ function levenshteinDistance(a, b) {
   return matrix[a.length][b.length];
 }
 
-// Search results function
+// Completely rewritten search functionality
 function getSearchResults(searchTerm) {
   if (!searchTerm || searchTerm.length < 2) {
     return [];
   }
   
-  searchTerm = searchTerm.toLowerCase();
-  const searchResults = [];
+  searchTerm = searchTerm.toLowerCase().trim();
+  const exactMatches = [];
+  const fuzzyMatches = [];
   
-  // Search locations
+  // Search locations for exact substring matches first
   window.locations.forEach(location => {
-    let bestScore = Infinity;
-    let matchField = '';
+    const name = (location.Name || '').toLowerCase();
+    const type = (location.LocationType || '').toLowerCase();
+    const notes = (location.Notes || '').toLowerCase();
     
-    // Check various fields for matches
-    const fieldsToCheck = [
-      { field: 'Name', value: location.Name, weight: 1 },
-      { field: 'LocationType', value: location.LocationType, weight: 1.2 },
-      { field: 'Notes', value: location.Notes, weight: 1.5 },
-      { field: 'Website', value: location.Website, weight: 1.3 },
-      { field: 'ContactEmail', value: location.ContactEmail, weight: 1.3 },
-      { field: 'ContactPhone', value: location.ContactPhone, weight: 1.3 }
-    ];
+    let score = Infinity;
+    let isExactMatch = false;
     
-    fieldsToCheck.forEach(({ field, value, weight }) => {
-      if (value) {
-        const valueStr = String(value).toLowerCase();
-        
-        // Exact match gets highest priority
-        if (valueStr.includes(searchTerm)) {
-          const score = 0 * weight; // Perfect match
-          if (score < bestScore) {
-            bestScore = score;
-            matchField = field;
-          }
-        } else {
-          // Fuzzy match
-          const score = levenshteinDistance(searchTerm, valueStr) * weight;
-          if (score < bestScore && score <= searchTerm.length * 2) { // Threshold for relevance
-            bestScore = score;
-            matchField = field;
-          }
-        }
-      }
-    });
+    // Check for exact substring matches (prioritize name field)
+    if (name.includes(searchTerm)) {
+      score = name.indexOf(searchTerm); // Earlier in name = better score
+      isExactMatch = true;
+    } else if (type.includes(searchTerm)) {
+      score = 1000 + type.indexOf(searchTerm); // Lower priority than name
+      isExactMatch = true;
+    } else if (notes.includes(searchTerm)) {
+      score = 2000 + notes.indexOf(searchTerm); // Lowest priority
+      isExactMatch = true;
+    }
     
-    // Add to results if we found a match
-    if (bestScore < Infinity && bestScore <= searchTerm.length * 2) {
-      searchResults.push({
+    if (isExactMatch) {
+      exactMatches.push({
         type: 'location',
         data: location,
-        score: bestScore,
-        matchField: matchField
+        score: score
       });
-    }
-  });
-  
-  // Search religious people
-  window.religious.forEach(person => {
-    let bestScore = Infinity;
-    let matchField = '';
-    
-    // Check various fields for matches
-    const fieldsToCheck = [
-      { field: 'Name', value: person.Name, weight: 1 },
-      { field: 'Type', value: person.Type, weight: 1.2 },
-      { field: 'Location/Area', value: person['Location/Area'], weight: 1.5 },
-      { field: 'Notes', value: person.Notes, weight: 1.5 },
-      { field: 'Website', value: person.Website, weight: 1.3 },
-      { field: 'Email', value: person.Email, weight: 1.3 },
-      { field: 'Phone', value: person.Phone, weight: 1.3 },
-      { field: 'AssociatesWith', value: person.AssociatesWith, weight: 1.4 },
-      { field: 'Beliefs', value: person.Beliefs, weight: 1.4 }
-    ];
-    
-    fieldsToCheck.forEach(({ field, value, weight }) => {
-      if (value) {
-        const valueStr = String(value).toLowerCase();
-        
-        // Exact match gets highest priority
-        if (valueStr.includes(searchTerm)) {
-          const score = 0 * weight; // Perfect match
-          if (score < bestScore) {
-            bestScore = score;
-            matchField = field;
-          }
-        } else {
-          // Fuzzy match
-          const score = levenshteinDistance(searchTerm, valueStr) * weight;
-          if (score < bestScore && score <= searchTerm.length * 2) { // Threshold for relevance
-            bestScore = score;
-            matchField = field;
-          }
-        }
-      }
-    });
-    
-    // Add to results if we found a match
-    if (bestScore < Infinity && bestScore <= searchTerm.length * 2) {
-      searchResults.push({
-        type: 'religious',
-        data: person,
-        score: bestScore,
-        matchField: matchField
-      });
-    }
-  });
-  
-  // Sort results by score
-  searchResults.sort((a, b) => a.score - b.score);
-  
-  // Find connected entities
-  const connectedResults = [];
-  searchResults.forEach(result => {
-    if (result.type === 'location') {
-      // Find priests connected to this location
-      const location = result.data;
-      if (location.ReligiousIdArray && location.ReligiousIdArray.length > 0) {
-        location.ReligiousIdArray.forEach(religiousId => {
-          const person = window.religiousMap.get(religiousId);
-          if (person && !searchResults.some(r => r.type === 'religious' && r.data.ReligiousID === religiousId)) {
-            connectedResults.push({
-              type: 'religious',
-              data: person,
-              score: result.score + 0.1,
-              matchField: `Connected to ${location.Name}`,
-              connected: true
-            });
-          }
+    } else {
+      // Only add fuzzy matches if no exact matches were found yet
+      const nameDistance = levenshteinDistance(searchTerm, name);
+      if (nameDistance <= Math.max(2, searchTerm.length / 2)) {
+        fuzzyMatches.push({
+          type: 'location',
+          data: location,
+          score: 10000 + nameDistance // Much lower priority than exact matches
         });
       }
-    } else if (result.type === 'religious') {
-      // Find locations connected to this priest
-      const person = result.data;
-      window.locations.forEach(location => {
-        if (location.ReligiousIdArray && 
-            location.ReligiousIdArray.includes(person.ReligiousID) &&
-            !searchResults.some(r => r.type === 'location' && r.data.LocationID === location.LocationID)) {
-          connectedResults.push({
-            type: 'location',
-            data: location,
-            score: result.score + 0.1,
-            matchField: `Connected to ${person.Name}`,
-            connected: true
-          });
-        }
-      });
     }
   });
   
-  // Add connected results and re-sort
-  return [...searchResults, ...connectedResults].sort((a, b) => a.score - b.score);
+  // Search religious people for exact substring matches
+  window.religious.forEach(person => {
+    const name = (person.Name || '').toLowerCase();
+    const type = (person.Type || '').toLowerCase();
+    const notes = (person.Notes || '').toLowerCase();
+    
+    let score = Infinity;
+    let isExactMatch = false;
+    
+    // Check for exact substring matches (prioritize name field)
+    if (name.includes(searchTerm)) {
+      score = name.indexOf(searchTerm);
+      isExactMatch = true;
+    } else if (type.includes(searchTerm)) {
+      score = 1000 + type.indexOf(searchTerm);
+      isExactMatch = true;
+    } else if (notes.includes(searchTerm)) {
+      score = 2000 + notes.indexOf(searchTerm);
+      isExactMatch = true;
+    }
+    
+    if (isExactMatch) {
+      exactMatches.push({
+        type: 'religious',
+        data: person,
+        score: score
+      });
+    } else {
+      // Only add fuzzy matches if no exact matches were found yet
+      const nameDistance = levenshteinDistance(searchTerm, name);
+      if (nameDistance <= Math.max(2, searchTerm.length / 2)) {
+        fuzzyMatches.push({
+          type: 'religious',
+          data: person,
+          score: 10000 + nameDistance
+        });
+      }
+    }
+  });
+  
+  // Sort exact matches by score
+  exactMatches.sort((a, b) => a.score - b.score);
+  
+  // If we have exact matches, return only those (up to 10)
+  if (exactMatches.length > 0) {
+    return exactMatches.slice(0, 10);
+  }
+  
+  // Otherwise, return fuzzy matches (up to 10)
+  fuzzyMatches.sort((a, b) => a.score - b.score);
+  return fuzzyMatches.slice(0, 10);
 }
 
-
-// Handle search input function
+// Updated search result display - no "match in" text
 function handleSearch(event) {
   const searchTerm = event.target.value.toLowerCase();
   const searchResultsContainer = document.getElementById('searchResults');
@@ -4487,10 +4496,9 @@ function handleSearch(event) {
   // Reset search results
   searchResultsContainer.innerHTML = '';
   
-  // Always ensure only one is shown
   if (searchTerm.length < 2) {
     searchResultsContainer.style.display = 'none';
-    outboundLinks.style.display = 'flex'; // Show links when no search
+    outboundLinks.style.display = 'flex';
     resetAllMarkers();
     return;
   }
@@ -4498,12 +4506,11 @@ function handleSearch(event) {
   // Hide outbound links when showing search results
   outboundLinks.style.display = 'none';
   
-  // Get search results
+  // Get search results (max 10, exact matches prioritized)
   const searchResults = getSearchResults(searchTerm);
   
   // Display search results
   if (searchResults.length > 0) {
-    // Create result items in the UI without highlighting markers during search
     searchResults.forEach(result => {
       const resultItem = document.createElement('div');
       resultItem.className = 'search-result-item';
@@ -4511,26 +4518,20 @@ function handleSearch(event) {
       let label = '';
       if (result.type === 'religious') {
         const person = result.data;
-        // Use proper translated title
         const translatedType = getTranslatedReligiousType(person.Type);
         label = `${translatedType} ${person.Name || ''}`;
       } else {
         label = result.data.Name || 'Location';
       }
       
-      // Add matched field indicator for non-connected results
-      if (!result.connected) {
-        resultItem.innerHTML = `<strong>${label}</strong>`;
-        if (result.matchField) {
-          const fieldDisplay = result.matchField.startsWith('Connected to') 
-            ? result.matchField 
-            : `Match in: ${result.matchField}`;
-          resultItem.innerHTML += `<br><small>${fieldDisplay}</small>`;
-        }
-      } else {
-        // Connected items are shown differently
-        resultItem.innerHTML = `<strong>${label}</strong><br><small>${result.matchField}</small>`;
-        resultItem.classList.add('connected');
+      // Simple display without "match in" text
+      resultItem.innerHTML = `<strong>${label}</strong>`;
+      
+      // Add location type or religious association as subtitle
+      if (result.type === 'location' && result.data.LocationType) {
+        resultItem.innerHTML += `<br><small>${result.data.LocationType}</small>`;
+      } else if (result.type === 'religious' && result.data.AssociatesWith) {
+        resultItem.innerHTML += `<br><small>${result.data.AssociatesWith}</small>`;
       }
       
       resultItem.tabIndex = 0;
@@ -4545,7 +4546,7 @@ function handleSearch(event) {
         // Clear search
         document.getElementById('searchInput').value = '';
         searchResultsContainer.style.display = 'none';
-        outboundLinks.style.display = 'flex'; // Show outbound links again
+        outboundLinks.style.display = 'flex';
       });
       
       searchResultsContainer.appendChild(resultItem);
@@ -4554,157 +4555,157 @@ function handleSearch(event) {
     searchResultsContainer.style.display = 'flex';
   } else {
     searchResultsContainer.style.display = 'none';
-    outboundLinks.style.display = 'flex'; // Show outbound links again
+    outboundLinks.style.display = 'flex';
   }
 }
 
-    // Try to get user's location
-    function getUserLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          // Success
-          (position) => {
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-            
-            // Center map on user's location
-            map.setView([lat, lng], 8);
-            
-            // Add a marker for user's location
-            addUserLocationMarker(lat, lng);
-          },
-          // Error
-          (error) => {
-            console.warn(`Geolocation error: ${error.message}`);
-            // Use approximate location
-            getApproximateLocation();
-          },
-          // Options
-          {
-            timeout: 5000,  // Wait just 5 seconds for the geolocation
-            maximumAge: 0   // Don't use a cached position
-          }
-        );
-      } else {
-        console.warn("Geolocation not supported by this browser");
+// Try to get user's location
+function getUserLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      // Success
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        
+        // Center map on user's location
+        map.setView([lat, lng], 8);
+        
+        // Add a marker for user's location
+        addUserLocationMarker(lat, lng);
+      },
+      // Error
+      (error) => {
+        console.warn(`Geolocation error: ${error.message}`);
         // Use approximate location
         getApproximateLocation();
+      },
+      // Options
+      {
+        timeout: 5000,  // Wait just 5 seconds for the geolocation
+        maximumAge: 0   // Don't use a cached position
+      }
+    );
+  } else {
+    console.warn("Geolocation not supported by this browser");
+    // Use approximate location
+    getApproximateLocation();
+  }
+}
+
+// Add a marker for the user's location
+function addUserLocationMarker(lat, lng) {
+  // Remove existing marker if any
+  if (userLocationMarker) {
+    map.removeLayer(userLocationMarker);
+  }
+  
+  // Create a blue user location marker
+  const userIcon = L.divIcon({
+    className: 'user-marker',
+    html: `<div style="width:12px; height:12px; background-color: blue; border-radius: 50%; border: 2px solid white;"></div>`,
+    iconSize: [12, 12],
+    iconAnchor: [6, 6]
+  });
+  
+  userLocationMarker = L.marker([lat, lng], { icon: userIcon })
+    .addTo(map)
+    .bindPopup("$$your-location$$");
+  }
+
+// Get approximate location based on timezone and language
+function getApproximateLocation() {
+  // Get timezone offset
+  const timezoneOffsetMinutes = new Date().getTimezoneOffset();
+  const timezoneOffsetHours = -timezoneOffsetMinutes / 60;
+  
+  // Approximate longitude based on timezone
+  const approximateLongitude = timezoneOffsetHours * 15;
+  
+  // Approximate latitude based on language
+  const approximateLatitude = estimateLatitude(approximateLongitude);
+        
+  // Center map and add marker
+  map.setView([approximateLatitude, approximateLongitude], 5);
+  addUserLocationMarker(approximateLatitude, approximateLongitude);
+}
+
+// Estimate latitude based on language and longitude
+function estimateLatitude(longitude) {
+  // Language-based latitude map
+  const languageLatitudeMap = {
+    "de": 51.0, // Germany
+    "en": 51.0, // UK
+    "fr": 46.0, // France
+    "es": 40.0, // Spain
+    "it": 42.0, // Italy
+    "pl": 52.0, // Poland
+    "ro": 46.0, // Romania
+    "ru": 55.0, // Russia
+    "tr": 39.0, // Turkey
+    "el": 38.0, // Greece
+    "ar": 25.0, // Arabian Peninsula
+    "tl": 14.0, // Philippines
+    "zh": 35.0, // China
+    "ko": 37.5, // Korea
+    "ja": 36.0, // Japan
+    "pt": -15.0 // Brazil
+  };
+  
+  // Longitude ranges for adjusting latitude
+  const longitudeRanges = {
+    "en": [
+      { min: -170, max: -30, lat: 40.0 },    // North America
+      { min: -10, max: 2, lat: 51.0 },       // UK
+      { min: 65, max: 90, lat: 20.0 },       // South Asia
+      { min: 110, max: 155, lat: -25.0 }     // Australia/NZ
+    ],
+    "es": [
+      { min: -120, max: -30, lat: 15.0 },    // Latin America
+      { min: -10, max: 5, lat: 40.0 }        // Spain
+    ],
+    "pt": [
+      { min: -75, max: -30, lat: -15.0 },    // Brazil
+      { min: -10, max: 0, lat: 39.0 }        // Portugal
+    ]
+  };
+  
+  // If we have longitude range data for this language, check it
+  if (longitudeRanges[CONFIG.currentLanguage]) {
+    for (const range of longitudeRanges[CONFIG.currentLanguage]) {
+      if (longitude >= range.min && longitude <= range.max) {
+        return range.lat;
       }
     }
-
-    // Add a marker for the user's location
-    function addUserLocationMarker(lat, lng) {
-      // Remove existing marker if any
-      if (userLocationMarker) {
-        map.removeLayer(userLocationMarker);
-      }
-      
-      // Create a blue user location marker
-      const userIcon = L.divIcon({
-        className: 'user-marker',
-        html: `<div style="width:12px; height:12px; background-color: blue; border-radius: 50%; border: 2px solid white;"></div>`,
-        iconSize: [12, 12],
-        iconAnchor: [6, 6]
-      });
-      
-      userLocationMarker = L.marker([lat, lng], { icon: userIcon })
-        .addTo(map)
-        .bindPopup("$$your-location$$");
-      }
-
-    // Get approximate location based on timezone and language
-    function getApproximateLocation() {
-      // Get timezone offset
-      const timezoneOffsetMinutes = new Date().getTimezoneOffset();
-      const timezoneOffsetHours = -timezoneOffsetMinutes / 60;
-      
-      // Approximate longitude based on timezone
-      const approximateLongitude = timezoneOffsetHours * 15;
-      
-      // Approximate latitude based on language
-      const approximateLatitude = estimateLatitude(approximateLongitude);
-            
-      // Center map and add marker
-      map.setView([approximateLatitude, approximateLongitude], 5);
-      addUserLocationMarker(approximateLatitude, approximateLongitude);
-    }
-
-    // Estimate latitude based on language and longitude
-    function estimateLatitude(longitude) {
-      // Language-based latitude map
-      const languageLatitudeMap = {
-        "de": 51.0, // Germany
-        "en": 51.0, // UK
-        "fr": 46.0, // France
-        "es": 40.0, // Spain
-        "it": 42.0, // Italy
-        "pl": 52.0, // Poland
-        "ro": 46.0, // Romania
-        "ru": 55.0, // Russia
-        "tr": 39.0, // Turkey
-        "el": 38.0, // Greece
-        "ar": 25.0, // Arabian Peninsula
-        "tl": 14.0, // Philippines
-        "zh": 35.0, // China
-        "ko": 37.5, // Korea
-        "ja": 36.0, // Japan
-        "pt": -15.0 // Brazil
-      };
-      
-      // Longitude ranges for adjusting latitude
-      const longitudeRanges = {
-        "en": [
-          { min: -170, max: -30, lat: 40.0 },    // North America
-          { min: -10, max: 2, lat: 51.0 },       // UK
-          { min: 65, max: 90, lat: 20.0 },       // South Asia
-          { min: 110, max: 155, lat: -25.0 }     // Australia/NZ
-        ],
-        "es": [
-          { min: -120, max: -30, lat: 15.0 },    // Latin America
-          { min: -10, max: 5, lat: 40.0 }        // Spain
-        ],
-        "pt": [
-          { min: -75, max: -30, lat: -15.0 },    // Brazil
-          { min: -10, max: 0, lat: 39.0 }        // Portugal
-        ]
-      };
-      
-      // If we have longitude range data for this language, check it
-      if (longitudeRanges[CONFIG.currentLanguage]) {
-        for (const range of longitudeRanges[CONFIG.currentLanguage]) {
-          if (longitude >= range.min && longitude <= range.max) {
-            return range.lat;
-          }
-        }
-      }
-      
-      // Otherwise use the general language map
-      if (languageLatitudeMap[CONFIG.currentLanguage]) {
-        return languageLatitudeMap[CONFIG.currentLanguage];
-      }
-      
-      // Regional fallback based on longitude
-      if (longitude > 10 && longitude < 40) {
-        return 50.0; // Eastern Europe
-      } else if (longitude >= 40 && longitude < 60) {
-        return 55.0; // Western Russia
-      } else if (longitude >= 60 && longitude < 90) {
-        return 45.0; // Central Asia
-      } else if (longitude >= 90 && longitude < 120) {
-        return 35.0; // East Asia
-      } else if (longitude >= 120 && longitude < 150) {
-        return 35.0; // Far East Asia
-      } else if (longitude > -10 && longitude <= 10) {
-        return 48.0; // Western Europe
-      } else if (longitude > -60 && longitude <= -10) {
-        return 45.0; // Atlantic/Western Europe
-      } else if (longitude > -120 && longitude <= -60) {
-        return 35.0; // Americas
-      }
-      
-      // Default fallback
-      return 20.0;
-    }
-  </script>
+  }
+  
+  // Otherwise use the general language map
+  if (languageLatitudeMap[CONFIG.currentLanguage]) {
+    return languageLatitudeMap[CONFIG.currentLanguage];
+  }
+  
+  // Regional fallback based on longitude
+  if (longitude > 10 && longitude < 40) {
+    return 50.0; // Eastern Europe
+  } else if (longitude >= 40 && longitude < 60) {
+    return 55.0; // Western Russia
+  } else if (longitude >= 60 && longitude < 90) {
+    return 45.0; // Central Asia
+  } else if (longitude >= 90 && longitude < 120) {
+    return 35.0; // East Asia
+  } else if (longitude >= 120 && longitude < 150) {
+    return 35.0; // Far East Asia
+  } else if (longitude > -10 && longitude <= 10) {
+    return 48.0; // Western Europe
+  } else if (longitude > -60 && longitude <= -10) {
+    return 45.0; // Atlantic/Western Europe
+  } else if (longitude > -120 && longitude <= -60) {
+    return 35.0; // Americas
+  }
+  
+  // Default fallback
+  return 20.0;
+}
+</script>
 </body>
 </html>
