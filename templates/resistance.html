@@ -2412,8 +2412,8 @@ async function fetchSheetData() {
 
     const encodedSheetName = encodeURIComponent(sheet);
     const googleSheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodedSheetName}&query=rows`;
-    const corsProxyUrl = `https://corsproxy.io/?${encodeURIComponent(googleSheetUrl)}`;
-    
+    const proxyUrl = 'https://api.codetabs.com/v1/proxy/?quest=';
+    const corsProxyUrl = `${proxyUrl}${encodeURIComponent(googleSheetUrl)}`;
     try {
       const response = await fetch(corsProxyUrl);
       if (!response.ok) {
