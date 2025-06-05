@@ -610,7 +610,43 @@
       font-display: swap;
     }
 
-        .calendar-btn {
+
+      .calendar-export-buttons {
+        display: flex;
+        gap: 10px;
+        margin: 15px 0;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .calendar-export-buttons .action-btn {
+        background: #700000;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: bold;
+        flex: 1;
+        min-width: 120px;
+        transition: background-color 0.2s;
+      }
+
+      .calendar-export-buttons .action-btn:hover {
+        background: #900000;
+      }
+
+      .calendar-bottom {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: flex-start;
+        overflow-y: scroll;
+        padding-bottom: 20px;
+      }
+
+    .calendar-btn {
       background: #437700;
       color: white;
       padding: 10px;
@@ -1104,7 +1140,7 @@
 
     <div class="search-container">
       <div style="display: flex; flex-direction: column;">
-        <input autofocus="true" type="text" class="search-input" placeholder="$$search-placeholder$$" id="searchInput">
+        <input type="text" class="search-input" placeholder="$$search-placeholder$$" id="searchInput">
         <div class="links">
           <a class="outbound-link" href="mailto:info@dubia.cc">$$report-error$$</a>
           <a class="outbound-link" href="mailto:info@ducia.cc">$$request-mass$$</a>
@@ -1160,13 +1196,11 @@ window.locations = [];
 window.religious = [];
 window.events = [];
 window.fundingData = [];
-window.cancelledEvents = [];
 
 // Maps for quick lookup
 window.locationMap = new Map();
 window.religiousMap = new Map();
 window.fundingMap = new Map();
-window.cancelledEventsMap = new Map();
 
 // Map and layers
 let map;
@@ -1247,14 +1281,13 @@ const defaultReligiousData = `"ReligiousID bp-zendejas","Type Bishop","Name Gera
 "fr-carton","Priest","Francis Carton",,"Resistance",,"NonSede","France","https://archive.is/wip/VAi3J","OldRite","Fellay?",,,"Lefebvre",,,,,,,,,,,,,,,
 "fr-bruhwiler","Priest","Alois Brühwiler",,"Resistance","bruehwiler-st-gallen-ch","NonSede","Switzerland","https://archive.is/wip/kawk6","OldRite","Fellay?",,,"Lefebvre",,,,,,,,,,,,,,,`;
 
-const defaultEventsData = `"EventID","EventType","LocationID?","GoogleMaps?","PriestID","DateStart","TimeStart?","DateEnd?","TimeEnd?","Repeats","OrganizerEMail","OrganizerPhone","","","","","","","","","","","","","","","","",""
-"mass-sajm-alsace","Mass","sajm-alsace","","fr-picot","21.04.2025","","30.04.2025","","Daily","","","","","","","","","","","","","","","","","","",""`;
+// Update default events data without IDs
+const defaultEventsData = `"EventType","LocationID?","GoogleMaps?","PriestID","DateStart","TimeStart?","DateEnd?","TimeEnd?","Repeats","OrganizerEMail","OrganizerPhone","","","","","","","","","","","","","","","","",""
+"Mass","sajm-alsace","","fr-picot","21.04.2025","","30.04.2025","","Daily","","","","","","","","","","","","","","","","","","","",""`;
 
-const defaultCancelledEventsData = `"AffectsEventID","DateStart","TimeStart?","DateEnd?","TimeEnd?","Reason","","","","","","","","","","","","","","","","","","","",""
-"mass-sajm-alsace","25.04.2025","23:00:00","26.04.2025","16:00:00","Mass cancelled because Fr. XXX is sick","","","","","","","","","","","","","","","","","","","",""`;
-
+// Remove cancelled events from default funding data
 const defaultFundingData = `"CampaignID","ReligiousOrLocationOrEventID","FundingType","FundingGoal","FundingCurrency","CurrentAmount","DonationLinksMulti","Notes","","","","","","","","","","","","","","","","","","","",""
-"discalced-carm-ongoing","","BuildParish","5177","USD","","paypal.me/StJosephCarmel","","","","","","","","","","","","","","","","","","","","",""
+"discalced-carm-ongoing","","BuildParish","5177","USD","","paypal.me/StJosephCarmel","","","","","","","","","","","","","","","","","","","",""
 "fr-hewko-ongoing","fr-hewko","FundAPriest","","","","paypal.me/frhewko","","","","","","","","","","","","","","","","","","","","",""
 "chapelle-pontmain","","BuildParish","","","","","https://archive.is/wip/HJCQh","","","","","","","","","","","","","","","","","","","",""
 "fr-ruiz-ongoing","fr-ruiz","FundAPriest","","","","paypal.me/hugoruizv","","","","","","","","","","","","","","","","","","","","",""`;
@@ -1339,16 +1372,11 @@ function setupEventListeners() {
 
 // Load data from fallback and Google Sheets
 async function loadData() {
-  // First load default data
   await parseLocationsData(defaultLocationsData);
   parseReligiousData(defaultReligiousData);
   parseEventsData(defaultEventsData);
-  parseCancelledEventsData(defaultCancelledEventsData);
   parseFundingData(defaultFundingData);
-
   handleUrlHash();
-
-  // Then try to fetch from the live DB
   await fetchSheetData();
 }
 
@@ -1442,14 +1470,12 @@ function copyCurrentUrlToClipboard() {
 
 // Generate PDF for calendar
 function generateCalendarPDF(entityId, isLocation = true) {
-  // Get entity data
   const entity = isLocation ? window.locationMap.get(entityId) : window.religiousMap.get(entityId);
   if (!entity) {
     console.error(`Entity with ID "${entityId}" not found.`);
     return;
   }
   
-  // Get current month and year from the calendar
   const grid = document.getElementById('calendarGrid');
   let currentMonth = new Date().getMonth();
   let currentYear = new Date().getFullYear();
@@ -1459,35 +1485,28 @@ function generateCalendarPDF(entityId, isLocation = true) {
     currentYear = parseInt(grid.dataset.year, 10);
   }
   
-  // Get all events for the month plus next month to ensure we have enough upcoming events
   const currentMonthEvents = getEventsForMonth(currentMonth, currentYear, entityId, isLocation);
   const nextMonthEvents = getEventsForMonth((currentMonth + 1) % 12, 
                                            currentMonth === 11 ? currentYear + 1 : currentYear, 
                                            entityId, isLocation);
   
-  // Combine events and filter for future events
   const now = new Date();
   const allEvents = [...currentMonthEvents, ...nextMonthEvents].filter(event => 
     event.StartDate && event.StartDate > now
   );
   
-  // Sort by date
   allEvents.sort((a, b) => a.StartDate - b.StartDate);
   
-  // Get month name for header
   const monthNames = [
     '$month-january$', '$month-february$', '$month-march$', '$month-april$', 
     '$month-may$', '$month-june$', '$month-july$', '$month-august$', 
     '$month-september$', '$month-october$', '$month-november$', '$month-december$'
   ];
   
-  // Get contact information
   let contactInfo = '';
   
-  // Create a list of priests for this entity
   const priestsList = [];
   if (isLocation) {
-    // Use associated priests
     if (entity.ReligiousIdArray && entity.ReligiousIdArray.length > 0) {
       entity.ReligiousIdArray.forEach(religiousId => {
         const priest = window.religiousMap.get(religiousId);
@@ -1501,7 +1520,6 @@ function generateCalendarPDF(entityId, isLocation = true) {
       });
     }
   } else {
-    // Use priest's info directly
     priestsList.push({
       name: `${entity.Type || 'Fr.'} ${entity.Name}`,
       phone: entity.ContactPhone || '',
@@ -1509,7 +1527,6 @@ function generateCalendarPDF(entityId, isLocation = true) {
     });
   }
   
-  // Create contact info string
   if (priestsList.length > 0) {
     contactInfo = priestsList.map(priest => {
       let info = priest.name;
@@ -1519,7 +1536,6 @@ function generateCalendarPDF(entityId, isLocation = true) {
     }).join('<br>');
   }
   
-  // Create Google Maps URL for location
   let mapUrl = '';
   if (isLocation) {
     if (entity.GoogleMaps) {
@@ -1528,7 +1544,6 @@ function generateCalendarPDF(entityId, isLocation = true) {
       mapUrl = `https://www.google.com/maps?q=${entity.Latitude},${entity.Longitude}`;
     }
   } else {
-    // For priests, use their first associated location
     const priestLocations = window.locations.filter(location => 
       location.ReligiousIdArray && location.ReligiousIdArray.includes(entity.ReligiousID)
     );
@@ -1543,131 +1558,53 @@ function generateCalendarPDF(entityId, isLocation = true) {
     }
   }
   
-  // Calculate pages needed (max 8 events per page, 2 columns of 4 events each)
   const eventsPerPage = 8;
   const totalPages = Math.min(4, Math.ceil(allEvents.length / eventsPerPage));
   
-  // Create QR code for entity link
-  const entityUrl = `ghttdubia.cc/${CONFIG.currentLanguage}/resistance#${entityId}`;
+  const entityUrl = `https://dubia.cc/${CONFIG.currentLanguage}/resistance#${entityId}`;
   
-  // Generate HTML content for PDF using array of strings instead of multiline template literals
   const htmlParts = [];
   
-  // HTML header
   htmlParts.push(`<html>`);
   htmlParts.push(`<head>`);
   htmlParts.push(`  <title>${entity.Name} - ${monthNames[currentMonth]} ${currentYear}</title>`);
   htmlParts.push(`  <style>`);
   htmlParts.push(`    @media print {`);
-  htmlParts.push(`      @page {`);
-  htmlParts.push(`        size: A4;`);
-  htmlParts.push(`        margin: 1cm;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      body {`);
-  htmlParts.push(`        font-family: Arial, sans-serif;`);
-  htmlParts.push(`        margin: 0;`);
-  htmlParts.push(`        padding: 0;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .page-break {`);
-  htmlParts.push(`        page-break-after: always;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .parish-header {`);
-  htmlParts.push(`        text-align: center;`);
-  htmlParts.push(`        background-color: #000000;`);
-  htmlParts.push(`        color: white;`);
-  htmlParts.push(`        padding: 15px 0;`);
-  htmlParts.push(`        margin-bottom: 20px;`);
-  htmlParts.push(`        font-size: 18pt;`);
-  htmlParts.push(`        font-weight: bold;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .event-columns {`);
-  htmlParts.push(`        display: flex;`);
-  htmlParts.push(`        flex-direction: row;`);
-  htmlParts.push(`        justify-content: space-between;`);
-  htmlParts.push(`        margin-bottom: 20px;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .event-column {`);
-  htmlParts.push(`        width: 48%;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .event {`);
-  htmlParts.push(`        margin-bottom: 15px;`);
-  htmlParts.push(`        padding: 8px;`);
-  htmlParts.push(`        border-left: 3px solid #700000;`);
-  htmlParts.push(`        background-color: #f9f9f9;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .event-cancelled {`);
-  htmlParts.push(`        text-decoration: line-through;`);
-  htmlParts.push(`        color: #999;`);
-  htmlParts.push(`        border-left-color: #999;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .event-title {`);
-  htmlParts.push(`        font-weight: bold;`);
-  htmlParts.push(`        font-size: 12pt;`);
-  htmlParts.push(`        margin-bottom: 5px;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .event-date {`);
-  htmlParts.push(`        font-size: 10pt;`);
-  htmlParts.push(`        margin-bottom: 5px;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .event-priest {`);
-  htmlParts.push(`        font-style: italic;`);
-  htmlParts.push(`        font-size: 10pt;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .notes-section {`);
-  htmlParts.push(`        border-top: 1px solid #ddd;`);
-  htmlParts.push(`        padding-top: 15px;`);
-  htmlParts.push(`        margin-top: 20px;`);
-  htmlParts.push(`        margin-bottom: 20px;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .notes-section h3 {`);
-  htmlParts.push(`        margin-top: 0;`);
-  htmlParts.push(`        margin-bottom: 10px;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .notes-lines {`);
-  htmlParts.push(`        height: 150px;`);
-  htmlParts.push(`        background-image: linear-gradient(#ddd 1px, transparent 1px);`);
-  htmlParts.push(`        background-size: 100% 25px;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .footer {`);
-  htmlParts.push(`        display: flex;`);
-  htmlParts.push(`        border-top: 1px solid #ddd;`);
-  htmlParts.push(`        padding-top: 15px;`);
-  htmlParts.push(`        font-size: 10pt;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .qr-code {`);
-  htmlParts.push(`        margin-right: 20px;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .footer-info {`);
-  htmlParts.push(`        flex-grow: 1;`);
-  htmlParts.push(`      }`);
-  htmlParts.push(`      .link-text {`);
-  htmlParts.push(`        margin-top: 5px;`);
-  htmlParts.push(`        font-size: 9pt;`);
-  htmlParts.push(`      }`);
+  htmlParts.push(`      @page { size: A4; margin: 1cm; }`);
+  htmlParts.push(`      body { font-family: Arial, sans-serif; margin: 0; padding: 0; }`);
+  htmlParts.push(`      .page-break { page-break-after: always; }`);
+  htmlParts.push(`      .parish-header { text-align: center; background-color: #000000; color: white; padding: 15px 0; margin-bottom: 20px; font-size: 18pt; font-weight: bold; }`);
+  htmlParts.push(`      .event-columns { display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px; }`);
+  htmlParts.push(`      .event-column { width: 48%; }`);
+  htmlParts.push(`      .event { margin-bottom: 15px; padding: 8px; border-left: 3px solid #700000; background-color: #f9f9f9; }`);
+  htmlParts.push(`      .event-title { font-weight: bold; font-size: 12pt; margin-bottom: 5px; }`);
+  htmlParts.push(`      .event-date { font-size: 10pt; margin-bottom: 5px; }`);
+  htmlParts.push(`      .event-priest { font-style: italic; font-size: 10pt; }`);
+  htmlParts.push(`      .notes-section { border-top: 1px solid #ddd; padding-top: 15px; margin-top: 20px; margin-bottom: 20px; }`);
+  htmlParts.push(`      .notes-section h3 { margin-top: 0; margin-bottom: 10px; }`);
+  htmlParts.push(`      .notes-lines { height: 150px; background-image: linear-gradient(#ddd 1px, transparent 1px); background-size: 100% 25px; }`);
+  htmlParts.push(`      .footer { display: flex; border-top: 1px solid #ddd; padding-top: 15px; font-size: 10pt; }`);
+  htmlParts.push(`      .qr-code { margin-right: 20px; }`);
+  htmlParts.push(`      .footer-info { flex-grow: 1; }`);
+  htmlParts.push(`      .link-text { margin-top: 5px; font-size: 9pt; }`);
   htmlParts.push(`    }`);
   htmlParts.push(`  </style>`);
   htmlParts.push(`</head>`);
   htmlParts.push(`<body>`);
   
-  // Generate pages
   for (let page = 0; page < totalPages; page++) {
     const startIdx = page * eventsPerPage;
     const pageEvents = allEvents.slice(startIdx, startIdx + eventsPerPage);
     
-    // Split into two columns
     const midpoint = Math.ceil(pageEvents.length / 2);
     const leftColumnEvents = pageEvents.slice(0, midpoint);
     const rightColumnEvents = pageEvents.slice(midpoint);
     
     htmlParts.push(`<div class="page">`);
-    htmlParts.push(`  <div class="parish-header">`);
-    htmlParts.push(`    ${entity.Name}`);
-    htmlParts.push(`  </div>`);
-    
+    htmlParts.push(`  <div class="parish-header">${entity.Name}</div>`);
     htmlParts.push(`  <div class="event-columns">`);
     htmlParts.push(`    <div class="event-column">`);
     
-    // Left column events
     leftColumnEvents.forEach(event => {
       const dateStr = event.StartDate ? formatDate(event.StartDate, { 
         weekday: 'long', 
@@ -1677,9 +1614,6 @@ function generateCalendarPDF(entityId, isLocation = true) {
       
       const timeStr = event.StartDate ? formatTime(event.StartDate, event.Timezone) : '';
       
-      const eventClass = event.isCancelled ? 'event event-cancelled' : 'event';
-      
-      // Priest info
       let priestInfo = '';
       if (event.PriestID) {
         const priest = window.religiousMap.get(event.PriestID);
@@ -1688,7 +1622,7 @@ function generateCalendarPDF(entityId, isLocation = true) {
         }
       }
       
-      htmlParts.push(`      <div class="${eventClass}">`);
+      htmlParts.push(`      <div class="event">`);
       htmlParts.push(`        <div class="event-title">${event.EventType || 'Event'}</div>`);
       htmlParts.push(`        <div class="event-date">${dateStr} - ${timeStr}</div>`);
       if (priestInfo) {
@@ -1699,7 +1633,6 @@ function generateCalendarPDF(entityId, isLocation = true) {
     
     htmlParts.push(`    </div><div class="event-column">`);
     
-    // Right column events
     rightColumnEvents.forEach(event => {
       const dateStr = event.StartDate ? formatDate(event.StartDate, { 
         weekday: 'long', 
@@ -1709,9 +1642,6 @@ function generateCalendarPDF(entityId, isLocation = true) {
       
       const timeStr = event.StartDate ? formatTime(event.StartDate, event.Timezone) : '';
       
-      const eventClass = event.isCancelled ? 'event event-cancelled' : 'event';
-      
-      // Priest info
       let priestInfo = '';
       if (event.PriestID) {
         const priest = window.religiousMap.get(event.PriestID);
@@ -1720,7 +1650,7 @@ function generateCalendarPDF(entityId, isLocation = true) {
         }
       }
       
-      htmlParts.push(`      <div class="${eventClass}">`);
+      htmlParts.push(`      <div class="event">`);
       htmlParts.push(`        <div class="event-title">${event.EventType || 'Event'}</div>`);
       htmlParts.push(`        <div class="event-date">${dateStr} - ${timeStr}</div>`);
       if (priestInfo) {
@@ -1729,19 +1659,10 @@ function generateCalendarPDF(entityId, isLocation = true) {
       htmlParts.push(`      </div>`);
     });
     
-    htmlParts.push(`    </div>`);
-    htmlParts.push(`  </div>`);
-    
-    htmlParts.push(`  <div class="notes-section">`);
-    htmlParts.push(`    <h3>$notes-title$</h3>`);
-    htmlParts.push(`    <div class="notes-lines"></div>`);
-    htmlParts.push(`  </div>`);
-    
+    htmlParts.push(`    </div></div>`);
+    htmlParts.push(`  <div class="notes-section"><h3>$notes-title$</h3><div class="notes-lines"></div></div>`);
     htmlParts.push(`  <div class="footer">`);
-    htmlParts.push(`    <div class="qr-code">`);
-    htmlParts.push(`      <div class="qr-container" id="qrcode-${page}"></div>`);
-    htmlParts.push(`      <div class="link-text">${entityUrl}</div>`);
-    htmlParts.push(`    </div>`);
+    htmlParts.push(`    <div class="qr-code"><div class="qr-container" id="qrcode-${page}"></div><div class="link-text">${entityUrl}</div></div>`);
     htmlParts.push(`    <div class="footer-info">`);
     if (contactInfo) {
       htmlParts.push(`      <div>${contactInfo}</div>`);
@@ -1749,11 +1670,8 @@ function generateCalendarPDF(entityId, isLocation = true) {
     if (mapUrl) {
       htmlParts.push(`      <div><a href="${mapUrl}" target="_blank">$view-on-maps$</a></div>`);
     }
-    htmlParts.push(`      <div>dubia.cc/${CONFIG.currentLanguage}/resistance</div>`);
-    htmlParts.push(`    </div>`);
-    htmlParts.push(`  </div>`);
+    htmlParts.push(`      <div>dubia.cc/${CONFIG.currentLanguage}/resistance</div></div></div>`);
     
-    // Add page break except for last page
     if (page < totalPages - 1) {
       htmlParts.push('  <div class="page-break"></div>');
     }
@@ -1763,17 +1681,13 @@ function generateCalendarPDF(entityId, isLocation = true) {
   
   htmlParts.push('</body></html>');
   
-  // Join all HTML parts into a single string
   const pdfHtml = htmlParts.join('\n');
   
-  // Create a new window for printing
   const printWindow = window.open('', '_blank');
   printWindow.document.write(pdfHtml);
   printWindow.document.close();
   
-  // Wait for content to load before generating QR codes
   printWindow.onload = function() {
-    // Generate QR codes
     for (let page = 0; page < totalPages; page++) {
       const qrContainer = printWindow.document.getElementById(`qrcode-${page}`);
       if (qrContainer) {
@@ -1788,10 +1702,8 @@ function generateCalendarPDF(entityId, isLocation = true) {
       }
     }
     
-    // Trigger print after short delay to ensure QR codes are rendered
     setTimeout(() => {
       printWindow.print();
-      // Don't close the window after print to allow user to save as PDF manually if needed
     }, 500);
   };
 }
@@ -1829,14 +1741,12 @@ function formatTime(date, timezone) {
 
 // Function to generate and download iCal file
 function generateICalFile(entityId, isLocation = true) {
-  // Get entity data
   const entity = isLocation ? window.locationMap.get(entityId) : window.religiousMap.get(entityId);
   if (!entity) {
     console.error(`Entity with ID "${entityId}" not found.`);
     return;
   }
   
-  // Get current month and year from the calendar
   const grid = document.getElementById('calendarGrid');
   let currentMonth = new Date().getMonth();
   let currentYear = new Date().getFullYear();
@@ -1846,16 +1756,13 @@ function generateICalFile(entityId, isLocation = true) {
     currentYear = parseInt(grid.dataset.year, 10);
   }
   
-  // Get all events for the month
   const monthEvents = getEventsForMonth(currentMonth, currentYear, entityId, isLocation);
   
-  // Check if there are events
   if (monthEvents.length === 0) {
     alert('No events to export for this month.');
     return;
   }
   
-  // Generate iCal content
   let iCalContent = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
@@ -1865,36 +1772,28 @@ function generateICalFile(entityId, isLocation = true) {
     `X-WR-CALNAME:${entity.Name || 'Calendar'}`
   ];
   
-  // Process each event
-  monthEvents.forEach(event => {
-    // Skip if no start date
+  monthEvents.forEach((event, index) => {
     if (!event.StartDate) return;
     
-    // Format dates for iCal (YYYYMMDDTHHMMSSZ)
     const startDate = formatDateForICal(event.StartDate);
     const endDate = event.EndDate ? formatDateForICal(event.EndDate) : startDate;
     
-    // Get unique ID for event
-    const eventUid = `${event.EventID || 'event'}-${startDate}@dubia.cc`;
+    const eventUid = `event-${index}-${startDate}@dubia.cc`;
     
-    // Start event
     iCalContent.push('BEGIN:VEVENT');
     iCalContent.push(`UID:${eventUid}`);
     iCalContent.push(`DTSTAMP:${formatDateForICal(new Date())}`);
     iCalContent.push(`DTSTART:${startDate}`);
     iCalContent.push(`DTEND:${endDate}`);
     
-    // Add summary
     const summary = event.EventType || 'Event';
     iCalContent.push(`SUMMARY:${summary}`);
     
-    // Add location if available
     if (isLocation) {
       const location = window.locationMap.get(event.LocationID);
       if (location) {
         iCalContent.push(`LOCATION:${location.Name}`);
         
-        // Add geo if coordinates available
         if (location.Latitude && location.Longitude) {
           iCalContent.push(`GEO:${location.Latitude};${location.Longitude}`);
         }
@@ -1910,13 +1809,11 @@ function generateICalFile(entityId, isLocation = true) {
       }
     }
     
-    // Add description including notes
     let description = '';
     if (event.Notes) {
       description += event.Notes;
     }
     
-    // Add priest info to description if available
     if (event.PriestID) {
       const priest = window.religiousMap.get(event.PriestID);
       if (priest) {
@@ -1926,14 +1823,12 @@ function generateICalFile(entityId, isLocation = true) {
     }
     
     if (description) {
-      // Format description for iCal (escape special chars and wrap lines)
       description = description.replace(/\n/g, '\\n');
       description = description.replace(/,/g, '\\,');
       description = description.replace(/;/g, '\\;');
       iCalContent.push(`DESCRIPTION:${description}`);
     }
     
-    // Add organizer if available
     if (event.PriestID) {
       const priest = window.religiousMap.get(event.PriestID);
       if (priest && priest.ContactEmail) {
@@ -1944,11 +1839,8 @@ function generateICalFile(entityId, isLocation = true) {
       }
     }
     
-    // Add status (cancelled or confirmed)
-    const { isCancelled } = checkEventCancellation(event, event.StartDate);
-    iCalContent.push(isCancelled ? 'STATUS:CANCELLED' : 'STATUS:CONFIRMED');
+    iCalContent.push('STATUS:CONFIRMED');
     
-    // Add recurrence rule if needed
     if (event.Repeats) {
       const rrule = generateRRule(event.Repeats);
       if (rrule) {
@@ -1956,14 +1848,11 @@ function generateICalFile(entityId, isLocation = true) {
       }
     }
     
-    // End event
     iCalContent.push('END:VEVENT');
   });
   
-  // End calendar
   iCalContent.push('END:VCALENDAR');
   
-  // Join lines and download
   const iCalData = iCalContent.join('\r\n');
   downloadFile(iCalData, `${entity.Name || 'calendar'}.ics`, 'text/calendar');
 }
@@ -2020,14 +1909,12 @@ function downloadFile(content, filename, contentType) {
 function validateData() {
   const warnings = [];
   
-  // Check for invalid location IDs in religious people
   window.religious.forEach(person => {
     if (person.UsualLocationID && !window.locationMap.has(person.UsualLocationID)) {
       warnings.push(`Warning: Religious person "${person.Name}" has invalid UsualLocationID "${person.UsualLocationID}"`);
     }
   });
   
-  // Check for priests without a parish
   window.religious.forEach(person => {
     if (person.Type?.toLowerCase() === 'priest' || person.Type?.toLowerCase() === 'bishop') {
       const hasParish = window.locations.some(location => 
@@ -2040,28 +1927,24 @@ function validateData() {
     }
   });
   
-  // Check for events with invalid LocationID
   window.events.forEach(event => {
     if (event.LocationID && !window.locationMap.has(event.LocationID)) {
-      warnings.push(`Warning: Event "${event.EventID}" has invalid LocationID "${event.LocationID}"`);
+      warnings.push(`Warning: Event has invalid LocationID "${event.LocationID}"`);
     }
   });
   
-  // Check for events with invalid PriestID
   window.events.forEach(event => {
     if (event.PriestID && !window.religiousMap.has(event.PriestID)) {
-      warnings.push(`Warning: Event "${event.EventID}" has invalid PriestID "${event.PriestID}"`);
+      warnings.push(`Warning: Event has invalid PriestID "${event.PriestID}"`);
     }
   });
   
-  // Check for locations without coordinates
   window.locations.forEach(location => {
     if (isNaN(location.Latitude) || isNaN(location.Longitude)) {
       warnings.push(`Warning: Location "${location.Name}" has invalid coordinates`);
     }
   });
   
-  // Check for locations without contact info
   window.locations.forEach(location => {
     if (!location.ContactEmail && !location.ContactPhone && 
         !location.Website && !location.GoogleMaps) {
@@ -2069,7 +1952,6 @@ function validateData() {
     }
   });
   
-  // Check for ReligiousIdArray referencing non-existent religious people
   window.locations.forEach(location => {
     if (location.ReligiousIdArray && location.ReligiousIdArray.length > 0) {
       location.ReligiousIdArray.forEach(id => {
@@ -2080,14 +1962,6 @@ function validateData() {
     }
   });
   
-  // Check for cancelled events referencing non-existent events
-  window.cancelledEvents.forEach(cancelled => {
-    if (!window.events.some(event => event.EventID === cancelled.AffectsEventID)) {
-      warnings.push(`Warning: Cancelled event entry references non-existent event ID "${cancelled.AffectsEventID}"`);
-    }
-  });
-  
-  // Output all warnings to console
   if (warnings.length > 0) {
     console.warn('Data validation warnings:');
     warnings.forEach(warning => console.warn(warning));
@@ -2353,38 +2227,10 @@ function fixMangledJson(data) {
  * Parse events CSV data
  * @param {string} csvData Raw CSV string
  */
- function parseEventsData(csvData) {
+function parseEventsData(csvData) {
   const parsedData = parseCsv(csvData);
-  
-  // Process events data
-  window.events = parsedData.map(event => {
-    return { ...event };
-  });
-  
-  // Update markers
+  window.events = parsedData.map(event => ({ ...event }));
   updateMapMarkers();
-}
-
-/**
- * Parse cancelled events CSV data
- * @param {string} csvData Raw CSV string
- */
- function parseCancelledEventsData(csvData) {
-  const parsedData = parseCsv(csvData);
-  
-  // Process cancelled events data
-  window.cancelledEvents = parsedData;
-  
-  // Create lookup map for faster access
-  window.cancelledEventsMap.clear();
-  window.cancelledEvents.forEach(cancelled => {
-    // Use eventID as key
-    const key = cancelled.AffectsEventID;
-    if (!window.cancelledEventsMap.has(key)) {
-      window.cancelledEventsMap.set(key, []);
-    }
-    window.cancelledEventsMap.get(key).push({ ...cancelled });
-  });
 }
 
 /**
@@ -2407,14 +2253,14 @@ function fixMangledJson(data) {
 // Fetch data from Google Sheets
 async function fetchSheetData() {
   const sheetId = CONFIG.sheetId;
-  const sheets = ["locations", "religious", "events", "cancelled-events", "funding"];
+  const sheets = ["locations", "religious", "events", "funding"]; // Removed "cancelled-events"
   
   for(const sheet of sheets) {
-
     const encodedSheetName = encodeURIComponent(sheet);
     const googleSheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodedSheetName}&query=rows`;
     const proxyUrl = 'https://corsproxy.fermyon.app?url=';
     const corsProxyUrl = `${proxyUrl}${encodeURIComponent(googleSheetUrl)}`;
+    
     try {
       const response = await fetch(corsProxyUrl);
       if (!response.ok) {
@@ -2422,20 +2268,17 @@ async function fetchSheetData() {
       }
       const csvText = await response.text();
 
-      // Parse CSV based on sheet type
       if (sheet === "locations") {
         await parseLocationsData(csvText);
       } else if (sheet === "religious") {
         parseReligiousData(csvText);
       } else if (sheet === "events") {
         parseEventsData(csvText);
-      } else if (sheet === "cancelled-events") {
-        parseCancelledEventsData(csvText);
       } else if (sheet === "funding") {
         parseFundingData(csvText);
       }
     } catch (e) {
-      console.error(`Error loading ${sheet} data:`, error);
+      console.error(`Error loading ${sheet} data:`, e);
       console.log(`Using fallback data for ${sheet}`);
     }
   }
@@ -2460,18 +2303,17 @@ function updateMapMarkers() {
   createConnectionPatternsForAllPriests();
 }
 
-// Fixed parish marker creation - all red, same size
 function createParishMarker(location) {
   if (!location.Latitude || !location.Longitude || 
       isNaN(location.Latitude) || isNaN(location.Longitude)) {
     return;
   }
   
-  // All parishes are red dots of the same size
+  // All parishes are red dots of the same size - let CSS handle styling
   const markerSize = CONFIG.parishMarkerSize;
   const icon = L.divIcon({
     className: 'parish-marker',
-    html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color:${CONFIG.parishMarkerColor};"></div>`,
+    html: `<div style="width:${markerSize}px; height:${markerSize}px;"></div>`,
     iconSize: [markerSize, markerSize],
     iconAnchor: [markerSize/2, markerSize/2]
   });
@@ -2520,8 +2362,21 @@ function createConnectionPatternsForAllPriests() {
 
 // Create star pattern from usual location
 function createStarPatternFromUsualLocation(priest, usualLocation, allLocations) {
-  // Create priest marker at usual location
-  createPriestMarker(priest, usualLocation.Latitude, usualLocation.Longitude);
+  // Only create priest marker at usual location if it's NOT already a parish location
+  // or create it slightly offset to avoid overlap
+  const isParishLocation = window.locations.some(loc => 
+    loc.LocationID === usualLocation.LocationID
+  );
+  
+  if (isParishLocation) {
+    // Create priest marker slightly offset from parish marker
+    const offsetLat = usualLocation.Latitude + 0.001; // Small offset
+    const offsetLng = usualLocation.Longitude + 0.001;
+    createPriestMarker(priest, offsetLat, offsetLng);
+  } else {
+    // Create priest marker at exact location if it's not a parish
+    createPriestMarker(priest, usualLocation.Latitude, usualLocation.Longitude);
+  }
   
   // Draw lines from usual location to all other locations
   allLocations.forEach(location => {
@@ -2591,7 +2446,7 @@ function createPriestMarker(priest, lat, lng) {
   const markerSize = CONFIG.priestMarkerSize;
   const icon = L.divIcon({
     className: 'priest-marker pulse',
-    html: `<div style="width:${markerSize}px; height:${markerSize}px; background-color:${CONFIG.priestMarkerColor};"></div>`,
+    html: `<div style="width:${markerSize}px; height:${markerSize}px;"></div>`,
     iconSize: [markerSize, markerSize],
     iconAnchor: [markerSize/2, markerSize/2]
   });
@@ -2609,7 +2464,6 @@ function createPriestMarker(priest, lat, lng) {
   
   return marker;
 }
-
 
 // Create connection lines between religious and their locations
 function createConnectionLines(location) {
@@ -2924,169 +2778,84 @@ function formatZonedDate(date, timezone, options = {}) {
      }
 }
 
-// Unified event cancellation checker
-function checkEventCancellation(eventInstance, date) {
-  if (!eventInstance.EventID || !window.cancelledEvents.some(c => c.AffectsEventID === eventInstance.EventID)) {
-    return { isCancelled: false, reason: null };
-  }
-
-  // Get the date to check - either provided date or event's StartDate
-  const eventTimezone = eventInstance.Timezone || 'UTC';
-  const eventDate = date || eventInstance.StartDate || createZonedDateTime(eventInstance.DateStart, eventInstance.TimeStart, eventTimezone);
-  
-  // If there's no valid date to check, we can't determine if it's cancelled
-  if (!eventDate || typeof eventDate.getTime !== 'function') {
-    return { isCancelled: false, reason: null };
-  }
-
-  const cancellations = window.cancelledEvents.filter(c => c.AffectsEventID === eventInstance.EventID);
-
-  for (const cancel of cancellations) {
-    const cancelStartZdtResult = createZonedDateTime(cancel.DateStart, cancel.TimeStart, eventTimezone);
-    const cancelEndZdtResult = createZonedDateTime(cancel.DateEnd || cancel.DateStart, cancel.TimeEnd, eventTimezone);
-
-    if (!cancelStartZdtResult) {
-        console.warn(`Could not parse cancellation start date for ${eventInstance.EventID}: ${cancel.DateStart}`);
-        continue;
-    }
-    let cancelStart = cancelStartZdtResult.date;
-    let cancelEnd = cancelEndZdtResult ? cancelEndZdtResult.date : null;
-    if (!cancelEnd) {
-         const endOfDayCancelZdt = createZonedDateTime(cancel.DateStart, '23:59:59', eventTimezone);
-         if(endOfDayCancelZdt) cancelEnd = endOfDayCancelZdt.date;
-    }
-    if (!cancelEnd) {
-       console.warn(`Could not determine cancellation end time for ${eventInstance.EventID} starting ${cancel.DateStart}`);
-       cancelEnd = new Date(cancelStart.getTime() + 60000); // cancel for 1 minute
-    }
-
-    // Compare UTC epoch milliseconds
-    if (eventDate.getTime() >= cancelStart.getTime() && eventDate.getTime() <= cancelEnd.getTime()) {
-      return { isCancelled: true, reason: cancel.Reason };
-    }
-  }
-
-  return { isCancelled: false, reason: null };
-}
-
-// Apply cancellations to events
-function applyCancellationsToEvents(events) {
-  
-  // Process each event and check for cancellations
-  events.forEach(event => {
-    // Only check events with an ID that might have cancellations
-    if (event.EventID) {
-      const { isCancelled, reason } = checkEventCancellation(event, event.StartDate);
-      if (isCancelled) {
-        event.isCancelled = true;
-        event.cancellationReason = reason;
-      }
-    }
-  });
-  
-  // Return events with cancellation flags set
-  return events.filter(event => !event.isCancelled);
-}
-
 // Get events for current month
 function getEventsForMonth(month, year, entityId, isLocation = true) {
-    // --- FIND THE TARGET TIMEZONE ---
-    let targetTimezone = 'UTC'; // Default
+    let targetTimezone = 'UTC';
     let associatedLocation = null;
+    
     if (isLocation) {
         associatedLocation = window.locationMap.get(entityId);
     } else {
-        // Find the *primary* location for the priest to determine timezone context
         const priestLocations = window.locations.filter(location =>
             location.ReligiousIdArray && location.ReligiousIdArray.includes(entityId)
         );
         if (priestLocations.length > 0) {
-             // Use the first location found, or could add logic for 'primary' location later
              associatedLocation = priestLocations[0];
         }
     }
+    
     if (associatedLocation && associatedLocation.Timezone) {
         targetTimezone = associatedLocation.Timezone;
-    } else if (associatedLocation) {
-        console.warn(`Location ${associatedLocation.LocationID} missing timezone property. Using UTC.`);
-    } else {
-         console.warn(`Could not find associated location for ${entityId}. Using UTC.`);
     }
-    // -------------------------------
 
     const potentiallyRelevantEvents = window.events.filter(event => {
-
         const entityMatches = isLocation ? (event.LocationID === entityId) : (event.PriestID === entityId);
         if (!entityMatches) return false;
 
-        // --- Look up event's specific location and timezone ---
         const eventLocationId = event.LocationID;
         const eventLocation = window.locationMap.get(eventLocationId);
-        const eventTimezone = eventLocation?.Timezone || 'UTC'; // Timezone of the EVENT ITSELF
-        //-----------------------------------------------------
+        const eventTimezone = eventLocation?.Timezone || 'UTC';
 
-        // Use createZonedDateTime for event start date
         const startZdtResult = createZonedDateTime(event.DateStart, event.TimeStart, eventTimezone);
-        if (!startZdtResult) return false; // Skip if start date invalid
+        if (!startZdtResult) return false;
         const eventStartDate = startZdtResult.date;
 
         const repeats = event.Repeats || '';
 
-        // Determine the range of the current view IN THE TARGET TIMEZONE
-        // Use start/end of month based on the *context timezone* (usually the primary location's zone)
-         const startOfMonthZdtResult = createZonedDateTime(`${year}-${month + 1}-01`, '00:00:00', targetTimezone);
-         if (!startOfMonthZdtResult) return false; // Cannot determine month range
-         const startOfMonth = startOfMonthZdtResult.date;
+        const startOfMonthZdtResult = createZonedDateTime(`${year}-${month + 1}-01`, '00:00:00', targetTimezone);
+        if (!startOfMonthZdtResult) return false;
+        const startOfMonth = startOfMonthZdtResult.date;
 
-         // Last day of month requires careful construction
-         const lastDayOfMonth = new Date(Date.UTC(year, month + 1, 0)); // Last day in UTC
-         const endOfMonthZdtResult = createZonedDateTime(
-             `${lastDayOfMonth.getUTCFullYear()}-${String(lastDayOfMonth.getUTCMonth() + 1).padStart(2, '0')}-${String(lastDayOfMonth.getUTCDate()).padStart(2, '0')}`,
-             '23:59:59', // End of day
-             targetTimezone
-         );
+        const lastDayOfMonth = new Date(Date.UTC(year, month + 1, 0));
+        const endOfMonthZdtResult = createZonedDateTime(
+            `${lastDayOfMonth.getUTCFullYear()}-${String(lastDayOfMonth.getUTCMonth() + 1).padStart(2, '0')}-${String(lastDayOfMonth.getUTCDate()).padStart(2, '0')}`,
+            '23:59:59',
+            targetTimezone
+        );
         if (!endOfMonthZdtResult) return false;
         const endOfMonth = endOfMonthZdtResult.date;
-         // --- End Month Range Calculation ---
-
 
         if (!repeats) {
-            // One-time event
             const endZdtResult = createZonedDateTime(event.DateEnd || event.DateStart, event.TimeEnd, eventTimezone);
             const actualEndDate = endZdtResult ? endZdtResult.date : null;
 
             if (actualEndDate) {
                 return eventStartDate.getTime() <= endOfMonth.getTime() && actualEndDate.getTime() >= startOfMonth.getTime();
             } else {
-                // If end date invalid, just check if start is within month
                 return eventStartDate.getTime() >= startOfMonth.getTime() && eventStartDate.getTime() <= endOfMonth.getTime();
             }
         } else {
-            // Repeating event: Check if the first occurrence starts before the end of the view window
             return eventStartDate.getTime() <= endOfMonth.getTime();
         }
     });
 
-    // --- Month range calculation (repeat for main logic) ---
-     const startOfMonthZdtResult = createZonedDateTime(`${year}-${month + 1}-01`, '00:00:00', targetTimezone);
-     const startOfMonth = startOfMonthZdtResult ? startOfMonthZdtResult.date : new Date(Date.UTC(year, month, 1)); // Fallback to UTC start
+    const startOfMonthZdtResult = createZonedDateTime(`${year}-${month + 1}-01`, '00:00:00', targetTimezone);
+    const startOfMonth = startOfMonthZdtResult ? startOfMonthZdtResult.date : new Date(Date.UTC(year, month, 1));
 
-     const lastDayOfMonth = new Date(Date.UTC(year, month + 1, 0));
-     const endOfMonthZdtResult = createZonedDateTime(
-        `${lastDayOfMonth.getUTCFullYear()}-${String(lastDayOfMonth.getUTCMonth() + 1).padStart(2, '0')}-${String(lastDayOfMonth.getUTCDate()).padStart(2, '0')}`,
-        '23:59:59',
-        targetTimezone
-     );
-    const endOfMonth = endOfMonthZdtResult ? endOfMonthZdtResult.date : new Date(Date.UTC(year, month + 1, 0, 23, 59, 59)); // Fallback
-    // --- End Month Range ---
-
+    const lastDayOfMonth = new Date(Date.UTC(year, month + 1, 0));
+    const endOfMonthZdtResult = createZonedDateTime(
+       `${lastDayOfMonth.getUTCFullYear()}-${String(lastDayOfMonth.getUTCMonth() + 1).padStart(2, '0')}-${String(lastDayOfMonth.getUTCDate()).padStart(2, '0')}`,
+       '23:59:59',
+       targetTimezone
+    );
+    const endOfMonth = endOfMonthZdtResult ? endOfMonthZdtResult.date : new Date(Date.UTC(year, month + 1, 0, 23, 59, 59));
 
     let expandedEvents = [];
 
     potentiallyRelevantEvents.forEach(event => {
         const eventLocationId = event.LocationID;
         const eventLocation = window.locationMap.get(eventLocationId);
-        const eventTimezone = eventLocation?.Timezone || 'UTC'; // USE EVENT'S ZONE
+        const eventTimezone = eventLocation?.Timezone || 'UTC';
 
         const seriesStartZdtResult = createZonedDateTime(event.DateStart, event.TimeStart, eventTimezone);
         if (!seriesStartZdtResult) return;
@@ -3095,40 +2864,32 @@ function getEventsForMonth(month, year, entityId, isLocation = true) {
         const seriesEndZdtResult = event.DateEnd ? createZonedDateTime(event.DateEnd, event.TimeEnd, eventTimezone) : null;
         let seriesEndDate = seriesEndZdtResult ? seriesEndZdtResult.date : null;
 
-        // --- Calculate duration based on *zoned* start/end ---
-        let durationMs = 2 * 60 * 60 * 1000; // Default 2 hours
+        let durationMs = 2 * 60 * 60 * 1000;
         if (seriesEndDate && event.TimeEnd) {
-            // Duration between explicitly zoned start and end
             durationMs = seriesEndDate.getTime() - seriesStartDate.getTime();
         } else if (!seriesEndDate && event.TimeStart) {
-             // Ends same day (no explicit end date, but has start time)
-             // Calculate end time relative to start date
              const endOfDayZdtResult = createZonedDateTime(event.DateStart, '23:59:59', eventTimezone);
              if (endOfDayZdtResult) {
                   durationMs = endOfDayZdtResult.date.getTime() - seriesStartDate.getTime();
              }
-        } // Else use default
-        if (durationMs <= 0) durationMs = 2 * 60 * 60 * 1000; // Ensure positive duration
-        // ----------------------------------------------------
-
+        }
+        if (durationMs <= 0) durationMs = 2 * 60 * 60 * 1000;
 
         const repeats = event.Repeats || '';
-        let currentDate = new Date(seriesStartDate); // Start iteration from the zoned start date
+        let currentDate = new Date(seriesStartDate);
 
         const loopUntilDate = seriesEndDate ?
              new Date(Math.min(seriesEndDate.getTime(), endOfMonth.getTime()))
              : endOfMonth;
 
-
         while (currentDate.getTime() <= loopUntilDate.getTime()) {
-             // Check if this instance is within the view month range
              if (currentDate.getTime() >= startOfMonth.getTime() && currentDate.getTime() <= endOfMonth.getTime()) {
                   const instanceEndDate = new Date(currentDate.getTime() + durationMs);
                   const eventCopy = {
                       ...event,
-                      StartDate: new Date(currentDate), // The Date object (UTC instant)
+                      StartDate: new Date(currentDate),
                       EndDate: instanceEndDate,
-                      Timezone: eventTimezone, // Store the relevant timezone for display!
+                      Timezone: eventTimezone,
                       OriginalDateStart: event.DateStart,
                       OriginalDateEnd: event.DateEnd
                   };
@@ -3137,67 +2898,69 @@ function getEventsForMonth(month, year, entityId, isLocation = true) {
 
             if (!repeats) break;
 
-             const previousLoopDate = new Date(currentDate);
-            // --- Advance date logic (requires careful timezone handling for monthly/yearly) ---
-            // This is complex to do perfectly without a library like Luxon.
-            // For monthly/yearly, Date objects might jump DST incorrectly.
-            // Simplification: Advance by days for simplicity, accept minor inaccuracy for M/Y repeats across DST.
-            // Proper Solution: Use Luxon or date-fns-tz for advancement.
+            const previousLoopDate = new Date(currentDate);
             switch (repeats.toLowerCase()) {
                 case 'daily': currentDate.setUTCDate(currentDate.getUTCDate() + 1); break;
                 case 'weekly': currentDate.setUTCDate(currentDate.getUTCDate() + 7); break;
                 case 'every2weeks': currentDate.setUTCDate(currentDate.getUTCDate() + 14); break;
                 case 'monthly':
                 case 'everymonth':
-                    currentDate.setUTCMonth(currentDate.getUTCMonth() + 1); break; // DST Warning!
+                    currentDate.setUTCMonth(currentDate.getUTCMonth() + 1); break;
                 case 'every2months':
-                     currentDate.setUTCMonth(currentDate.getUTCMonth() + 2); break; // DST Warning!
+                     currentDate.setUTCMonth(currentDate.getUTCMonth() + 2); break;
                 case 'yearly':
                 case 'everyyear':
-                     currentDate.setUTCFullYear(currentDate.getUTCFullYear() + 1); break; // DST Warning!
+                     currentDate.setUTCFullYear(currentDate.getUTCFullYear() + 1); break;
                  default:
                     console.warn(`Unknown repeat type: ${repeats}`);
-                    currentDate = new Date(loopUntilDate.getTime() + 1); // Force exit
+                    currentDate = new Date(loopUntilDate.getTime() + 1);
                     break;
             }
-            // --------------------------------------------------------------
-
 
              if (currentDate.getTime() <= previousLoopDate.getTime()) {
-                 console.error(`Date didn't advance for event ${event.EventID}. Loop detected. Breaking.`);
+                 console.error(`Date didn't advance. Loop detected. Breaking.`);
                  break;
              }
              if (currentDate.getTime() > loopUntilDate.getTime() && repeats) {
                 break;
             }
-        } // end while
-    }); // end forEach potentiallyRelevant
+        }
+    });
 
-    const finalEvents = applyCancellationsToEvents(expandedEvents);
-    return finalEvents;
+    return expandedEvents;
 }
 
 // Get upcoming events
 function getUpcomingEvents(entityId, isLocation = true, limit = 3) {
   const now = new Date();
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
+  let currentMonth = now.getMonth();
+  let currentYear = now.getFullYear();
   
-  // Get events for current month and next month
-  const events = [
-    ...getEventsForMonth(currentMonth, currentYear, entityId, isLocation),
-    ...getEventsForMonth((currentMonth + 1) % 12, currentMonth === 11 ? currentYear + 1 : currentYear, entityId, isLocation)
-  ];
+  const allEvents = [];
+  const maxMonthsToSearch = 12; // Search up to 12 months ahead
+  let monthsSearched = 0;
+  
+  // Search across multiple months until we find enough events or reach the limit
+  while (allEvents.length < limit && monthsSearched < maxMonthsToSearch) {
+    const monthEvents = getEventsForMonth(currentMonth, currentYear, entityId, isLocation);
+    allEvents.push(...monthEvents);
+    
+    // Move to next month
+    currentMonth++;
+    monthsSearched++;
+    if (currentMonth > 11) {
+      currentMonth = 0;
+      currentYear++;
+    }
+  }
   
   // Filter for future events
-  const futureEvents = events.filter(event => {
+  const futureEvents = allEvents.filter(event => {
     return event.StartDate && event.StartDate > now;
   });
   
-  // Sort by date
+  // Sort by date and return limited number of events
   futureEvents.sort((a, b) => a.StartDate - b.StartDate);
-  
-  // Return limited number of events
   return futureEvents.slice(0, limit);
 }
 
@@ -3281,7 +3044,7 @@ function showUpcomingEvents(entityId, isLocation = true) {
     console.error("Calendar events display element not found!");
     return;
   }
-  eventsEl.innerHTML = ''; // Clear previous content
+  eventsEl.innerHTML = '';
 
   const upcomingHeading = document.createElement('h3');
   upcomingHeading.textContent = 'Upcoming Events';
@@ -3304,15 +3067,7 @@ function showUpcomingEvents(entityId, isLocation = true) {
     upcomingEvents.forEach(event => {
       const eventEl = document.createElement('div');
       eventEl.className = 'calendar-event';
-      
-      // Apply cancelled styling if needed
-      if (event.isCancelled) {
-        eventEl.classList.add('cancelled');
-        eventEl.style.textDecoration = 'line-through';
-        eventEl.style.color = 'grey';
-      }
 
-      // Event header - More compact format: "Fri Apr 25 - Mass @ 12:00 AM GMT+2"
       const headerEl = document.createElement('div');
       headerEl.className = 'calendar-event-header';
       headerEl.style.fontWeight = 'bold';
@@ -3320,7 +3075,6 @@ function showUpcomingEvents(entityId, isLocation = true) {
       let headerText = '';
       
       if (event.StartDate) {
-        // Format day and date
         headerText += formatZonedDate(event.StartDate, event.Timezone, { 
           weekday: 'short', 
           month: 'short', 
@@ -3328,10 +3082,8 @@ function showUpcomingEvents(entityId, isLocation = true) {
         });
       }
       
-      // Add event type
       headerText += ` - ${event.EventType || 'Event'}`;
       
-      // Add time with timezone
       if (event.StartDate) {
         headerText += ` - ${formatZonedTime(event.StartDate, event.Timezone, { timeZoneName: 'short' })}`;
       }
@@ -3339,13 +3091,11 @@ function showUpcomingEvents(entityId, isLocation = true) {
       headerEl.textContent = headerText;
       eventEl.appendChild(headerEl);
 
-      // Person or Location details in simpler format
       if (isLocation && event.PriestID) {
         const priest = window.religiousMap.get(event.PriestID);
         if (priest) {
           const priestEl = document.createElement('div');
           priestEl.className = 'calendar-event-priest';
-          // Use translated type
           const translatedType = getTranslatedReligiousType(priest.Type);
           priestEl.textContent = `${translatedType} ${priest.Name || ''}`;
           eventEl.appendChild(priestEl);
@@ -3360,17 +3110,6 @@ function showUpcomingEvents(entityId, isLocation = true) {
         }
       }
 
-      // Display cancellation reason if applicable
-      if (event.isCancelled && event.cancellationReason) {
-        const cancelEl = document.createElement('div');
-        cancelEl.className = 'calendar-event-cancelled';
-        cancelEl.style.color = '#cc0000'; // Dark red
-        cancelEl.style.fontWeight = 'bold';
-        cancelEl.textContent = `Cancelled: ${event.cancellationReason}`;
-        eventEl.appendChild(cancelEl);
-      }
-
-      // Add spacing between events
       eventEl.style.marginBottom = '10px';
       eventEl.style.paddingBottom = '5px';
       eventEl.style.borderBottom = '1px dashed #ccc';
@@ -3524,6 +3263,9 @@ function getHtmlForCalendar(month, year, entityId, isLocation = true) {
   // Create grid
   const grid = document.createElement('div');
   grid.className = 'calendar-grid';
+  grid.id = 'calendarGrid';
+  grid.dataset.month = month;
+  grid.dataset.year = year;
   
   // Add day headers
   dayNames.forEach(day => {
@@ -3591,18 +3333,34 @@ function getHtmlForCalendar(month, year, entityId, isLocation = true) {
   
   container.appendChild(grid);
   
-  // Add export buttons below the grid
+  // Add export buttons below the grid - FIXED POSITIONING
   const exportButtonsContainer = document.createElement('div');
   exportButtonsContainer.className = 'calendar-export-buttons';
-  exportButtonsContainer.style.display = 'flex';
-  exportButtonsContainer.style.gap = '10px';
-  exportButtonsContainer.style.marginTop = '15px';
-  exportButtonsContainer.style.marginBottom = '10px';
+  exportButtonsContainer.style.cssText = `
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  `;
   
   // Create PDF export button
   const pdfButton = document.createElement('button');
   pdfButton.className = 'action-btn';
-  pdfButton.textContent = 'Export to PDF';
+  pdfButton.textContent = '📄 Export PDF';
+  pdfButton.style.cssText = `
+    background: #700000;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    flex: 1;
+    min-width: 120px;
+  `;
   pdfButton.addEventListener('click', () => {
     generateCalendarPDF(entityId, isLocation);
   });
@@ -3610,9 +3368,36 @@ function getHtmlForCalendar(month, year, entityId, isLocation = true) {
   // Create iCal export button
   const iCalButton = document.createElement('button');
   iCalButton.className = 'action-btn';
-  iCalButton.textContent = 'Export to iCal';
+  iCalButton.textContent = '📅 Export iCal';
+  iCalButton.style.cssText = `
+    background: #004970;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    flex: 1;
+    min-width: 120px;
+  `;
   iCalButton.addEventListener('click', () => {
     generateICalFile(entityId, isLocation);
+  });
+  
+  // Add hover effects
+  pdfButton.addEventListener('mouseenter', () => {
+    pdfButton.style.background = '#900000';
+  });
+  pdfButton.addEventListener('mouseleave', () => {
+    pdfButton.style.background = '#700000';
+  });
+  
+  iCalButton.addEventListener('mouseenter', () => {
+    iCalButton.style.background = '#006699';
+  });
+  iCalButton.addEventListener('mouseleave', () => {
+    iCalButton.style.background = '#004970';
   });
   
   // Add buttons to container
@@ -4117,16 +3902,14 @@ function showEventsForDay(entityId, year, month, day, isLocation = true) {
     return;
   }
   
-  eventsEl.innerHTML = ''; // Clear previous events
+  eventsEl.innerHTML = '';
 
-  // --- Get context timezone for formatting ---
   let contextTimezone = 'UTC';
   const entityLocation = isLocation ? window.locationMap.get(entityId) : window.locations.find(l => l.ReligiousIdArray?.includes(entityId));
   if (entityLocation?.Timezone) {
     contextTimezone = entityLocation.Timezone;
   }
 
-  // Create the day header using the timezone
   const targetDayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   const dayDate = createZonedDateTime(targetDayStr, '12:00:00', contextTimezone);
   
@@ -4141,10 +3924,8 @@ function showEventsForDay(entityId, year, month, day, isLocation = true) {
     eventsEl.appendChild(dayHeading);
   }
 
-  // Get events data using the separated function
   const dayEvents = getEventsForDay(entityId, year, month, day, isLocation);
 
-  // --- Display Events or "No Events" Message ---
   if (dayEvents.length === 0) {
     const noEventsEl = document.createElement('p');
     noEventsEl.textContent = '$$no-events$$';
@@ -4154,40 +3935,28 @@ function showEventsForDay(entityId, year, month, day, isLocation = true) {
       const eventEl = document.createElement('div');
       eventEl.className = 'calendar-event';
 
-      // Apply cancelled styling if needed
-      if (event.isCancelled) {
-        eventEl.classList.add('cancelled');
-        eventEl.style.textDecoration = 'line-through';
-        eventEl.style.color = 'grey';
-      }
-
-      // Event title (e.g., "Mass", "Confession")
       const titleEl = document.createElement('div');
       titleEl.className = 'calendar-event-title';
       titleEl.textContent = event.EventType || 'Event';
       eventEl.appendChild(titleEl);
 
-      // Event Time - Use zoned formatting!
       if (event.StartDate) {
         const timeEl = document.createElement('div');
         timeEl.className = 'calendar-event-time';
         let timeString = formatZonedTime(event.StartDate, event.Timezone);
 
         if (event.EndDate && event.EndDate.getTime() !== event.StartDate.getTime()) {
-          // Add end time if different
           const durationMs = event.EndDate.getTime() - event.StartDate.getTime();
-          if (durationMs > 1000) { // Only show end time if duration > 1 second
+          if (durationMs > 1000) {
             timeString += ` - ${formatZonedTime(event.EndDate, event.Timezone)}`;
           }
         }
-        // Add timezone identifier for clarity
         timeString += ` (${formatZonedTime(event.StartDate, event.Timezone, { timeZoneName: 'short' })})`;
 
         timeEl.textContent = `Time: ${timeString}`;
         eventEl.appendChild(timeEl);
       }
 
-      // Priest or Location details (depending on context)
       if (isLocation && event.PriestID) {
         const priest = window.religiousMap.get(event.PriestID);
         if (priest) {
@@ -4206,7 +3975,6 @@ function showEventsForDay(entityId, year, month, day, isLocation = true) {
         }
       }
 
-      // Notes for the event
       if (event.Notes) {
         const notesEl = document.createElement('div');
         notesEl.className = 'calendar-event-notes';
@@ -4215,17 +3983,6 @@ function showEventsForDay(entityId, year, month, day, isLocation = true) {
         eventEl.appendChild(notesEl);
       }
 
-      // Display cancellation reason if applicable
-      if (event.isCancelled && event.cancellationReason) {
-        const cancelEl = document.createElement('div');
-        cancelEl.className = 'calendar-event-cancelled';
-        cancelEl.style.color = '#cc0000';
-        cancelEl.style.fontWeight = 'bold';
-        cancelEl.textContent = `Cancelled: ${event.cancellationReason}`;
-        eventEl.appendChild(cancelEl);
-      }
-
-      // Append the fully constructed event element
       eventsEl.appendChild(eventEl);
     });
   }
@@ -4311,14 +4068,45 @@ function generateCalendar(entityId, month, year, isLocation = true) {
   const grid = document.getElementById('calendarGrid');
   
   // Clear previous content
-  grid.innerHTML = '';
+  if (grid) {
+    grid.innerHTML = '';
+  }
   
   // Get calendar HTML
   const calendarHTML = getHtmlForCalendar(month, year, entityId, isLocation);
   
   // Update display
-  monthYearEl.innerHTML = calendarHTML.querySelector('.calendar-month-year').innerHTML;
-  grid.innerHTML = calendarHTML.querySelector('.calendar-grid').innerHTML;
+  if (monthYearEl) {
+    const headerContainer = calendarHTML.querySelector('div > div'); // Get the header container
+    if (headerContainer) {
+      monthYearEl.innerHTML = headerContainer.querySelector('.calendar-month-year').innerHTML;
+    }
+  }
+  
+  if (grid) {
+    const gridContent = calendarHTML.querySelector('.calendar-grid');
+    if (gridContent) {
+      grid.innerHTML = gridContent.innerHTML;
+      grid.dataset.month = month;
+      grid.dataset.year = year;
+    }
+    
+    // Also add the export buttons to the calendar bottom section
+    const calendarBottom = document.querySelector('.calendar-bottom');
+    if (calendarBottom) {
+      // Remove existing export buttons if any
+      const existingButtons = calendarBottom.querySelector('.calendar-export-buttons');
+      if (existingButtons) {
+        existingButtons.remove();
+      }
+      
+      // Add new export buttons
+      const exportButtons = calendarHTML.querySelector('.calendar-export-buttons');
+      if (exportButtons) {
+        calendarBottom.appendChild(exportButtons.cloneNode(true));
+      }
+    }
+  }
 }
 
 // Reset all markers to their default style
