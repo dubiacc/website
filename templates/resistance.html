@@ -566,7 +566,7 @@
       text-align: center;
       box-shadow: 0 0 10px rgba(0,0,0,0.5);
     }
-    
+
     .parish-marker {
       background-color: #cc0000;  /* Red for parishes */
       border-radius: 50%;
@@ -2413,7 +2413,7 @@ async function fetchSheetData() {
 
     const encodedSheetName = encodeURIComponent(sheet);
     const googleSheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodedSheetName}&query=rows`;
-    const proxyUrl = 'https://corsproxy-snn3wdk8.fermyon.app?url=';
+    const proxyUrl = 'https://corsproxy.fermyon.app?url=';
     const corsProxyUrl = `${proxyUrl}${encodeURIComponent(googleSheetUrl)}`;
     try {
       const response = await fetch(corsProxyUrl);
