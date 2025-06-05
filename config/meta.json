@@ -2,6 +2,8 @@
     "owner": "schuett",
     "strings": {
         "de": {
+            "email": "E-Mail",
+            "phone": "Telefon",
             "special-articles-title": "Themen",
             "special-articles-desc": "Durchsuche alle deutschen Artikel",
             "special-docs-title": "Dokumente",
@@ -150,6 +152,8 @@
             "title-brother": "Br."
         },
         "en": {
+            "email": "Email",
+            "phone": "Phone",
             "special-articles-title": "Topics",
             "special-articles-desc": "Search all English articles by category / tag",
             "special-docs-title": "Documents",
@@ -298,6 +302,8 @@
             "title-brother": "Br."
         },
         "fr": {
+            "email": "E-mail",
+            "phone": "Téléphone",
             "special-articles-title": "Sujets",
             "special-articles-desc": "Parcourir tous les articles en français",
             "special-docs-title": "Documents",
@@ -446,6 +452,8 @@
             "title-brother": "Fr."
         },
         "pl": {
+            "email": "E-mail",
+            "phone": "Telefon",
             "special-articles-title": "Tematy",
             "special-articles-desc": "Przeglądaj wszystkie polskie artykuły",
             "special-docs-title": "Dokumenty",
@@ -594,6 +602,8 @@
             "title-brother": "Br."
         },
         "br": {
+            "email": "E-mail",
+            "phone": "Telefone",
             "special-articles-title": "Tópicos",
             "special-articles-desc": "Explore todos os artigos em português",
             "special-docs-title": "Documentos",
@@ -742,6 +752,8 @@
             "title-brother": "Ir."
         },
         "es": {
+            "email": "Correo electrónico",
+            "phone": "Teléfono",
             "special-articles-title": "Temas",
             "special-articles-desc": "Explora todos los artículos en español",
             "special-docs-title": "Documentos",
@@ -890,6 +902,8 @@
             "title-brother": "Hno."
         },
         "it": {
+            "email": "E-mail",
+            "phone": "Telefono",
             "special-articles-title": "Argomenti",
             "special-articles-desc": "Cerca tutti gli articoli italiani per categoria / tag",
             "special-docs-title": "Documenti",
@@ -1038,6 +1052,8 @@
             "title-brother": "Fr."
         },
         "ru": {
+            "email": "Электронная почта",
+            "phone": "Телефон",
             "special-articles-title": "Темы",
             "special-articles-desc": "Искать все русские статьи по категориям / тегам",
             "special-docs-title": "Документы",
@@ -1186,6 +1202,8 @@
             "title-brother": "бр."
         },
         "tr": {
+            "email": "E-posta",
+            "phone": "Telefon",
             "special-articles-title": "Konular",
             "special-articles-desc": "Tüm Türkçe makaleleri kategori / etikete göre arayın",
             "special-docs-title": "Belgeler",
@@ -1334,6 +1352,8 @@
             "title-brother": "Bir."
         },
         "el": {
+            "email": "E-mail",
+            "phone": "Τηλέφωνο",
             "special-articles-title": "Θέματα",
             "special-articles-desc": "Αναζητήστε όλα τα ελληνικά άρθρα κατά κατηγορία / ετικέτα",
             "special-docs-title": "Έγγραφα",
@@ -1482,6 +1502,8 @@
             "title-brother": "Αδ."
         },
         "ar": {
+            "email": "البريد الإلكتروني",
+            "phone": "الهاتف",
             "special-articles-title": "المواضيع",
             "special-articles-desc": "ابحث في جميع المقالات العربية حسب الفئة / العلامة",
             "special-docs-title": "الوثائق",
@@ -1630,6 +1652,8 @@
             "title-brother": "أخ."
         },
         "tl": {
+            "email": "Email",
+            "phone": "Telepono",
             "special-articles-title": "Mga Paksa",
             "special-articles-desc": "Maghanap sa lahat ng artikulo sa Tagalog ayon sa kategorya / tag",
             "special-docs-title": "Dokumento",
@@ -1778,6 +1802,8 @@
             "title-brother": "Bro."
         },
         "zh": {
+            "email": "电子邮件",
+            "phone": "电话",
             "special-articles-title": "主题",
             "special-articles-desc": "按类别/标签搜索所有中文文章",
             "special-docs-title": "文档",
@@ -1926,6 +1952,8 @@
             "title-brother": "修士."
         },
         "ko": {
+            "email": "이메일",
+            "phone": "전화",
             "special-articles-title": "주제",
             "special-articles-desc": "카테고리/태그별 모든 한국어 기사 검색",
             "special-docs-title": "문서",
@@ -2074,6 +2102,8 @@
             "title-brother": "수사."
         },
         "ja": {
+            "email": "メール",
+            "phone": "電話",
             "special-articles-title": "トピック",
             "special-articles-desc": "カテゴリ/タグ別にすべての日本語記事を検索",
             "special-docs-title": "文書",
@@ -2222,6 +2252,8 @@
             "title-brother": "ブラザー."
         },
         "ro": {
+            "email": "E-mail",
+            "phone": "Telefon",
             "special-articles-title": "Teme",
             "special-articles-desc": "Caută toate articolele în română după categorie/etichetă",
             "special-docs-title": "Documente",
@@ -2370,6 +2402,8 @@
             "title-brother": "Fr."
         },
         "pt": {
+            "email": "E-mail",
+            "phone": "Telefone",
             "special-articles-title": "Tópicos",
             "special-articles-desc": "Pesquise todos os artigos em português por categoria/etiqueta",
             "special-docs-title": "Documentos",
