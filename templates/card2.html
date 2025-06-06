@@ -11,16 +11,6 @@
         <div id="loading">Loading resources...</div>
         <div id="control-panel" style="display: none;">
             <div class="control-group">
-                <label for="language">Language:</label>
-                <select id="language">
-                    <option value="de">Deutsch</option>
-                    <option value="en">English</option>
-                    <option value="es">Español</option>
-                    <option value="fr">Français</option>
-                    <option value="it">Italiano</option>
-                </select>
-            </div>
-            <div class="control-group">
                 <label for="width">Width (mm):</label>
                 <input type="number" id="width" value="85" min="50" max="150">
                 <label for="height">Height (mm):</label>
@@ -28,10 +18,10 @@
             </div>
             <div class="control-group">
                 <label for="darkIndices">Dark word indices (comma-separated):</label>
-                <input type="text" id="darkIndices" value="1,3,5,8,12,15,18,22,25,28" style="width: 300px;">
+                <input type="text" id="darkIndices" value="" style="width: 300px;">
             </div>
             <div class="control-group">
-                <button onclick="generatePDFs()">Generate PDFs</button>
+                <button onclick="generatePDF()">Generate PDF</button>
             </div>
         </div>
     </div>
@@ -49,6 +39,9 @@
     </div>
     
     <script>
+        // Hard-coded language - change this to set the default language
+        const CURRENT_LANGUAGE = 'en';
+        
         // Resources storage
         const resources = {
             watercolor: null,
@@ -157,6 +150,7 @@
                 object-fit: cover;
                 z-index: 1;
                 filter: contrast(1.4);
+                transform: rotate(180deg);
             }
             
             .watercolor-back {
@@ -166,6 +160,7 @@
                 top: auto;
                 left: auto;
                 z-index: 2;
+                transform: none;
             }
             
             .card-content {
@@ -305,56 +300,96 @@
         `;
         
         const translations = {
+            ar: {
+                tagline: "اكتشف الكنيسة<br>الكاثوليكية الحقيقية.",
+                keywords: ["الإلحاد", "أخلاقيات حيوية", "بروتستانتي", "العصور الوسطى", "الإسلام", "التاريخ", "اليهودية", "الأخلاق", "التطور", "الثورة الفرنسية", "التوماوية", "الكنيسة المبكرة", "الأرثوذكسية الشرقية", "الفلسفة", "إباضية المقعد", "آباء الكنيسة", "أنجليكاني", "لوثر", "الموت", "الروح", "البروتستانتية", "أوغسطين", "العلم"],
+                darkIndices: [1, 4, 6, 9, 12, 15, 18, 21]
+            },
+            br: {
+                tagline: "Descubra a verdadeira<br>Igreja Católica.",
+                keywords: ["ATEÍSMO", "BIOÉTICA", "EVANGÉLICO", "IDADE MÉDIA", "ISLÃ", "HISTÓRIA", "JUDAÍSMO", "MORAL", "EVOLUÇÃO", "REVOLUÇÃO FRANCESA", "TOMISMO", "IGREJA PRIMITIVA", "ORTODOXIA ORIENTAL", "FILOSOFIA", "SEDEVACANTISMO", "PADRES DA IGREJA", "ANGLICANO", "LUTERO", "MORTE", "ALMA", "PROTESTANTISMO", "AGOSTINHO", "CIÊNCIA"],
+                darkIndices: [2, 5, 7, 10, 13, 16, 19, 22]
+            },
             de: {
                 tagline: "Entdecke die wahre<br>katholische Kirche.",
-                keywords: [
-                    "ATHEISMUS", "BIOETHIK", "EVANGELISCH", "MITTELALTER", "ISLAM", "GESCHICHTE", "JUDENTUM", "MORAL",
-                    "EVOLUTION", "FRZ-REVOLUTION", "THOMISMUS", "FRUEHKIRCHE", "OST-ORTHODOXIE", "PHILOSOPHIE",
-                    "SEDISVAKANZ", "KIRCHENVAETER", "ANGLIKANISCH", "LUTHER", "TOD", "SEELE", "PROTESTANTISMUS",
-                    "AUGUSTINUS", "ISLAM", "KIRCHENVAETER", "GESCHICHTE", "WISSENSCHAFT", "MORAL", "EVANGELISCH"
-                ]
+                keywords: ["ATHEISMUS", "BIOETHIK", "EVANGELISCH", "MITTELALTER", "ISLAM", "GESCHICHTE", "JUDENTUM", "MORAL", "EVOLUTION", "FRZ-REVOLUTION", "THOMISMUS", "FRUEHKIRCHE", "OST-ORTHODOXIE", "PHILOSOPHIE", "SEDISVAKANZ", "KIRCHENVAETER", "ANGLIKANISCH", "LUTHER", "TOD", "SEELE", "PROTESTANTISMUS", "AUGUSTINUS", "WISSENSCHAFT"],
+                darkIndices: [1, 3, 5, 8, 12, 15, 18, 22]
+            },
+            el: {
+                tagline: "Ανακαλύψτε την αληθινή<br>Καθολική Εκκλησία.",
+                keywords: ["ΑΘΕΪΣΜΟΣ", "ΒΙΟΗΘΙΚΗ", "ΠΡΟΤΕΣΤΑΝΤΗΣ", "ΜΕΣΑΙΩΝΑΣ", "ΙΣΛΑΜ", "ΙΣΤΟΡΙΑ", "ΙΟΥΔΑΪΣΜΟΣ", "ΗΘΙΚΗ", "ΕΞΕΛΙΞΗ", "ΓΑΛΛΙΚΗ ΕΠΑΝΑΣΤΑΣΗ", "ΘΩΜΙΣΜΟΣ", "ΠΡΩΙΜΗ ΕΚΚΛΗΣΙΑ", "ΑΝΑΤΟΛΙΚΗ ΟΡΘΟΔΟΞΙΑ", "ΦΙΛΟΣΟΦΙΑ", "ΚΑΘΙΣΜΑΤΙΚΟΣ", "ΠΑΤΕΡΕΣ ΤΗΣ ΕΚΚΛΗΣΙΑΣ", "ΑΓΓΛΙΚΑΝΟΣ", "ΛΟΥΘΗΡΟΣ", "ΘΑΝΑΤΟΣ", "ΨΥΧΗ", "ΠΡΟΤΕΣΤΑΝΤΙΣΜΟΣ", "ΑΥΓΟΥΣΤΙΝΟΣ", "ΕΠΙΣΤΗΜΗ"],
+                darkIndices: [0, 3, 6, 9, 11, 14, 17, 20]
             },
             en: {
                 tagline: "Discover the true<br>Catholic Church.",
-                keywords: [
-                    "ATHEISM", "BIOETHICS", "PROTESTANT", "MIDDLE AGES", "ISLAM", "HISTORY", "JUDAISM", "MORALITY",
-                    "EVOLUTION", "FRENCH REVOLUTION", "THOMISM", "EARLY CHURCH", "EASTERN ORTHODOXY", "PHILOSOPHY",
-                    "SEDEVACANTISM", "CHURCH FATHERS", "ANGLICAN", "LUTHER", "DEATH", "SOUL", "PROTESTANTISM",
-                    "AUGUSTINE", "ISLAM", "CHURCH FATHERS", "HISTORY", "SCIENCE", "MORALITY", "PROTESTANT"
-                ]
+                keywords: ["ATHEISM", "BIOETHICS", "PROTESTANT", "MIDDLE AGES", "ISLAM", "HISTORY", "JUDAISM", "MORALITY", "EVOLUTION", "FRENCH REVOLUTION", "THOMISM", "EARLY CHURCH", "EASTERN ORTHODOXY", "PHILOSOPHY", "SEDEVACANTISM", "CHURCH FATHERS", "ANGLICAN", "LUTHER", "DEATH", "SOUL", "PROTESTANTISM", "AUGUSTINE", "SCIENCE"],
+                darkIndices: [2, 4, 7, 11, 14, 16, 19, 21]
             },
             es: {
                 tagline: "Descubre la verdadera<br>Iglesia Católica.",
-                keywords: [
-                    "ATEÍSMO", "BIOÉTICA", "EVANGÉLICO", "EDAD MEDIA", "ISLAM", "HISTORIA", "JUDAÍSMO", "MORAL",
-                    "EVOLUCIÓN", "REVOLUCIÓN FRANCESA", "TOMISMO", "IGLESIA PRIMITIVA", "ORTODOXIA ORIENTAL", "FILOSOFÍA",
-                    "SEDEVACANTISMO", "PADRES DE LA IGLESIA", "ANGLICANO", "LUTERO", "MUERTE", "ALMA", "PROTESTANTISMO",
-                    "AGUSTÍN", "ISLAM", "PADRES DE LA IGLESIA", "HISTORIA", "CIENCIA", "MORAL", "EVANGÉLICO"
-                ]
+                keywords: ["ATEÍSMO", "BIOÉTICA", "EVANGÉLICO", "EDAD MEDIA", "ISLAM", "HISTORIA", "JUDAÍSMO", "MORAL", "EVOLUCIÓN", "REVOLUCIÓN FRANCESA", "TOMISMO", "IGLESIA PRIMITIVA", "ORTODOXIA ORIENTAL", "FILOSOFÍA", "SEDEVACANTISMO", "PADRES DE LA IGLESIA", "ANGLICANO", "LUTERO", "MUERTE", "ALMA", "PROTESTANTISMO", "AGUSTÍN", "CIENCIA"],
+                darkIndices: [1, 3, 5, 8, 12, 15, 18, 20]
             },
             fr: {
                 tagline: "Découvrez la vraie<br>Église catholique.",
-                keywords: [
-                    "ATHÉISME", "BIOÉTHIQUE", "ÉVANGÉLIQUE", "MOYEN ÂGE", "ISLAM", "HISTOIRE", "JUDAÏSME", "MORALE",
-                    "ÉVOLUTION", "RÉVOLUTION FRANÇAISE", "THOMISME", "ÉGLISE PRIMITIVE", "ORTHODOXIE ORIENTALE", "PHILOSOPHIE",
-                    "SÉDÉVACANTISME", "PÈRES DE L'ÉGLISE", "ANGLICAN", "LUTHER", "MORT", "ÂME", "PROTESTANTISME",
-                    "AUGUSTIN", "ISLAM", "PÈRES DE L'ÉGLISE", "HISTOIRE", "SCIENCE", "MORALE", "ÉVANGÉLIQUE"
-                ]
+                keywords: ["ATHÉISME", "BIOÉTHIQUE", "ÉVANGÉLIQUE", "MOYEN ÂGE", "ISLAM", "HISTOIRE", "JUDAÏSME", "MORALE", "ÉVOLUTION", "RÉVOLUTION FRANÇAISE", "THOMISME", "ÉGLISE PRIMITIVE", "ORTHODOXIE ORIENTALE", "PHILOSOPHIE", "SÉDÉVACANTISME", "PÈRES DE L'ÉGLISE", "ANGLICAN", "LUTHER", "MORT", "ÂME", "PROTESTANTISME", "AUGUSTIN", "SCIENCE"],
+                darkIndices: [0, 2, 6, 9, 13, 16, 18, 22]
             },
             it: {
                 tagline: "Scopri la vera<br>Chiesa Cattolica.",
-                keywords: [
-                    "ATEISMO", "BIOETICA", "EVANGELICO", "MEDIOEVO", "ISLAM", "STORIA", "GIUDAISMO", "MORALE",
-                    "EVOLUZIONE", "RIVOLUZIONE FRANCESE", "TOMISMO", "CHIESA PRIMITIVA", "ORTODOSSIA ORIENTALE", "FILOSOFIA",
-                    "SEDEVACANTISMO", "PADRI DELLA CHIESA", "ANGLICANO", "LUTERO", "MORTE", "ANIMA", "PROTESTANTESIMO",
-                    "AGOSTINO", "ISLAM", "PADRI DELLA CHIESA", "STORIA", "SCIENZA", "MORALE", "EVANGELICO"
-                ]
+                keywords: ["ATEISMO", "BIOETICA", "EVANGELICO", "MEDIOEVO", "ISLAM", "STORIA", "GIUDAISMO", "MORALE", "EVOLUZIONE", "RIVOLUZIONE FRANCESE", "TOMISMO", "CHIESA PRIMITIVA", "ORTODOSSIA ORIENTALE", "FILOSOFIA", "SEDEVACANTISMO", "PADRI DELLA CHIESA", "ANGLICANO", "LUTERO", "MORTE", "ANIMA", "PROTESTANTESIMO", "AGOSTINO", "SCIENZA"],
+                darkIndices: [1, 4, 6, 10, 13, 15, 17, 21]
+            },
+            ja: {
+                tagline: "真のカトリック教会を<br>発見してください。",
+                keywords: ["無神論", "生命倫理", "プロテスタント", "中世", "イスラム教", "歴史", "ユダヤ教", "道徳", "進化", "フランス革命", "トミズム", "初期教会", "東方正教会", "哲学", "空位論", "教父", "聖公会", "ルター", "死", "魂", "プロテスタント主義", "アウグスティヌス", "科学"],
+                darkIndices: [2, 5, 8, 11, 14, 16, 19, 23]
+            },
+            ko: {
+                tagline: "참된 가톨릭 교회를<br>발견하세요.",
+                keywords: ["무신론", "생명윤리", "개신교", "중세", "이슬람", "역사", "유대교", "도덕", "진화", "프랑스 혁명", "토미즘", "초기 교회", "동방 정교회", "철학", "공석주의", "교부", "성공회", "루터", "죽음", "영혼", "개신교주의", "아우구스티누스", "과학"],
+                darkIndices: [0, 3, 7, 10, 12, 15, 18, 22]
+            },
+            pl: {
+                tagline: "Odkryj prawdziwy<br>Kościół Katolicki.",
+                keywords: ["ATEIZM", "BIOETYKA", "PROTESTANCKI", "ŚREDNIOWIECZE", "ISLAM", "HISTORIA", "JUDAIZM", "MORALNOŚĆ", "EWOLUCJA", "REWOLUCJA FRANCUSKA", "TOMIZM", "WCZESNY KOŚCIÓŁ", "PRAWOSŁAWIE WSCHODNIE", "FILOZOFIA", "SEDEWAKANTYŚCI", "OJCOWIE KOŚCIOŁA", "ANGLIKAŃSKI", "LUTER", "ŚMIERĆ", "DUSZA", "PROTESTANTYZM", "AUGUSTYN", "NAUKA"],
+                darkIndices: [1, 4, 6, 9, 11, 14, 17, 20]
+            },
+            pt: {
+                tagline: "Descubra a verdadeira<br>Igreja Católica.",
+                keywords: ["ATEÍSMO", "BIOÉTICA", "PROTESTANTE", "IDADE MÉDIA", "ISLÃO", "HISTÓRIA", "JUDAÍSMO", "MORALIDADE", "EVOLUÇÃO", "REVOLUÇÃO FRANCESA", "TOMISMO", "IGREJA PRIMITIVA", "ORTODOXIA ORIENTAL", "FILOSOFIA", "SEDEVACANTISMO", "PADRES DA IGREJA", "ANGLICANO", "LUTERO", "MORTE", "ALMA", "PROTESTANTISMO", "AGOSTINHO", "CIÊNCIA"],
+                darkIndices: [2, 5, 7, 10, 13, 16, 19, 21]
+            },
+            ro: {
+                tagline: "Descoperă adevărata<br>Biserică Catolică.",
+                keywords: ["ATEISM", "BIOETICĂ", "PROTESTANT", "EVUL MEDIU", "ISLAM", "ISTORIE", "IUDAISM", "MORALITATE", "EVOLUȚIE", "REVOLUȚIA FRANCEZĂ", "TOMISM", "BISERICA PRIMITIVĂ", "ORTODOXIA ORIENTALĂ", "FILOZOFIE", "SEDEVACANTISM", "PĂRINȚII BISERICII", "ANGLICAN", "LUTHER", "MOARTE", "SUFLET", "PROTESTANTISM", "AUGUSTIN", "ȘTIINȚĂ"],
+                darkIndices: [0, 3, 6, 8, 12, 15, 18, 22]
+            },
+            ru: {
+                tagline: "Откройте истинную<br>Католическую Церковь.",
+                keywords: ["АТЕИЗМ", "БИОЭТИКА", "ПРОТЕСТАНТ", "СРЕДНЕВЕКОВЬЕ", "ИСЛАМ", "ИСТОРИЯ", "ИУДАИЗМ", "МОРАЛЬ", "ЭВОЛЮЦИЯ", "ФРАНЦУЗСКАЯ РЕВОЛЮЦИЯ", "ТОМИЗМ", "РАННЯЯ ЦЕРКОВЬ", "ВОСТОЧНОЕ ПРАВОСЛАВИЕ", "ФИЛОСОФИЯ", "СЕДЕВАКАНТИЗМ", "ОТЦЫ ЦЕРКВИ", "АНГЛИКАНСКИЙ", "ЛЮТЕР", "СМЕРТЬ", "ДУША", "ПРОТЕСТАНТИЗМ", "АВГУСТИН", "НАУКА"],
+                darkIndices: [1, 4, 7, 9, 13, 16, 19, 23]
+            },
+            tl: {
+                tagline: "Tuklasin ang tunay na<br>Simbahang Katoliko.",
+                keywords: ["ATEISMO", "BIOETIKA", "PROTESTANTE", "GITNANG PANAHON", "ISLAM", "KASAYSAYAN", "HUDAISMO", "MORALIDAD", "EBOLUSYON", "REBOLUSYONG PRANSES", "TOMISMO", "UNANG SIMBAHAN", "SILANGANG ORTODOKSO", "PILOSOPIYA", "SEDEVACANTISMO", "MGA AMA NG SIMBAHAN", "ANGLICANO", "LUTHER", "KAMATAYAN", "KALULUWA", "PROTESTANTISMO", "AGUSTIN", "AGHAM"],
+                darkIndices: [2, 4, 6, 10, 12, 15, 17, 21]
+            },
+            tr: {
+                tagline: "Gerçek Katolik<br>Kilisesi'ni keşfedin.",
+                keywords: ["ATEİZM", "BİYOETİK", "PROTESTAN", "ORTA ÇAĞ", "İSLAM", "TARİH", "YAHUDİLİK", "AHLAK", "EVRİM", "FRANSIZ DEVRİMİ", "TOMİZM", "ERKEN KİLİSE", "DOĞU ORTODOKSLUĞu", "FELSEFE", "SEDEVAKANTİZM", "KİLİSE BABALARI", "ANGLİKAN", "LUTHER", "ÖLÜM", "RUH", "PROTESTANLık", "AUGUSTİN", "BİLİM"],
+                darkIndices: [0, 3, 5, 8, 11, 14, 18, 22]
+            },
+            zh: {
+                tagline: "发现真正的<br>天主教会。",
+                keywords: ["无神论", "生物伦理学", "新教", "中世纪", "伊斯兰教", "历史", "犹太教", "道德", "进化", "法国大革命", "托马斯主义", "早期教会", "东方正教会", "哲学", "空位论", "教父", "圣公会", "路德", "死亡", "灵魂", "新教主义", "奥古斯丁", "科学"],
+                darkIndices: [1, 3, 6, 9, 12, 14, 17, 20]
             }
         };
         
-        // Apply base CSS
+        // Apply base CSS and card CSS for preview
         const styleEl = document.createElement('style');
-        styleEl.textContent = baseCSS;
+        styleEl.textContent = baseCSS + cardCSS;
         document.head.appendChild(styleEl);
         
         // Fetch and convert to base64
@@ -398,9 +433,13 @@
                 resources.fontCSS = await processFontCSS(ebGaramondCSS);
                 resources.oswaldFontCSS = await processFontCSS(oswaldCSS);
                 
-                // Show controls
+                // Show controls and set initial dark indices
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('control-panel').style.display = 'block';
+                
+                // Set dark indices for current language
+                const currentTranslation = translations[CURRENT_LANGUAGE];
+                document.getElementById('darkIndices').value = currentTranslation.darkIndices.join(',');
                 
                 updatePreview();
             } catch (error) {
@@ -476,11 +515,10 @@
         function updatePreview() {
             const width = parseInt(document.getElementById('width').value);
             const height = parseInt(document.getElementById('height').value);
-            const language = document.getElementById('language').value;
             const darkIndicesStr = document.getElementById('darkIndices').value;
             const darkIndices = darkIndicesStr.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
             
-            const config = { width, height, language, darkIndices };
+            const config = { width, height, language: CURRENT_LANGUAGE, darkIndices };
             
             const frontHTML = generateCardHTML({ ...config, side: 'front' });
             const backHTML = generateCardHTML({ ...config, side: 'back' });
@@ -489,76 +527,72 @@
             document.getElementById('card-back-preview').innerHTML = backHTML;
         }
         
-        async function generatePDFs() {
+        async function generatePDF() {
             const width = document.getElementById('width').value;
             const height = document.getElementById('height').value;
             const darkIndicesStr = document.getElementById('darkIndices').value;
             const darkIndices = darkIndicesStr.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
             
-            // Generate PDFs for all languages
-            for (const lang of Object.keys(translations)) {
-                const config = { width, height, language: lang, darkIndices };
-                
-                const frontHTML = generateCardHTML({ ...config, side: 'front' });
-                const backHTML = generateCardHTML({ ...config, side: 'back' });
-                
-                // Create HTML content
-                const htmlParts = [];
-                htmlParts.push('<!DOCTYPE html>');
-                htmlParts.push('<html>');
-                htmlParts.push('<head>');
-                htmlParts.push(`<title>Business Card - ${lang.toUpperCase()}</title>`);
-                htmlParts.push('<style>');
-                htmlParts.push(resources.fontCSS);
-                htmlParts.push(resources.oswaldFontCSS);
-                htmlParts.push(cardCSS);
-                htmlParts.push('</style>');
-                htmlParts.push('</head>');
-                htmlParts.push('<body>');
-                htmlParts.push('<div class="preview-container">');
-                htmlParts.push('<div class="card-wrapper">');
-                htmlParts.push(frontHTML);
-                htmlParts.push('</div>');
-                htmlParts.push('<div class="card-wrapper">');
-                htmlParts.push(backHTML);
-                htmlParts.push('</div>');
-                htmlParts.push('</div>');
-                htmlParts.push('</body>');
-                htmlParts.push('</html>');
-                
-                const pdfHtml = htmlParts.join('\n');
-                
-                // Create iframe for printing
-                const iframe = document.createElement('iframe');
-                iframe.style.position = 'absolute';
-                iframe.style.top = '-10000px';
-                iframe.style.left = '-10000px';
-                iframe.style.width = '0';
-                iframe.style.height = '0';
-                document.body.appendChild(iframe);
-                
-                // Write content to iframe
-                iframe.contentDocument.open();
-                iframe.contentDocument.write(pdfHtml);
-                iframe.contentDocument.close();
-                
-                // Wait for content to load
-                iframe.onload = function() {
+            const config = { width, height, language: CURRENT_LANGUAGE, darkIndices };
+            
+            const frontHTML = generateCardHTML({ ...config, side: 'front' });
+            const backHTML = generateCardHTML({ ...config, side: 'back' });
+            
+            // Create HTML content
+            const htmlParts = [];
+            htmlParts.push('<!DOCTYPE html>');
+            htmlParts.push('<html>');
+            htmlParts.push('<head>');
+            htmlParts.push(`<title>Business Card - ${CURRENT_LANGUAGE.toUpperCase()}</title>`);
+            htmlParts.push('<style>');
+            htmlParts.push(resources.fontCSS);
+            htmlParts.push(resources.oswaldFontCSS);
+            htmlParts.push(cardCSS);
+            htmlParts.push('</style>');
+            htmlParts.push('</head>');
+            htmlParts.push('<body>');
+            htmlParts.push('<div class="preview-container">');
+            htmlParts.push('<div class="card-wrapper">');
+            htmlParts.push(frontHTML);
+            htmlParts.push('</div>');
+            htmlParts.push('<div class="card-wrapper">');
+            htmlParts.push(backHTML);
+            htmlParts.push('</div>');
+            htmlParts.push('</div>');
+            htmlParts.push('</body>');
+            htmlParts.push('</html>');
+            
+            const pdfHtml = htmlParts.join('\n');
+            
+            // Create iframe for printing
+            const iframe = document.createElement('iframe');
+            iframe.style.position = 'absolute';
+            iframe.style.top = '-10000px';
+            iframe.style.left = '-10000px';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            document.body.appendChild(iframe);
+            
+            // Write content to iframe
+            iframe.contentDocument.open();
+            iframe.contentDocument.write(pdfHtml);
+            iframe.contentDocument.close();
+            
+            // Wait for content to load
+            iframe.onload = function() {
+                setTimeout(() => {
+                    iframe.contentWindow.print();
+                    // Remove iframe after a delay
                     setTimeout(() => {
-                        iframe.contentWindow.print();
-                        // Remove iframe after a delay
-                        setTimeout(() => {
-                            document.body.removeChild(iframe);
-                        }, 1000);
-                    }, 500);
-                };
-            }
+                        document.body.removeChild(iframe);
+                    }, 1000);
+                }, 500);
+            };
         }
         
         // Initialize
         document.getElementById('width').addEventListener('input', updatePreview);
         document.getElementById('height').addEventListener('input', updatePreview);
-        document.getElementById('language').addEventListener('change', updatePreview);
         document.getElementById('darkIndices').addEventListener('input', updatePreview);
         
         // Load resources on page load
