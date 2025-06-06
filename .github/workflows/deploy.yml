@@ -36,6 +36,7 @@ jobs:
           rm -rf ./.git
           rm -rf ./md2json
           cp ./templates/missa.html ./dist/en/missa.html
+          cp ./templates/card2.html ./dist/en/card.html
           rm -rf ./templates
           rm -rf ./.gitignore
           rm -rf ./gen.py
