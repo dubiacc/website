@@ -263,6 +263,7 @@
       <option value="easter-5">Fifth Sunday After Easter</option>
       <option value="ascension-sunday">Ascension Sunday</option>
       <option value="pentecost-sunday">Pentecost Sunday</option>
+      <option value="pentecost-monday">Pentecost Monday</option>
     </select>
     
     <label for="language-select">Language:</label>
@@ -2958,6 +2959,643 @@
 
     // Enhanced catalog with proper priest markings
     const catalog = {
+            "proper:introit:pentecost-monday": [
+        { type: "action", key: "action.stand" },
+        { type: "rb", text_la: "Ps 80:17" },
+        {
+          type: "pr_blk",
+          initial: true,
+          lines: [
+            { segments: ["Cibávit eos ex ádipe fruménti, allelúia: et de petra, melle saturávit eos, allelúia, allelúia."] }
+          ]
+        },
+        { type: "rb", text_la: "Ps 80:2" },
+        {
+          type: "pr_blk",
+          lines: [
+            { segments: ["Exsultáte Deo, adiutóri nostro: iubiláte Deo Iacob."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Glória Patri, et Fílio, et Spirítui Sancto."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Sicut erat in princípio, et nunc, et semper, et in sǽcula sæculórum. Amen."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          initial: true,
+          lines: [
+            { segments: ["Cibávit eos ex ádipe fruménti, allelúia: et de petra, melle saturávit eos, allelúia, allelúia."] }
+          ]
+        }
+      ],
+
+      "proper:collect:pentecost-monday": [
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Dóminus vobíscum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Et cum spíritu tuo."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Orémus."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Deus, qui Apóstolis tuis Sanctum dedísti Spíritum: concéde plebi tuæ piæ petitiónis efféctum; ut, quibus dedísti fidem, largiáris et pacem."], po: true },
+            { segments: ["Per Dóminum nostrum Iesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte eiúsdem Spíritus Sancti Deus, per ómnia sǽcula sæculórum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Amen."] }
+          ]
+        }
+      ],
+
+      "proper:epistle:pentecost-monday": [
+        { type: "action", key: "action.sit" },
+        { type: "rb", text_la: "Léctio Actuum Apostolórum" },
+        { type: "rb", text_la: "Acts 10:42-48" },
+        {
+          type: "pr_blk",
+          initial: true,
+          lines: [
+            { segments: ["In diébus illis: Apériens Petrus os suum, dixit: Viri fratres, nobis præcépit Dóminus prædicáre pópulo: et testificári, quia ipse est, qui constitútus est a Deo iudex vivórum et mortuórum. Huic omnes Prophétæ testimónium pérhibent, remissiónem peccatórum accípere per nomen eius omnes, qui credunt in eum. Adhuc loquénte Petro verba hæc, cecidit Spíritus Sanctus super omnes, qui audiébant verbum. Et obstupuérunt ex circumcisióne fidéles, qui vénerant cum Petro: quia et in natiónes grátia Spíritus Sancti effúsa est. Audiébant enim illos loquéntes linguis et magnificántes Deum. Tunc respóndit Petrus: Numquid aquam quis prohibére potest, ut non baptizéntur hi, qui Spíritum Sanctum accepérunt sicut et nos? Et iussit eos baptizári in nómine Dómini Iesu Christi."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Deo grátias."] }
+          ]
+        }
+      ],
+
+      "proper:gradual-sequence:pentecost-monday": [
+        { type: "action", key: "action.stand" },
+        {
+          type: "pr_blk",
+          lines: [
+            { segments: ["Allelúia, allelúia."] }
+          ]
+        },
+        { type: "rb", text_la: "Acts 2:4" },
+        {
+          type: "pr_blk",
+          speaker: "V.",
+          initial: true,
+          lines: [
+            { segments: ["Loquebántur váriis linguis Apóstoli magnália Dei. Allelúia."] }
+          ]
+        },
+        { type: "action", key: "rubric.genuflect" }, 
+        {
+          type: "pr_blk",
+          speaker: "V.",
+          initial: true,
+          lines: [
+            { segments: ["Veni, Sancte Spiritus, reple tuorum corda fidélium: et tui amóris in eis ignem accénde."] }
+          ]
+        },
+        { type: "rb", text_la: "Sequentia" },
+        {
+          type: "pr_blk",
+          initial: true,
+          lines: [
+            { segments: ["Veni, Sancte Spíritus, et emítte cǽlitus lucis tuæ rádium."] },
+            { segments: ["Veni, pater páuperum; veni, dator múnerum; veni, lumen córdium."] },
+            { segments: ["Consolátor óptime, dulcis hospes ánimæ, dulce refrigérium."] },
+            { segments: ["In labóre réquies, in æstu tempéries, in fletu solácium."] },
+            { segments: ["O lux beatíssima, reple cordis íntima tuórum fidélium."] },
+            { segments: ["Sine tuo númine nihil est in hómine, nihil est innóxium."] },
+            { segments: ["Lava quod est sórdidum, riga quod est áridum, sana quod est sáucium."] },
+            { segments: ["Flecte quod est rígidum, fove quod est frígidum, rege quod est dévium."] },
+            { segments: ["Da tuis fidélibus, in te confidéntibus, sacrum septenárium."] },
+            { segments: ["Da virtútis méritum, da salútis éxitum, da perénne gáudium."] },
+            { segments: ["Amen. Allelúia."] }
+          ]
+        }
+      ],
+
+      "proper:gospel:pentecost-monday": [
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Dóminus vobíscum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Et cum spíritu tuo."] }
+          ]
+        },
+        { type: "rb", key: "rubric.sign_book_self" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Sequéntia ++ sancti Evangélii secúndum Ioánnem"], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Glória tibi, Dómine."] }
+          ]
+        },
+        { type: "rb", text_la: "Ioannes 3:16-21" },
+        {
+          type: "pr_blk",
+          initial: true,
+          lines: [
+            { segments: ["In illo témpore: Dixit Iesus Nicodémo: Sic Deus diléxit mundum, ut Fílium suum unigénitum daret: ut omnis, qui credit in eum, non péreat, sed hábeat vitam ætérnam. Non enim misit Deus Fílium suum in mundum, ut iúdicet mundum, sed ut salvétur mundus per ipsum. Qui credit in eum, non iudicátur; qui autem non credit, iam iudicátus est: quia non credit in nómine unigéniti Fílii Dei. Hoc est autem iudícium: quia lux venit in mundum, et dilexérunt hómines magis ténebras quam lucem: erant enim eórum mala ópera. Omnis enim, qui male agit, odit lucem, et non venit ad lucem, ut non arguántur ópera eius: qui autem facit veritátem, venit ad lucem, ut manifesténtur ópera eius, quia in Deo sunt facta."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Laus tibi, Christe."] }
+          ]
+        }
+      ],
+
+      "proper:offertory:pentecost-monday": [
+        { type: "action", key: "action.sit" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Dóminus vobíscum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Et cum spíritu tuo."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Orémus."], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Ps 17:14, 16" },
+        {
+          type: "pr_blk",
+          initial: true,
+          lines: [
+            { segments: ["Intónuit de cœlo Dóminus, et Altíssimus dedit vocem suam: et apparuérunt fontes aquárum, allelúia."] }
+          ]
+        }
+      ],
+
+      "proper:secret:pentecost-monday": [
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Propítius, Dómine, quǽsumus, hæc dona sanctífica: et, hóstiæ spiritális oblatióne suscépta, nosmetípsos tibi pérfice munus ætérnum."], po: true },
+            { segments: ["Per Dóminum nostrum Iesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Amen."] }
+          ]
+        }
+      ],
+
+      "proper:communion:pentecost-monday": [
+        { type: "action", key: "action.stand" },
+        { type: "rb", text_la: "Ioannes 14:26" },
+        {
+          type: "pr_blk",
+          initial: true,
+          lines: [
+            { segments: ["Spíritus Sanctus docébit vos, allelúia: quæcúmque díxero vobis, allelúia, allelúia."] }
+          ]
+        }
+      ],
+
+      "proper:postcommunion:pentecost-monday": [
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Dóminus vobíscum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Et cum spíritu tuo."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Orémus."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Adésto, quǽsumus, Dómine, pópulo tuo: et, quem mystériis cœléstibus imbuísti, ab hóstium furóre defénde."], po: true },
+            { segments: ["Per Dóminum nostrum Iesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Amen."] }
+          ]
+        }
+      ],
+      
+      "ordinary:canon-pentecost-octave": [
+        { type: "rb", text_la: "Sacerdos, profunde inclinatus ante Altare, manibus super eo positis, dicit:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: [ "Te ígitur, clementíssime Pater, per Jesum Christum, Fílium tuum, Dóminum nostrum, súpplices rogámus, ac pétimus," ], po: true },
+            { type: "rb", text_la: "Osculatur Altare et, junctis manibus ante pectus, dicit:" },
+            { segments: [ "uti accépta hábeas et benedícas," ], po: true },
+            { type: "rb", text_la: "Signat ter super Hostiam et Calicem simul, dicens:" },
+            { segments: [ "hæc + dona, hæc + múnera, hæc + sancta sacrifícia illibáta," ], po: true },
+            { type: "rb", text_la: "Extensis manibus prosequitur:" },
+            { segments: [ "in primis, quæ tibi offérimus pro Ecclésia tua sancta cathólica: quam pacificáre, custodíre, adunáre et régere dignéris toto orbe terrárum: una cum fámulo tuo Papa nostro N. et Antístite nostro N. et ómnibus orthodóxis, atque cathólicæ et apostólicæ fídei cultóribus." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Commemoratio pro vivis." },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: [ "Meménto, Dómine, famulórum famularúmque tuarum N. et N." ], po: true },
+            { type: "rb", text_la: "Jungit manus, orat aliquantulum pro quibus orare intendit: deinde manibus extensis prosequitur:" },
+            { segments: [ "et ómnium circumstántium, quorum tibi fides cógnita est et nota devótio, pro quibus tibi offérimus: vel qui tibi ófferunt hoc sacrifícium laudis, pro se suísque ómnibus: pro redemptióne animárum suárum, pro spe salútis et incolumitátis suæ: tibíque reddunt vota sua ætérno Deo, vivo et vero." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Infra Actionem (Communicantes for Pentecost Octave)" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: [ "Communicántes, et diem sacratíssimum Pentecóstes celebrántes, quo Spíritus Sanctus Apóstolis innúmeris linguis appáruit: sed et memóriam venerántes, in primis gloriósæ semper Vírginis Maríæ, Genetrícis Dei et Dómini nostri Jesu Christi: sed et beáti Joseph, ejúsdem Vírginis Sponsi, et beatórum Apostolórum ac Mártyrum tuórum, Petri et Pauli, Andréæ, Jacóbi, Joánnis, Thomæ, Jacóbi, Philíppi, Bartholomǽi, Matthǽi, Simónis et Thaddǽi: Lini, Cleti, Cleméntis, Xysti, Cornélii, Cypriáni, Lauréntii, Chrysógoni, Joánnis et Pauli, Cosmæ et Damiáni: et ómnium Sanctórum tuórum; quorum méritis precibúsque concédas, ut in ómnibus protectiónis tuæ muniámur auxílio." ], po: true },
+            { type: "rb", text_la: "Jungit manus." },
+            { segments: [ "Per eúndem Christum, Dóminum nostrum. Amen." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { type: "rb", text_la: "Tenens manus expansas super Oblata, dicit (Hanc Igitur for Pentecost Octave):" },
+            { segments: [ "Hanc ígitur oblatiónem servitútis nostræ, sed et cunctæ famíliæ tuæ, quam tibi offérimus pro his quoque, quos regeneráre dignátus es ex aqua et Spíritu Sancto, tríbuens eis remissiónem ómnium peccatórum, quǽsumus, Dómine, ut placátus accípias: diésque nostros in tua pace dispónas, atque ab ætérna damnatióne nos éripi, et in electórum tuórum júbeas grege numerári." ], po: true },
+            { type: "rb", text_la: "Jungit manus." },
+            { segments: [ "Per Christum, Dóminum nostrum. Amen." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: [ "Quam oblatiónem tu, Deus, in ómnibus, quǽsumus," ], po: true },
+            { type: "rb", text_la: "Signat ter super Oblata," },
+            { segments: [ "bene+díctam, adscríp+tam, ra+tam, rationábilem, acceptabilémque fácere dignéris:" ], po: true },
+            { type: "rb", text_la: "Signat semel super Hostiam," },
+            { segments: [ "ut nobis Cor+pus," ], po: true },
+            { type: "rb", text_la: "et semel super Calicem," },
+            { segments: [ "et San+guis fiat dilectíssimi Fílii tui," ], po: true },
+            { type: "rb", text_la: "Jungit manus," },
+            { segments: [ "Dómini nostri Jesu Christi." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: [ "Qui prídie quam paterétur," ], po: true },
+            { type: "rb", text_la: "Accipit Hostiam," },
+            { segments: [ "accépit panem in sanctas ac venerábiles manus suas," ], po: true },
+            { type: "rb", text_la: "Elevat oculos ad cælum," },
+            { segments: [ "elevátis óculis in cælum ad te Deum, Patrem suum omnipoténtem," ], po: true },
+            { type: "rb", text_la: "Caput inclinat," },
+            { segments: [ "tibi grátias agens," ], po: true },
+            { type: "rb", text_la: "Signat super Hostiam," },
+            { segments: [ "bene+díxit, fregit, dedítque discípulis suis, dicens: Accípite, et manducáte ex hoc omnes." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Tenens ambabus manibus Hostiam inter indices et pollices, profert verba consecrationis secrete, distincte et attente super Hostiam." },
+            { segments: [ "HOC EST ENIM CORPUS MEUM." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Quibus verbis prolatis, statim Hostiam consecratam genuflexus adorat: surgit, ostendit populo, reponit super Corporale, et genuflexus iterum adorat." },
+        { type: "rb", text_la: "Tunc, detecto Calice, dicit:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: [ "Símili modo postquam cenátum est," ], po: true },
+            { type: "rb", text_la: "Ambabus manibus accipit Calicem," },
+            { segments: [ "accípiens et hunc præclárum Cálicem in sanctas ac venerábiles manus suas:" ], po: true },
+            { type: "rb", text_la: "item Caput inclinat," },
+            { segments: [ "item tibi grátias agens," ], po: true },
+            { type: "rb", text_la: "Sinistra tenens Calicem, dextera signat super eum," },
+            { segments: [ "bene+díxit, dedítque discípulis suis, dicens: Accípite, et bíbite ex eo omnes." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Profert verba consecrationis super Calicem, attente, continuate, et secrete, tenens illum parum elevatum." },
+            { segments: [ "HIC EST ENIM CALIX SANGUINIS MEI, NOVI ET ÆTERNI TESTAMENTI: MYSTERIUM FIDEI: QUI PRO VOBIS ET PRO MULTIS EFFUNDETUR IN REMISSIONEM PECCATORUM." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Quibus verbis prolatis, deponit Calicem super Corporale, et dicens secrete:" },
+            { segments: [ "Hæc quotiescúmque fecéritis, in mei memóriam faciétis." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Genuflexus adorat: surgit, ostendit populo, deponit, cooperit, et genuflexus iterum adorat." },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { type: "rb", text_la: "Deinde disjunctis manibus dicit:" },
+            { segments: [ "Unde et mémores, Dómine, nos servi tui, sed et plebs tua sancta, ejúsdem Christi Fílii tui, Dómini nostri, tam beátæ passiónis, nec non et ab ínferis resurrectiónis, sed et in cælos gloriósæ ascensiónis: offérimus præcláræ majestáti tuæ de tuis donis ac datis," ], po: true },
+            { type: "rb", text_la: "Jungit manus, et signat ter super Hostiam, et Calicem simul, dicens:" },
+            { segments: [ "Hóstiam + puram, Hóstiam + sanctam, Hóstiam + immaculátam," ], po: true },
+            { type: "rb", text_la: "Signat semel super Hostiam, dicens:" },
+            { segments: [ "Panem + sanctum vitæ ætérnæ," ], po: true },
+            { type: "rb", text_la: "et semel super Calicem, dicens:" },
+            { segments: [ "et Cálicem + salútis perpétuæ." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { type: "rb", text_la: "Extensis manibus prosequitur:" },
+            { segments: [ "Supra quæ propítio ac seréno vultu respícere dignéris: et accépta habére, sicúti accépta habére dignátus es múnera púeri tui justi Abel, et sacrifícium Patriárchæ nostri Abrahæ: et quod tibi óbtulit summus sacérdos tuus Melchísedech, sanctum sacrifícium, immaculátam hóstiam." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { type: "rb", text_la: "Profunde inclinatus, junctis manibus et super Altare positis, dicit:" },
+            { segments: [ "Súpplices te rogámus, omnípotens Deus: jube hæc perférri per manus sancti Angeli tui in sublíme altáre tuum, in conspéctu divínæ majestátis tuæ: ut, quotquot" ], po: true },
+            { type: "rb", text_la: "Osculatur Altare," },
+            { segments: [ "ex hac altáris participatióne sacrosánctum Fílii tui" ], po: true },
+            { type: "rb", text_la: "Jungit manus, et signat semel super Hostiam, et semel super Calicem," },
+            { segments: [ "Cor+pus, et Sán+guinem sumpsérimus," ], po: true },
+            { type: "rb", text_la: "Seipsum signat, dicens:" },
+            { segments: [ "omni benedictióne cælésti et grátia repleámur." ], po: true },
+            { type: "rb", text_la: "Jungit manus." },
+            { segments: [ "Per eúndem Christum, Dóminum nostrum. Amen." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Commemoratio pro defunctis." },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: [ "Meménto étiam, Dómine, famulórum famularúmque tuárum N. et N., qui nos præcessérunt cum signo fídei, et dórmiunt in somno pacis." ], po: true },
+            { type: "rb", text_la: "Jungit manus, orat aliquantulum pro iis defunctis, pro quibus orare intendit, deinde extensis manibus prosequitur:" },
+            { segments: [ "Ipsis, Dómine, et ómnibus in Christo quiescéntibus locum refrigérii, lucis, et pacis, ut indúlgeas, deprecámur." ], po: true },
+            { type: "rb", text_la: "Jungit manus, et caput inclinat, dicens:" },
+            { segments: [ "Per eúndem Christum, Dóminum nostrum. Amen." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { type: "rb", text_la: "Manu dextera percutit sibi pectus, elata aliquantulum voce dicens:" },
+            { segments: [ "Nobis quoque peccatóribus" ], po: true },
+            { type: "rb", text_la: "Extensis manibus ut prius, secrete prosequitur:" },
+            { segments: [ "fámulis tuis, de multitúdine miseratiónum tuárum sperántibus, partem áliquam et societátem donáre dignéris, cum tuis sanctis Apóstolis et Martýribus: cum Joánne, Stéphano, Matthía, Bárnaba, Ignátio, Alexándro, Marcellíno, Petro, Felicitáte, Perpétua, Agatha, Lúcia, Agnéte, Cæcília, Anastásia, et ómnibus Sanctis tuis: intra quorum nos consórtium, non æstimátor mériti, sed véniæ, quǽsumus, largítor admítte." ], po: true },
+            { type: "rb", text_la: "Jungit manus." },
+            { segments: [ "Per Christum, Dóminum nostrum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: [ "Per quem hæc ómnia, Dómine, semper bona creas," ], po: true },
+            { type: "rb", text_la: "Signat ter super Hostiam, et Calicem simul, dicens:" },
+            { segments: [ "sanctí+ficas, viví+ficas, bene+dícis et præstas nobis." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Discooperit Calicem, genuflectit, accipit Hostiam inter pollicem et indicem manus dexteræ: et tenens sinistra Calicem, cum Hostia signat ter a labio ad labium Calicis, dicens:" },
+            { segments: [ "Per Ip+sum, et cum Ip+so, et in Ip+so," ], po: true },
+            { type: "rb", text_la: "Cum ipsa Hostia signat bis inter se et Calicem, dicens:" },
+            { segments: [ "est tibi Deo Patri + omnipoténti, in unitáte Spíritus + Sancti," ], po: true },
+            { type: "rb", text_la: "Elevans parum Calicem cum Hostia, dicit:" },
+            { segments: [ "omnis honor, et glória." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Ponit Hostiam, Calicem Palla cooperit, genuflectit, surgit, et dicit intellegibili voce vel cantat:" },
+            { segments: [ "Per ómnia sǽcula sæculórum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Amen." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: [ "Orémus: Præcéptis salutáribus móniti, et divína institutióne formáti audémus dícere:" ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk", 
+          initial: true,
+          lines: [
+            { segments: [ "Pater noster, qui es in cælis. Sanctificétur nomen tuum. Advéniat regnum tuum. Fiat volúntas tua, sicut in cælo et in terra. Panem nostrum quotidiánum da nobis hódie. Et dimítte nobis débita nostra, sicut et nos dimíttimus debitóribus nostris. Et ne nos indúcas in tentatiónem:" ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Sed líbera nos a malo." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: [ "Amen." ], po: true } 
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { type: "rb", text_la: "Deinde manu dextera accipit inter indicem et medium digitos Patenam, quam tenens super Altare erectam, dicit secrete:" },
+            { segments: [ "Líbera nos, quǽsumus, Dómine, ab ómnibus malis, prætéritis, præséntibus et futúris: et intercedénte beáta et gloriósa semper Vírgine Dei Genetríce María, cum beátis Apóstolis tuis Petro et Paulo, atque Andréa, et ómnibus Sanctis," ], po: true },
+            { type: "rb", text_la: "Signat se cum Patena a fronte ad pectus," },
+            { segments: [ "da propítius pacem in diébus nostris:" ], po: true },
+            { type: "rb", text_la: "Patenam osculatur," },
+            { segments: [ "ut, ope misericórdiæ tuæ adjúti, et a peccáto simus semper líberi et ab omni perturbatióne secúri." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Submittit Patenam Hostiæ, discooperit Calicem, genuflectit, surgit, accipit Hostiam, et eam super Calicem tenens utraque manu, frangit per medium, dicens:" },
+            { segments: [ "Per eúndem Dóminum nostrum Jesum Christum, Fílium tuum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Et mediam partem, quam in dextera manu tenet, ponit super Patenam. Deinde ex parte, quæ in sinistra remanserat, frangit particulam, dicens:" },
+            { segments: [ "Qui tecum vivit et regnat in unitáte Spíritus Sancti Deus." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { type: "rb", text_la: "Aliam mediam partem, quam in sinistra manu habet, adjungit mediæ super Patenam positæ, et particulam parvam dextera retinens super Calicem, quem sinistra per nodum infra cuppam tenet, dicit intellegibili voce vel cantat:" },
+            { segments: [ "Per ómnia sǽcula sæculórum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Amen." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { type: "rb", text_la: "Cum ipsa particula signat ter super Calicem, dicens:" },
+            { segments: [ "Pax Dómini sit + semper vobís+cum." ], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: [ "Et cum spíritu tuo." ] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { type: "rb", text_la: "Particulam ipsam immittit in Calicem, dicens secrete:" },
+            { segments: [ "Hæc commíxtio, et consecrátio Córporis et Sánguinis Dómini nostri Jesu Christi, fiat accipiéntibus nobis in vitam ætérnam. Amen." ], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Cooperit Calicem, genuflectit, surgit, et inclinatus Sacramento, junctis manibus, et ter pectus percutiens, intellegibili voce dicit:" },
+        {
+          type: "pr_blk", 
+          initial: true,
+          lines: [
+            { type: "action", key: "action.strike_breast_thrice"},
+            { segments: [ "Agnus Dei, qui tollis peccáta mundi: miserére nobis." ] },
+            { segments: [ "Agnus Dei, qui tollis peccáta mundi: miserére nobis." ] },
+            { segments: [ "Agnus Dei, qui tollis peccáta mundi: dona nobis pacem." ] }
+          ]
+        }
+      ],
       "proper:introit:pentecost-sunday": [
         { type: "action", key: "action.stand" },
         { type: "rb", text_la: "Sap 1:7." },
@@ -5484,6 +6122,12 @@
 
     // Section name translations
     const sectionNames = {
+      "pentecost-monday": {
+        "en": "Pentecost Monday",
+        "de": "Pfingstmontag",
+        "fr": "Lundi de la Pentecôte",
+        "es": "Lunes de Pentecostés"
+      },
       "pentecost-sunday": {
         "en": "Pentecost Sunday",
         "de": "Pfingstsonntag",
@@ -5710,6 +6354,43 @@
 
     // Mass configurations
     const massConfigs = {
+      "pentecost-monday": {
+        name: "Pentecost Monday",
+        season: "pentecost",
+        sections: [
+          { key: "vidi-aquam", type: "ordinary", id: "vidi-aquam" },
+          { key: "prayers-foot-altar", type: "ordinary", id: "prayers-foot-altar" },
+          { key: "incensation-before-introit", type: "ordinary", id: "incensation-before-introit", sole: true },
+          { key: "introit", type: "proper", id: "introit:pentecost-monday" },
+          { key: "kyrie", type: "ordinary", id: "kyrie" },
+          { key: "gloria", type: "ordinary", id: "gloria" },
+          { key: "collect", type: "proper", id: "collect:pentecost-monday" },
+          { key: "epistle", type: "proper", id: "epistle:pentecost-monday" },
+          { key: "alleluia", type: "proper", id: "gradual-sequence:pentecost-monday" },
+          { key: "gospel-solemn-prep", type: "ordinary", id: "gospel-solemn-prep", sole: true },
+          { key: "gospel", type: "proper", id: "gospel:pentecost-monday" },
+          { key: "credo", type: "ordinary", id: "credo" },
+          { key: "offertory-antiphon", type: "proper", id: "offertory:pentecost-monday" },
+          { key: "offertory-prayers-host", type: "ordinary", id: "offertory-prayers-host" },
+          { key: "offertory-prayers-wine-water", type: "ordinary", id: "offertory-prayers-wine-water" },
+          { key: "offertory-prayers-chalice-etc", type: "ordinary", id: "offertory-prayers-chalice-etc" },
+          { key: "offertory-incensation", type: "ordinary", id: "offertory-incensation", sole: true },
+          { key: "offertory-lavabo", type: "ordinary", id: "offertory-lavabo" },
+          { key: "offertory-suscipe-sancta-trinitas", type: "ordinary", id: "offertory-suscipe-sancta-trinitas" },
+          { key: "offertory-orate-fratres", type: "ordinary", id: "offertory-orate-fratres" },
+          { key: "secret", type: "proper", id: "secret:pentecost-monday" },
+          { key: "preface", type: "ordinary", id: "preface-pentecost" },
+          { key: "sanctus", type: "ordinary", id: "sanctus" },
+          { key: "canon", type: "ordinary", id: "canon-pentecost-octave" },
+          { key: "prayers-before-communion", type: "ordinary", id: "prayers-before-communion" },
+          { key: "priest-communion", type: "ordinary", id: "priest-communion" },
+          { key: "communion-antiphon", type: "proper", id: "communion:pentecost-monday" },
+          { key: "ablution-prayers", type: "ordinary", id: "ablution-prayers" },
+          { key: "postcommunion", type: "proper", id: "postcommunion:pentecost-monday" },
+          { key: "conclusion", type: "ordinary", id: "conclusion" },
+          { key: "last-gospel", type: "ordinary", id: "last-gospel" }
+        ]
+      },
       "pentecost-sunday": {
         name: "Dominica Pentecostes",
         season: "pentecost",
@@ -6089,7 +6770,7 @@
       const languageSelect = document.getElementById('language-select');
       
       // Load initial Mass
-      renderMass('pentecost-sunday');
+      renderMass('pentecost-monday');
       
       // Handle Mass selection changes
       massSelect.addEventListener('change', function() {
