@@ -20,8 +20,6 @@ jobs:
         uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
-          install-chromedriver: true
-          install-dependencies: true
 
       - name: Install Node dependencies
         run: |
@@ -31,11 +29,13 @@ jobs:
         run: node templates/scraper.js
         env:
           CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
-          CHROMEDRIVER_PATH: ${{ steps.setup-chrome.outputs.chromedriver-path }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_DOCS_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_DOCS_SERVICE_ACCOUNT }}
 
+      # This step will run regardless of the scraper's outcome.
+      # It ensures all generated files (HTML, CSVs, logs, and error.json on failure) are saved.
       - name: Upload all data artifacts
+        if: always() # <-- This is the key change
         uses: actions/upload-artifact@v4
         with:
           name: scraped-data
@@ -43,6 +43,7 @@ jobs:
           retention-days: 7
           
       # Upload only the final Gemini output as a separate artifact for easier access
+      # This will be skipped on failure because the file won't exist, which is the correct behavior.
       - name: Upload Gemini output
         uses: actions/upload-artifact@v4
         with:
