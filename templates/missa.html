@@ -387,6 +387,14 @@
     // Enhanced lexicon with better coverage
     const lexicon = {
 
+      "asperges": "sprinkle",
+      "hyssopo": "with hyssop",
+      "mundabor": "I shall be cleansed",
+      "lavabis": "you will wash me",
+      "dealbabor": "I shall be made whiter",
+      "nivem": "snow",
+      "salutare": "salvation",
+
       // Lexicon additions for Trinity Sunday
       "benedicta": "blessed",
       "indivisa": "undivided",
@@ -3031,7 +3039,114 @@
 
     // Enhanced catalog with proper priest markings
     const catalog = {
-            "proper:introit:trinity-sunday": [
+      "ordinary:asperges-me": [
+        { type: "action", key: "action.stand" },
+        { type: "rb", text_la: "Extra Tempus Paschale, Sacerdos, antequam incipiat Missam, facit aspersionem aquæ benedictæ, dicens:" },
+        {
+          type: "pr_blk",
+          speaker: "Ant.",
+          initial: true,
+          lines: [
+            { segments: ["Aspérges me, Dómine, hyssópo, et mundábor: lavábis me, et super nivem dealbábor."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "Ps.",
+          lines: [
+            { segments: ["Miserére mei, Deus, secúndum magnam misericórdiam tuam."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Glória Patri, et Fílio, et Spirítui Sancto."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Sicut erat in princípio, et nunc, et semper, et in sǽcula sæculórum. Amen."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "Ant.",
+          initial: true,
+          lines: [
+            { segments: ["Aspérges me, Dómine, hyssópo, et mundábor: lavábis me, et super nivem dealbábor."] }
+          ]
+        },
+        { type: "rb", text_la: "Sacerdos, stans versus ad altare, dicit:" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Osténde nobis, Dómine, misericórdiam tuam."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Et salutáre tuum da nobis."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Dómine, exáudi oratiónem meam."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Et clamor meus ad te véniat."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Dóminus vobíscum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Et cum spíritu tuo."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Orémus."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Exáudi nos, Dómine sancte, Pater omnípotens, ætérne Deus: et míttere dignéris sanctum Angelum tuum de cælis, qui custódiat, fóveat, prótegat, vísitet atque deféndat omnes habitántes in hoc habitáculo. Per Christum Dóminum nostrum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Amen."] }
+          ]
+        }
+      ],
+      "proper:introit:trinity-sunday": [
         { type: "action", key: "action.stand" },
         { type: "rb", text_la: "Tob 12:6" },
         {
@@ -6531,7 +6646,12 @@
 
     // Section name translations
     const sectionNames = {
-      // Inside sectionNames object
+      "asperges-me": {
+        "en": "Asperges Me",
+        "de": "Asperges Me",
+        "fr": "Asperges Me",
+        "es": "Asperges Me"
+      },
       "trinity-sunday": {
         "en": "Most Holy Trinity",
         "de": "Heiligste Dreifaltigkeit",
@@ -6782,10 +6902,11 @@
 
     // Mass configurations
     const massConfigs = {
-            "trinity-sunday": {
+      "trinity-sunday": {
         name: "Dominica Sanctissimae Trinitatis",
         season: "ordinary-time",
         sections: [
+          { key: "asperges-me", type: "ordinary", id: "asperges-me" },
           { key: "prayers-foot-altar", type: "ordinary", id: "prayers-foot-altar" },
           { key: "incensation-before-introit", type: "ordinary", id: "incensation-before-introit", sole: true },
           { key: "introit", type: "proper", id: "introit:trinity-sunday" },
