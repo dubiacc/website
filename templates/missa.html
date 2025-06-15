@@ -264,6 +264,7 @@
       <option value="ascension-sunday">Ascension Sunday</option>
       <option value="pentecost-sunday">Pentecost Sunday</option>
       <option value="pentecost-monday">Pentecost Monday</option>
+      <option value="trinity-sunday" selected="true">Most Holy Trinity</option>
     </select>
     
     <label for="language-select">Language:</label>
@@ -385,6 +386,77 @@
 
     // Enhanced lexicon with better coverage
     const lexicon = {
+
+      // Lexicon additions for Trinity Sunday
+      "benedicta": "blessed",
+      "indivisa": "undivided",
+      "unitas": "Unity",
+      "confitebimur": "we will confess",
+      "fecit": "He has shown",
+      "nobiscum": "with us",
+      "admirabile": "glorious",
+      "universa": "all",
+      "dedisti": "You have given",
+      "confessione": "confession",
+      "agnoscere": "to acknowledge",
+      "potentia": "power",
+      "unitatem": "unity",
+      "eiusdem": "of the same",
+      "firmitate": "firmness",
+      "muniamur": "we may be protected",
+      "adversis": "harm",
+      "altitudo": "depth",
+      "divitiarum": "of the riches",
+      "incomprehensibilia": "incomprehensible",
+      "iudicia": "judgments",
+      "investigabiles": "unsearchable",
+      "sensum": "mind",
+      "consiliarius": "counselor",
+      "retribuetur": "recompense should be made",
+      "intueris": "look into",
+      "abyssos": "depths",
+      "firmamento": "firmament",
+      "laudabilis": "praiseworthy",
+      "patrum": "of the fathers",
+      "data": "given",
+      "euntes": "Go",
+      "docete": "teach",
+      "baptizantes": "baptizing",
+      "eos": "them",
+      "servare": "to observe",
+      "mandavi": "I have commanded",
+      "usque": "unto",
+      "consummationem": "consummation",
+      "unigenitusque": "and the only-begotten",
+      "invocationem": "invocation",
+      "oblationis": "of this offering",
+      "nosmetipsos": "us ourselves",
+      "perfice": "make",
+      "singularitate": "oneness",
+      "personae": "of a person",
+      "substantiae": "substance",
+      "revelante": "by revelation",
+      "credimus": "we believe",
+      "differentia": "difference",
+      "discretionis": "separation",
+      "sentimus": "we believe",
+      "proprietas": "distinction",
+      "essentia": "essence",
+      "adoretur": "may be adored",
+      "aequalitas": "equality",
+      "cessant": "cease",
+      "clamare": "to cry out",
+      "cotidie": "daily",
+      "viventibus": "the living",
+      "susceptio": "reception",
+      "sempiternae": "eternal",
+      "eiusdemque": "and of the same",
+      "confessio": "profession",
+      "cremaberis": "thou art burnt",
+      "reverende": "reverend",
+      "domne": "sir",
+      "deleantur": "be blotted out",
+      "delicta": "sins",
 
       // From Pentecost Introit
       "spiritus": "Spirit", // Already exists, but confirm variant forms
@@ -2959,7 +3031,344 @@
 
     // Enhanced catalog with proper priest markings
     const catalog = {
-            "proper:introit:pentecost-monday": [
+            "proper:introit:trinity-sunday": [
+        { type: "action", key: "action.stand" },
+        { type: "rb", text_la: "Tob 12:6" },
+        {
+          type: "pr_blk",
+          initial: true,
+          lines: [
+            { segments: ["Benedícta sit sancta Trínitas atque indivísa Unitas: confitébimur ei, quia fecit nobíscum misericórdiam suam."] }
+          ]
+        },
+        { type: "rb", text_la: "Ps 8:2" },
+        {
+          type: "pr_blk",
+          lines: [
+            { segments: ["Dómine, Dóminus noster, quam admirábile est nomen tuum in univérsa terra!"] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Glória Patri, et Fílio, et Spirítui Sancto."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Sicut erat in princípio, et nunc, et semper, et in sǽcula sæculórum. Amen."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          initial: true,
+          lines: [
+            { segments: ["Benedícta sit sancta Trínitas atque indivísa Unitas: confitébimur ei, quia fecit nobíscum misericórdiam suam."] }
+          ]
+        }
+      ],
+
+      "proper:collect:trinity-sunday": [
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Dóminus vobíscum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Et cum spíritu tuo."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Orémus."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Omnípotens sempitérne Deus, qui dedísti fámulis tuis in confessióne veræ fídei, ætérnæ Trinitátis glóriam agnóscere, et in poténtia maiestátis adoráre Unitátem: quǽsumus; ut, eiúsdem fídei firmitáte, ab ómnibus semper muniámur advérsis."], po: true },
+            { segments: ["Per Dóminum nostrum Iesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Amen."] }
+          ]
+        }
+      ],
+
+      "proper:epistle:trinity-sunday": [
+        { type: "action", key: "action.sit" },
+        { type: "rb", text_la: "Léctio Epístolæ beáti Pauli Apóstoli ad Romános" },
+        { type: "rb", text_la: "Rom 11:33-36" },
+        {
+          type: "pr_blk",
+          initial: true,
+          lines: [
+            { segments: ["O altitúdo divitiárum sapiéntiæ et sciéntiæ Dei: quam incomprehensibília sunt iudícia eius, et investigábiles viæ eius! Quis enim cognovit sensum Dómini? Aut quis consiliárius eius fuit? Aut quis prior dedit illi, et retribuétur ei? Quóniam ex ipso et per ipsum et in ipso sunt ómnia: ipsi glória in sǽcula. Amen."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Deo grátias."] }
+          ]
+        }
+      ],
+
+      "proper:gradual:trinity-sunday": [
+        { type: "action", key: "action.stand" },
+        { type: "rb", text_la: "Dan 3:55-56" },
+        {
+          type: "pr_blk",
+          initial: true,
+          lines: [
+            { segments: ["Benedíctus es, Dómine, qui intuéris abýssos, et sedes super Chérubim."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "V",
+          lines: [
+            { segments: ["Benedíctus es, Dómine, in firmaménto cæli, et laudábilis in sǽcula. Allelúia, allelúia."] }
+          ]
+        },
+        { type: "rb", text_la: "Dan 3:52" },
+        {
+          type: "pr_blk",
+          speaker: "V",
+          initial: true,
+          lines: [
+            { segments: ["Benedíctus es, Dómine, Deus patrum nostrórum, et laudábilis in sǽcula. Allelúia."] }
+          ]
+        }
+      ],
+      
+      "proper:gospel:trinity-sunday": [
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Dóminus vobíscum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Et cum spíritu tuo."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Sequéntia ++ sancti Evangélii secúndum Matthǽum"], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Glória tibi, Dómine."] }
+          ]
+        },
+        { type: "rb", text_la: "Matt 28:18-20" },
+        {
+          type: "pr_blk",
+          initial: true,
+          lines: [
+            { segments: ["In illo témpore: Dixit Iesus discípulis suis: Data est mihi omnis potéstas in cœlo et in terra. Eúntes ergo docéte omnes gentes, baptizántes eos in nómine Patris, et Fílii, et Spíritus Sancti: docéntes eos serváre ómnia, quæcúmque mandávi vobis. Et ecce, ego vobíscum sum ómnibus diébus usque ad consummatiónem sǽculi."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Laus tibi, Christe."] }
+          ]
+        }
+      ],
+
+      "proper:offertory:trinity-sunday": [
+        { type: "action", key: "action.sit" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Dóminus vobíscum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Et cum spíritu tuo."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Orémus."], po: true }
+          ]
+        },
+        { type: "rb", text_la: "Tob 12:6" },
+        {
+          type: "pr_blk",
+          initial: true,
+          lines: [
+            { segments: ["Benedíctus sit Deus Pater, unigenitúsque Dei Fílius, Sanctus quoque Spíritus: quia fecit nobíscum misericórdiam suam."] }
+          ]
+        }
+      ],
+
+      "proper:secret:trinity-sunday": [
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Sanctífica, quǽsumus, Dómine, Deus noster, per tui sancti nóminis invocatiónem, huius oblatiónis hóstiam: et per eam nosmetípsos tibi pérfice munus ætérnum."], po: true },
+            { segments: ["Per Dóminum nostrum Iesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Amen."] }
+          ]
+        }
+      ],
+
+      "ordinary:preface-trinity": [
+        { type: "action", key: "action.stand" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Dóminus vobíscum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Et cum spíritu tuo."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Sursum corda."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Habémus ad Dóminum."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Grátias agámus Dómino Deo nostro."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Dignum et justum est."] }
+          ]
+        },
+        { type: "rb", text_la: "Præfatio de Sanctissima Trinitate" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Vere dignum et iustum est, æquum et salutáre, nos tibi semper et ubíque grátias ágere: Dómine sancte, Pater omnípotens, ætérne Deus: Qui cum unigénito Fílio tuo et Spíritu Sancto unus es Deus, unus es Dóminus: non in uníus singularitáte persónæ, sed in uníus Trinitáte substántiæ. Quod enim de tua glória, revelánte te, crédimus, hoc de Fílio tuo, hoc de Spíritu Sancto sine differéntia discretiónis sentímus. Ut in confessióne veræ sempiternǽque Deitátis, et in persónis propríetas, et in esséntia únitas, et in maiestáte adorétur æquálitas. Quam laudant Angeli atque Archángeli, Chérubim quoque ac Séraphim: qui non cessant clamáre cotídie, una voce dicéntes:"], po: true }
+          ]
+        }
+      ],
+      
+      "proper:communion:trinity-sunday": [
+        { type: "action", key: "action.stand" },
+        { type: "rb", text_la: "Tob 12:6" },
+        {
+          type: "pr_blk",
+          initial: true,
+          lines: [
+            { segments: ["Benedícimus Deum cœli et coram ómnibus vivéntibus confitébimur ei: quia fecit nobíscum misericórdiam suam."] }
+          ]
+        }
+      ],
+
+      "proper:postcommunion:trinity-sunday": [
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Dóminus vobíscum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Et cum spíritu tuo."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Orémus."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Profíciat nobis ad salútem córporis et ánimæ, Dómine, Deus noster, huius sacraménti suscéptio: et sempitérnæ sanctæ Trinitátis eiusdémque indivíduæ Unitátis conféssio."], po: true },
+            { segments: ["Per Dóminum nostrum Iesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Amen."] }
+          ]
+        }
+      ],
+
+      "proper:introit:pentecost-monday": [
         { type: "action", key: "action.stand" },
         { type: "rb", text_la: "Ps 80:17" },
         {
@@ -6122,6 +6531,25 @@
 
     // Section name translations
     const sectionNames = {
+      // Inside sectionNames object
+      "trinity-sunday": {
+        "en": "Most Holy Trinity",
+        "de": "Heiligste Dreifaltigkeit",
+        "fr": "Très Sainte Trinité",
+        "es": "Santísima Trinidad"
+      },
+      "preface-trinity": {
+        "en": "Preface of the Holy Trinity",
+        "de": "Präfation von der Heiligsten Dreifaltigkeit",
+        "fr": "Préface de la Sainte Trinité",
+        "es": "Prefacio de la Santísima Trinidad"
+      },
+      "gradual": {
+        "en": "Gradual",
+        "de": "Graduale",
+        "fr": "Graduel",
+        "es": "Gradual"
+      },
       "pentecost-monday": {
         "en": "Pentecost Monday",
         "de": "Pfingstmontag",
@@ -6354,6 +6782,42 @@
 
     // Mass configurations
     const massConfigs = {
+            "trinity-sunday": {
+        name: "Dominica Sanctissimae Trinitatis",
+        season: "ordinary-time",
+        sections: [
+          { key: "prayers-foot-altar", type: "ordinary", id: "prayers-foot-altar" },
+          { key: "incensation-before-introit", type: "ordinary", id: "incensation-before-introit", sole: true },
+          { key: "introit", type: "proper", id: "introit:trinity-sunday" },
+          { key: "kyrie", type: "ordinary", id: "kyrie" },
+          { key: "gloria", type: "ordinary", id: "gloria" },
+          { key: "collect", type: "proper", id: "collect:trinity-sunday" },
+          { key: "epistle", type: "proper", id: "epistle:trinity-sunday" },
+          { key: "gradual", type: "proper", id: "gradual:trinity-sunday" },
+          { key: "gospel-solemn-prep", type: "ordinary", id: "gospel-solemn-prep", sole: true },
+          { key: "gospel", type: "proper", id: "gospel:trinity-sunday" },
+          { key: "credo", type: "ordinary", id: "credo" },
+          { key: "offertory-antiphon", type: "proper", id: "offertory:trinity-sunday" },
+          { key: "offertory-prayers-host", type: "ordinary", id: "offertory-prayers-host" },
+          { key: "offertory-prayers-wine-water", type: "ordinary", id: "offertory-prayers-wine-water" },
+          { key: "offertory-prayers-chalice-etc", type: "ordinary", id: "offertory-prayers-chalice-etc" },
+          { key: "offertory-incensation", type: "ordinary", id: "offertory-incensation", sole: true },
+          { key: "offertory-lavabo", type: "ordinary", id: "offertory-lavabo" },
+          { key: "offertory-suscipe-sancta-trinitas", type: "ordinary", id: "offertory-suscipe-sancta-trinitas" },
+          { key: "offertory-orate-fratres", type: "ordinary", id: "offertory-orate-fratres" },
+          { key: "secret", type: "proper", id: "secret:trinity-sunday" },
+          { key: "preface", type: "ordinary", id: "preface-trinity" },
+          { key: "sanctus", type: "ordinary", id: "sanctus" },
+          { key: "canon", type: "ordinary", id: "canon" },
+          { key: "prayers-before-communion", type: "ordinary", id: "prayers-before-communion" },
+          { key: "priest-communion", type: "ordinary", id: "priest-communion" },
+          { key: "communion-antiphon", type: "proper", id: "communion:trinity-sunday" },
+          { key: "ablution-prayers", type: "ordinary", id: "ablution-prayers" },
+          { key: "postcommunion", type: "proper", id: "postcommunion:trinity-sunday" },
+          { key: "conclusion", type: "ordinary", id: "conclusion" },
+          { key: "last-gospel", type: "ordinary", id: "last-gospel" }
+        ]
+      },
       "pentecost-monday": {
         name: "Pentecost Monday",
         season: "pentecost",
@@ -6770,7 +7234,7 @@
       const languageSelect = document.getElementById('language-select');
       
       // Load initial Mass
-      renderMass('pentecost-monday');
+      renderMass('trinity-sunday');
       
       // Handle Mass selection changes
       massSelect.addEventListener('change', function() {
