@@ -3223,6 +3223,60 @@
 
     // Enhanced catalog with proper priest markings
     const catalog = {
+      "ordinary:preface": [
+        { type: "action", key: "action.stand" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Dóminus vobíscum."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Et cum spíritu tuo."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Sursum corda."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Habémus ad Dóminum."] }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          lines: [
+            { segments: ["Grátias agámus Dómino Deo nostro."], po: true }
+          ]
+        },
+        {
+          type: "pr_blk",
+          speaker: "S",
+          lines: [
+            { segments: ["Dignum et iustum est."] }
+          ]
+        },
+        { type: "rb", text_la: "Præfatio Communis" },
+        {
+          type: "pr_blk",
+          speaker: "P",
+          initial: true,
+          lines: [
+            { segments: ["Vere dignum et iustum est, æquum et salutáre, nos tibi semper et ubíque grátias ágere: Dómine sancte, Pater omnípotens, ætérne Deus: per Christum, Dóminum nostrum. Per quem maiestátem tuam laudant Angeli, adórant Dominatiónes, tremunt Potestátes. Cæli cælorúmque Virtútes ac beáta Séraphim sócia exsultatióne concélebrant. Cum quibus et nostras voces ut admítti iubeas, deprecámur, súpplici confessióne dicéntes:"], po: true }
+          ]
+        }
+      ],
       "proper:introit:corpus-christi": [
         { type: "action", key: "action.stand" },
         { type: "rb", text_la: "Ps 80:17" },
@@ -3490,9 +3544,6 @@
           ]
         }
       ],
-      // Corpus Christi uses the Common Preface, so no new preface entry is needed in catalog unless a specific one is desired.
-      // The sample HTML uses Common Preface ("Præfatio Communis")
-
       "proper:communion:corpus-christi": [
         { type: "action", key: "action.stand" },
         { type: "rb", text_la: "1 Cor 11:26-27" },
@@ -7206,7 +7257,20 @@
         "fr": "Graduel et Séquence",
         "es": "Gradual y Secuencia"
       },
-      "preface-pentecost": { // For the specific Pentecost Preface
+      "preface": { // For Common Preface if you use this key in massConfigs
+        "en": "Preface",
+        "de": "Präfation",
+        "fr": "Préface",
+        "es": "Prefacio"
+      },
+      // Or more specifically if you named the key 'preface-common' in massConfigs:
+      "preface-common": {
+        "en": "Common Preface",
+        "de": "Allgemeine Präfation",
+        "fr": "Préface Commune",
+        "es": "Prefacio Común"
+      },
+      "preface-pentecost": {
         "en": "Preface of the Holy Spirit",
         "de": "Präfation vom Heiligen Geist",
         "fr": "Préface du Saint-Esprit",
