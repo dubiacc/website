@@ -2969,7 +2969,11 @@ fn article2html(
     let html = html.replace("$$SKIP_TO_MAIN_CONTENT$$", &skip);
     let contact = get_special_page_link(lang, "about", meta)?;
     let root_href = get_root_href();
+    let special_about_path = get_string(meta, lang, "special-about-path")?;
+    let special_about_title = get_string(meta, lang, "special-about-title")?;
 
+    let html = html.replace("$$SPECIAL_ABOUT_PATH$$", &special_about_path);
+    let html = html.replace("$$SPECIAL_ABOUT_TITLE$$", &special_about_title);
     let html = html.replace("$$CONTACT_URL$$", &contact);
     let html = html.replace("$$TITLE$$", &a.title);
     let html = html.replace("$$TITLE_ID$$", &title_id);

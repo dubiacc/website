@@ -259,14 +259,10 @@
   <div class="mass-selector">
     <label for="mass-select">Select Mass:</label>
     <select id="mass-select">
-      <option value="easter-4">Fourth Sunday After Easter</option>
-      <option value="easter-5">Fifth Sunday After Easter</option>
-      <option value="ascension-sunday">Ascension Sunday</option>
-      <option value="pentecost-sunday">Pentecost Sunday</option>
-      <option value="pentecost-monday">Pentecost Monday</option>
-      <option value="trinity-sunday" selected="true">Most Holy Trinity</option>
+      <!-- Options will be populated by JavaScript -->
+      <option value="trinity-sunday" selected="true">Loading...</option>
     </select>
-    
+
     <label for="language-select">Language:</label>
     <select id="language-select" class="language-selector">
       <option value="en">English</option>
@@ -386,6 +382,132 @@
 
     // Enhanced lexicon with better coverage
     const lexicon = {
+
+      "eripuit": "rescued",
+      "herodis": "of Herod",
+      "exspectatione": "expecting",
+      "plebis": "of the people",
+      "probasti": "probed",
+      "cognovisti": "you know",
+      "sessionem": "sitting",
+      "resurrectionem": "standing",
+      "martyrio": "by the martyrdom",
+      "consecrasti": "made holy",
+      "sequi": "to follow",
+      "praeceptum": "teaching",
+      "religionis": "of faith",
+      "sumpsit": "received",
+      "exordium": "first beginning",
+      "affligeret": "persecute",
+      "quosdam": "certain members",
+      "iacobum": "James",
+      "ioannis": "of John",
+      "gladio": "with the sword",
+      "videns": "seeing",
+      "placeret": "it pleased",
+      "iudaeis": "the Jews",
+      "apposuit": "he proceeded",
+      "apprehenderet": "to arrest",
+      "petrum": "Peter",
+      "azymorum": "of the Unleavened Bread",
+      "carcerem": "into prison",
+      "tradens": "committing",
+      "quattuor": "four",
+      "quaternionibus": "to four guards",
+      "militum": "of soldiers",
+      "custodiendum": "the custody",
+      "volens": "intending",
+      "producere": "to bring forth",
+      "servabatur": "was being kept",
+      "oratio": "prayer",
+      "fiebat": "was being made",
+      "intermissione": "ceasing",
+      "producturus": "about to bring forth",
+      "dormiens": "sleeping",
+      "vinctus": "bound",
+      "catenis": "with chains",
+      "duabus": "two",
+      "astitit": "stood beside",
+      "refulsit": "shone",
+      "habitaculo": "in the room",
+      "percussoque": "and he struck",
+      "latere": "on the side",
+      "excitavit": "woke",
+      "velociter": "quickly",
+      "ceciderunt": "dropped",
+      "praecingere": "Gird yourself",
+      "calcea": "put on",
+      "caligas": "sandals",
+      "circumda": "Wrap about you",
+      "vestimentum": "cloak",
+      "sequebatur": "he followed",
+      "nesciebat": "without knowing",
+      "existimabat": "he thought",
+      "visum": "a vision",
+      "videre": "was having",
+      "transeuntes": "They passed through",
+      "custodiam": "guard",
+      "portam": "gate",
+      "ferream": "iron",
+      "ducit": "leads",
+      "ultro": "of its own accord",
+      "aperta": "opened",
+      "exeuntes": "they went out",
+      "processerunt": "passed on through",
+      "vicum": "street",
+      "continuo": "straightway",
+      "discessit": "left",
+      "reversus": "came to himself",
+      "constitues": "you shall make",
+      "principes": "princes",
+      "memores": "mindful",
+      "propterea": "therefore",
+      "confitebuntur": "shall praise",
+      "petram": "rock",
+      "aedificabo": "I will build",
+      "caesareae": "of Caesarea",
+      "philippi": "of Philippi",
+      "interrogabat": "he asked",
+      "eliam": "Elias",
+      "ieremiam": "Jeremias",
+      "bar-iona": "Bar-Jona",
+      "revelavit": "revealed",
+      "portae": "gates",
+      "inferi": "of hell",
+      "praevalebunt": "shall prevail",
+      "adversus": "against",
+      "dabo": "I will give",
+      "claves": "keys",
+      "quodcumque": "whatsoever",
+      "ligaveris": "you shall bind",
+      "ligatum": "bound",
+      "solveris": "you shall loose",
+      "solutum": "loosed",
+      "progenie": "progeny",
+      "generatione": "generation",
+      "sacrandas": "to be hallowed",
+      "apostolica": "apostolic",
+      "prosequatur": "may accompany",
+      "expiari": "to be pardoned",
+      "defendi": "to be defended",
+      "suppliciter": "humbly",
+      "exorare": "to entreat",
+      "gregem": "flock",
+      "deseras": "desert",
+      "continua": "constant",
+      "protectione": "protection",
+      "custodias": "keep",
+      "iisdem": "same",
+      "rectoribus": "rulers",
+      "gubernetes": "governed",
+      "vicarios": "vicars",
+      "contulisti": "didst set over",
+      "praeesse": "to be pastors",
+      "alimento": "food",
+      "satiasti": "filled",
+      "intercessionibus": "by the intercession",
+      "adversitate": "from harm",
+      "custodi": "defend",
 
       "cibavit": "He fed",
       "adipe": "with the best", // or "fat"
@@ -3223,6 +3345,351 @@
 
     // Enhanced catalog with proper priest markings
     const catalog = {
+      "proper:introit:ss-peter-paul": [
+          { type: "action", key: "action.stand" },
+          { type: "rb", text_la: "Acts 12:11" },
+          {
+            type: "pr_blk",
+            initial: true,
+            lines: [
+              { segments: ["Nunc scio vere, quia misit Dóminus Angelum suum: et erípuit me de manu Heródis et de omni exspectatióne plebis Iudæórum."] }
+            ]
+          },
+          { type: "rb", text_la: "Ps 138:1-2" },
+          {
+            type: "pr_blk",
+            lines: [
+              { segments: ["Dómine; probásti me et cognovísti me: tu cognovísti sessiónem meam et resurrectiónem meam."] }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "P",
+            lines: [
+              { segments: ["Glória Patri, et Fílio, et Spirítui Sancto."], po: true }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "S",
+            lines: [
+              { segments: ["Sicut erat in princípio, et nunc, et semper, et in sǽcula sæculórum. Amen."] }
+            ]
+          },
+          {
+            type: "pr_blk",
+            initial: true,
+            lines: [
+              { segments: ["Nunc scio vere, quia misit Dóminus Angelum suum: et erípuit me de manu Heródis et de omni exspectatióne plebis Iudæórum."] }
+            ]
+          }
+      ],
+
+      "proper:collect:ss-peter-paul": [
+          {
+            type: "pr_blk",
+            speaker: "P",
+            lines: [
+              { segments: ["Dóminus vobíscum."], po: true }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "S",
+            lines: [
+              { segments: ["Et cum spíritu tuo."] }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "P",
+            initial: true,
+            lines: [
+              { segments: ["Orémus."], po: true }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "P",
+            initial: true,
+            lines: [
+              { segments: ["Deus, qui hodiérnam diem Apostolórum tuórum Petri et Pauli martýrio consecrásti: da Ecclésiæ tuæ, eórum in ómnibus sequi præcéptum; per quos religiónis sumpsit exórdium."], po: true },
+              { segments: ["Per Dóminum nostrum Iesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum."], po: true }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "S",
+            lines: [
+              { segments: ["Amen."] }
+            ]
+          }
+      ],
+
+      "proper:epistle:ss-peter-paul": [
+          { type: "action", key: "action.sit" },
+          { type: "rb", text_la: "Léctio Actuum Apostolórum" },
+          { type: "rb", text_la: "Acts 12:1-11" },
+          {
+            type: "pr_blk",
+            initial: true,
+            lines: [
+              { segments: ["In diébus illis: Misit Heródes rex manus, ut afflígeret quosdam de ecclésia. Occidit autem Iacóbum fratrem Ioánnis gládio. Videns autem, quia pláceret Iudæis, appósuit, ut apprehénderet et Petrum. Erant autem dies azymórum. Quem cum apprehendísset, misit in cárcerem, tradens quátuor quaterniónibus mílitum custodiéndum, volens post Pascha prodúcere eum pópulo. Et Petrus quidem servabátur in cárcere. Orátio autem fiébat sine intermissióne ab ecclésia ad Deum pro eo. Cum autem productúrus eum esset Heródes, in ipsa nocte erat Petrus dórmiens inter duos mílites, vinctus caténis duábus: et custódes ante óstium custodiébant cárcerem. Et ecce, Angelus Dómini ástitit: et lumen refúlsit in habitáculo: percussóque látere Petri, excitávit eum, dicens: Surge velóciter. Et cecidérunt caténæ de mánibus eius. Dixit autem Angelus ad eum: Præcíngere, et cálcea te cáligas tuas. Et fecit sic. Et dixit illi: Circúmda tibi vestiméntum tuum, et séquere me. Et éxiens sequebátur eum, et nesciébat, quia verum est, quod fiébat per Angelum: existimábat autem se visum vidére. Transeúntes autem primam et secúndam custódiam, venérunt ad portam férream, quæ ducit ad civitátem: quæ ultro apérta est eis. Et exeúntes processérunt vicum unum: et contínuo discéssit Angelus ab eo. Et Petrus ad se revérsus, dixit: Nunc scio vere, quia misit Dóminus Angelum suum, et erípuit me de manu Heródis et de omni exspectatióne plebis Iudæórum."] }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "S",
+            lines: [
+              { segments: ["Deo grátias."] }
+            ]
+          }
+      ],
+
+      "proper:gradual:ss-peter-paul": [
+          { type: "action", key: "action.stand" },
+          { type: "rb", text_la: "Ps 44:17-18" },
+          {
+            type: "pr_blk",
+            initial: true,
+            lines: [
+              { segments: ["Constítues eos príncipes super omnem terram: mémores erunt nóminis tui, Dómine."] }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "V",
+            lines: [
+              { segments: ["Pro pátribus tuis nati sunt tibi fílii: proptérea pópuli confitebúntur tibi. Allelúia, allelúia."] }
+            ]
+          },
+          { type: "rb", text_la: "Matt 16:18" },
+          {
+            type: "pr_blk",
+            speaker: "V",
+            initial: true,
+            lines: [
+              { segments: ["Tu es Petrus, et super hanc petram ædificábo Ecclésiam meam. Allelúia."] }
+            ]
+          }
+      ],
+
+      "proper:gospel:ss-peter-paul": [
+          {
+            type: "pr_blk",
+            speaker: "P",
+            lines: [
+              { segments: ["Dóminus vobíscum."], po: true }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "S",
+            lines: [
+              { segments: ["Et cum spíritu tuo."] }
+            ]
+          },
+          { type: "rb", key: "rubric.sign_book_self" },
+          {
+            type: "pr_blk",
+            speaker: "P",
+            initial: true,
+            lines: [
+              { segments: ["Sequéntia ++ sancti Evangélii secúndum Matthǽum"], po: true }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "S",
+            lines: [
+              { segments: ["Glória tibi, Dómine."] }
+            ]
+          },
+          { type: "rb", text_la: "Matt 16:13-19" },
+          {
+            type: "pr_blk",
+            initial: true,
+            lines: [
+              { segments: ["In illo témpore: Venit Iesus in partes Cæsaréæ Philíppi, et interrogábat discípulos suos, dicens: Quem dicunt hómines esse Fílium hóminis? At illi dixérunt: Alii Ioánnem Baptístam, alii autem Elíam, álii vero Ieremíam, aut unum ex prophétis. Dicit illis Iesus: Vos autem quem me esse dícitis? Respóndens Simon Petrus, dixit: Tu es Christus, Fílius Dei vivi. Respóndens autem Iesus, dixit ei: Beátus es, Simon Bar Iona: quia caro et sanguis non revelávit tibi, sed Pater meus, qui in cœlis est. Et ego dico tibi, quia tu es Petrus, et super hanc petram ædificábo Ecclésiam meam, et portæ ínferi non prævalébunt advérsus eam. Et tibi dabo claves regni cœlórum. Et quodcúmque ligáveris super terram, erit ligátum et in cœlis: et quodcúmque sólveris super terram, erit solútum et in cœlis."] }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "S",
+            lines: [
+              { segments: ["Laus tibi, Christe."] }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "P",
+            lines: [
+              { segments: ["Per Evangélica dicta, deleántur nostra delícta."], po: true }
+            ],
+            sole: true
+          }
+      ],
+
+      "proper:offertory:ss-peter-paul": [
+          { type: "action", key: "action.sit" },
+          {
+            type: "pr_blk",
+            speaker: "P",
+            lines: [
+              { segments: ["Dóminus vobíscum."], po: true }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "S",
+            lines: [
+              { segments: ["Et cum spíritu tuo."] }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "P",
+            initial: true,
+            lines: [
+              { segments: ["Orémus."], po: true }
+            ]
+          },
+          { type: "rb", text_la: "Ps 44:17-18" },
+          {
+            type: "pr_blk",
+            initial: true,
+            lines: [
+              { segments: ["Constítues eos príncipes super omnem terram: mémores erunt nóminis tui, Dómine, in omni progénie et generatióne."] }
+            ]
+          }
+      ],
+
+      "proper:secret:ss-peter-paul": [
+          {
+            type: "pr_blk",
+            speaker: "P",
+            initial: true,
+            lines: [
+              { segments: ["Hóstias, Dómine, quas nómini tuo sacrándas offérimus, apostólica prosequátur orátio: per quam nos expiári tríbuas et deféndi."], po: true },
+              { segments: ["Per Dóminum nostrum Iesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum."], po: true }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "S",
+            lines: [
+              { segments: ["Amen."] }
+            ]
+          }
+      ],
+
+      "ordinary:preface-apostles": [
+          { type: "action", key: "action.stand" },
+          {
+            type: "pr_blk",
+            speaker: "P",
+            lines: [
+              { segments: ["Dóminus vobíscum."], po: true }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "S",
+            lines: [
+              { segments: ["Et cum spíritu tuo."] }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "P",
+            lines: [
+              { segments: ["Sursum corda."], po: true }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "S",
+            lines: [
+              { segments: ["Habémus ad Dóminum."] }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "P",
+            lines: [
+              { segments: ["Grátias agámus Dómino Deo nostro."], po: true }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "S",
+            lines: [
+              { segments: ["Dignum et iustum est."] }
+            ]
+          },
+          { type: "rb", text_la: "Præfatio de Apostolis" },
+          {
+            type: "pr_blk",
+            speaker: "P",
+            initial: true,
+            lines: [
+              { segments: ["Vere dignum et iustum est, æquum et salutáre: Te, Dómine, supplíciter exoráre, ut gregem tuum, Pastor ætérne, non déseras: sed per beátos Apóstolos tuos contínua protectióne custódias. Ut iísdem rectóribus gubernétur, quos óperis tui vicários eídem contulísti præésse pastóres. Et ídeo cum Angelis et Archángelis, cum Thronis et Dominatiónibus cumque omni milítia cœléstis exércitus hymnum glóriæ tuæ cánimus, sine fine dicéntes:"], po: true }
+            ]
+          }
+      ],
+
+      "proper:communion:ss-peter-paul": [
+          { type: "action", key: "action.stand" },
+          { type: "rb", text_la: "Matt 16:18" },
+          {
+            type: "pr_blk",
+            initial: true,
+            lines: [
+              { segments: ["Tu es Petrus, et super hanc petram ædificábo Ecclésiam meam."] }
+            ]
+          }
+      ],
+
+      "proper:postcommunion:ss-peter-paul": [
+          {
+            type: "pr_blk",
+            speaker: "P",
+            lines: [
+              { segments: ["Dóminus vobíscum."], po: true }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "S",
+            lines: [
+              { segments: ["Et cum spíritu tuo."] }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "P",
+            initial: true,
+            lines: [
+              { segments: ["Orémus."], po: true }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "P",
+            initial: true,
+            lines: [
+              { segments: ["Quos cœlésti, Dómine, aliménto satiásti: apostólicis intercessiónibus ab omni adversitáte custódi."], po: true },
+              { segments: ["Per Dóminum nostrum Iesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, per ómnia sǽcula sæculórum."], po: true }
+            ]
+          },
+          {
+            type: "pr_blk",
+            speaker: "S",
+            lines: [
+              { segments: ["Amen."] }
+            ]
+          }
+      ],
       "ordinary:preface": [
         { type: "action", key: "action.stand" },
         {
@@ -7203,6 +7670,18 @@
 
     // Section name translations
     const sectionNames = {
+      "ss-peter-paul": {
+          "en": "Saints Peter & Paul, Apostles",
+          "de": "Hll. Petrus und Paulus, Apostel",
+          "fr": "Saints Pierre et Paul, Apôtres",
+          "es": "Santos Pedro y Pablo, Apóstoles"
+      },
+      "preface-apostles": {
+          "en": "Preface of the Apostles",
+          "de": "Präfation der Apostel",
+          "fr": "Préface des Apôtres",
+          "es": "Prefacio de los Apóstoles"
+      },
       "corpus-christi": {
         "en": "Corpus Christi",
         "de": "Fronleichnam",
@@ -7484,6 +7963,43 @@
 
     // Mass configurations
     const massConfigs = {
+      "ss-peter-paul": {
+          name: "Feast of Saints Peter and Paul",
+          season: "ordinary-time",
+          sections: [
+            { key: "asperges-me", type: "ordinary", id: "asperges-me" },
+            { key: "prayers-foot-altar", type: "ordinary", id: "prayers-foot-altar" },
+            { key: "incensation-before-introit", type: "ordinary", id: "incensation-before-introit", sole: true },
+            { key: "introit", type: "proper", id: "introit:ss-peter-paul" },
+            { key: "kyrie", type: "ordinary", id: "kyrie" },
+            { key: "gloria", type: "ordinary", id: "gloria" },
+            { key: "collect", type: "proper", id: "collect:ss-peter-paul" },
+            { key: "epistle", type: "proper", id: "epistle:ss-peter-paul" },
+            { key: "gradual", type: "proper", id: "gradual:ss-peter-paul" },
+            { key: "gospel-solemn-prep", type: "ordinary", id: "gospel-solemn-prep", sole: true },
+            { key: "gospel", type: "proper", id: "gospel:ss-peter-paul" },
+            { key: "credo", type: "ordinary", id: "credo" },
+            { key: "offertory-antiphon", type: "proper", id: "offertory:ss-peter-paul" },
+            { key: "offertory-prayers-host", type: "ordinary", id: "offertory-prayers-host" },
+            { key: "offertory-prayers-wine-water", type: "ordinary", id: "offertory-prayers-wine-water" },
+            { key: "offertory-prayers-chalice-etc", type: "ordinary", id: "offertory-prayers-chalice-etc" },
+            { key: "offertory-incensation", type: "ordinary", id: "offertory-incensation", sole: true },
+            { key: "offertory-lavabo", type: "ordinary", id: "offertory-lavabo" },
+            { key: "offertory-suscipe-sancta-trinitas", type: "ordinary", id: "offertory-suscipe-sancta-trinitas" },
+            { key: "offertory-orate-fratres", type: "ordinary", id: "offertory-orate-fratres" },
+            { key: "secret", type: "proper", id: "secret:ss-peter-paul" },
+            { key: "preface", type: "ordinary", id: "preface-apostles" },
+            { key: "sanctus", type: "ordinary", id: "sanctus" },
+            { key: "canon", type: "ordinary", id: "canon" },
+            { key: "prayers-before-communion", type: "ordinary", id: "prayers-before-communion" },
+            { key: "priest-communion", type: "ordinary", id: "priest-communion" },
+            { key: "communion-antiphon", type: "proper", id: "communion:ss-peter-paul" },
+            { key: "ablution-prayers", type: "ordinary", id: "ablution-prayers" },
+            { key: "postcommunion", type: "proper", id: "postcommunion:ss-peter-paul" },
+            { key: "conclusion", type: "ordinary", id: "conclusion" },
+            { key: "last-gospel", type: "ordinary", id: "last-gospel" }
+          ]
+      },
       "corpus-christi": {
         name: "Festum Sanctissimi Corporis Christi",
         season: "ordinary-time", // Or a more specific season if desired, e.g., "corpus-christi-season"
@@ -7968,13 +8484,45 @@
       });
     }
 
+    // New function to dynamically populate the mass selector
+    function populateMassSelector() {
+      const massSelect = document.getElementById('mass-select');
+      const previouslySelected = massSelect.value; // Store the currently selected value
+
+      massSelect.innerHTML = ''; // Clear out the old hard-coded options
+
+      // Loop through the massConfigs object to create new options
+      Object.keys(massConfigs).forEach(massId => {
+        const config = massConfigs[massId];
+        const option = document.createElement('option');
+        
+        option.value = massId;
+
+        // Get the translated title, with fallbacks
+        let titleText = config.name; // Fallback to the internal name
+        if (config.title) {
+            titleText = config.title[currentLanguage] || config.title['en'] || config.name;
+        }
+        option.textContent = titleText;
+
+        // If this option was the one previously selected, keep it selected
+        if (massId === previouslySelected) {
+          option.selected = true;
+        }
+
+        massSelect.appendChild(option);
+      });
+    }
+
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
       const massSelect = document.getElementById('mass-select');
       const languageSelect = document.getElementById('language-select');
       
+      populateMassSelector(); 
+
       // Load initial Mass
-      renderMass('corpus-christi');
+      renderMass('ss-peter-paul');
       
       // Handle Mass selection changes
       massSelect.addEventListener('change', function() {
@@ -7984,6 +8532,7 @@
       // Handle language changes
       languageSelect.addEventListener('change', function() {
         currentLanguage = this.value;
+        populateMassSelector(); 
         renderMass(massSelect.value);
       });
     });

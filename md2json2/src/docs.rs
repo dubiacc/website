@@ -188,7 +188,11 @@ pub fn document2html(
     let contact = crate::get_special_page_link(lang, "about", meta)?;
     let root_href = get_root_href();
     let docs_folder = get_string(meta, lang, "special-docs-path")?;
+    let special_about_path = get_string(meta, lang, "special-about-path")?;
+    let special_about_title = get_string(meta, lang, "special-about-title")?;
 
+    let html = html.replace("$$SPECIAL_ABOUT_PATH$$", &special_about_path);
+    let html = html.replace("$$SPECIAL_ABOUT_TITLE$$", &special_about_title);
     let html = html.replace("$$CONTACT_URL$$", &contact);
     let html = html.replace("$$TITLE$$", &doc.title);
     let html = html.replace("$$TITLE_ID$$", &title_id);
