@@ -3346,6 +3346,10 @@ fn special2html(
         "$$PAGE_HREF$$",
         &format!("{}/{}/{}", get_root_href(), lang, page.filepath),
     );
+    let special_about_path = get_string(meta, lang, "special-about-path")?;
+    let special_about_title = get_string(meta, lang, "special-about-title")?;
+    special = special.replace("$$SPECIAL_ABOUT_TITLE$$", &special_about_title);
+    special = special.replace("$$SPECIAL_ABOUT_PATH$$", &special_about_title);
     Ok((format!("{}.html", page.filepath), special))
 }
 
@@ -3745,6 +3749,12 @@ fn render_index_html(
         "<!-- HEADER_NAVIGATION -->",
         &header_navigation(lang, false, meta)?,
     );
+
+    let special_about_path = get_string(meta, lang, "special-about-path")?;
+    let special_about_title = get_string(meta, lang, "special-about-title")?;
+    index_html = index_html.replace("$$SPECIAL_ABOUT_TITLE$$", &special_about_title);
+    index_html = index_html.replace("$$SPECIAL_ABOUT_PATH$$", &special_about_title);
+
     index_html = index_html.replace("<!-- MULTILANG_TAGS -->", multilang);
     index_html = index_html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content");
     index_html = index_html.replace("$$TITLE$$", &title);
