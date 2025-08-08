@@ -40,7 +40,7 @@ fn find_translation_group(
             // Also need to check other articles that link TO this one
             for (other_lang, other_articles) in &all_articles.map {
                 for (other_slug, other_article) in other_articles {
-                    if let Some(target_slug) = other_article.translations.get(lang) {
+                    if let Some(target_slug) = other_article.translations.get(&lang) {
                         if target_slug == &slug {
                             let key = (other_lang.clone(), other_slug.clone());
                             if !visited.contains(&key) {

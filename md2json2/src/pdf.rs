@@ -53,7 +53,7 @@ pub fn generate_pdf(article: &ParsedArticleAnalyzed) -> Result<Vec<u8>, String> 
                  println!("PDF generation warnings for '{}': {:?}", article.title, warnings);
             }
             // The save method in printpdf 0.8.2 returns a Result<Vec<u8>, Error>
-            doc.save(&Default::default()).map_err(|e| e.to_string())
+            Ok(doc.save(&Default::default(), &mut Vec::new()))
         },
         Err(e) => {
              Err(format!("Failed to generate PDF for '{}': {}", article.title, e))

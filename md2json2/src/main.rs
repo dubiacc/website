@@ -61,7 +61,7 @@ struct VectorizedArticles {
     map: BTreeMap<Lang, BTreeMap<Slug, VectorizedArticle>>,
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 struct AnalyzedArticles {
     map: BTreeMap<Lang, BTreeMap<Slug, ParsedArticleAnalyzed>>,
 }
