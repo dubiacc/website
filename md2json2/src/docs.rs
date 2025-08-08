@@ -94,6 +94,12 @@ pub fn process_documents(documents: &LoadedDocuments) -> Result<AnalyzedDocument
                     backlinks: Vec::new(),
                     bibliography: parsed.get_bibliography(),
                     footnotes: parsed.footnotes.clone(),
+                    // Add default values for new fields
+                    nihil_obstat: None,
+                    imprimatur: None,
+                    translations: BTreeMap::new(),
+                    status: crate::ArticleStatus::default(),
+                    src: content.to_string(),
                 };
                 
                 analyzed

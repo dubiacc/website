@@ -1,8 +1,10 @@
 use rosary::RosaryMysteries;
 use rosary::RosaryTemplates;
 use docs::AnalyzedDocuments;
-use serde_derive::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+use crate::review::propagate_review_status;
+use crate::wip::generate_wip_page;
+use crate::pdf::generate_pdf;
 use std::collections::BTreeSet;
 use std::path::Path;
 
@@ -10,10 +12,33 @@ mod langtrain;
 mod resistance;
 mod rosary;
 mod docs;
+mod review;
+mod wip;
+mod pdf;
+
+use serde::{Deserialize, Serialize};
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+enum ArticleStatus {
+    Finished,
+    InReview,
+    Prayer,
+}
+
+impl Default for ArticleStatus {
+    fn default() -> Self {
+        ArticleStatus::InReview
+    }
+}
+
+#[derive(Debug)]
+struct LoadedArticle {
+    content: String,
+    status: ArticleStatus,
+}
 
 #[derive(Debug, Default)]
 struct LoadedArticles {
-    langs: BTreeMap<Lang, BTreeMap<Slug, String>>,
+    langs: BTreeMap<Lang, BTreeMap<Slug, LoadedArticle>>,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -27,6 +52,7 @@ enum ArticleType {
 struct VectorizedArticle {
     words: Vec<usize>,
     atype: ArticleType,
+    status: ArticleStatus,
     parsed: ParsedArticle,
 }
 
@@ -64,6 +90,8 @@ struct ParsedArticle {
     article_abstract: Vec<Paragraph>,
     sections: Vec<ArticleSection>,
     footnotes: Vec<Footnote>,
+    nihil_obstat: Option<String>,
+    imprimatur: Option<String>,
 }
 
 impl ParsedArticle {
@@ -170,6 +198,11 @@ impl VectorizedArticles {
                                         backlinks: backlinks,
                                         bibliography: vectorized.parsed.get_bibliography(),
                                         footnotes: vectorized.parsed.footnotes.clone(),
+                                        nihil_obstat: vectorized.parsed.nihil_obstat.clone(),
+                                        imprimatur: vectorized.parsed.imprimatur.clone(),
+                                        translations: vectorized.parsed.translations.clone(),
+                                        status: vectorized.status,
+                                        src: vectorized.parsed.src.clone(),
                                     },
                                 )
                             })
@@ -248,6 +281,16 @@ struct ParsedArticleAnalyzed {
     bibliography: Vec<Link>,
     // footnote annotations
     footnotes: Vec<Footnote>,
+    // review status
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    nihil_obstat: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    imprimatur: Option<String>,
+    // translation graph
+    #[serde(default)]
+    translations: BTreeMap<String, String>,
+    status: ArticleStatus,
+    src: String,
 }
 
 #[derive(Debug, Default, PartialEq, Eq, PartialOrd, Ord, Clone, Serialize, Deserialize)]
@@ -352,6 +395,10 @@ struct Config {
     authors: Vec<String>,
     #[serde(default)]
     translations: BTreeMap<String, String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    nihil_obstat: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    imprimatur: Option<String>,
 }
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
@@ -778,6 +825,8 @@ fn parse_article(s: &str) -> ParsedArticle {
         article_abstract: parse_paragraphs(&article_abstract.join("\r\n")),
         sections,
         footnotes,
+        nihil_obstat: config.nihil_obstat,
+        imprimatur: config.imprimatur,
     }
 }
 
@@ -1342,7 +1391,7 @@ impl LoadedArticles {
                 .map(|(k, v)| {
                     let all_words = v
                         .values()
-                        .flat_map(|c| get_words_of_article(c))
+                        .flat_map(|c| get_words_of_article(&c.content))
                         .collect::<BTreeSet<_>>();
                     let all_words_indexed = all_words
                         .iter()
@@ -1353,20 +1402,21 @@ impl LoadedArticles {
                     (
                         k.clone(),
                         v.iter()
-                            .map(|(k, v2)| {
-                                let embedding = get_words_of_article(v2)
+                            .map(|(slug, loaded_article)| {
+                                let embedding = get_words_of_article(&loaded_article.content)
                                     .into_iter()
                                     .filter_map(|q| all_words_indexed.get(q).copied())
                                     .collect();
 
-                                let atype = ArticleType::new(v2);
+                                let atype = ArticleType::new(&loaded_article.content);
 
                                 (
-                                    k.clone(),
+                                    slug.clone(),
                                     VectorizedArticle {
                                         words: embedding,
                                         atype: atype,
-                                        parsed: parse_article(v2),
+                                        status: loaded_article.status,
+                                        parsed: parse_article(&loaded_article.content),
                                     },
                                 )
                             })
@@ -1425,34 +1475,51 @@ fn get_similar_articles(
 
 #[cfg(feature = "external")]
 fn load_articles(dir: &Path) -> Result<LoadedArticles, String> {
+    let mut langs = BTreeMap::new();
+
     let entries = walkdir::WalkDir::new(dir)
         .max_depth(5)
         .into_iter()
         .filter_map(|entry| {
-            let entry = entry.map_err(|e| e.to_string()).ok()?;
-            let entry = entry.path();
-            if entry.file_name().and_then(|s| s.to_str()) == Some("index.md") {
-                let name = entry.parent()?;
-                let lang = name.parent()?;
-                let contents = std::fs::read_to_string(&entry).ok()?;
-
-                Some((
-                    lang.file_name()?.to_str()?.to_string(),
-                    name.file_name()?.to_str()?.to_string(),
-                    contents,
-                ))
-            } else {
-                None
+            let entry = entry.ok()?;
+            let path = entry.path();
+            if !path.is_file() {
+                return None;
             }
+
+            let path_str = path.to_str()?;
+            let status = if path_str.contains("/finished/") {
+                ArticleStatus::Finished
+            } else if path_str.contains("/in-review/") {
+                ArticleStatus::InReview
+            } else if path_str.contains("/prayers/") {
+                ArticleStatus::Prayer
+            } else {
+                return None;
+            };
+
+            let (lang, slug) = if status == ArticleStatus::Prayer {
+                if path.extension().and_then(|s| s.to_str()) != Some("md") { return None; }
+                let slug = path.file_stem()?.to_str()?.to_string();
+                let lang = path.parent()?.parent()?.file_name()?.to_str()?.to_string();
+                (lang, slug)
+            } else {
+                if path.file_name().and_then(|s| s.to_str()) != Some("index.md") { return None; }
+                let slug = path.parent()?.file_name()?.to_str()?.to_string();
+                let lang = path.parent()?.parent()?.parent()?.file_name()?.to_str()?.to_string();
+                (lang, slug)
+            };
+
+            let contents = std::fs::read_to_string(&path).ok()?;
+            Some((lang, slug, contents, status))
         })
         .collect::<Vec<_>>();
 
-    let mut langs = BTreeMap::new();
-    for (lang, id, contents) in entries {
+    for (lang, slug, contents, status) in entries {
         langs
             .entry(lang)
-            .or_insert_with(|| BTreeMap::default())
-            .insert(id, contents);
+            .or_insert_with(BTreeMap::default)
+            .insert(slug, LoadedArticle { content: contents, status });
     }
 
     Ok(LoadedArticles { langs })
@@ -1490,7 +1557,7 @@ fn get_root_href() -> &'static str {
 }
 
 fn gen_serviceworker_js(cwd: &Path, articles: &AnalyzedArticles, meta: &MetaJson) -> String {
-    let mut s = include_str!("../../templates/sw.js").to_string();
+    let mut s = include_str!("../../templates/sw-inject.js").to_string();
     s = s.replace(
         "workbox.precaching.precacheAndRoute([]);",
         &gen_sw_paths(cwd, articles, meta),
@@ -1989,7 +2056,7 @@ fn head(
     let darklight = include_str!("../../templates/darklight.html");
     let head_css = include_str!("../../static/css/head2.css").to_string();
     let toc = include_str!("../../static/css/TOC.css");
-    let page_toolbar = include_str!("../../static/css/PAGE_TOOLBAR.css");
+    let page_toolbar = include_str!("../../static/css/PAGE_TOOLBAR.CSS");
     let img_css = include_str!("../../static/css/FIGURE.css");
     let floating_header = include_str!("../../static/css/FLOATING_HEADER.css");
     let noscript_style = include_str!("../../static/css/noscript.css");
@@ -3801,19 +3868,37 @@ fn main() -> Result<(), String> {
             .to_path_buf();
     }
 
+    let mut warnings: Vec<String> = Vec::new();
+
     let meta = std::fs::read_to_string(&cwd.join("config").join("meta.json")).map_err(|e| e.to_string())?;
     let meta_map = read_meta_json(&meta);
 
-    let dir = cwd.join("articles");
-
     let _ = std::fs::create_dir_all(cwd.join("dist"));
 
-    // Load, parse and analyze articles
-    let articles = load_articles(&dir)?;
-    let vectorized = articles.vectorize();
-    let analyzed = vectorized.analyze();
+    // 1. Load ALL articles (finished, in-review, prayers)
+    let all_articles_loaded = load_articles(&cwd.join("articles"))?;
+    let all_vectorized = all_articles_loaded.vectorize();
+    let all_analyzed = all_vectorized.analyze();
     
-    // Load and process documents
+    // 2. Propagate review statuses across translation groups
+    let all_analyzed_with_status = review::propagate_review_status(&all_analyzed);
+
+    // 3. Split articles into published and WIP
+    let mut published_articles = AnalyzedArticles::default();
+    let mut wip_articles = AnalyzedArticles::default();
+
+    for (lang, lang_articles) in all_analyzed_with_status.map.iter() {
+        for (slug, article) in lang_articles {
+            // A prayer is always published. An article needs imprimatur.
+            if article.status == ArticleStatus::Prayer || article.imprimatur.is_some() {
+                published_articles.map.entry(lang.clone()).or_default().insert(slug.clone(), article.clone());
+            } else {
+                wip_articles.map.entry(lang.clone()).or_default().insert(slug.clone(), article.clone());
+            }
+        }
+    }
+
+    // Load and process documents (this logic remains the same)
     let docs_dir = cwd.join("docs");
     let documents = if docs_dir.exists() {
         docs::load_documents(&docs_dir)?
@@ -3822,30 +3907,37 @@ fn main() -> Result<(), String> {
     };
     let analyzed_documents = docs::process_documents(&documents)?;
     
-    // Render and write articles
+    // --- RENDER PUBLISHED SITE ---
     let mut articles_by_tag = ArticlesByTag::default();
-    for (lang, articles) in analyzed.map.iter() {
+    for (lang, articles) in published_articles.map.iter() {
         for (slug, a) in articles {
-            let s = article2html(
-                &lang,
-                &slug,
-                &a,
-                &mut articles_by_tag,
-                &meta_map,
-            );
-            
-            match s {
+            // 1. Render HTML (existing logic)
+            match article2html(&lang, &slug, &a, &mut articles_by_tag, &meta_map) {
                 Ok(s) => {
                     let path = cwd.join("dist").join(lang);
                     let _ = std::fs::create_dir_all(&path);
                     let _ = std::fs::write(path.join(slug.to_string() + ".html"), &minify(&s));
                 }
                 Err(e) if e.is_empty() => {}
-                Err(q) => return Err(q),
+                Err(q) => warnings.push(q), // Collect rendering errors
+            }
+
+            // 2. Save original Markdown
+            let md_path = cwd.join("dist").join(lang).join(format!("{}.md", slug));
+            let _ = std::fs::write(md_path, &a.src);
+
+            // 3. Generate and save PDF
+            match pdf::generate_pdf(a) {
+                Ok(pdf_bytes) => {
+                    let pdf_path = cwd.join("dist").join(lang).join(format!("{}.pdf", slug));
+                    let _ = std::fs::write(pdf_path, pdf_bytes);
+                }
+                Err(e) => warnings.push(e), // Collect PDF errors as warnings
             }
         }
     }
 
+    // Render document pages (existing logic)
     for (lang, author_docs) in analyzed_documents.map.iter() {
 
         let docs_path = get_string(&meta_map, lang, "special-docs-path")?;
@@ -3881,7 +3973,7 @@ fn main() -> Result<(), String> {
             )?;
 
             let sp = SpecialPage {
-                title: docs_title + " - " + &author_name,
+                title: docs_title.clone() + " - " + &author_name,
                 filepath: docs_html,
                 id: docs_id,
                 description: docs_desc,
@@ -3903,7 +3995,7 @@ fn main() -> Result<(), String> {
     }
 
     // Write author pages
-    let author_pages = render_page_author_pages(&analyzed, &meta_map)?;
+    let author_pages = render_page_author_pages(&published_articles, &meta_map)?;
     for (lang, authors) in author_pages.iter() {
         let _ = std::fs::create_dir_all(cwd.join("dist").join(&lang).join("author"));
         for (a, v) in authors {
@@ -3914,14 +4006,14 @@ fn main() -> Result<(), String> {
         }
     }
 
-    // Generate search index
-    let si = generate_search_index(&analyzed, &analyzed_documents, &meta_map);
+    // Generate search index (using published content)
+    let si = generate_search_index(&published_articles, &analyzed_documents, &meta_map);
     for (lang, si) in si.iter() {
         let json = serde_json::to_string(&si).unwrap_or_default();
         let _ = std::fs::write(cwd.join("dist").join(lang).join("index.json"), json);
     }
     
-    // Write special pages
+    // Write special pages (using published articles)
     let langs = meta_map.strings.keys().cloned().collect::<Vec<_>>();
     for l in langs.iter() {
         let sp = get_special_pages(&l, &meta_map, &articles_by_tag, &analyzed_documents)?;
@@ -3932,122 +4024,86 @@ fn main() -> Result<(), String> {
         }
 
         let missal_path = cwd.join("dist").join(l).join(match l.as_str() {
-            "de" => "missale.html",
-            "en" => "missal.html",
-            "fr" => "missel.html",
-            "es" => "misal.html",
-            "br" => "missal.html",
-            "pl" => "mszal.html",
+            "de" => "missale.html", "en" => "missal.html", "fr" => "missel.html",
+            "es" => "misal.html", "br" => "missal.html", "pl" => "mszal.html",
             _ => "missal.html",
         });
+        let _ = std::fs::write(missal_path, MISSAL.replace("let currentLanguage = \"en\"", &format!("let currentLanguage = \"{l}\"")));
 
-        // Write missal
-        let _ = std::fs::write(missal_path, MISSAL.replace(
-            "let currentLanguage = \"en\"", 
-            &format!("let currentLanguage = \"{l}\""),
-        ));
-
-        // Write rosary
         let r = match l.as_str() {
-            "de" => "rosenkranz.html",
-            "en" => "rosary.html",
-            "fr" => "rosaire.html",
-            "es" => "rosario.html",
-            "br" => "rosario.html",
-            "pl" => "rozaniec.html",
+            "de" => "rosenkranz.html", "en" => "rosary.html", "fr" => "rosaire.html",
+            "es" => "rosario.html", "br" => "rosario.html", "pl" => "rozaniec.html",
             _ => "rosary.html",
         };
-
         let rosary_path = cwd.join("dist").join(l).join(r);
-        let rosary_content = rosary::generate_rosary(
-            l, &rosary_template(l), 
-            &rosary_mysteries(), &meta_map
-        );
+        let rosary_content = rosary::generate_rosary(l, &rosary_template(l), &rosary_mysteries(), &meta_map);
         let special_page = SpecialPage {
-            id: r.replace(".html", ""),
-            filepath: r.to_string(),
-            title: r.replace(".html", ""),
-            description: r.replace(".html", ""),
-            content: rosary_content,
+            id: r.replace(".html", ""), filepath: r.to_string(), title: r.replace(".html", ""),
+            description: r.replace(".html", ""), content: rosary_content,
             special_content: "<style>#special-contents { display:block !important; }</style>".to_string(),
         };
-        let (filename, html) = special2html(l, &special_page, &meta_map).unwrap_or_default();
+        let (_, html) = special2html(l, &special_page, &meta_map).unwrap_or_default();
         let _ = std::fs::write(rosary_path, &html);
 
-        // Write latin trainer
         let latin_file = match l.as_str() {
-            "de" => "latein.html",
-            "en" => "latin.html",
-            "br" => "latim.html",
-            "pl" => "laciny.html",
-            "es" => "latin.html",
-            "fr" => "latin.html",
+            "de" => "latein.html", "en" => "latin.html", "br" => "latim.html",
+            "pl" => "laciny.html", "es" => "latin.html", "fr" => "latin.html",
             _ => "latin.html",
         };
         let latin_path = cwd.join("dist").join(l).join(latin_file);
         let tl = langtrain::TrainLang::Latin;
-        /* 
-        let grammar_lessons = tl.get_grammar_lessons(l);
-        a.sections.push(ArticleSection {
-            title: format!("V01: 1000 words"),
-            indent: 2,
-            pars: Vec::new(),
-        });
-        for gl in grammar_lessons.sections.iter() {
-            a.sections.push(ArticleSection {
-                title: gl.title.clone(),
-                indent: 2,
-                pars: Vec::new(),
-            });
-        }
-        */
         let latin_content = langtrain::generate_langtrain_content(l, tl, &meta_map)?;
         let special_page = SpecialPage {
-            id: latin_file.replace(".html", ""),
-            filepath: latin_file.to_string(),
-            title: latin_file.replace(".html", ""),
-            description: latin_file.replace(".html", ""),
+            id: latin_file.replace(".html", ""), filepath: latin_file.to_string(),
+            title: latin_file.replace(".html", ""), description: latin_file.replace(".html", ""),
             content: latin_content,
             special_content: "<style>#special-contents { display:block !important; }</style>".to_string(),
         };
-        let (filename, html) = special2html(l, &special_page, &meta_map).unwrap_or_default();
+        let (_, html) = special2html(l, &special_page, &meta_map).unwrap_or_default();
         let _ = std::fs::write(latin_path, &html);
     }
 
-    // Write index + /search pages
-    let si = search_html(&analyzed, &analyzed_documents, &meta_map)?;
-    for (lang, (_searchbar_html, search_html, search_js)) in si.iter() {
+    // Write index + /search pages (using published articles)
+    let search_html_result = search_html(&published_articles, &analyzed_documents, &meta_map)?;
+    for (lang, (_searchbar_html, search_html, search_js)) in search_html_result.iter() {
         let _ = std::fs::create_dir_all(cwd.join("dist").join(lang));
         let _ = std::fs::write(cwd.join("dist").join(lang).join("search.js"), search_js);
         let _ = std::fs::write(cwd.join("dist").join(lang).join("search.html"), &minify(&search_html));
-        let index_html = render_index_html(lang, &analyzed, &meta_map, &si)?;
+        let index_html = render_index_html(lang, &published_articles, &meta_map, &search_html_result)?;
         let _ = std::fs::write(cwd.join("dist").join(&format!("{lang}.html")), &minify(&index_html));
     }
 
-    // Generate map pages
+    // --- RENDER WIP CONTENT ---
+    for (lang, articles) in wip_articles.map.iter() {
+        let wip_dir = cwd.join("dist").join(lang).join("wip");
+        let _ = std::fs::create_dir_all(&wip_dir);
+
+        for (slug, a) in articles {
+            match article2html(&lang, &slug, &a, &mut ArticlesByTag::default(), &meta_map) {
+                 Ok(s) => {
+                    let path = wip_dir.join(format!("{}.html", slug));
+                    let _ = std::fs::write(path, &minify(&s));
+                },
+                Err(e) => warnings.push(format!("WIP render error for {}/{}: {}", lang, slug, e)),
+            }
+        }
+    }
+
+    // Generate the main wip.html page
+    let wip_url_base = get_root_href();
+    let wip_page_content = wip::generate_wip_page(&all_analyzed_with_status, &meta_map, &warnings, wip_url_base);
+    let _ = std::fs::write(cwd.join("dist/wip.html"), wip_page_content);
+
+    // --- FINAL BUILD STEPS ---
     resistance::generate_resistance_pages(&cwd, &meta_map)?;
-
-    // Write gitignore
-    let _ = std::fs::write(cwd.join(".gitignore"), generate_gitignore(&articles, &meta_map));
-
-    // Write serviceworker
+    let _ = std::fs::write(cwd.join(".gitignore"), generate_gitignore(&all_articles_loaded, &meta_map));
     let _ = std::fs::write(
         cwd.join("dist").join("sw.js"),
-        gen_serviceworker_js(&cwd, &analyzed, &meta_map),
+        gen_serviceworker_js(&cwd, &published_articles, &meta_map),
     );
+    let _ = std::fs::write(cwd.join("dist").join("index.html"), INDEX);
+    let _ = std::fs::write(cwd.join("dist").join("death.html"), DEATH);
+    let _ = std::fs::write(cwd.join("dist").join("CNAME"), "dubia.cc");
 
-    // Write index.html and CNAME
-    let _ = std::fs::write(
-        cwd.join("dist").join("index.html"),
-        INDEX,
-    );
-    let _ = std::fs::write(
-        cwd.join("dist").join("death.html"),
-        DEATH,
-    );
-    let _ = std::fs::write(
-        cwd.join("dist").join("CNAME"),
-        "dubia.cc",
-    );
     Ok(())
 }
