@@ -32,7 +32,8 @@ pub fn load_documents(dir: &Path) -> Result<LoadedDocuments, String> {
             let path = entry.path();
             
             // Skip index.md files for now (we'll handle them separately)
-            if path.file_name().and_then(|s| s.to_str()) == Some("index.md") {
+            let fname = path.file_name().and_then(|s| s.to_str()).unwrap_or("");
+            if fname == "index.md" || fname == "README.md" {
                 return None;
             }
             

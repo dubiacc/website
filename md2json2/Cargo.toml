@@ -26,6 +26,7 @@ comrak = "0.39.0"
 image = { version = "0.25.5", default-features = false, features = ["rayon", "avif", "bmp", "jpeg", "png", "webp"]}
 unicode-normalization = "0.1"
 printpdf = "0.8.2"
+tiktoken-rs = "0.7.0"
 
 [features]
 default = ["external"]

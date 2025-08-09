@@ -50,7 +50,7 @@ enum ArticleType {
 
 #[derive(Debug)]
 struct VectorizedArticle {
-    words: Vec<usize>,
+    words: Vec<u32>,
     atype: ArticleType,
     status: ArticleStatus,
     parsed: ParsedArticle,
@@ -152,7 +152,10 @@ impl VectorizedArticles {
                         v.iter()
                             .map(|(slug, vectorized)| {
 
+                                println!("finding similar articles for {slug}...");
                                 let similar = get_similar_articles(vectorized, slug, v);
+
+                                println!("found similar articles for {slug}");
 
                                 // gather all links of other sites that link here
                                 let backlinks = self
@@ -1372,6 +1375,7 @@ fn test_image() {
 
 impl LoadedArticles {
     pub fn vectorize(&self) -> VectorizedArticles {
+
         fn get_words_of_article(s: &str) -> Vec<&str> {
             s.split_whitespace()
                 .filter_map(|s| {
@@ -1384,36 +1388,27 @@ impl LoadedArticles {
                 .collect()
         }
 
+        use tiktoken_rs::o200k_base;
+
+        let bpe = o200k_base().unwrap();
+        
         VectorizedArticles {
             map: self
                 .langs
                 .iter()
                 .map(|(k, v)| {
-                    let all_words = v
-                        .values()
-                        .flat_map(|c| get_words_of_article(&c.content))
-                        .collect::<BTreeSet<_>>();
-                    let all_words_indexed = all_words
-                        .iter()
-                        .enumerate()
-                        .map(|(i, s)| (*s, i))
-                        .collect::<BTreeMap<_, _>>();
-
                     (
                         k.clone(),
                         v.iter()
                             .map(|(slug, loaded_article)| {
-                                let embedding = get_words_of_article(&loaded_article.content)
-                                    .into_iter()
-                                    .filter_map(|q| all_words_indexed.get(q).copied())
-                                    .collect();
 
+                                let tokens = bpe.encode_with_special_tokens(&loaded_article.content);
                                 let atype = ArticleType::new(&loaded_article.content);
 
                                 (
                                     slug.clone(),
                                     VectorizedArticle {
-                                        words: embedding,
+                                        words: tokens,
                                         atype: atype,
                                         status: loaded_article.status,
                                         parsed: parse_article(&loaded_article.content),
@@ -1435,6 +1430,10 @@ fn get_similar_articles(
     id: &str,
     map: &BTreeMap<String, VectorizedArticle>,
 ) -> Vec<SectionLink> {
+    
+    return Vec::new();
+
+    /*
     let (article_src, article_type) = (&s.words, s.atype);
 
     let mut target = Vec::new();
@@ -1471,6 +1470,7 @@ fn get_similar_articles(
         })
         .take(10)
         .collect()
+    */
 }
 
 #[cfg(feature = "external")]
@@ -3868,18 +3868,37 @@ fn main() -> Result<(), String> {
             .to_path_buf();
     }
 
+    while !cwd.join("docs").is_dir() {
+        cwd = cwd
+            .parent()
+            .ok_or("cannot find /docs dir in current path")?
+            .to_path_buf();
+    }
+
     let mut warnings: Vec<String> = Vec::new();
 
-    let meta = std::fs::read_to_string(&cwd.join("config").join("meta.json")).map_err(|e| e.to_string())?;
+    let meta = std::fs::read_to_string(&cwd.join("config").join("meta.json"))
+    .map_err(|e| format!("cannot find config/meta.json: {}", e.to_string()))?;
+    
     let meta_map = read_meta_json(&meta);
 
     let _ = std::fs::create_dir_all(cwd.join("dist"));
 
+    println!("loaded meta.json!");
+
     // 1. Load ALL articles (finished, in-review, prayers)
     let all_articles_loaded = load_articles(&cwd.join("articles"))?;
+
+    println!("loaded articles! vectorizing...");
+    
     let all_vectorized = all_articles_loaded.vectorize();
+
+    println!("vectorized articles! analyzing...");
+
     let all_analyzed = all_vectorized.analyze();
     
+    println!("analyzed articles! propagating review status...");
+
     // 2. Propagate review statuses across translation groups
     let all_analyzed_with_status = review::propagate_review_status(&all_analyzed);
 
@@ -3898,6 +3917,8 @@ fn main() -> Result<(), String> {
         }
     }
 
+    println!("loading documents...");
+
     // Load and process documents (this logic remains the same)
     let docs_dir = cwd.join("docs");
     let documents = if docs_dir.exists() {
@@ -3905,8 +3926,13 @@ fn main() -> Result<(), String> {
     } else {
         docs::LoadedDocuments::default()
     };
+
+    println!("documents loaded! processing documents...");
+
     let analyzed_documents = docs::process_documents(&documents)?;
     
+    println!("documents processed! rendering pages...");
+
     // --- RENDER PUBLISHED SITE ---
     let mut articles_by_tag = ArticlesByTag::default();
     for (lang, articles) in published_articles.map.iter() {
@@ -3933,6 +3959,16 @@ fn main() -> Result<(), String> {
                     let _ = std::fs::write(pdf_path, pdf_bytes);
                 }
                 Err(e) => warnings.push(e), // Collect PDF errors as warnings
+            }
+        }
+    }
+
+    for (lang, author_docs) in analyzed_documents.map.iter() {
+        println!("analyzed lang: {lang}");
+        for (k, v) in author_docs.iter() {
+            println!("  {}:", k);
+            for (q, v) in v.iter() {
+                println!("    {q} - {}", v.title);
             }
         }
     }
@@ -4006,6 +4042,8 @@ fn main() -> Result<(), String> {
         }
     }
 
+    println!("generating search index...");
+
     // Generate search index (using published content)
     let si = generate_search_index(&published_articles, &analyzed_documents, &meta_map);
     for (lang, si) in si.iter() {
@@ -4013,6 +4051,8 @@ fn main() -> Result<(), String> {
         let _ = std::fs::write(cwd.join("dist").join(lang).join("index.json"), json);
     }
     
+    println!("generating special pages...");
+
     // Write special pages (using published articles)
     let langs = meta_map.strings.keys().cloned().collect::<Vec<_>>();
     for l in langs.iter() {
@@ -4073,6 +4113,8 @@ fn main() -> Result<(), String> {
         let _ = std::fs::write(cwd.join("dist").join(&format!("{lang}.html")), &minify(&index_html));
     }
 
+    println!("generating wip page...");
+
     // --- RENDER WIP CONTENT ---
     for (lang, articles) in wip_articles.map.iter() {
         let wip_dir = cwd.join("dist").join(lang).join("wip");
@@ -4094,6 +4136,8 @@ fn main() -> Result<(), String> {
     let wip_page_content = wip::generate_wip_page(&all_analyzed_with_status, &meta_map, &warnings, wip_url_base);
     let _ = std::fs::write(cwd.join("dist/wip.html"), wip_page_content);
 
+    println!("generating resistance pages...");
+
     // --- FINAL BUILD STEPS ---
     resistance::generate_resistance_pages(&cwd, &meta_map)?;
     let _ = std::fs::write(cwd.join(".gitignore"), generate_gitignore(&all_articles_loaded, &meta_map));
@@ -4104,6 +4148,8 @@ fn main() -> Result<(), String> {
     let _ = std::fs::write(cwd.join("dist").join("index.html"), INDEX);
     let _ = std::fs::write(cwd.join("dist").join("death.html"), DEATH);
     let _ = std::fs::write(cwd.join("dist").join("CNAME"), "dubia.cc");
+
+    println!("done!");
 
     Ok(())
 }
