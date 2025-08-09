@@ -25,6 +25,24 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: dubiacc/articles
+          path: articles
+          fetch-depth: 1
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: dubiacc/docs
+          path: docs
+          fetch-depth: 1
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: dubiacc/archive
+          path: archive
+          fetch-depth: 1
       - name: Run md2json
         run: |
           cp ./md2json2/md2json-linux ./md2json-bin

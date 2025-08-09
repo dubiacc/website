@@ -2056,7 +2056,7 @@ fn head(
     let darklight = include_str!("../../templates/darklight.html");
     let head_css = include_str!("../../static/css/head2.css").to_string();
     let toc = include_str!("../../static/css/TOC.css");
-    let page_toolbar = include_str!("../../static/css/PAGE_TOOLBAR.CSS");
+    let page_toolbar = include_str!("../../static/css/PAGE_TOOLBAR.css");
     let img_css = include_str!("../../static/css/FIGURE.css");
     let floating_header = include_str!("../../static/css/FLOATING_HEADER.css");
     let noscript_style = include_str!("../../static/css/noscript.css");
