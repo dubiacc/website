@@ -29,18 +29,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: dubiacc/articles
+          ssh-key: ${{ secrets.DEPLOY_KEY_PRIVATE_3 }}
           path: articles
           fetch-depth: 1
       - name: Checkout
         uses: actions/checkout@v4
         with:
           repository: dubiacc/docs
+          ssh-key: ${{ secrets.DEPLOY_KEY_PRIVATE_1 }}
           path: docs
           fetch-depth: 1
       - name: Checkout
         uses: actions/checkout@v4
         with:
           repository: dubiacc/archive
+          ssh-key: ${{ secrets.DEPLOY_KEY_PRIVATE_2 }}
           path: archive
           fetch-depth: 1
       - name: Run md2json
