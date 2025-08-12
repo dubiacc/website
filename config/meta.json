@@ -2553,6 +2553,10 @@
         }
     },
     "authors": {
+        "pivert": {
+            "displayname": "Fr. François Pivert",
+            "contact": "http://abbe-pivert.com"
+        },
         "tam": {
             "displayname": "Fr. Giulio Maria Tam",
             "contact": "http://marcel-lefebvre-tam.com"
