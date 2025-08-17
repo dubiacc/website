@@ -2553,6 +2553,10 @@
         }
     },
     "authors": {
+        "kempis": {
+            "displayname": "Thomas à Kempis",
+            "contact": "https://en.wikipedia.org/wiki/Thomas_%C3%A0_Kempis"
+        },
         "pivert": {
             "displayname": "Fr. François Pivert",
             "contact": "http://abbe-pivert.com"
