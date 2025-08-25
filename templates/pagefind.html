@@ -2,7 +2,7 @@
 <html lang="$$LANG$$">
 <!-- HEAD_TEMPLATE_HTML -->
 <body class="page-lorem dropcaps-kanzlei">
-    <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+    <link href="/static/pagefind/pagefind-ui.css" rel="stylesheet">
 	<main>
         <nav id="sidebar">
 			<!-- HEADER_NAVIGATION -->
@@ -17,10 +17,14 @@
             </div>
         </article>
     </main>
-    <script src="/pagefind/pagefind-ui.js"></script>
+    <script src="/static/pagefind/pagefind-ui.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {
-            new PagefindUI({ element: "#search", showSubResults: true });
+            new PagefindUI({
+                element: "#search",
+                showSubResults: true,
+                bundlePath: "/static/pagefind/"
+            });
         });
     </script>
 </body>
