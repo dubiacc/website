@@ -174,6 +174,24 @@
     .search-input::placeholder {
       color: var(--search-placeholder);
     }
+
+    .location-btn {
+        padding: 10px;
+        border: 3px solid var(--search-bg);
+        background: var(--search-bg);
+        color: var(--search-text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        margin-left: -3px;
+        margin-top: 10px;
+    }
+    .location-btn:hover {
+      background-color: var(--search-results-hover);
+    }
+    .location-btn:focus {
+        border: 3px solid var(--focus-col);
+        outline: none;
+    }
     
     .search-results {
         font-family: 'UnifrakturMaguntia';
@@ -1140,7 +1158,10 @@
 
     <div class="search-container">
       <div style="display: flex; flex-direction: column;">
-        <input type="text" class="search-input" placeholder="$$search-placeholder$$" id="searchInput">
+        <div style="display: flex; flex-direction: row; align-items: stretch;">
+          <input type="text" class="search-input" placeholder="$$search-placeholder$$" id="searchInput" style="flex-grow: 1; margin-right: 0px;">
+          <button id="zoomToLocationBtn" class="location-btn" title="Zoom to my location">&#8982;</button>
+        </div>
         <div class="links">
           <a class="outbound-link" href="mailto:info@dubia.cc">$$report-error$$</a>
           <a class="outbound-link" href="mailto:info@ducia.cc">$$request-mass$$</a>
@@ -1482,9 +1503,6 @@ async function init() {
   
   // Load data (first from fallback, then from Google Sheets)
   await loadData();
-        
-  // Try to get user's location
-  getUserLocation();
 }
 
 // Set up event listeners
@@ -1521,6 +1539,8 @@ function setupEventListeners() {
     map.getContainer().classList.add('dark-map');
   }
   
+  document.getElementById('zoomToLocationBtn').addEventListener('click', getUserLocation);
+
   // Listen for theme changes
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
     if (e.matches) {
