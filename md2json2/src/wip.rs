@@ -63,7 +63,7 @@ pub fn generate_wip_page(
             .map(|item| {
                 let (lang, slug) = item.slug.split_once("/").unwrap_or_default();
                 format!(
-                    "<li><a href='/{lang}/wip/{slug}.html'>{}</a> (<a href='/{lang}/{slug}.pdf' target='_blank'>Preview PDF</a>)</li>",
+                    "<li><a href='/{lang}/wip/{slug}.html'>{}</a> (<a href='/{lang}/wip/{slug}.pdf' target='_blank'>Preview PDF</a>)</li>",
                     item.title,
                     lang = lang,
                     slug = slug

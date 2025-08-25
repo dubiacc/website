@@ -4207,12 +4207,26 @@ fn main() -> Result<(), String> {
         let _ = std::fs::create_dir_all(&wip_dir);
 
         for (slug, a) in articles {
+            // Render HTML for WIP article
             match article2html(&lang, &slug, &a, &mut ArticlesByTag::default(), &meta_map) {
                  Ok(s) => {
                     let path = wip_dir.join(format!("{}.html", slug));
                     let _ = std::fs::write(path, &minify(&s));
                 },
                 Err(e) => warnings.push(format!("WIP render error for {}/{}: {}", lang, slug, e)),
+            }
+
+            // Save original Markdown for WIP article
+            let md_path = wip_dir.join(format!("{}.md", slug));
+            let _ = std::fs::write(md_path, &a.src);
+
+            // Generate and save PDF for WIP article
+            match pdf::generate_pdf(a) {
+                Ok(pdf_bytes) => {
+                    let pdf_path = wip_dir.join(format!("{}.pdf", slug));
+                    let _ = std::fs::write(pdf_path, pdf_bytes);
+                }
+                Err(e) => warnings.push(format!("WIP PDF error for {}/{}: {}", lang, slug, e)),
             }
         }
     }
