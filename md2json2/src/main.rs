@@ -2049,6 +2049,7 @@ fn get_string(meta: &MetaJson, lang: &str, key: &str) -> Result<String, String> 
 
 pub struct ArticleInfo {
     is_doc: bool,
+    is_wip: bool,
     author: String,
     slug: String,
 }
@@ -2335,7 +2336,7 @@ fn page_desciption(
         return Ok(String::new());
     }
     let descr = get_description(lang, a, meta)?;
-    Ok(format!("<div class='page-description' style='max-width: 500px;margin: 10px auto;'><p>{descr}</p></div>"))
+    Ok(format!("<div class='page-description' style='max-width: 500px;font-size:0.8em;text-align: justify;margin: 10px auto;'><p>{descr}</p></div>"))
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -3019,6 +3020,7 @@ fn article2html(
     a: &ParsedArticleAnalyzed,
     articles_by_tag: &mut ArticlesByTag,
     meta: &MetaJson,
+    is_wip: bool,
 ) -> Result<String, String> {
     static HTML: &str = include_str!("../../templates/lorem.html");
 
@@ -3062,6 +3064,7 @@ fn article2html(
     );
     let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a, meta, Some(ArticleInfo { 
         is_doc: false, 
+        is_wip,
         author: String::new(), 
         slug: slug.to_string(),
     }))?);
@@ -3994,7 +3997,7 @@ fn main() -> Result<(), String> {
     for (lang, articles) in published_articles.map.iter() {
         for (slug, a) in articles {
             // 1. Render HTML (existing logic)
-            match article2html(&lang, &slug, &a, &mut articles_by_tag, &meta_map) {
+            match article2html(&lang, &slug, &a, &mut articles_by_tag, &meta_map, false) {
                 Ok(s) => {
                     let path = cwd.join("dist").join(lang);
                     let _ = std::fs::create_dir_all(&path);
@@ -4186,7 +4189,7 @@ fn main() -> Result<(), String> {
 
         for (slug, a) in articles {
             // Render HTML for WIP article
-            match article2html(&lang, &slug, &a, &mut ArticlesByTag::default(), &meta_map) {
+            match article2html(&lang, &slug, &a, &mut ArticlesByTag::default(), &meta_map, true) {
                  Ok(s) => {
                     let path = wip_dir.join(format!("{}.html", slug));
                     let _ = std::fs::write(path, &minify(&s));

@@ -175,6 +175,7 @@ pub fn document2html(
     );
     let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, doc, meta, Some(crate::ArticleInfo { 
         is_doc: true, 
+        is_wip: false,
         author: author.to_string(), 
         slug: slug.to_string() 
     }))?);

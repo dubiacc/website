@@ -16,12 +16,13 @@
     </script>
 
 	<a
+        href=""
 		class="copy-article has-icon has-content spawns-popup has-indicator-hook"
 		data-link-icon="⿻"
 		data-link-icon-type="text"
 		style="--link-icon: '⿻';"
 		data-attribute-title="$$COPY_DESC$$"
-        onclick="window.copyMarkdownToClipboard('$$COPY_HREF$$')"
+        onclick="window.copyMarkdownToClipboard('$$COPY_HREF$$'); return false;"
 	>
 		<span class="indicator-hook"></span>$$COPY_TITLE$$
 		<span class="link-icon-hook">⁠</span>
