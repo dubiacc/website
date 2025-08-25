@@ -25,9 +25,15 @@ pub fn generate_resistance_pages(cwd: &Path, meta: &MetaJson) -> Result<(), Stri
 }
 
 fn generate_resistance_html(lang: &str, meta: &MetaJson) -> Result<String, String> {
-    // Get the template HTML
-    let mut template = include_str!("../../templates/resistance.html").to_string();
+    
+    let cwd = crate::getcwd()?;
 
+    let r_path = cwd.join("templates").join("resistance.html");
+
+    // Get the template HTML
+    let mut template = std::fs::read_to_string(r_path)
+    .map_err(|e| format!("reading resistance.html {e}"))?;
+    
     // Get translations for this language
     let strings = meta
         .strings

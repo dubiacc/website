@@ -2,6 +2,7 @@ use rosary::RosaryMysteries;
 use rosary::RosaryTemplates;
 use docs::AnalyzedDocuments;
 use std::collections::BTreeMap;
+use std::path::PathBuf;
 use crate::review::propagate_review_status;
 use crate::wip::generate_wip_page;
 use crate::pdf::generate_pdf;
@@ -3857,8 +3858,7 @@ const INDEX: &str = include_str!("../../index.html");
 const DEATH: &str = include_str!("../../templates/death.html");
 const MISSAL: &str = include_str!("../../templates/missa.html");
 
-fn main() -> Result<(), String> {
-    // Setup
+pub fn getcwd() -> Result<PathBuf, String> {
     let mut cwd = std::env::current_dir().map_err(|e| e.to_string())?;
 
     while !cwd.join("articles").is_dir() {
@@ -3874,6 +3874,14 @@ fn main() -> Result<(), String> {
             .ok_or("cannot find /docs dir in current path")?
             .to_path_buf();
     }
+
+    Ok(cwd)
+}
+
+fn main() -> Result<(), String> {
+    // Setup
+
+    let cwd = crate::getcwd()?;
 
     let mut warnings: Vec<String> = Vec::new();
 
