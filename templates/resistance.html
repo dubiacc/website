@@ -121,7 +121,6 @@
         outline: none;
         border: 3px solid var(--search-bg);
         pointer-events: all;
-        margin-top: 10px;
     }
     
     @media screen and (max-width: 450px) {
@@ -176,21 +175,24 @@
     }
 
     .location-btn {
-        padding: 10px;
-        border: 3px solid var(--search-bg);
-        background: var(--search-bg);
-        color: var(--search-text);
-        font-size: 1.2rem;
-        cursor: pointer;
-        margin-left: -3px;
-        margin-top: 10px;
+      border: 3px dotted steelblue;
+      background: var(--search-bg);
+      color: var(--search-text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      flex-grow: 1;
+      align-items: center;
+      justify-content: center;
+      max-width: 50px;
+      margin: 0px;
+      cursor: pointer;
     }
     .location-btn:hover {
       background-color: var(--search-results-hover);
     }
     .location-btn:focus {
-        border: 3px solid var(--focus-col);
-        outline: none;
+        border: 3px dotted black;
     }
     
     .search-results {
@@ -1158,7 +1160,7 @@
 
     <div class="search-container">
       <div style="display: flex; flex-direction: column;">
-        <div style="display: flex; flex-direction: row; align-items: stretch;">
+        <div style="display: flex; flex-direction: row; align-items: stretch;padding-top: 10px;">
           <input type="text" class="search-input" placeholder="$$search-placeholder$$" id="searchInput" style="flex-grow: 1; margin-right: 0px;">
           <button id="zoomToLocationBtn" class="location-btn" title="Zoom to my location">&#8982;</button>
         </div>
