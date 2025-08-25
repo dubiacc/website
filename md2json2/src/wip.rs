@@ -18,9 +18,12 @@ pub fn generate_wip_page(
 
     for (lang, articles) in &all_articles.map {
         for (slug, article) in articles {
+            if article.is_prayer() {
+                continue;
+            }
             // WIP articles are rendered in a special wip/ subdirectory
             let link = SectionLink {
-                slug: format!("{}/{}/wip/{}.html", wip_url_base, lang, slug),
+                slug: format!("{}/{slug}", lang, slug = slug),
                 title: article.title.clone(),
                 id: None,
             };
@@ -57,9 +60,17 @@ pub fn generate_wip_page(
         if items.is_empty() { return String::new(); }
         let list_items = items
             .iter()
-            .map(|item| format!("<li><a href='{}'>{}</a></li>", item.slug, item.title))
+            .map(|item| {
+                let (lang, slug) = item.slug.split_once("/").unwrap_or_default();
+                format!(
+                    "<li><a href='/{lang}/wip/{slug}.html'>{}</a> (<a href='/{lang}/wip/{slug}.pdf' target='_blank'>Preview PDF</a>)</li>",
+                    item.title,
+                    lang = lang,
+                    slug = slug
+                )
+            })
             .collect::<String>();
-        format!("<h2>{}</h2><ul>{}</ul>", title, list_items)
+        format!("<h2 class='filterable-header'>{}</h2><ul class='filterable'>{}</ul>", title, list_items)
     };
 
     let render_translation_list = |title: &str, items: &BTreeMap<String, Vec<String>>| -> String {
@@ -68,7 +79,7 @@ pub fn generate_wip_page(
             .iter()
             .map(|(title, langs)| format!("<li>{} → [{}]</li>", title, langs.join(", ")))
             .collect::<String>();
-        format!("<h2>{}</h2><ul>{}</ul>", title, list_items)
+        format!("<h2 class='filterable-header'>{}</h2><ul class='filterable'>{}</ul>", title, list_items)
     };
 
     let warnings_html = if !warnings.is_empty() {
@@ -82,6 +93,7 @@ pub fn generate_wip_page(
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Work in Progress</title>
     <style>
         body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; margin: 2em; background-color: #fdfdfd; color: #1a1a1a; }}
@@ -94,14 +106,47 @@ pub fn generate_wip_page(
         a:hover {{ text-decoration: underline; }}
         pre {{ background-color: #f0f0f0; padding: 1em; border: 1px solid #ddd; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }}
         code {{ font-size: 0.95em; }}
+        #searchInput {{ width: 100%; padding: 10px; margin-bottom: 20px; font-size: 1em; border-radius: 5px; border: 1px solid #ddd; }}
     </style>
 </head>
 <body>
     <h1>Work in Progress</h1>
+    <input type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search for articles...">
     {}
     {}
     {}
     {}
+    <script>
+    function searchFunction() {{
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById('searchInput');
+        filter = input.value.toUpperCase();
+        var lists = document.getElementsByClassName('filterable');
+        for (var j = 0; j < lists.length; j++) {{
+            ul = lists[j];
+            li = ul.getElementsByTagName('li');
+            var header = ul.previousElementSibling;
+            var visibleItems = 0;
+            for (i = 0; i < li.length; i++) {{
+                a = li[i].getElementsByTagName("a")[0];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {{
+                    li[i].style.display = "";
+                    visibleItems++;
+                }} else {{
+                    li[i].style.display = "none";
+                }}
+            }}
+            if (visibleItems > 0) {{
+                header.style.display = "";
+                ul.style.display = "";
+            }} else {{
+                header.style.display = "none";
+                ul.style.display = "none";
+            }}
+        }}
+    }}
+    </script>
 </body>
 </html>
 "#,

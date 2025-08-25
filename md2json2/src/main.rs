@@ -2052,6 +2052,9 @@ fn head(
     lang: &str,
     title_id: &str,
     meta: &MetaJson,
+    is_doc: bool,
+    author: &str,
+    slug: &str,
 ) -> Result<String, String> {
     let license = include_str!("../../templates/license.html");
     let darklight = include_str!("../../templates/darklight.html");
@@ -2111,7 +2114,74 @@ fn head(
         &get_string(meta, lang, "page-smc")?,
     );
     head = head.replace("$$CONTACT_URL$$", &get_special_page_link(lang, "about", meta)?);
-    head = head.replace("$$SLUG$$", title_id);
+    head = head.replace("$$SLUG$$", slug);
+
+    let (pdf_path, md_path) = if is_doc {
+        let docs_folder = get_string(meta, lang, "special-docs-path").unwrap_or_default();
+        (
+            format!("/{}/{}/{}/{}.pdf", lang, docs_folder, author, slug),
+            format!("/{}/{}/{}/{}.md", lang, docs_folder, author, slug),
+        )
+    } else {
+        (
+            format!("/{}/{}.pdf", lang, slug),
+            format!("/{}/{}.md", lang, slug),
+        )
+    };
+
+    let toolbar_html = format!(
+        r#"
+        <style>
+            .article-toolbar {{
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                z-index: 1000;
+            }}
+            .toolbar-button {{
+                background-color: #f0f0f0;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                padding: 5px 10px;
+                cursor: pointer;
+                font-size: 1.2em;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }}
+            .toolbar-button:hover {{
+                background-color: #e0e0e0;
+            }}
+        </style>
+        <div class="article-toolbar">
+            <a href="{}" target="_blank" class="toolbar-button" title="Download PDF">
+                &#x1F4C4;
+            </a>
+            <button class="toolbar-button" onclick="copyMarkdownToClipboard('{}')" title="Copy Article to Clipboard">
+                &#x1F4CB;
+            </button>
+        </div>
+        <script>
+            function copyMarkdownToClipboard(url) {{
+                fetch(url)
+                    .then(response => response.text())
+                    .then(text => {{
+                        navigator.clipboard.writeText(text).then(() => {{
+                            alert('Article copied to clipboard!');
+                        }}, () => {{
+                            alert('Failed to copy article to clipboard.');
+                        }});
+                    }});
+            }}
+        </script>
+        "#,
+        pdf_path, md_path
+    );
+
+    head = head.replace("<!-- ARTICLE_TOOLBAR -->", &toolbar_html);
 
     Ok(head)
 }
@@ -3006,7 +3076,7 @@ fn article2html(
     let a = &a;
     let html = HTML.replace(
         "<!-- HEAD_TEMPLATE_HTML -->",
-        &head(a, lang, title_id.as_str(), meta)?,
+        &head(a, lang, title_id.as_str(), meta, false, "", slug)?,
     );
     let html = html.replace(
         "<!-- HEADER_NAVIGATION -->",
@@ -4034,6 +4104,14 @@ fn main() -> Result<(), String> {
                 let html = docs::document2html(lang, author, slug, doc, &meta_map)?;
                 let output_path = output_dir.join(format!("{}.html", slug));
                 let _ = std::fs::write(output_path, &minify(&html));
+
+                match pdf::generate_pdf(doc) {
+                    Ok(pdf_bytes) => {
+                        let pdf_path = output_dir.join(format!("{}.pdf", slug));
+                        let _ = std::fs::write(pdf_path, pdf_bytes);
+                    }
+                    Err(e) => warnings.push(e),
+                }
             }
         }
     }
@@ -4129,12 +4207,26 @@ fn main() -> Result<(), String> {
         let _ = std::fs::create_dir_all(&wip_dir);
 
         for (slug, a) in articles {
+            // Render HTML for WIP article
             match article2html(&lang, &slug, &a, &mut ArticlesByTag::default(), &meta_map) {
                  Ok(s) => {
                     let path = wip_dir.join(format!("{}.html", slug));
                     let _ = std::fs::write(path, &minify(&s));
                 },
                 Err(e) => warnings.push(format!("WIP render error for {}/{}: {}", lang, slug, e)),
+            }
+
+            // Save original Markdown for WIP article
+            let md_path = wip_dir.join(format!("{}.md", slug));
+            let _ = std::fs::write(md_path, &a.src);
+
+            // Generate and save PDF for WIP article
+            match pdf::generate_pdf(a) {
+                Ok(pdf_bytes) => {
+                    let pdf_path = wip_dir.join(format!("{}.pdf", slug));
+                    let _ = std::fs::write(pdf_path, pdf_bytes);
+                }
+                Err(e) => warnings.push(format!("WIP PDF error for {}/{}: {}", lang, slug, e)),
             }
         }
     }
