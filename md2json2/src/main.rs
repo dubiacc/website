@@ -3004,7 +3004,9 @@ fn article2html(
     let content = body_content(lang, &slug, &a.sections, meta)?;
 
     let a = &a;
-    let html = HTML.replace(
+    let html = HTML.replace("<!-- PAGEFIND_ATTRIBUTES -->", "data-pagefind-body data-pagefind-filter='type: article' data-pagefind-sort='priority:1'");
+    let html = html.replace("<!-- PAGEFIND_TITLE_ATTRIBUTE -->", "data-pagefind-meta='title'");
+    let html = html.replace(
         "<!-- HEAD_TEMPLATE_HTML -->",
         &head(a, lang, title_id.as_str(), meta)?,
     );
@@ -3270,11 +3272,7 @@ fn search_html(
             );
             search_html = search_html.replace("$$TITLE$$", &searchpage_title);
 
-            let mut search_js = include_str!("../../static/js/search.js").to_string();
-            search_js = search_js.replace("$$LANG$$", lang);
-            search_js = search_js.replace("$$VERSION$$", &version);
-            search_js = search_js.replace("$$NO_RESULTS$$", &no_results);
-            search_js = search_js.replace("$$DOC_FOLDER$$", &get_string(meta, lang, "special-docs-path")?);
+            let search_js = include_str!("../../static/js/pagefind_search.js").to_string();
 
             // Return the tuple for this language
             Ok((lang.clone(), (searchbar_html, search_html, search_js)))

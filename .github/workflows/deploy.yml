@@ -51,6 +51,12 @@ jobs:
           cp ./md2json2/md2json-linux ./md2json-bin
           chmod +x ./md2json-bin
           ./md2json-bin --production
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run Pagefind
+        run: npx pagefind --site "dist"
       - name: Remove unnecessary files
         run: |
           rm -rf ./*.DS_Store
@@ -62,6 +68,7 @@ jobs:
           rm -rf ./.gitignore
           rm -rf ./gen.py
           cp -r ./static ./dist
+          mv ./dist/pagefind ./dist/static/
       - name: Debug dist
         run: tree ./dist
       - name: Setup Pages
