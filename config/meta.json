@@ -149,7 +149,9 @@
             "title-priest": "P.",
             "title-sister": "Schw.",
             "title-mother": "M.",
-            "title-brother": "Br."
+            "title-brother": "Br.",
+            "copy-article": "Artikel in die Zwischenablage kopieren",
+            "print-as-pdf": "Artikel als PDF herunterladen"
         },
         "en": {
             "email": "Email",
@@ -299,7 +301,9 @@
             "title-priest": "Fr.",
             "title-sister": "Sr.",
             "title-mother": "M.",
-            "title-brother": "Br."
+            "title-brother": "Br.",
+            "copy-article": "Copy article to clipboard",
+            "print-as-pdf": "Download article as PDF"
         },
         "fr": {
             "email": "E-mail",
@@ -449,7 +453,9 @@
             "title-priest": "P.",
             "title-sister": "Sr.",
             "title-mother": "M.",
-            "title-brother": "Fr."
+            "title-brother": "Fr.",
+            "copy-article": "Copier l'article dans le presse-papiers",
+            "print-as-pdf": "Télécharger l'article en PDF"
         },
         "pl": {
             "email": "E-mail",
@@ -599,7 +605,9 @@
             "title-priest": "Ks.",
             "title-sister": "S.",
             "title-mother": "M.",
-            "title-brother": "Br."
+            "title-brother": "Br.",
+            "copy-article": "Kopiuj artykuł do schowka",
+            "print-as-pdf": "Pobierz artykuł jako PDF"
         },
         "br": {
             "email": "E-mail",
@@ -749,7 +757,9 @@
             "title-priest": "Pe.",
             "title-sister": "Ir.",
             "title-mother": "Me.",
-            "title-brother": "Ir."
+            "title-brother": "Ir.",
+            "copy-article": "Copiar artigo para a área de transferência",
+            "print-as-pdf": "Baixar artigo como PDF"
         },
         "es": {
             "email": "Correo electrónico",
@@ -899,7 +909,9 @@
             "title-priest": "P.",
             "title-sister": "Hna.",
             "title-mother": "M.",
-            "title-brother": "Hno."
+            "title-brother": "Hno.",
+            "copy-article": "Copiar artículo al portapapeles",
+            "print-as-pdf": "Descargar artículo como PDF"
         },
         "it": {
             "email": "E-mail",
@@ -1049,7 +1061,9 @@
             "title-priest": "P.",
             "title-sister": "Suor.",
             "title-mother": "M.",
-            "title-brother": "Fr."
+            "title-brother": "Fr.",
+            "copy-article": "Copia l'articolo negli appunti",
+            "print-as-pdf": "Scarica l'articolo in PDF"
         },
         "ru": {
             "email": "Электронная почта",
@@ -1199,7 +1213,9 @@
             "title-priest": "о.",
             "title-sister": "с.",
             "title-mother": "м.",
-            "title-brother": "бр."
+            "title-brother": "бр.",
+            "copy-article": "Копировать статью в буфер обмена",
+            "print-as-pdf": "Скачать статью в формате PDF"
         },
         "tr": {
             "email": "E-posta",
@@ -1349,7 +1365,9 @@
             "title-priest": "Pdr.",
             "title-sister": "Rah.",
             "title-mother": "Anne.",
-            "title-brother": "Bir."
+            "title-brother": "Bir.",
+            "copy-article": "Makaleyi panoya kopyala",
+            "print-as-pdf": "Makaleyi PDF olarak indir"
         },
         "el": {
             "email": "E-mail",
@@ -1499,7 +1517,9 @@
             "title-priest": "π.",
             "title-sister": "Αδ.",
             "title-mother": "Μ.",
-            "title-brother": "Αδ."
+            "title-brother": "Αδ.",
+            "copy-article": "Αντιγραφή άρθρου στο πρόχειρο",
+            "print-as-pdf": "Λήψη άρθρου ως PDF"
         },
         "ar": {
             "email": "البريد الإلكتروني",
@@ -1649,7 +1669,9 @@
             "title-priest": "أب.",
             "title-sister": "أخت.",
             "title-mother": "أم.",
-            "title-brother": "أخ."
+            "title-brother": "أخ.",
+            "copy-article": "نسخ المقال إلى الحافظة",
+            "print-as-pdf": "تنزيل المقال بصيغة PDF"
         },
         "tl": {
             "email": "Email",
@@ -1799,7 +1821,9 @@
             "title-priest": "P.",
             "title-sister": "Sor.",
             "title-mother": "Ina.",
-            "title-brother": "Bro."
+            "title-brother": "Bro.",
+            "copy-article": "Kopyahin ang artikulo sa clipboard",
+            "print-as-pdf": "I-download ang artikulo bilang PDF"
         },
         "zh": {
             "email": "电子邮件",
@@ -1949,7 +1973,9 @@
             "title-priest": "神父.",
             "title-sister": "修女.",
             "title-mother": "院长.",
-            "title-brother": "修士."
+            "title-brother": "修士.",
+            "copy-article": "将文章复制到剪贴板",
+            "print-as-pdf": "将文章下载为 PDF"
         },
         "ko": {
             "email": "이메일",
@@ -2099,7 +2125,9 @@
             "title-priest": "신부.",
             "title-sister": "수녀.",
             "title-mother": "원장.",
-            "title-brother": "수사."
+            "title-brother": "수사.",
+            "copy-article": "클립보드에 기사 복사",
+            "print-as-pdf": "기사를 PDF로 다운로드"
         },
         "ja": {
             "email": "メール",
@@ -2249,7 +2277,9 @@
             "title-priest": "神父.",
             "title-sister": "シスター.",
             "title-mother": "マザー.",
-            "title-brother": "ブラザー."
+            "title-brother": "ブラザー.",
+            "copy-article": "記事をクリップボードにコピー",
+            "print-as-pdf": "記事をPDFとしてダウンロード"
         },
         "ro": {
             "email": "E-mail",
@@ -2399,7 +2429,9 @@
             "title-priest": "Pr.",
             "title-sister": "S.",
             "title-mother": "M.",
-            "title-brother": "Fr."
+            "title-brother": "Fr.",
+            "copy-article": "Copiați articolul în clipboard",
+            "print-as-pdf": "Descărcați articolul ca PDF"
         },
         "pt": {
             "email": "E-mail",
@@ -2549,7 +2581,9 @@
             "title-priest": "Pe.",
             "title-sister": "Ir.",
             "title-mother": "Me.",
-            "title-brother": "Ir."
+            "title-brother": "Ir.",
+            "copy-article": "Copiar artigo para a área de transferência",
+            "print-as-pdf": "Descarregar artigo como PDF"
         }
     },
     "authors": {
