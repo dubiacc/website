@@ -44,6 +44,27 @@
         overflow: hidden;
         overflow-y: auto;
     }
+    #index-search-results .result-item {
+        display: flex;
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+    }
+    #index-search-results .result-title {
+        width: 30%;
+        padding-right: 10px;
+    }
+    #index-search-results .result-context {
+        width: 70%;
+    }
+    @media (max-width: 768px) {
+        #index-search-results .result-item {
+            flex-direction: column;
+        }
+        #index-search-results .result-title,
+        #index-search-results .result-context {
+            width: 100%;
+        }
+    }
     #index-search-results li {
         margin-top: 0 !important;
     }
