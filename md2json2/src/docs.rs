@@ -158,7 +158,9 @@ pub fn document2html(
     
     let title_id = format!("{}-docs-{}-{}", lang, author, slug);
     
-    let html = HTML.replace(
+    let html = HTML.replace("<!-- PAGEFIND_ATTRIBUTES -->", "data-pagefind-body data-pagefind-filter='type: document' data-pagefind-sort='priority:2'");
+    let html = html.replace("<!-- PAGEFIND_TITLE_ATTRIBUTE -->", "data-pagefind-meta='title'");
+    let html = html.replace(
         "<!-- HEAD_TEMPLATE_HTML -->",
         &head(doc, lang, &title_id, meta, true, author, slug)?,
     );
