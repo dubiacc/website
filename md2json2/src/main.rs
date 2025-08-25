@@ -3130,7 +3130,7 @@ fn render_page_author_pages(
 
             let mut special_content = String::new();
             if let Some(contact) = &author_info.contact {
-                special_content.push_str(&format!("<h2>{}</h2><p><a href='{_}'>{_}</a></p>", get_string(meta, lang, "author-contact")?, _ = contact));
+                special_content.push_str(&format!("<h2>{}</h2><p><a href='{contact}'>{contact}</a></p>", get_string(meta, lang, "author-contact")?));
             }
             if !author_info.donate.is_empty() {
                 let donate_str = get_string(meta, lang, "author-donate")?;
