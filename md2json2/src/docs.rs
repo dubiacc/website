@@ -160,7 +160,7 @@ pub fn document2html(
     
     let html = HTML.replace(
         "<!-- HEAD_TEMPLATE_HTML -->",
-        &head(doc, lang, &title_id, meta)?,
+        &head(doc, lang, &title_id, meta, true, author, slug)?,
     );
     let html = html.replace(
         "<!-- HEADER_NAVIGATION -->",
