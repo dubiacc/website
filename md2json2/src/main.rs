@@ -3108,56 +3108,57 @@ fn article2html(
 fn render_page_author_pages(
     articles: &AnalyzedArticles,
     meta: &MetaJson,
-) -> Result<BTreeMap<String, Vec<(String, String)>>, String> {
-    let mut finalmap = BTreeMap::new();
-    for lang in articles.map.keys() {
-        let contact_str = get_string(meta, lang, "author-contact")?;
-        let donate_str = get_string(meta, lang, "author-donate")?;
+    cwd: &Path,
+) -> Result<(), String> {
+    for (lang, lang_articles) in articles.map.iter() {
+        let mut articles_by_author: BTreeMap<String, Vec<SectionLink>> = BTreeMap::new();
+        for (slug, article) in lang_articles {
+            for author_id in &article.authors {
+                articles_by_author
+                    .entry(author_id.clone())
+                    .or_default()
+                    .push(SectionLink {
+                        id: None,
+                        slug: slug.clone(),
+                        title: article.title.clone(),
+                    });
+            }
+        }
 
-        for (id, v) in meta.authors.iter() {
-            let name = &v.displayname;
-            let contact_url = v.contact.as_deref();
-            let mut dn = String::new();
-            for (platform, link) in v.donate.iter() {
-                let s = match platform.as_str() {
-                    "paypal" => format!("<p><a href='{link}'>PayPal</a></p>"),
-                    "github" => format!("<p><a href='{link}'>GitHub</a></p>"),
-                    "ko-fi" => format!("<p><a href='{link}'>Ko-Fi</a></p>"),
-                    "pledge" => format!("<p><a href='{link}'>Pledge.to</a></p>"),
-                    "wise" => format!("<p><a href='{link}'>Wise</a></p>"),
-                    "subscribestar" => format!("<p><a href='{link}'>SubscribeStar</a></p>"),
-                    "patreon" => format!("<p><a href='{link}'>Patreon</a></p>"),
-                    _ => {
-                        return Err(format!(
-                            "unknown platform {platform} for user {id} in meta.json authors"
-                        ))
-                    }
-                };
+        for (author_id, author_articles) in articles_by_author {
+            let author_info = meta.authors.get(&author_id).ok_or_else(|| format!("Author '{}' not found in meta.json", author_id))?;
 
-                dn.push_str(&s);
+            let mut special_content = String::new();
+            if let Some(contact) = &author_info.contact {
+                special_content.push_str(&format!("<h2>{}</h2><p><a href='{_}'>{_}</a></p>", get_string(meta, lang, "author-contact")?, _ = contact));
+            }
+            if !author_info.donate.is_empty() {
+                let donate_str = get_string(meta, lang, "author-donate")?;
+                special_content.push_str(&format!("<h2>{}</h2>", donate_str));
+                for (platform, link) in &author_info.donate {
+                    special_content.push_str(&format!("<p><a href='{link}'>{platform}</a></p>"));
+                }
             }
 
-            let mut t = format!("<!doctype html><html><head><title>{name}</title></head><body>");
-            t += &format!("<h1>{name}</h1>");
-            if let Some(contact_url) = contact_url {
-                t += &format!("<h2>{contact_str}</h2>");
-                t += &format!("<a href='{contact_url}'>{contact_url}</a>");
-            }
+            let page_content = render_index_section(lang, &author_id, "", &author_info.displayname, &author_articles, false);
 
-            if !dn.is_empty() {
-                t += &format!("<h2>{donate_str}</h2>");
-                t += &dn;
-            }
-            t += &format!("</body></html>");
+            let page = SpecialPage {
+                id: format!("author-{}", author_id),
+                filepath: format!("author/{}", author_id.replace(":", "-")),
+                title: author_info.displayname.clone(),
+                description: format!("Articles by {}", author_info.displayname),
+                content: page_content,
+                special_content,
+            };
 
-            finalmap
-                .entry(lang.clone())
-                .or_insert_with(|| Vec::new())
-                .push((id.to_lowercase().replace(":", "-"), t));
+            let (filename, html) = special2html(lang, &page, meta)?;
+            let path = cwd.join("dist").join(lang).join(filename);
+            let _ = std::fs::create_dir_all(path.parent().unwrap());
+            let _ = std::fs::write(path, &minify(&html));
         }
     }
 
-    Ok(finalmap)
+    Ok(())
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -3420,7 +3421,7 @@ fn get_special_pages(
             id: shop_id,
             description: shop_desc,
             content: render_shop_sections(lang, &tags.shop, meta),
-            special_content: site_author_donation(lang, meta).unwrap_or_default(),
+            special_content: String::new(),
         },
         SpecialPage {
             title: about_title,
@@ -3469,6 +3470,15 @@ fn special2html(
     let special_about_title = get_string(meta, lang, "special-about-title")?;
     special = special.replace("$$SPECIAL_ABOUT_TITLE$$", &special_about_title);
     special = special.replace("$$SPECIAL_ABOUT_PATH$$", &special_about_title);
+
+    let shop_id = get_string(meta, lang, "special-shop-id")?;
+    if page.id == shop_id {
+        let donate_section = site_author_donation(lang, meta).unwrap_or_default();
+        special = special.replace("<!-- SHOP_DONATE -->", &donate_section);
+    } else {
+        special = special.replace("<!-- SHOP_DONATE -->", "");
+    }
+
     Ok((format!("{}.html", page.filepath), special))
 }
 
@@ -4098,16 +4108,7 @@ fn main() -> Result<(), String> {
     }
 
     // Write author pages
-    let author_pages = render_page_author_pages(&published_articles, &meta_map)?;
-    for (lang, authors) in author_pages.iter() {
-        let _ = std::fs::create_dir_all(cwd.join("dist").join(&lang).join("author"));
-        for (a, v) in authors {
-            let _ = std::fs::write(
-                cwd.join("dist").join(&lang).join("author").join(&format!("{a}.html")),
-                &minify(&v),
-            );
-        }
-    }
+    render_page_author_pages(&published_articles, &meta_map, &cwd)?;
 
     println!("generating search index...");
 
@@ -4178,6 +4179,22 @@ fn main() -> Result<(), String> {
         let _ = std::fs::write(cwd.join("dist").join(lang).join("search.html"), &minify(&search_html));
         let index_html = render_index_html(lang, &published_articles, &meta_map, &search_html_result)?;
         let _ = std::fs::write(cwd.join("dist").join(&format!("{lang}.html")), &minify(&index_html));
+
+        let mut pagefind_html = include_str!("../../templates/pagefind.html").to_string();
+        let parsed = ParsedArticleAnalyzed {
+            title: "Pagefind Test".to_string(),
+            ..Default::default()
+        };
+        pagefind_html = pagefind_html.replace(
+            "<!-- HEAD_TEMPLATE_HTML -->",
+            &head(&parsed, lang, &format!("{lang}-pagefind"), &meta_map)?,
+        );
+        pagefind_html = pagefind_html.replace(
+            "<!-- HEADER_NAVIGATION -->",
+            &header_navigation(lang, true, &meta_map)?,
+        );
+        pagefind_html = pagefind_html.replace("$$LANG$$", lang);
+        let _ = std::fs::write(cwd.join("dist").join(lang).join("pagefind.html"), &minify(&pagefind_html));
     }
 
     println!("generating wip page...");
@@ -4212,8 +4229,31 @@ fn main() -> Result<(), String> {
         }
     }
 
-    // Generate the main wip.html page
     let wip_url_base = get_root_href();
+
+    // Check for untranslated tags
+    let mut all_tags = BTreeSet::new();
+    for lang_articles in all_analyzed_with_status.map.values() {
+        for article in lang_articles.values() {
+            for tag in &article.tags {
+                all_tags.insert(tag.clone());
+            }
+        }
+    }
+
+    let all_meta_langs = meta_map.tags.keys().cloned().collect::<BTreeSet<_>>();
+
+    for tag in &all_tags {
+        for lang in &all_meta_langs {
+            if let Some(lang_tags) = meta_map.tags.get(lang) {
+                if !lang_tags.tags.contains_key(tag) {
+                    warnings.push(format!("Missing translation for tag '{}' in language '{}'", tag, lang));
+                }
+            }
+        }
+    }
+
+    // Generate the main wip.html page
     let wip_page_content = wip::generate_wip_page(&all_analyzed_with_status, &meta_map, &warnings, wip_url_base);
     let _ = std::fs::write(cwd.join("dist/wip.html"), wip_page_content);
 
