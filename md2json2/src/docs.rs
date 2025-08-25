@@ -162,8 +162,7 @@ pub fn document2html(
     let html = html.replace("<!-- PAGEFIND_TITLE_ATTRIBUTE -->", "data-pagefind-meta='title'");
     let html = html.replace(
         "<!-- HEAD_TEMPLATE_HTML -->",
-        &head(doc, lang, &title_id, meta, true, author, slug)?,
-    );
+        &head(doc, lang, &title_id, meta)?);
     let html = html.replace(
         "<!-- HEADER_NAVIGATION -->",
         &header_navigation(lang, true, meta)?,
@@ -174,7 +173,11 @@ pub fn document2html(
         "<!-- PAGE_DESCRIPTION -->",
         &page_desciption(lang, doc, meta)?,
     );
-    let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, doc, meta)?);
+    let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, doc, meta, Some(crate::ArticleInfo { 
+        is_doc: true, 
+        author: author.to_string(), 
+        slug: slug.to_string() 
+    }))?);
     let html = html.replace(
         "<!-- BODY_ABSTRACT -->",
         &body_abstract(lang, slug, doc.is_prayer(), &doc.summary),

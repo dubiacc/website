@@ -1,0 +1,29 @@
+<span class="similar">
+
+    <script>
+        function copyMarkdownToClipboard(url) {
+            fetch(url)
+            .then(response => response.text())
+            .then(text => {
+                navigator.clipboard.writeText(text)
+                .then(
+                    () => {}, 
+                    () => { alert('Failed to copy article to clipboard.');}
+                );
+            });
+        }
+        window.copyMarkdownToClipboard = copyMarkdownToClipboard;
+    </script>
+
+	<a
+		class="copy-article has-icon has-content spawns-popup has-indicator-hook"
+		data-link-icon="⿻"
+		data-link-icon-type="text"
+		style="--link-icon: '⿻';"
+		data-attribute-title="$$COPY_DESC$$"
+        onclick="window.copyMarkdownToClipboard('$$COPY_HREF$$')"
+	>
+		<span class="indicator-hook"></span>$$COPY_TITLE$$
+		<span class="link-icon-hook">⁠</span>
+	</a>
+</span>

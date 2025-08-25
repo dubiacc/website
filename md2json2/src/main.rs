@@ -2047,14 +2047,53 @@ fn get_string(meta: &MetaJson, lang: &str, key: &str) -> Result<String, String> 
         .clone())
 }
 
+pub struct ArticleInfo {
+    is_doc: bool,
+    author: String,
+    slug: String,
+}
+
+impl ArticleInfo {
+
+    pub fn get_pdf_link(&self, meta: &MetaJson, lang: &str) -> String {
+        let docs_folder = get_string(meta, lang, "special-docs-path").unwrap_or_default();
+
+        let pdf_path = if self.is_doc {
+            format!("/{}/{}/{}/{}.pdf", lang, docs_folder, self.author, self.slug)
+        } else {
+            format!("/{}/{}.pdf", lang, self.slug)
+        };
+
+        let mut bl = include_str!("../../templates/page-metadata.pdf.html").to_string();
+        bl = bl.replace("$$PDF_DESC$$", &get_string(meta, lang, "print-as-pdf").unwrap_or_default());
+        bl = bl.replace("$$PDF_TITLE$$", &get_string(meta, lang, "print-as-pdf").unwrap_or_default());
+        bl = bl.replace("$$PDF_HREF$$", &pdf_path);
+        bl
+    }
+
+    pub fn get_copy_article(&self, meta: &MetaJson, lang: &str) -> String {
+    
+        let docs_folder = get_string(meta, lang, "special-docs-path").unwrap_or_default();
+
+        let md_path = if self.is_doc {
+            format!("/{}/{}/{}/{}.md", lang, docs_folder, self.author, self.slug)
+        } else {
+            format!("/{}/{}.md", lang, self.slug)
+        };
+
+        let mut bl = include_str!("../../templates/page-metadata.copy.html").to_string();
+        bl = bl.replace("$$COPY_DESC$$", &get_string(meta, lang, "copy-article").unwrap_or_default());
+        bl = bl.replace("$$COPY_TITLE$$", &get_string(meta, lang, "copy-article").unwrap_or_default());
+        bl = bl.replace("$$COPY_HREF$$", &md_path);
+        bl
+    }
+}
+
 fn head(
     a: &ParsedArticleAnalyzed,
     lang: &str,
     title_id: &str,
     meta: &MetaJson,
-    is_doc: bool,
-    author: &str,
-    slug: &str,
 ) -> Result<String, String> {
     let license = include_str!("../../templates/license.html");
     let darklight = include_str!("../../templates/darklight.html");
@@ -2114,74 +2153,7 @@ fn head(
         &get_string(meta, lang, "page-smc")?,
     );
     head = head.replace("$$CONTACT_URL$$", &get_special_page_link(lang, "about", meta)?);
-    head = head.replace("$$SLUG$$", slug);
-
-    let (pdf_path, md_path) = if is_doc {
-        let docs_folder = get_string(meta, lang, "special-docs-path").unwrap_or_default();
-        (
-            format!("/{}/{}/{}/{}.pdf", lang, docs_folder, author, slug),
-            format!("/{}/{}/{}/{}.md", lang, docs_folder, author, slug),
-        )
-    } else {
-        (
-            format!("/{}/{}.pdf", lang, slug),
-            format!("/{}/{}.md", lang, slug),
-        )
-    };
-
-    let toolbar_html = format!(
-        r#"
-        <style>
-            .article-toolbar {{
-                position: fixed;
-                top: 10px;
-                right: 10px;
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-                z-index: 1000;
-            }}
-            .toolbar-button {{
-                background-color: #f0f0f0;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                padding: 5px 10px;
-                cursor: pointer;
-                font-size: 1.2em;
-                display: flex;
-                align-items: center;
-                gap: 5px;
-            }}
-            .toolbar-button:hover {{
-                background-color: #e0e0e0;
-            }}
-        </style>
-        <div class="article-toolbar">
-            <a href="{}" target="_blank" class="toolbar-button" title="Download PDF">
-                &#x1F4C4;
-            </a>
-            <button class="toolbar-button" onclick="copyMarkdownToClipboard('{}')" title="Copy Article to Clipboard">
-                &#x1F4CB;
-            </button>
-        </div>
-        <script>
-            function copyMarkdownToClipboard(url) {{
-                fetch(url)
-                    .then(response => response.text())
-                    .then(text => {{
-                        navigator.clipboard.writeText(text).then(() => {{
-                            alert('Article copied to clipboard!');
-                        }}, () => {{
-                            alert('Failed to copy article to clipboard.');
-                        }});
-                    }});
-            }}
-        </script>
-        "#,
-        pdf_path, md_path
-    );
-
-    head = head.replace("<!-- ARTICLE_TOOLBAR -->", &toolbar_html);
+    head = head.replace("$$SLUG$$", &title_id);
 
     Ok(head)
 }
@@ -2498,7 +2470,7 @@ pub fn add_translation_keys(
     Ok(meta)
 }
 
-fn page_metadata(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Result<String, String> {
+fn page_metadata(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson, info: Option<ArticleInfo>) -> Result<String, String> {
     if a.is_prayer() {
         return Ok(String::new());
     }
@@ -2556,6 +2528,8 @@ fn page_metadata(lang: &str, a: &ParsedArticleAnalyzed, meta: &MetaJson) -> Resu
     }
 
     page_meta = page_meta.replace("<!-- AUTHORS -->", &authors_link);
+    page_meta = page_meta.replace("<!-- PDF_DOTTED -->", &info.as_ref().map(|i| i.get_pdf_link(meta, lang)).unwrap_or_default());
+    page_meta = page_meta.replace("<!-- COPY_ARTICLE_DOTTED -->", &info.as_ref().map(|i| i.get_copy_article(meta, lang)).unwrap_or_default());
 
     Ok(page_meta)
 }
@@ -3069,16 +3043,12 @@ fn article2html(
     let logo_svg = include_str!("../../static/img/logo/full.svg")
         .replace("<svg ", "<svg style='max-height:50px;' ");
 
-    let mut a = a.clone();
-
     let content = body_content(lang, &slug, &a.sections, meta)?;
-
-    let a = &a;
     let html = HTML.replace("<!-- PAGEFIND_ATTRIBUTES -->", "data-pagefind-body data-pagefind-filter='type: article' data-pagefind-sort='priority:1'");
     let html = html.replace("<!-- PAGEFIND_TITLE_ATTRIBUTE -->", "data-pagefind-meta='title'");
     let html = html.replace(
         "<!-- HEAD_TEMPLATE_HTML -->",
-        &head(a, lang, title_id.as_str(), meta, false, "", slug)?,
+        &head(a, lang, title_id.as_str(), meta)?,
     );
     let html = html.replace(
         "<!-- HEADER_NAVIGATION -->",
@@ -3090,7 +3060,11 @@ fn article2html(
         "<!-- PAGE_DESCRIPTION -->",
         &page_desciption(lang, &a, meta)?,
     );
-    let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a, meta)?);
+    let html = html.replace("<!-- PAGE_METADATA -->", &page_metadata(lang, &a, meta, Some(ArticleInfo { 
+        is_doc: false, 
+        author: String::new(), 
+        slug: slug.to_string(),
+    }))?);
     let html = html.replace(
         "<!-- BODY_ABSTRACT -->",
         &body_abstract(lang, slug, a.is_prayer(), &a.summary),
@@ -3342,7 +3316,13 @@ fn search_html(
             );
             search_html = search_html.replace("$$TITLE$$", &searchpage_title);
 
-            let search_js = include_str!("../../static/js/pagefind_search.js").to_string();
+            let mut search_js = include_str!("../../static/js/search.js").to_string();
+            search_js = search_js.replace("$$LANG$$", lang);
+            search_js = search_js.replace("$$VERSION$$", &version);
+            search_js = search_js.replace("$$NO_RESULTS$$", &no_results);
+            search_js = search_js.replace("$$DOC_FOLDER$$", &get_string(meta, lang, "special-docs-path")?);
+
+            // let search_js = include_str!("../../static/js/pagefind_search.js").to_string();
 
             // Return the tuple for this language
             Ok((lang.clone(), (searchbar_html, search_html, search_js)))
