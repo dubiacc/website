@@ -3821,7 +3821,7 @@ fn render_index_html(
     let special_about_path = get_string(meta, lang, "special-about-path")?;
     let special_about_title = get_string(meta, lang, "special-about-title")?;
     index_html = index_html.replace("$$SPECIAL_ABOUT_TITLE$$", &special_about_title);
-    index_html = index_html.replace("$$SPECIAL_ABOUT_PATH$$", &special_about_title);
+    index_html = index_html.replace("$$SPECIAL_ABOUT_PATH$$", &special_about_path);
 
     index_html = index_html.replace("<!-- MULTILANG_TAGS -->", multilang);
     index_html = index_html.replace("$$SKIP_TO_MAIN_CONTENT$$", "Skip to main content");
