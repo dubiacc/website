@@ -1,7 +1,7 @@
 // This module contains the logic for generating the wip.html page.
 // - It will list articles needing review, approval, or translation.
 // - It will also display any build warnings.
-use crate::{AnalyzedArticles, MetaJson, SectionLink, Slug, Lang};
+use crate::{AnalyzedArticles, ArticleStatus, MetaJson, SectionLink, Slug, Lang};
 use std::collections::{BTreeMap, BTreeSet};
 
 pub fn generate_wip_page(
@@ -18,12 +18,12 @@ pub fn generate_wip_page(
 
     for (lang, articles) in &all_articles.map {
         for (slug, article) in articles {
-            if article.is_prayer() {
+            if article.status == ArticleStatus::Prayer {
                 continue;
             }
             // WIP articles are rendered in a special wip/ subdirectory
             let link = SectionLink {
-                slug: format!("{}/{slug}", lang, slug = slug),
+                slug: format!("{}/{}", lang, slug = slug),
                 title: article.title.clone(),
                 id: None,
             };
@@ -63,7 +63,7 @@ pub fn generate_wip_page(
             .map(|item| {
                 let (lang, slug) = item.slug.split_once("/").unwrap_or_default();
                 format!(
-                    "<li><a href='/{lang}/wip/{slug}.html'>{}</a> (<a href='/{lang}/wip/{slug}.pdf' target='_blank'>Preview PDF</a>)</li>",
+                    "<li><a href='/{lang}/wip/{slug}'>{}</a> (<a href='/{lang}/wip/{slug}.pdf' target='_blank'>Preview PDF</a>)</li>",
                     item.title,
                     lang = lang,
                     slug = slug

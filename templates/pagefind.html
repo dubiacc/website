@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="$$LANG$$">
+<!-- HEAD_TEMPLATE_HTML -->
+<body class="page-lorem dropcaps-kanzlei">
+    <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+	<main>
+        <nav id="sidebar">
+			<!-- HEADER_NAVIGATION -->
+		</nav>
+		<article>
+			<header>
+				<h1 style="max-width:470px;margin:0 auto;font-size:2.2em;">Pagefind Test</h1>
+			</header>
+
+			<div class="markdownBody" id="markdownBody">
+                <div id="search" class="search"></div>
+            </div>
+        </article>
+    </main>
+    <script src="/pagefind/pagefind-ui.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            new PagefindUI({ element: "#search", showSubResults: true });
+        });
+    </script>
+</body>
+</html>
