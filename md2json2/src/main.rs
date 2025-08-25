@@ -2059,10 +2059,16 @@ impl ArticleInfo {
     pub fn get_pdf_link(&self, meta: &MetaJson, lang: &str) -> String {
         let docs_folder = get_string(meta, lang, "special-docs-path").unwrap_or_default();
 
-        let pdf_path = if self.is_doc {
-            format!("/{}/{}/{}/{}.pdf", lang, docs_folder, self.author, self.slug)
+        let wip = if self.is_wip {
+            "/wip/"
         } else {
-            format!("/{}/{}.pdf", lang, self.slug)
+            ""
+        };
+
+        let pdf_path = if self.is_doc {
+            format!("/{lang}{wip}/{docs_folder}/{}/{}.pdf", self.author, self.slug)
+        } else {
+            format!("/{lang}{wip}/{}.pdf", self.slug)
         };
 
         let mut bl = include_str!("../../templates/page-metadata.pdf.html").to_string();
@@ -2076,10 +2082,16 @@ impl ArticleInfo {
     
         let docs_folder = get_string(meta, lang, "special-docs-path").unwrap_or_default();
 
-        let md_path = if self.is_doc {
-            format!("/{}/{}/{}/{}.md", lang, docs_folder, self.author, self.slug)
+        let wip = if self.is_wip {
+            "/wip/"
         } else {
-            format!("/{}/{}.md", lang, self.slug)
+            ""
+        };
+
+        let md_path = if self.is_doc {
+            format!("/{lang}{wip}/{docs_folder}/{}/{}.md", self.author, self.slug)
+        } else {
+            format!("/{lang}{wip}/{}.md", self.slug)
         };
 
         let mut bl = include_str!("../../templates/page-metadata.copy.html").to_string();
@@ -2336,7 +2348,7 @@ fn page_desciption(
         return Ok(String::new());
     }
     let descr = get_description(lang, a, meta)?;
-    Ok(format!("<div class='page-description' style='max-width: 500px;font-size:0.8em;text-align: justify;margin: 10px auto;'><p>{descr}</p></div>"))
+    Ok(format!("<div class='page-description' style='max-width: 500px;font-size:0.9em;text-align: justify;margin: 10px auto;'><p>{descr}</p></div>"))
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
