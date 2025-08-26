@@ -2587,6 +2587,10 @@
         }
     },
     "authors": {
+        "denzinger": {
+            "displayname": "Heinrich Denzinger",
+            "contact": "https://en.wikipedia.org/wiki/Heinrich_Joseph_Dominicus_Denzinger"
+        },
         "kempis": {
             "displayname": "Thomas à Kempis",
             "contact": "https://en.wikipedia.org/wiki/Thomas_%C3%A0_Kempis"
